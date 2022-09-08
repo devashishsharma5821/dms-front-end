@@ -1,6 +1,7 @@
 # Getting Started with DMS3.0 app
 
-git clone https://gitlab-internal.antuit.ai/esp/dms/frontend.git cd frontend
+1. git clone https://gitlab-internal.antuit.ai/esp/dms/frontend.git
+2. cd frontend
 
 ### `npm start`
 
@@ -19,3 +20,5 @@ It correctly bundles React in production mode and optimizes the build for the be
 Note: this is a one-way operation. Once you `eject`, you can’t go back!
 
 ## Reference
+
+1. sass: https://medium.com/@dandobusiness/adding-sass-scss-to-your-react-typescript-project-162de415b19a

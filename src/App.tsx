@@ -1,16 +1,17 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import DashboardPage from './pages/dashboard/dashboard';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-interface IAppProps {}
+const DashboardPage = lazy(() => import('./pages/dashboard/dashboard'));
 
-const App: React.FunctionComponent<IAppProps> = () => {
+const App = () => {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<DashboardPage />} />
-            </Routes>
-        </BrowserRouter>
+        <Router>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                    <Route path="/" element={<DashboardPage />} />
+                </Routes>
+            </Suspense>
+        </Router>
     );
 };
 
