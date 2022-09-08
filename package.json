@@ -1,6 +1,6 @@
 {
-    "name": "dms-v3",
-    "version": "0.1.0",
+    "name": "dms",
+    "version": "3.0.0",
     "private": true,
     "dependencies": {
         "@testing-library/jest-dom": "^5.16.5",
@@ -21,6 +21,8 @@
     "scripts": {
         "start": "set PORT=4200 && react-scripts start",
         "build": "react-scripts build",
+        "lint": "eslint \"src/**/*.{ts,tsx}\"",
+        "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
@@ -42,7 +44,16 @@
             "last 1 safari version"
         ]
     },
+    "pre-commit": [
+        "lint:fix",
+        "lint"
+    ],
     "devDependencies": {
+        "eslint": "^8.23.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-jsx-a11y": "^6.6.1",
+        "eslint-plugin-react": "^7.31.7",
+        "pre-commit": "^1.2.2",
         "prettier": "2.7.1"
     }
 }
