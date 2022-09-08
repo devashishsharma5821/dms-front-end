@@ -1,8 +1,8 @@
 import React from 'react';
-interface IDashboardPageProps {}
+import './dashboard.scss';
 
-const DashboardPage: React.FunctionComponent<IDashboardPageProps> = () => {
-    return <div>Welcome to dashboard page..</div>;
+const DashboardPage = () => {
+    return <div className="welcome">Welcome to dashboard page..</div>;
 };
 
 export default DashboardPage;
