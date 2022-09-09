@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-const DashboardPage = lazy(() => import('./pages/dashboard/dashboard'));
+const DashboardPage = lazy(() => import('./pages/dashboard'));
 
 const App = () => {
     return (
