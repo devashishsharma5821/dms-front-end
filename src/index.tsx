@@ -7,7 +7,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { API_ENFPOINTS } from './environments';
 import { msalConfig } from './authConfig';
 
-import App from './app';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 /* MSAL should be instantiated outside of the component tree to prevent it from being re-instantiated on re-renders. */
