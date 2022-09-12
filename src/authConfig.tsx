@@ -36,12 +36,7 @@ export const msalConfig: Configuration = {
     }
 };
 
-// Add here scopes for id token to be used at MS Identity Platform endpoints.
+// Add here scopes for id token to be used at MS Identity Platform endpoints. protected resource
 export const loginRequest: PopupRequest = {
     scopes: ['https://antuitbtoc.onmicrosoft.com/espdev-scope/api']
-};
-
-// Add here the endpoints for MS Graph API services you would like to use.
-export const graphConfig = {
-    graphMeEndpoint: 'https://graph.microsoft-ppe.com/v1.0/me'
 };
