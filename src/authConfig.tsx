@@ -10,7 +10,6 @@ export const msalConfig: Configuration = {
         postLogoutRedirectUri: '/'
     },
     cache: {
-        cacheLocation: 'sessionStorage',
         storeAuthStateInCookie: false
     },
     system: {
@@ -22,13 +21,13 @@ export const msalConfig: Configuration = {
                         console.log(message);
                         return;
                     case LogLevel.Info:
-                        console.log(message);
+                        // console.log(message);
                         return;
                     case LogLevel.Verbose:
-                        console.debug(message);
+                        // console.debug(message);
                         return;
                     case LogLevel.Warning:
-                        console.warn(message);
+                        // console.warn(message);
                         return;
                 }
             }
@@ -36,7 +35,7 @@ export const msalConfig: Configuration = {
     }
 };
 
-// Add here scopes for id token to be used at MS Identity Platform endpoints. protected resource
-export const loginRequest: PopupRequest = {
+// Add here scopes for id token to be used at MS Identity Platform endpoints.
+export const protectedResources: PopupRequest = {
     scopes: ['https://antuitbtoc.onmicrosoft.com/espdev-scope/api']
 };

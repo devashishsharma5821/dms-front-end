@@ -1,9 +1,8 @@
-import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useMsal, useAccount } from '@azure/msal-react';
 import { EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
-import { loginRequest } from './authConfig';
-const DashboardPage = lazy(() => import('./pages/dashboard'));
+import { protectedResources } from './authConfig';
+import { AppRouter } from './app-router';
 
 const App = () => {
     const { instance, accounts, inProgress } = useMsal();
@@ -12,7 +11,7 @@ const App = () => {
         if (account && inProgress === 'none') {
             instance
                 .acquireTokenSilent({
-                    scopes: loginRequest.scopes,
+                    scopes: protectedResources.scopes,
                     account: account
                 })
                 .then((response) => {
@@ -25,7 +24,7 @@ const App = () => {
                         if (account && inProgress === 'none') {
                             instance
                                 .acquireTokenPopup({
-                                    scopes: loginRequest.scopes
+                                    scopes: protectedResources.scopes
                                 })
                                 .then((response) => {
                                     console.log('AcquireTokenPopup success..');
@@ -40,7 +39,6 @@ const App = () => {
 
     useEffect(() => {
         const callbackId = instance.addEventCallback((event: any) => {
-            debugger;
             if (event.eventType === EventType.LOGIN_FAILURE) {
                 instance.logout();
             }
@@ -56,15 +54,7 @@ const App = () => {
         };
     }, [instance]);
 
-    return (
-        <Router>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Routes>
-                    <Route path="/" element={<DashboardPage />} />
-                </Routes>
-            </Suspense>
-        </Router>
-    );
+    return <AppRouter></AppRouter>;
 };
 
 export default App;
