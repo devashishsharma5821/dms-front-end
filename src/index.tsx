@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { MsalAuthenticationTemplate, MsalProvider } from '@azure/msal-react';
 import { ApolloProvider } from '@apollo/client';
-import { msalConfig } from './authConfig';
+import { msalConfig } from './authConfig'; // from
 import client from './apollo-client';
 
 import App from './App';
