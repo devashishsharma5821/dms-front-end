@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { getUserConfig } from '../../query';
-
+import { getUserConfig, wsconnect } from '../../query';
 import './home.scss';
 
 function UserConfiguration() {
@@ -9,17 +8,25 @@ function UserConfiguration() {
     const { loading, error, data } = useQuery(GET_USER_CONFIGURATION);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : `${error.toString()}`</p>;
-    if (data) console.log('--> ', data);
+    if (data?.userConfiguration?.user?.espUserToken) {
+        localStorage['espUserToken'] = data.userConfiguration.user.espUserToken ?? '';
+    }
 
-    return <h4> User configuration </h4>;
+    return <span></span>;
 }
 
 const HomePage = () => {
+    const [message, setMessage] = useState('Status');
+
+    useEffect(() => {
+        wsconnect(setMessage);
+    }, []);
     return (
         <>
             <div className="welcome">Welcome to Home page..</div>
             <br></br>
             <UserConfiguration />
+            {message}
         </>
     );
 };
