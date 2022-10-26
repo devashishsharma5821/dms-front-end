@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Flex, Divider, useColorModeValue, Center, VStack } from '@chakra-ui/react';
+import { Link as Routelink } from 'react-router-dom';
 import {
     CreateIcon,
     WhiteHome,
@@ -17,6 +18,7 @@ import {
     WhiteSettingIcon,
     WhiteFluentIcon
 } from '../../assets/icons';
+
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const sideBarMenuIcons = [
@@ -24,31 +26,38 @@ const SideBarMenu = () => {
             section: [
                 {
                     icon: <CreateIcon />,
-                    iconName: 'Create'
+                    iconName: 'Create',
+                    route: '/project'
                 },
                 {
                     icon: <WhiteHome />,
-                    iconName: 'Home'
+                    iconName: 'Home',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteRecentIcon />,
-                    iconName: 'Recent'
+                    iconName: 'Recent',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteExperiment />,
-                    iconName: 'Experiment'
+                    iconName: 'Experiment',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteCollection />,
-                    iconName: 'Collection'
+                    iconName: 'Collection',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteComputeIcon />,
-                    iconName: 'Compute'
+                    iconName: 'Compute',
+                    route: '/compute'
                 },
                 {
                     icon: <WhiteDatasetIcon />,
-                    iconName: 'Dataset'
+                    iconName: 'Dataset',
+                    route: '/notfound'
                 }
             ]
         },
@@ -56,15 +65,18 @@ const SideBarMenu = () => {
             section: [
                 {
                     icon: <WhiteNotebookIcon />,
-                    iconName: 'Notebook'
+                    iconName: 'Notebook',
+                    route: '/notebook'
                 },
                 {
                     icon: <WhiteArtifactsIcon />,
-                    iconName: 'Artifacts'
+                    iconName: 'Artifacts',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteWorkflowsIcon />,
-                    iconName: 'Workflows'
+                    iconName: 'Workflows',
+                    route: '/notfound'
                 }
             ]
         },
@@ -72,19 +84,23 @@ const SideBarMenu = () => {
             section: [
                 {
                     icon: <WhiteDocumentationIcon />,
-                    iconName: 'Documentation'
+                    iconName: 'Documentation',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteResourceCenterIcon />,
-                    iconName: 'ResourceCenter'
+                    iconName: 'ResourceCenter',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteInfoIcon />,
-                    iconName: 'Info'
+                    iconName: 'Info',
+                    route: '/notfound'
                 },
                 {
                     icon: <WhiteSettingIcon />,
-                    iconName: 'Setting'
+                    iconName: 'Setting',
+                    route: '/notfound'
                 }
             ]
         },
@@ -92,7 +108,8 @@ const SideBarMenu = () => {
             section: [
                 {
                     icon: <WhiteFluentIcon />,
-                    iconName: 'Fluent'
+                    iconName: 'Fluent',
+                    route: '/notfound'
                 }
             ]
         }
@@ -108,14 +125,20 @@ const SideBarMenu = () => {
                             if (lastItemLength === iconIndex) {
                                 return (
                                     <>
-                                        <Box mt="17">{icons.icon}</Box>
+                                        <Routelink to={icons.route}>
+                                            <Box mt="17">{icons.icon}</Box>
+                                        </Routelink>
                                         <Center>
                                             <Divider mt="17" orientation="horizontal" bg={'dark.borderColor'} />
                                         </Center>
                                     </>
                                 );
                             } else {
-                                return <Box mt="17">{icons.icon}</Box>;
+                                return (
+                                    <Routelink to={icons.route}>
+                                        <Box mt="17">{icons.icon}</Box>
+                                    </Routelink>
+                                );
                             }
                         });
 
