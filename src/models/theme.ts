@@ -4,7 +4,7 @@ export const styles = {
     global: {
         // styles for the `body`
         body: {
-            fontFamily: 'Arial'
+            fontFamily: 'NunitoFont'
         },
         // styles for the `a`
         a: {
