@@ -2,10 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { getUserConfig, wsconnect } from '../../query';
 import './home.scss';
-import { useDisclosure, Drawer, Button, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useColorModeValue } from '@chakra-ui/react';
+import {
+    useDisclosure,
+    Drawer,
+    Button,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    useColorModeValue,
+    Box,
+    IconButton
+} from '@chakra-ui/react';
 import Form from '@rjsf/chakra-ui';
 import validator from '@rjsf/validator-ajv6';
 import type { JSONSchema7 } from 'json-schema';
+import TransformerMenu from '../../component/Transformers/TransformerMenu';
+import { ArrowRightIcon } from '@chakra-ui/icons';
+import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 
 function UserConfiguration() {
     const { GET_USER_CONFIGURATION } = getUserConfig();
@@ -24,17 +40,20 @@ const HomePage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef: any = React.useRef();
     const themebg = useColorModeValue('light.header', 'dark.header');
-    const [schema, setSchema] = React.useState<JSONSchema7>({
-        title: 'Widgets',
-        type: 'object',
-        properties: {
-            stringFormats: {
-                type: 'object',
-                title: 'String formats',
-                properties: {
-                    email: {
-                        type: 'string',
-                        format: 'email'
+    const [leftMenuOpen, setLeftMenuOpen] = useState(false);
+    const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+    
+    const [ schema, setSchema ] = React.useState<JSONSchema7>({
+        "title": "Widgets",
+        "type": "object",
+        "properties": {
+            "stringFormats": {
+                "type": "object",
+                "title": "String formats",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
                     },
                     uri: {
                         type: 'string',
@@ -205,19 +224,30 @@ const HomePage = () => {
     useEffect(() => {
         wsconnect(setMessage);
     }, []);
+    const toggleLeftMenu = () => {
+        setLeftMenuOpen(!leftMenuOpen);
+    }
     return (
         <>
+            <Box height="100%" width="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={"30"}>
+                <Box textAlign="center">
+                    <IconButton aria-label="expand" minWidth="0" border="1px" width="24px" height="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} background={bgColor} _active={{background:bgColor}}  _hover={{background:bgColor}} icon={
+                    <DoubleAngleRightIcon/>} mt={17} onClick={toggleLeftMenu} />
+                    </Box>
+                <Box position="absolute" width="150px" transform="rotate(270deg)" left={15} mt={75} textAlign="right" ><Box color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}>Transformers</Box></Box>
+            </Box>
             <div className="wrap">
                 <a>Welcome to Home page..</a>
                 <br></br>
                 <UserConfiguration />
                 {message}
-                <Button ref={btnRef} variant="solid" bg={themebg} onClick={onOpen}>
+                <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
+                <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
                     Open
                 </Button>
-                <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef}>
+                <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                     <DrawerOverlay />
-                    <DrawerContent mt={'44px'}>
+                    <DrawerContent mt="44px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                         <DrawerCloseButton />
                         <DrawerHeader>Example React Schema Form</DrawerHeader>
 

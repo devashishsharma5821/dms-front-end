@@ -13,7 +13,7 @@ export const AppRouter = () => {
                 <Flex h={'95vh'} overflowY={'hidden'}>
                     <Stack direction={'row'}>
                         {/*Replace Below Box with Side Bar Component*/}
-                        <Box w={'50'} bg={useColorModeValue('light.header', 'dark.header')}>
+                        <Box w={'50'} bg={useColorModeValue('light.header', 'dark.header')}  zIndex="4000">
                             <SideBarMenu />
                         </Box>
                         <Box>
