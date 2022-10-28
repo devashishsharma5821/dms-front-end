@@ -42,30 +42,28 @@ export const colors = {
         userCircleHeaderBg: '#B3DDEB',
         hoverSideBarMenu: '#0387B0',
         darkGray: '#878787',
-        gray: '#B8B8B8',
-
-
+        gray: '#B8B8B8'
     },
     light: {
         header: '#1A3F59',
         button: '#0387B0',
-        blue : '#0387B0',
-        lightGrayishBlue : '#F7FAFC',
-        lighterGrayishBlue :"#D8DCDE",
-        lightestDarkGray : "#757575",
+        blue: '#0387B0',
+        lightGrayishBlue: '#F7FAFC',
+        lighterGrayishBlue: '#D8DCDE',
+        lightestDarkGray: '#757575',
         hoverSideBarMenu: '#0387B0'
     },
     dark: {
         header: '#3D3D3F',
         button: '#3296ED',
-        mediumDark: "#464648",
-        gray : '#C9C9CA',
-        veryDarkGrayishBlue:'#313133',
-        veryLightDarkGrayishBlue : '#434248',
+        mediumDark: '#464648',
+        gray: '#C9C9CA',
+        veryDarkGrayishBlue: '#313133',
+        veryLightDarkGrayishBlue: '#434248',
+        white: '#ffffff'
     },
-    brand:{
-        500: "#0387B0",
-        
+    brand: {
+        500: '#0387B0'
     }
 };
 
@@ -81,4 +79,3 @@ export const spacing = {
         38: '38px'
     }
 };
-
