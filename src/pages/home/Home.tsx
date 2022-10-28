@@ -234,7 +234,8 @@ const HomePage = () => {
                     <IconButton aria-label="expand" minWidth="0" border="1px" width="24px" height="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} background={bgColor} _active={{background:bgColor}}  _hover={{background:bgColor}} icon={
                     <DoubleAngleRightIcon/>} mt={17} onClick={toggleLeftMenu} />
                     </Box>
-                <Box position="absolute" width="150px" transform="rotate(270deg)" left={15} mt={75} textAlign="right" ><Box color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}>Transformers</Box></Box>
+                <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={75} textAlign="right" >
+                    <Box fontFamily="Nunito" color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">Transformers</Box></Box>
             </Box>
             <div className="wrap">
                 <a>Welcome to Home page..</a>
