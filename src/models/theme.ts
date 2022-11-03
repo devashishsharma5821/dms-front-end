@@ -42,32 +42,34 @@ export const colors = {
         userCircleHeaderBg: '#B3DDEB',
         hoverSideBarMenu: '#0387B0',
         darkGray: '#878787',
-        gray: '#B8B8B8'
+        gray: '#B8B8B8',
+        blackText: '#333333',
+        containerAgGridRecords: ' #646A78',
+        agGridBachground: '#EEEEEE'
     },
     light: {
         header: '#1A3F59',
         button: '#0387B0',
-        blue : '#0387B0',
-        lightGrayishBlue : '#F7FAFC',
-        lighterGrayishBlue :"#D8DCDE",
-        lightestDarkGray : "#757575",
+        blue: '#0387B0',
+        lightGrayishBlue: '#F7FAFC',
+        lighterGrayishBlue: '#D8DCDE',
+        lightestDarkGray: '#757575',
         hoverSideBarMenu: '#0387B0',
         slightlyDesaturatedBlue: '#9792C8',
-        veryDarkBlue: "#08192E",
+        veryDarkBlue: '#08192E'
     },
     dark: {
         header: '#3D3D3F',
         button: '#3296ED',
-        mediumDark: "#464648",
-        gray : '#C9C9CA',
-        veryDarkGrayishBlue:'#313133',
-        veryLightDarkGrayishBlue : '#434248',
-        lightGrayishBlue:'#C9C5E9',
-        veryDarkGray: "#171717"
+        mediumDark: '#464648',
+        gray: '#C9C9CA',
+        veryDarkGrayishBlue: '#313133',
+        veryLightDarkGrayishBlue: '#434248',
+        lightGrayishBlue: '#C9C5E9',
+        veryDarkGray: '#171717'
     },
-    brand:{
-        500: "#0387B0",
-        
+    brand: {
+        500: '#0387B0'
     }
 };
 
@@ -78,6 +80,7 @@ export const spacing = {
         7: '7px',
         8: '8px',
         10: '10px',
+        14: '14px',
         15: '15px',
         16: '16px',
         17: '17px',
@@ -86,7 +89,6 @@ export const spacing = {
         38: '38px',
         44: '44px',
         54: '54px'
-
     }
 };
 
@@ -104,6 +106,4 @@ export const sizes = {
         44: '44px',
         54: '54px'
     }
-
 };
-
