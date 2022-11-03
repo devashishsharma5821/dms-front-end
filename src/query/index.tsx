@@ -14,6 +14,12 @@ export const getUserConfig = () => {
                     defaultApp
                     appAlerts
                     espUserToken
+                    applications { 
+                    applicationId
+                    applicationName
+                    configJson
+                    i18n 
+                    }
                 }
                 error
             }

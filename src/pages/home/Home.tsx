@@ -22,7 +22,20 @@ import type { JSONSchema7 } from 'json-schema';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import { ArrowRightIcon } from '@chakra-ui/icons';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
+let config = {
+    "title": "Demand Modeling Studio",
+    "isManage": true,
+    "transformerMenu" : [
+        {
+            "name": "Input Output",
+            "order": 1
+        },
+        {
 
+        }
+    ]
+};
+let i18n = {};
 function UserConfiguration() {
     const { GET_USER_CONFIGURATION } = getUserConfig();
     const { loading, error, data } = useQuery(GET_USER_CONFIGURATION);
@@ -30,6 +43,14 @@ function UserConfiguration() {
     if (error) return <p>Error : `${error.toString()}`</p>;
     if (data?.userConfiguration?.user?.espUserToken) {
         localStorage['espUserToken'] = data.userConfiguration.user.espUserToken ?? '';
+    }
+    if(data?.userConfiguration?.user?.applications) {
+        const dmsApplicationConfiguration = data?.userConfiguration?.user?.applications.filter((app: any) => {
+            return app.applicationName === "dms";
+        });
+        config = dmsApplicationConfiguration[0].configJson;
+        i18n = dmsApplicationConfiguration[0].i18n;
+        console.log('Config', config);
     }
 
     return <span></span>;
@@ -42,7 +63,7 @@ const HomePage = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
-    
+
     const [ schema, setSchema ] = React.useState<JSONSchema7>({
         "title": "Widgets",
         "type": "object",
@@ -238,7 +259,7 @@ const HomePage = () => {
                     <Box fontFamily="Nunito" color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">Transformers</Box></Box>
             </Box>
             <div className="wrap">
-                <a>Welcome to Home page..</a>
+                <a>Welcome To Home Page</a>
                 <br></br>
                 <UserConfiguration />
                 {message}
