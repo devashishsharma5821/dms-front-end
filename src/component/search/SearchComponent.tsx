@@ -9,7 +9,7 @@ const SearchComponent = () => {
     const searchChange = (event: ChangeEvent<HTMLInputElement>) => {
         let currentSearchValue = event.currentTarget.value;
         setSearchValue(event.currentTarget.value);
-        currentSearchValue && currentSearchValue.trim() != '' ? setClearSearch(true) : setClearSearch(false);
+        currentSearchValue && currentSearchValue.trim() !== '' ? setClearSearch(true) : setClearSearch(false);
     };
     const clearSearch = () => {
         setSearchValue('');
@@ -32,7 +32,7 @@ const SearchComponent = () => {
                 _placeholder={{ color: 'default.gray' }}
                 value={searchValue}
                 border="none"
-                paddingStart="var(--chakra-space-9)"
+                paddingStart="38"
                 paddingEnd="var(--chakra-space-4)"
                 _focus={{ outline: 'none', boxShadow: 'none' }}
                 onChange={searchChange}

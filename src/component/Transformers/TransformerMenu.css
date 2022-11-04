@@ -1,3 +1,10 @@
 .chakra-stack div:nth-child(2){
     margin-inline-start: 0;
 }
+.chakra-modal__body::-webkit-scrollbar{
+    display: none;
+}
+.chakra-modal__body{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

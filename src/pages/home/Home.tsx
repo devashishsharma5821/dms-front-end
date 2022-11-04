@@ -20,7 +20,6 @@ import Form from '@rjsf/chakra-ui';
 import validator from '@rjsf/validator-ajv6';
 import type { JSONSchema7 } from 'json-schema';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
-import { ArrowRightIcon } from '@chakra-ui/icons';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 let config = {
     "title": "Demand Modeling Studio",
@@ -60,11 +59,10 @@ const HomePage = () => {
     const [message, setMessage] = useState('Status');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef: any = React.useRef();
-    const themebg = useColorModeValue('light.header', 'dark.header');
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
 
-    const [ schema, setSchema ] = React.useState<JSONSchema7>({
+    const [ schema ] = React.useState<JSONSchema7>({
         "title": "Widgets",
         "type": "object",
         "properties": {

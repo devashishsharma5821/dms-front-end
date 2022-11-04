@@ -56,7 +56,8 @@ export const colors = {
         lightestDarkGray: '#757575',
         hoverSideBarMenu: '#0387B0',
         slightlyDesaturatedBlue: '#9792C8',
-        veryDarkBlue: '#08192E'
+        veryDarkBlue: "#08192E",
+        grayishBlue:  "#ECEAFD"
     },
     dark: {
         header: '#3D3D3F',
@@ -79,16 +80,22 @@ export const spacing = {
         2: '2px',
         7: '7px',
         8: '8px',
+        9: '9px',
         10: '10px',
+        11: '11px',
+        12: '12px',
         14: '14px',
         15: '15px',
         16: '16px',
         17: '17px',
         20: '20px',
+        22: '22px',
         24: '24px',
         38: '38px',
+        40: '40px',
         44: '44px',
-        54: '54px'
+        54: '54px',
+        73: '73px'
     }
 };
 
