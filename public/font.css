@@ -1,12 +1,7 @@
 @font-face {
     font-family: 'NunitoFont';
+    font-weight: 400;
     src: url('./font/nunito/nunito-regular.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'NunitoFont';
-    font-weight: 300;
-    src: url('./font/nunito/nunito-light.woff2') format('woff2');
 }
 
 @font-face {
