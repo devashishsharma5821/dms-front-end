@@ -260,7 +260,7 @@ const HomePage = () => {
                     <DoubleAngleRightIcon/>} mt={17} onClick={toggleLeftMenu} />
                     </Box>
                 <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={75} textAlign="right" >
-                    <Box fontFamily="Nunito" color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">Transformers</Box></Box>
+                    <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">Transformers</Box></Box>
             </Box>
             <div className="wrap">
                 <a>Welcome To Home Page</a>

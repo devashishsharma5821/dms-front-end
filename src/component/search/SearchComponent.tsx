@@ -2,18 +2,30 @@ import React, { ChangeEvent, useState } from 'react';
 import { useColorModeValue, InputGroup, Input, InputLeftElement, InputRightElement, IconButton } from '@chakra-ui/react';
 import { CloseIcon, Search2Icon } from '@chakra-ui/icons';
 
-const SearchComponent = () => {
+const SearchComponent = (props:any) => {
     const [showClearSearch, setClearSearch] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const iconBg = useColorModeValue('light.lighterGrayishBlue', 'dark.veryDarkGrayishBlue');
+
+/* 
+* for Handling Search Input Changes
+*/
+
     const searchChange = (event: ChangeEvent<HTMLInputElement>) => {
         let currentSearchValue = event.currentTarget.value;
         setSearchValue(event.currentTarget.value);
-        currentSearchValue && currentSearchValue.trim() !== '' ? setClearSearch(true) : setClearSearch(false);
+        currentSearchValue && currentSearchValue.trim() != '' ? setClearSearch(true) : setClearSearch(false);
+        props.searchChange(currentSearchValue);
     };
+
+/* 
+* for Clearing Search Input Changes
+*/
+
     const clearSearch = () => {
         setSearchValue('');
         setClearSearch(false);
+        props.searchChange("");
     };
 
     return (

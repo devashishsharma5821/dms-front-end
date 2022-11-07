@@ -4,7 +4,7 @@ export const styles = {
     global: {
         // styles for the `body`
         body: {
-            fontFamily: 'NunitoFont',
+            fontFamily: 'NunitoFont , Fallback, sans-serif',
             fontWeight: 400,
         },
         // styles for the `a`
@@ -96,7 +96,7 @@ export const spacing = {
         40: '40px',
         44: '44px',
         54: '54px',
-        73: '73px'
+        57: '57px'
     }
 };
 

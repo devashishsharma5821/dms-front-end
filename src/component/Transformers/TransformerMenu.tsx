@@ -2,7 +2,7 @@ import {Box, Button, useColorModeValue, Divider, Flex, Center } from "@chakra-ui
 import { useDisclosure } from "@chakra-ui/react-use-disclosure";
 import { useRef, useState, useEffect } from "react";
 import { useApolloClient} from "@apollo/client";
-import './TransformerMenu.css'
+import './TransformerMenu.scss'
 
 import {
     Drawer,
@@ -28,7 +28,7 @@ import { getTransformersData } from "../../query";
 import SearchComponent from "../search/SearchComponent";
 
 const TransformerMenu = (props: any) => {
-
+const [transformarsData, setTransformarsData] = useState(new Array<TransformerDetail>());
     const [formatedTransformersData, setFormatedTransformersData] = useState({});
     const client = useApolloClient();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -57,8 +57,23 @@ const TransformerMenu = (props: any) => {
         const formatedtranformerData = formatTransformerData(transformerdata);
         setFormatedTransformersData(formatedtranformerData);
     }
-
 /*
+* filtering Transformers data by User Search Input
+ */   
+    const onSearchChange = (searchVal:string) => {
+        let searchResults = [];
+        if(searchVal && searchVal !==""){
+             searchResults = transformarsData.filter((currentTransformer:any) => currentTransformer.name?.toLocaleLowerCase().indexOf(searchVal?.toLocaleLowerCase()) > -1);
+         
+        }else{
+            searchResults = [...transformarsData]
+        }
+        const formatedData = formatTransformerData(searchResults);
+        setFormatedTransformersData(formatedData);
+       
+    }
+    
+    /*
  * Query to  get transformers data
 */
     
@@ -69,6 +84,7 @@ const TransformerMenu = (props: any) => {
             })
             .then((response) => {
                 let transformerdata = [...response.data.dmsTransformers];
+                setTransformarsData(transformerdata);
                 updateTransformersData(transformerdata)
             })
             .catch((err) => console.error(err));
@@ -89,19 +105,19 @@ const TransformerMenu = (props: any) => {
                     <DrawerCloseButton bg={panelCloseBtnBg} _hover={{background:panelCloseBtnBg}} border="px" mt={2.5} mr={2.5} w="24px" h="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}>
                         <DoubleAngleLeftIcon></DoubleAngleLeftIcon>
                     </DrawerCloseButton>
-                    <DrawerHeader>Transformers</DrawerHeader>
+                    <DrawerHeader >Transformers</DrawerHeader>
 
                     <DrawerBody paddingStart='var(--chakra-space-11)' paddingEnd='var(--chakra-space-11)' >
-                        <SearchComponent/>
+                        <SearchComponent searchChange={(val:string)=>{onSearchChange(val)}}/>
 
-                        <Flex marginTop={18} fontFamily="Nunito">
+                        <Flex marginTop={18}>
                             <Box paddingLeft={11} paddingRight={10} color={useColorModeValue('light.blue', 'dark.gray')} fontWeight="bold" textDecoration="none" cursor="pointer">
                                 Expand All
                             </Box>
                             <Center height="38"  h={5} background={useColorModeValue('light.blue', 'dark.gray')}>
                                 <Divider orientation="vertical" />
                             </Center>
-                            <Box pl={12} pr={73}  color={useColorModeValue('light.blue', 'dark.gray')} fontWeight="bold" cursor="pointer">
+                            <Box pl={12} pr={57}  color={useColorModeValue('light.blue', 'dark.gray')} fontWeight="bold" cursor="pointer">
                                 Collapse All
                             </Box>
                         </Flex>
