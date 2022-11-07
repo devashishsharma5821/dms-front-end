@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { getUserConfig, wsconnect } from '../../query';
+import { WhiteSettingIcon } from '../../assets/icons';
 import './home.scss';
 import {
-    useDisclosure,
-    Drawer,
     Button,
     DrawerBody,
     DrawerFooter,
@@ -12,15 +11,22 @@ import {
     DrawerOverlay,
     DrawerContent,
     DrawerCloseButton,
-    useColorModeValue,
     Box,
-    IconButton
+    IconButton,
+    Wrap,
+    WrapItem,
+    Tooltip,
+    useToast,
+    useColorModeValue,
+    useDisclosure,
+    Drawer,
 } from '@chakra-ui/react';
 import Form from '@rjsf/chakra-ui';
 import validator from '@rjsf/validator-ajv6';
 import type { JSONSchema7 } from 'json-schema';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
+import ModalComponent from '../../component/modalSystem/modal';
 let config = {
     "title": "Demand Modeling Studio",
     "isManage": true,
@@ -49,7 +55,6 @@ function UserConfiguration() {
         });
         config = dmsApplicationConfiguration[0].configJson;
         i18n = dmsApplicationConfiguration[0].i18n;
-        console.log('Config', config);
     }
 
     return <span></span>;
@@ -61,7 +66,8 @@ const HomePage = () => {
     const btnRef: any = React.useRef();
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
-
+    const toast = useToast()
+    const statuses = ['success', 'error', 'warning', 'info']
     const [ schema ] = React.useState<JSONSchema7>({
         "title": "Widgets",
         "type": "object",
@@ -283,6 +289,34 @@ const HomePage = () => {
                         </DrawerFooter>
                     </DrawerContent>
                 </Drawer>
+                <Wrap mt={10}>
+                    {statuses.map((status: any, i: number) => (
+                        <WrapItem key={i}>
+                            <Button
+                                variant="solid"
+                                bg={'light.button'}
+                                onClick={() =>
+                                    toast({
+                                        title: `${status} toast`,
+                                        status: status,
+                                        isClosable: true,
+                                        position: 'top-right'
+                                    })
+                                }
+                            >
+                                Show {status} toast
+                            </Button>
+                        </WrapItem>
+                    ))}
+                    <WrapItem key={'modal'}>
+                        <ModalComponent />
+                    </WrapItem>
+                    <WrapItem>
+                        <Tooltip hasArrow label='Tooltip Example'>
+                            <Button variant="solid" bg={useColorModeValue('light.button', 'dark.button')}>ToolTip Example</Button>
+                        </Tooltip>
+                    </WrapItem>
+                </Wrap>
             </div>
         </>
     );
