@@ -5,7 +5,7 @@ export const styles = {
         // styles for the `body`
         body: {
             fontFamily: 'NunitoFont , Fallback, sans-serif',
-            fontWeight: 400,
+            fontWeight: 400
         },
         // styles for the `a`
         a: {
@@ -46,7 +46,9 @@ export const colors = {
         gray: '#B8B8B8',
         blackText: '#333333',
         containerAgGridRecords: ' #646A78',
-        agGridBachground: '#EEEEEE'
+        agGridBachground: '#EEEEEE',
+        toolbarButton: '#2180C2',
+        displayOffButton: '#EDEFF4'
     },
     light: {
         header: '#1A3F59',
@@ -57,8 +59,8 @@ export const colors = {
         lightestDarkGray: '#757575',
         hoverSideBarMenu: '#0387B0',
         slightlyDesaturatedBlue: '#9792C8',
-        veryDarkBlue: "#08192E",
-        grayishBlue:  "#ECEAFD"
+        veryDarkBlue: '#08192E',
+        grayishBlue: '#ECEAFD'
     },
     dark: {
         header: '#3D3D3F',
@@ -79,6 +81,8 @@ export const colors = {
 export const spacing = {
     space: {
         2: '2px',
+        4: '4px',
+        6: '6px',
         7: '7px',
         8: '8px',
         9: '9px',
@@ -104,6 +108,9 @@ export const spacing = {
 export const sizes = {
     spacing: {
         2: '2px',
+        3: '3px',
+        4: '4px',
+        6: '6px',
         8: '8px',
         10: '10px',
         15: '15px',

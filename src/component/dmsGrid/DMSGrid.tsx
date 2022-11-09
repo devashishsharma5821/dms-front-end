@@ -25,7 +25,7 @@ var rowDataA: ICar[] = [
 const DMSGrid = () => {
     const gridRef = useRef<AgGridReact<ICar>>(null);
     const textColor = useColorModeValue('light.header', 'dark.white');
-    const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
+    const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
     const [rowData, setRowData] = useState<ICar[]>(rowDataA);
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { field: 'project' },

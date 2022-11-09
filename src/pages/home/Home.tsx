@@ -19,7 +19,7 @@ import {
     useToast,
     useColorModeValue,
     useDisclosure,
-    Drawer,
+    Drawer
 } from '@chakra-ui/react';
 import Form from '@rjsf/chakra-ui';
 import validator from '@rjsf/validator-ajv6';
@@ -28,16 +28,14 @@ import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import ModalComponent from '../../component/modalSystem/modal';
 let config = {
-    "title": "Demand Modeling Studio",
-    "isManage": true,
-    "transformerMenu" : [
+    title: 'Demand Modeling Studio',
+    isManage: true,
+    transformerMenu: [
         {
-            "name": "Input Output",
-            "order": 1
+            name: 'Input Output',
+            order: 1
         },
-        {
-
-        }
+        {}
     ]
 };
 let i18n = {};
@@ -49,9 +47,9 @@ function UserConfiguration() {
     if (data?.userConfiguration?.user?.espUserToken) {
         localStorage['espUserToken'] = data.userConfiguration.user.espUserToken ?? '';
     }
-    if(data?.userConfiguration?.user?.applications) {
+    if (data?.userConfiguration?.user?.applications) {
         const dmsApplicationConfiguration = data?.userConfiguration?.user?.applications.filter((app: any) => {
-            return app.applicationName === "dms";
+            return app.applicationName === 'dms';
         });
         config = dmsApplicationConfiguration[0].configJson;
         i18n = dmsApplicationConfiguration[0].i18n;
@@ -66,19 +64,19 @@ const HomePage = () => {
     const btnRef: any = React.useRef();
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
-    const toast = useToast()
-    const statuses = ['success', 'error', 'warning', 'info']
-    const [ schema ] = React.useState<JSONSchema7>({
-        "title": "Widgets",
-        "type": "object",
-        "properties": {
-            "stringFormats": {
-                "type": "object",
-                "title": "String formats",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "format": "email"
+    const toast = useToast();
+    const statuses = ['success', 'error', 'warning', 'info'];
+    const [schema] = React.useState<JSONSchema7>({
+        title: 'Widgets',
+        type: 'object',
+        properties: {
+            stringFormats: {
+                type: 'object',
+                title: 'String formats',
+                properties: {
+                    email: {
+                        type: 'string',
+                        format: 'email'
                     },
                     uri: {
                         type: 'string',
@@ -251,16 +249,31 @@ const HomePage = () => {
     }, []);
     const toggleLeftMenu = () => {
         setLeftMenuOpen(!leftMenuOpen);
-    }
+    };
     return (
         <>
-            <Box height="100%" width="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={"30"}>
+            <Box height="100%" width="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={'30'}>
                 <Box textAlign="center">
-                    <IconButton aria-label="expand" minWidth="0" border="1px" width="24px" height="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} background={bgColor} _active={{background:bgColor}}  _hover={{background:bgColor}} icon={
-                    <DoubleAngleRightIcon/>} mt={17} onClick={toggleLeftMenu} />
+                    <IconButton
+                        aria-label="expand"
+                        minWidth="0"
+                        border="1px"
+                        width="24px"
+                        height="24px"
+                        borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
+                        background={bgColor}
+                        _active={{ background: bgColor }}
+                        _hover={{ background: bgColor }}
+                        icon={<DoubleAngleRightIcon />}
+                        mt={17}
+                        onClick={toggleLeftMenu}
+                    />
+                </Box>
+                <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={75} textAlign="right">
+                    <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
+                        Transformers
                     </Box>
-                <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={75} textAlign="right" >
-                    <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">Transformers</Box></Box>
+                </Box>
             </Box>
             <div className="wrap">
                 <a>Welcome To Home Page</a>
@@ -312,8 +325,10 @@ const HomePage = () => {
                         <ModalComponent />
                     </WrapItem>
                     <WrapItem>
-                        <Tooltip hasArrow label='Tooltip Example'>
-                            <Button variant="solid" bg={useColorModeValue('light.button', 'dark.button')}>ToolTip Example</Button>
+                        <Tooltip hasArrow label="Tooltip Example">
+                            <Button variant="solid" bg={useColorModeValue('light.button', 'dark.button')}>
+                                ToolTip Example
+                            </Button>
                         </Tooltip>
                     </WrapItem>
                 </Wrap>
