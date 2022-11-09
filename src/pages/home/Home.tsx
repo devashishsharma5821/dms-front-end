@@ -27,6 +27,7 @@ import type { JSONSchema7 } from 'json-schema';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import ModalComponent from '../../component/modalSystem/modal';
+import Toolbar from '../../component/toolbar/Toolbar';
 let config = {
     title: 'Demand Modeling Studio',
     isManage: true,
@@ -276,6 +277,7 @@ const HomePage = () => {
                 </Box>
             </Box>
             <div className="wrap">
+                <Toolbar></Toolbar>
                 <a>Welcome To Home Page</a>
                 <br></br>
                 <UserConfiguration />
