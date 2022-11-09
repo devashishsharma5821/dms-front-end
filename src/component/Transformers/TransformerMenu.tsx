@@ -1,7 +1,7 @@
-import {Box, Button, useColorModeValue, Divider, Flex, Center } from "@chakra-ui/react";
+import { Box, Button, useColorModeValue, Divider, Flex, Center } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react-use-disclosure";
 import { useRef, useState, useEffect } from "react";
-import { useApolloClient} from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import './TransformerMenu.scss'
 
 import {
@@ -26,9 +26,10 @@ import { TransformerDetail } from "../../models/transformerDetail";
 import { TransformerListResponse } from "../../models/transformerListResponse";
 import { getTransformersData } from "../../query";
 import SearchComponent from "../search/SearchComponent";
+import client from "../../apollo-client";
 
 const TransformerMenu = (props: any) => {
-const [transformarsData, setTransformarsData] = useState(new Array<TransformerDetail>());
+    const [transformarsData, setTransformarsData] = useState(new Array<TransformerDetail>());
     const [formatedTransformersData, setFormatedTransformersData] = useState({});
     const client = useApolloClient();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,58 +39,91 @@ const [transformarsData, setTransformarsData] = useState(new Array<TransformerDe
     const accordianItemBorder = useColorModeValue('light.slightlyDesaturatedBlue', 'dark.lightGrayishBlue');
     const accordianTextColor = useColorModeValue('light.veryDarkBlue', 'dark.veryDarkGray');
     const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
-    
-/*
- * for grouping transformers data by category and returning formatted object
-*/
+
+    /*
+     * for grouping transformers data by category and returning formatted object
+    */
     const formatTransformerData = (transformerdata: any) => {
-      return  transformerdata.reduce((transformersList:any, currentObj:any)=>{
-             (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(currentObj);
-                return transformersList;
-        },{});
+        return transformerdata.reduce((transformersList: any, currentObj: any) => {
+            (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(currentObj);
+            return transformersList;
+        }, {});
     }
 
-/*
- * formatting transformers data and updating it to formatedTransformersData
-*/
-   
-    const updateTransformersData = (transformerdata:TransformerDetail[])=>{
+    /*
+     * formatting transformers data and updating it to formatedTransformersData
+    */
+
+    const updateTransformersData = (transformerdata: TransformerDetail[]) => {
         const formatedtranformerData = formatTransformerData(transformerdata);
         setFormatedTransformersData(formatedtranformerData);
     }
-/*
-* filtering Transformers data by User Search Input
- */   
-    const onSearchChange = (searchVal:string) => {
+    /*
+    * filtering Transformers data by User Search Input
+     */
+    const onSearchChange = (searchVal: string) => {
         let searchResults = [];
-        if(searchVal && searchVal !==""){
-             searchResults = transformarsData.filter((currentTransformer:any) => currentTransformer.name?.toLocaleLowerCase().indexOf(searchVal?.toLocaleLowerCase()) > -1);
-         
-        }else{
+        if (searchVal && searchVal !== "") {
+            searchResults = transformarsData.filter((currentTransformer: any) => currentTransformer.name?.toLocaleLowerCase().indexOf(searchVal?.toLocaleLowerCase()) > -1);
+
+        } else {
             searchResults = [...transformarsData]
         }
         const formatedData = formatTransformerData(searchResults);
         setFormatedTransformersData(formatedData);
-       
+
     }
-    
+
+    var elementObj: any = {};
+
+    const clickElement = (i: any) => {
+        console.log("count=", i);
+        elementObj[i].click();
+    }
+
+    const toggleAccordian = (expandAll: boolean) => {
+
+        const TransformersAccordions: any[] = Array.from(
+            document.getElementsByClassName("chakra-accordion__button")
+            // document.querySelectorAll("chakra - accordion__item")
+        );
+        console.log("TransformersAccordions=" + TransformersAccordions);
+        for (let i = 0; i < TransformersAccordions.length; i++) {
+            ((index) => TransformersAccordions[index].click())(i);
+        }
+
+        // chakraAccordionButtons.map((element: any) => {
+        //   element.setAttribute("aria-expanded", expandAll.toString());
+        //   element.Click();
+        // });
+
+        // TransformersAccordions.forEach(button => {
+        //     button.click();
+        //     // button.addEventListener('click', function handleClick(event: any) {
+        //     //     console.log('button clicked');
+        //     //     console.log(event);
+        //     //     console.log(event.target);
+        //     // });
+        // })
+    };
+
     /*
- * Query to  get transformers data
-*/
-    
+    * Query to  get transformers data
+    */
+
     useEffect(() => {
         const { GET_TRANSFORMERS } = getTransformersData();
         client.query<TransformerListResponse<Array<TransformerDetail>>>({
-                query: GET_TRANSFORMERS
-            })
+            query: GET_TRANSFORMERS
+        })
             .then((response) => {
                 let transformerdata = [...response.data.dmsTransformers];
                 setTransformarsData(transformerdata);
                 updateTransformersData(transformerdata)
             })
             .catch((err) => console.error(err));
-    },[])
-    
+    }, [])
+
     useEffect(() => {
         props.isLeftMenuOpen ? onOpen() : onClose();
     }, [props.isLeftMenuOpen]);
@@ -102,74 +136,75 @@ const [transformarsData, setTransformarsData] = useState(new Array<TransformerDe
             <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
                 <DrawerOverlay bg="transparent" />
                 <DrawerContent bg={themeBg} mt="44" ml="54" w="292px" maxWidth="292px">
-                    <DrawerCloseButton bg={panelCloseBtnBg} _hover={{background:panelCloseBtnBg}} border="px" mt={2.5} mr={2.5} w="24px" h="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}>
+                    <DrawerCloseButton bg={panelCloseBtnBg} _hover={{ background: panelCloseBtnBg }} border="px" mt={2.5} mr={2.5} w="24px" h="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}>
                         <DoubleAngleLeftIcon></DoubleAngleLeftIcon>
                     </DrawerCloseButton>
                     <DrawerHeader >Transformers</DrawerHeader>
 
                     <DrawerBody paddingStart='var(--chakra-space-11)' paddingEnd='var(--chakra-space-11)' >
-                        <SearchComponent searchChange={(val:string)=>{onSearchChange(val)}}/>
+                        <SearchComponent searchChange={(val: string) => { onSearchChange(val) }} />
 
                         <Flex marginTop={18}>
-                            <Box paddingLeft={11} paddingRight={10} color={useColorModeValue('light.blue', 'dark.gray')} fontWeight="bold" textDecoration="none" cursor="pointer">
+                            <Box paddingLeft={11} paddingRight={10} color={useColorModeValue('light.blue', 'dark.gray')} fontWeight="bold" textDecoration="none" cursor="pointer" onClick={() => { toggleAccordian(true) }}>
                                 Expand All
                             </Box>
-                            <Center height="38"  h={5} background={useColorModeValue('light.blue', 'dark.gray')}>
+                            <Center height="38" h={5} background={useColorModeValue('light.blue', 'dark.gray')}>
                                 <Divider orientation="vertical" />
                             </Center>
-                            <Box pl={12} pr={57}  color={useColorModeValue('light.blue', 'dark.gray')} fontWeight="bold" cursor="pointer">
+                            <Box pl={12} pr={57} color={useColorModeValue('light.blue', 'dark.gray')} fontWeight="bold" cursor="pointer" onClick={() => { toggleAccordian(false) }}>
                                 Collapse All
                             </Box>
                         </Flex>
                         <Accordion allowMultiple mt={22}>
-                            {Object.entries(formatedTransformersData).map((transformerCategoryList: any)=>{
+                            {Object.entries(formatedTransformersData).map((transformerCategoryList: any) => {
                                 return (
-                                <AccordionItem border="none" _last={{ border: 'none' }} borderStyle="none" mb='22'>
-                                {({ isExpanded }) => (
-                                    <>
-                                        <h2 style={{ border: 'none', borderStyle: 'none' }}>
-                                            <AccordionButton>
-                                                {isExpanded ? (
-                                                    <DownDeltaIcon />
-                                                ) : (
-                                                    <RightDeltaIcon />
-                                                )}
-                                                <Box display='flex' justifyContent="center"  fontWeight={600}  alignItems="center" ml="10">
-                                                    <Box><TransformersIcon /></Box>
-                                                    <Box flex="1" textAlign="left" ml='10'>
+                                    <AccordionItem border="none" _last={{ border: 'none' }} borderStyle="none" mb='22'>
+                                        {({ isExpanded }) => (
+                                            <>
+                                                <h2 style={{ border: 'none', borderStyle: 'none' }}>
+                                                    <AccordionButton>
+                                                        {isExpanded ? (
+                                                            <DownDeltaIcon />
+                                                        ) : (
+                                                            <RightDeltaIcon />
+                                                        )}
+                                                        <Box display='flex' justifyContent="center" fontWeight={600} alignItems="center" ml="10">
+                                                            <Box><TransformersIcon /></Box>
+                                                            <Box flex="1" textAlign="left" ml='10'>
 
-                                                   { transformerCategoryList[0] }
-                                                    </Box></Box>
+                                                                {transformerCategoryList[0]}
+                                                            </Box></Box>
 
 
-                                            </AccordionButton>
-                                        </h2>
-                                        <AccordionPanel pb={4} ml="9" mt="10" paddingStart="0" paddingEnd="0">
-                                            <List spacing={3}>
-                                                {[...transformerCategoryList[1]].map((item2:TransformerDetail,index)=>{
-                                                    return(
-                                                <ListItem id={'list-'+index}>
-                                                    <Button leftIcon={<TransformersIcon/>} h="52px" boxShadow="0px 3px 3px rgba(0, 0, 0, 0.08);" borderRadius="4px" 
-                                                    justifyContent="flex-start" textAlign="left" fontFamily="Nunito" borderColor={accordianItemBorder} bg={accordianItemBg} 
-                                                    _hover={{background:accordianItemBg}} color={accordianTextColor} colorScheme='teal' variant='outline' width='257px'>{item2.name}</Button>
-                                                </ListItem>
-                                                    )
-                                                })}
-                                                
-                                                
-                                            </List>
-                                        </AccordionPanel>
-                                    </>
-                                )}
-                            </AccordionItem>
-                            )
+                                                    </AccordionButton>
+                                                </h2>
+                                                <AccordionPanel pb={4} ml="9" mt="10" paddingStart="0" paddingEnd="0">
+                                                    <List spacing={3}>
+                                                        {[...transformerCategoryList[1]].map((item2: TransformerDetail, index) => {
+                                                            return (
+                                                                <ListItem id={'list-' + index}>
+                                                                    <Button leftIcon={<TransformersIcon />} h="52px" boxShadow="0px 3px 3px rgba(0, 0, 0, 0.08);" borderRadius="4px"
+                                                                        justifyContent="flex-start" textAlign="left" fontFamily="Nunito" borderColor={accordianItemBorder} bg={accordianItemBg}
+                                                                        _hover={{ background: accordianItemBg }} color={accordianTextColor} colorScheme='teal' variant='outline' width='257px'>{item2.name}</Button>
+                                                                </ListItem>
+                                                            )
+                                                        })}
+
+
+                                                    </List>
+                                                </AccordionPanel>
+                                            </>
+                                        )
+                                        }
+                                    </AccordionItem>
+                                )
                             })}
-  
+
                         </Accordion>
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>
-        </div>
+        </div >
     );
 };
 
