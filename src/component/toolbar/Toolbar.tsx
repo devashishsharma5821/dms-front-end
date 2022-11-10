@@ -1,64 +1,15 @@
 import React from 'react';
-import { Box, Flex, Text, useColorModeValue, Button, Center, Divider, LightMode, Stack, Switch } from '@chakra-ui/react';
-import Settings from '../../assets/icons/Settings';
-import DownArrowToolbar from '../../assets/DownArrowToolbar';
-import Output from '../../assets/icons/Output';
+import { Box, Flex, Text, useColorModeValue, Button, Center, Divider, Stack, Switch } from '@chakra-ui/react';
 import RunArrow from '../../assets/icons/RunArrow';
-import VariableToolbar from '../../assets/icons/VariableToolbar';
-import SaveAs from '../../assets/icons/SaveAs';
-import MoreIconToolbar from '../../assets/icons/MoreIconToolbar';
-import DeployedIcon from '../../assets/icons/DeployedIcon';
-import DeployPipelineButton from '../../assets/icons/DeployPipelineButton';
+import toolbarDataIcons from '../../models/toolbarData';
 
-const ToolbarIcons = [
-    {
-        component: <Settings />,
-        name: 'Setting',
-        type: 'icon'
-    },
-    {
-        component: <Output />,
-        name: 'Output',
-        type: 'icon'
-    },
-    {
-        component: <VariableToolbar />,
-        name: 'Variables',
-        type: 'icon'
-    },
-    {
-        component: <SaveAs />,
-        name: 'SaveAs',
-        type: 'icon'
-    },
-    { component: <MoreIconToolbar />, name: 'Run', type: 'moreIcon' },
-
-    {
-        name: 'Comments',
-        type: 'switch'
-    },
-
-    {
-        name: 'Run',
-        type: 'button',
-        disabled: false
-    },
-    { component: <DeployPipelineButton />, name: 'Deploy Pipeline', type: 'pipelineButton', disabled: true },
-    { component: <DeployedIcon />, name: 'my-compute1', type: 'deployedIcon' },
-    {
-        gb: '8 GB',
-        core: '4 Core',
-        type: 'serverInfo'
-    },
-    { component: <DownArrowToolbar />, name: 'downArrow', type: 'downArrow' }
-];
 const Toolbar = () => {
     const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'56px'} pl={'4'} bg={themebg}>
             <Center flex="2" mr={12}>
                 <Center>
-                    {ToolbarIcons.map((sections, sectionIndex) => {
+                    {toolbarDataIcons.map((sections, sectionIndex) => {
                         return (
                             <>
                                 {sections.type === 'icon' && (
@@ -113,7 +64,7 @@ const Toolbar = () => {
                                         <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
                                             <Text width={'10'}>{sections.gb}</Text>
                                             <Divider orientation="vertical" mr={'8'} height={'16px'} />
-                                            <Text width={'10'}>{sections.core}</Text>
+                                            <Text width={'12'}>{sections.core}</Text>
                                         </Center>
                                     </>
                                 )}

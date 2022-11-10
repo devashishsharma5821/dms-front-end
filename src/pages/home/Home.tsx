@@ -276,8 +276,11 @@ const HomePage = () => {
                     </Box>
                 </Box>
             </Box>
+            <Box width={'1300px'}>
+                {' '}
+                <Toolbar />
+            </Box>
             <div className="wrap">
-                <Toolbar></Toolbar>
                 <a>Welcome To Home Page</a>
                 <br></br>
                 <UserConfiguration />
