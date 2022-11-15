@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import { useMsal, useAccount } from '@azure/msal-react';
+import { useMsal, useAccount, useIsAuthenticated  } from '@azure/msal-react';
 import { EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { protectedResources } from './authConfig';
-import { AppRouter } from './app-router';
+
+import UserConfiguration  from './user-config';
 
 const App = () => {
     const { instance, accounts, inProgress } = useMsal();
     const account = useAccount(accounts[0] || {});
+    const isAuthenticated = useIsAuthenticated();
     useEffect(() => {
         if (account && inProgress === 'none') {
             instance
@@ -54,7 +56,10 @@ const App = () => {
         };
     }, [instance]);
 
-    return <AppRouter></AppRouter>;
+   
+    return <>
+        { isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span> }
+    </>
 };
 
 export default App;

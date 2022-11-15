@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { getUserConfig, wsconnect } from '../../query';
-import { WhiteSettingIcon } from '../../assets/icons';
+import { wsconnect } from '../../query';
 import './home.scss';
 import {
     Button,
@@ -28,40 +26,14 @@ import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import ModalComponent from '../../component/modalSystem/modal';
 import Toolbar from '../../component/toolbar/Toolbar';
-let config = {
-    title: 'Demand Modeling Studio',
-    isManage: true,
-    transformerMenu: [
-        {
-            name: 'Input Output',
-            order: 1
-        },
-        {}
-    ]
-};
-let i18n = {};
-function UserConfiguration() {
-    const { GET_USER_CONFIGURATION } = getUserConfig();
-    const { loading, error, data } = useQuery(GET_USER_CONFIGURATION);
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error : `${error.toString()}`</p>;
-    if (data?.userConfiguration?.user?.espUserToken) {
-        localStorage['espUserToken'] = data.userConfiguration.user.espUserToken ?? '';
-    }
-    if (data?.userConfiguration?.user?.applications) {
-        const dmsApplicationConfiguration = data?.userConfiguration?.user?.applications.filter((app: any) => {
-            return app.applicationName === 'dms';
-        });
-        config = dmsApplicationConfiguration[0].configJson;
-        i18n = dmsApplicationConfiguration[0].i18n;
-    }
-
-    return <span></span>;
-}
+import useAppStore from '../../store';
 
 const HomePage = () => {
     const [message, setMessage] = useState('Status');
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {i18n, config } = useAppStore();
+    //console.log("i18n: ", i18n);
+    //console.log("config: ", config);
     const btnRef: any = React.useRef();
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
@@ -283,7 +255,6 @@ const HomePage = () => {
             <div className="wrap">
                 <a>Welcome To Home Page</a>
                 <br></br>
-                <UserConfiguration />
                 {message}
                 <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
                 <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
