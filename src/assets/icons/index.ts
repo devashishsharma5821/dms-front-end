@@ -6,7 +6,7 @@ export { WhiteDatasetIcon } from './WhiteDatasetIcon';
 export { WhiteNotebookIcon } from './WhiteNotebookIcon';
 export { WhiteArtifactsIcon } from './WhiteArtifactsIcon';
 export { WhiteWorkflowsIcon } from './WhiteWorkflowsIcon';
-export { WhiteDocumentationIcon } from './WhiteDocumentationIcon';
+export { PipelineIcon } from './PipelineIcon';
 export { WhiteResourceCenterIcon } from './WhiteResourceCenterIcon';
 export { WhiteInfoIcon } from './WhiteInfoIcon';
 export { WhiteRecentIcon } from './WhiteRecentIcon';

@@ -9,12 +9,12 @@ import {
     WhiteNotebookIcon,
     WhiteArtifactsIcon,
     WhiteWorkflowsIcon,
-    WhiteDocumentationIcon,
-    WhiteResourceCenterIcon,
+    PipelineIcon,
     WhiteInfoIcon,
     WhiteSettingIcon,
     WhiteFluentIcon
 } from '../assets/icons';
+
 const sideBarMenuIcons = [
     {
         section: [
@@ -35,12 +35,21 @@ const sideBarMenuIcons = [
             },
             {
                 icon: <WhiteExperiment />,
-                iconName: 'Experiment',
+                iconName: 'Explorer',
+                route: '/notfound'
+            }
+        ]
+    },
+    {
+        section: [
+            {
+                icon: <WhiteCollection />,
+                iconName: 'Projects',
                 route: '/notfound'
             },
             {
-                icon: <WhiteCollection />,
-                iconName: 'Collection',
+                icon: <PipelineIcon />,
+                iconName: 'Pipeline',
                 route: '/notfound'
             },
             {
@@ -64,7 +73,7 @@ const sideBarMenuIcons = [
             },
             {
                 icon: <WhiteArtifactsIcon />,
-                iconName: 'Artifacts',
+                iconName: 'Artifact Store',
                 route: '/notfound'
             },
             {
@@ -77,23 +86,13 @@ const sideBarMenuIcons = [
     {
         section: [
             {
-                icon: <WhiteDocumentationIcon />,
-                iconName: 'Documentation',
-                route: '/notfound'
-            },
-            {
-                icon: <WhiteResourceCenterIcon />,
-                iconName: 'ResourceCenter',
-                route: '/notfound'
-            },
-            {
                 icon: <WhiteInfoIcon />,
-                iconName: 'Info',
+                iconName: 'Help',
                 route: '/notfound'
             },
             {
                 icon: <WhiteSettingIcon />,
-                iconName: 'Setting',
+                iconName: 'Settings',
                 route: '/notfound'
             }
         ]
@@ -102,7 +101,7 @@ const sideBarMenuIcons = [
         section: [
             {
                 icon: <WhiteFluentIcon />,
-                iconName: 'Fluent',
+                iconName: 'Auto Expand',
                 route: '/notfound'
             }
         ]
