@@ -80,6 +80,7 @@ export const colors = {
 //spacing
 export const spacing = {
     space: {
+        0: '0px',
         2: '2px',
         4: '4px',
         6: '6px',
@@ -93,6 +94,7 @@ export const spacing = {
         15: '15px',
         16: '16px',
         17: '17px',
+        18: '18px',
         20: '20px',
         22: '22px',
         24: '24px',
