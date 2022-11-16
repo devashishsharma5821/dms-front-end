@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import Header from '../src/component/header/Header';
-import { HomePage, PageNotFound, Notebook, Compute, Project } from './pages';
+import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } from './pages';
 import { Box, Flex, Stack, useColorModeValue } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 
@@ -18,7 +18,9 @@ export const AppRouter = () => {
                         </Box>
                         <Box>
                             <Routes>
-                                <Route path="/" element={<HomePage />} />
+                                <Route path="/" element={<PageNotFound />} />
+                                <Route path="/home" element={<HomePage />} />
+                                <Route path="/experiment" element={<ExperimentsPage />} />
                                 <Route path="/notfound" element={<PageNotFound />} />
                                 <Route path="/notebook" element={<Notebook />} />
                                 <Route path="/compute" element={<Compute />} />

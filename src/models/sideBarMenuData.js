@@ -26,7 +26,7 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteHome />,
                 iconName: 'Home',
-                route: '/notfound'
+                route: '/home'
             },
             {
                 icon: <WhiteRecentIcon />,
@@ -36,7 +36,7 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteExperiment />,
                 iconName: 'Explorer',
-                route: '/notfound'
+                route: '/experiment'
             }
         ]
     },
