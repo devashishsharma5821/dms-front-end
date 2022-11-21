@@ -10,7 +10,7 @@ const Project = () => {
                 <Box fontSize={'24px'} fontWeight={700} ml={'24'} mt={'35'} mb={'24'}>
                     Project
                 </Box>
-                <Stack spacing={3}>
+                <Stack spacing={4}>
                     <Text fontSize="md" ml={'24'} noOfLines={[2]}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                         ullamco laboris nisi ut aliquip ex ea commodo consequat. <br />

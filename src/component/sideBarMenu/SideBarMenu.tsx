@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Flex, Divider, useColorModeValue, Center, VStack } from '@chakra-ui/react';
 import { Link as Routelink } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
@@ -7,6 +7,7 @@ import './style.scss';
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const [isHovering, setIsHovering] = React.useState(false);
+    const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
     const hoverIn = () => {
         setIsHovering(true);
     };
@@ -15,8 +16,8 @@ const SideBarMenu = () => {
     };
 
     return (
-        <div id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
-            <Flex className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
+        <div style={zIndexStyle} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
+            <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
                 <VStack>
                     {!isHovering && (
                         <Box ml="15" mr="15">

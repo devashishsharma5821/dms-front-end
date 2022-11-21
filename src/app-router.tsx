@@ -10,13 +10,9 @@ export const AppRouter = () => {
         <Router>
             <Suspense fallback={<div>Loading...</div>}>
                 <Header />
-                <Flex h={'95vh'} overflowY={'hidden'}>
-                    <Stack direction={'row'}>
+                <Flex overflowY={'hidden'}>
                         {/*Replace Below Box with Side Bar Component*/}
-                        <Box w={'50'} bg={useColorModeValue('light.header', 'dark.header')} zIndex="4000">
                             <SideBarMenu />
-                        </Box>
-                        <Box>
                             <Routes>
                                 <Route path="/" element={<PageNotFound />} />
                                 <Route path="/home" element={<HomePage />} />
@@ -26,8 +22,6 @@ export const AppRouter = () => {
                                 <Route path="/compute" element={<Compute />} />
                                 <Route path="/project" element={<Project />} />
                             </Routes>
-                        </Box>
-                    </Stack>
                 </Flex>
             </Suspense>
         </Router>

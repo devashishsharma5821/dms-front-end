@@ -12,6 +12,7 @@ import {
     Box,
     IconButton,
     useToast,
+    Flex,
     useColorModeValue,
     useDisclosure,
     Drawer
@@ -33,6 +34,7 @@ const ExperimentsPage = () => {
     const btnRef: any = React.useRef();
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+    const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     const [schema] = React.useState<JSONSchema7>({
         title: 'Widgets',
         type: 'object',
@@ -227,63 +229,66 @@ const ExperimentsPage = () => {
     }, [currentLang]);
     return (
         <>
-            <Box height="100%" width="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={'30'}>
-                <Box textAlign="center">
-                    <IconButton
-                        aria-label="expand"
-                        minWidth="0"
-                        border="1px"
-                        width="24px"
-                        height="24px"
-                        borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
-                        background={bgColor}
-                        _active={{ background: bgColor }}
-                        _hover={{ background: bgColor }}
-                        icon={<DoubleAngleRightIcon />}
-                        mt={17}
-                        onClick={toggleLeftMenu}
-                    />
+            <Box width={'100%'}>
+                <Box width={'100%'} height={'56px'} bg={themebg}>
+                    <Toolbar />
                 </Box>
-                <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={75} textAlign="right">
-                    <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
-                        Transformers
+                <Flex>
+                    <Box height="100%" width="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={'30'}>
+                        <Box textAlign="center">
+                            <IconButton
+                                aria-label="expand"
+                                minWidth="0"
+                                border="1px"
+                                width="24px"
+                                height="24px"
+                                borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
+                                background={bgColor}
+                                _active={{ background: bgColor }}
+                                _hover={{ background: bgColor }}
+                                icon={<DoubleAngleRightIcon />}
+                                mt={-85}
+                                onClick={toggleLeftMenu}
+                            />
+                        </Box>
+                        <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={30} textAlign="right">
+                            <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
+                                Transformers
+                            </Box>
+                        </Box>
+                        <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
                     </Box>
-                </Box>
-            </Box>
-            <Box width={'1300px'}>
-                {' '}
-                <Toolbar />
-            </Box>
-            <div className="wrap">
-                <a>{translationToUse[config['title']]}</a>
-                <br></br>
-                {message}
-                <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
-                <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
-                    Open
-                </Button>
-                <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>
-                    Change Translation
-                </Button>
-                <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
-                    <DrawerOverlay />
-                    <DrawerContent mt="44px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
-                        <DrawerCloseButton />
-                        <DrawerHeader>Example React Schema Form</DrawerHeader>
+                    <div className="wrap">
+                        <a>{translationToUse[config['title']]}</a>
+                        <br></br>
+                        {message}
+                        <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
+                            Open
+                        </Button>
+                        <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>
+                            Change Translation
+                        </Button>
+                        <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+                            <DrawerOverlay />
+                            <DrawerContent mt="44px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+                                <DrawerCloseButton />
+                                <DrawerHeader>Example React Schema Form</DrawerHeader>
 
-                        <DrawerBody>
-                            <Form schema={schema} formData={formData} uiSchema={layout} validator={validator} liveValidate />
-                        </DrawerBody>
+                                <DrawerBody>
+                                    <Form schema={schema} formData={formData} uiSchema={layout} validator={validator} liveValidate />
+                                </DrawerBody>
 
-                        <DrawerFooter>
-                            <Button variant="outline" mr={3} onClick={onClose}>
-                                Cancel
-                            </Button>
-                            <Button colorScheme="blue">Save</Button>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </Drawer>
-            </div>
+                                <DrawerFooter>
+                                    <Button variant="outline" mr={3} onClick={onClose}>
+                                        Cancel
+                                    </Button>
+                                    <Button colorScheme="blue">Save</Button>
+                                </DrawerFooter>
+                            </DrawerContent>
+                        </Drawer>
+                    </div>
+                </Flex>
+            </Box>
         </>
     );
 };
