@@ -40,14 +40,16 @@ const Header = () => {
                     </Button>
                 </Box>
                 <Menu>
-                    <MenuButton>
+                    <MenuButton height={'36px'}>
                         <Avatar borderRadius="full" boxSize="34px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
-                    <MenuList px={1} py={1} minWidth="10">
-                        <MenuItem>Setting</MenuItem>
+                    <MenuList borderRadius={'0'}>
+                        <MenuItem>My Profile</MenuItem>
+                        <MenuItem>Settings</MenuItem>
+                        <MenuItem>Signout</MenuItem>
                     </MenuList>
                 </Menu>
-                <Box color={'default.whiteText'} pl={'2'}>
+                <Box color={'default.whiteText'} >
                     {' '}
                     <DownArrow />
                 </Box>
