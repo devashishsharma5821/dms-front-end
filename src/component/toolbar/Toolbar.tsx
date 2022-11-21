@@ -1,10 +1,9 @@
 import React from 'react';
-import { Box, Flex, Text, useColorModeValue, Button, Center, Divider, Stack, Switch, Heading, Spacer } from '@chakra-ui/react';
+import { Box, Flex, Text, Button, Center, Divider, Stack, Switch, Spacer } from '@chakra-ui/react';
 import RunArrow from '../../assets/icons/RunArrow';
 import toolbarDataIcons from '../../models/toolbarData';
 
 const Toolbar = () => {
-    const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     return (
             <Flex height={'56px'} minWidth='max-content' alignItems='center' gap='2' pl={35}>
                     {toolbarDataIcons.section1.map((sections, sectionIndex) => {
