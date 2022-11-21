@@ -27,7 +27,9 @@ import useAppStore from '../../store';
 const ExperimentsPage = () => {
     const [message, setMessage] = useState('Status');
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const {i18n, config } = useAppStore();
+    const {i18n,  config } = useAppStore();
+    const [currentLang, setCurrentLang] = useState('en_US');
+    const [translationToUse, setTranslationToUse] = useState(i18n[currentLang].translations);
     const btnRef: any = React.useRef();
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
@@ -215,6 +217,14 @@ const ExperimentsPage = () => {
     const toggleLeftMenu = () => {
         setLeftMenuOpen(!leftMenuOpen);
     };
+    const changeTranslation = () => {
+
+        let language = (currentLang === 'en_US') ?  'en_SP' :  'en_US';
+       setCurrentLang(language);
+    };
+    useEffect(() => {
+        setTranslationToUse(i18n[currentLang].translations);
+    }, [currentLang]);
     return (
         <>
             <Box height="100%" width="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={'30'}>
@@ -245,12 +255,15 @@ const ExperimentsPage = () => {
                 <Toolbar />
             </Box>
             <div className="wrap">
-                <a>Welcome To Home Page</a>
+                <a>{translationToUse[config['title']]}</a>
                 <br></br>
                 {message}
                 <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
                 <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
                     Open
+                </Button>
+                <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>
+                    Change Translation
                 </Button>
                 <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                     <DrawerOverlay />
