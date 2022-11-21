@@ -1,8 +1,8 @@
 import create from 'zustand';
 
 interface AppState {
-  i18n: {},
-  config: {},
+  i18n: any,
+  config: any,
   updateI18N: (translation: {}) => void,
   updateAppConfig: (config: {}) => void
 }

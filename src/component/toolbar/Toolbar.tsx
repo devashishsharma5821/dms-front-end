@@ -1,15 +1,12 @@
 import React from 'react';
-import { Box, Flex, Text, useColorModeValue, Button, Center, Divider, Stack, Switch } from '@chakra-ui/react';
+import { Box, Flex, Text, Button, Center, Divider, Stack, Switch, Spacer } from '@chakra-ui/react';
 import RunArrow from '../../assets/icons/RunArrow';
 import toolbarDataIcons from '../../models/toolbarData';
 
 const Toolbar = () => {
-    const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     return (
-        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'56px'} pl={'4'} bg={themebg}>
-            <Center flex="2" mr={12}>
-                <Center>
-                    {toolbarDataIcons.map((sections, sectionIndex) => {
+            <Flex height={'56px'} minWidth='max-content' alignItems='center' gap='2' pl={35}>
+                    {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                         return (
                             <>
                                 {sections.type === 'icon' && (
@@ -49,38 +46,45 @@ const Toolbar = () => {
                                         </Button>
                                     </>
                                 )}
-                                {sections.type === 'deployedIcon' && (
-                                    <>
-                                        {' '}
-                                        <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
-                                        <Center>
-                                            <Box mr={'8'}>{sections.component}</Box>
-                                            <Box width={'100px'}>{sections.name}</Box>
-                                        </Center>
-                                    </>
-                                )}
-                                {sections.type === 'serverInfo' && (
-                                    <>
-                                        <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
-                                            <Text width={'10'}>{sections.gb}</Text>
-                                            <Divider orientation="vertical" mr={'8'} height={'16px'} />
-                                            <Text width={'12'}>{sections.core}</Text>
-                                        </Center>
-                                    </>
-                                )}
-                                {sections.type === 'downArrow' && (
-                                    <>
-                                        <Center flex="2" mr={5} justifyContent={'flex-end'}>
-                                            <Box pl={'2'}>{sections.component}</Box>
-                                        </Center>
-                                    </>
-                                )}
                             </>
                         );
                     })}
-                </Center>
-            </Center>
-        </Flex>
+                <Spacer />
+                    <Flex height={'56px'} gap='2'>
+                        {toolbarDataIcons.section2.map((sections, sectionIndex) => {
+                            return (
+                                <Center>
+                                    {sections.type === 'deployedIcon' && (
+                                        <>
+                                            {' '}
+                                            <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
+                                            <Center>
+                                                <Box mr={'8'}>{sections.component}</Box>
+                                                <Box width={'100px'}>{sections.name}</Box>
+                                            </Center>
+                                        </>
+                                    )}
+                                    {sections.type === 'serverInfo' && (
+                                        <>
+                                            <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
+                                                <Text width={'10'}>{sections.gb}</Text>
+                                                <Divider orientation="vertical" mr={'8'} height={'16px'} />
+                                                <Text width={'12'}>{sections.core}</Text>
+                                            </Center>
+                                        </>
+                                    )}
+                                    {sections.type === 'downArrow' && (
+                                        <>
+                                            <Center flex="2" mr={5} justifyContent={'flex-end'}>
+                                                <Box pl={'2'}>{sections.component}</Box>
+                                            </Center>
+                                        </>
+                                    )}
+                                </Center>
+                            );
+                        })}
+                        </Flex>
+            </Flex>
     );
 };
 
