@@ -48,7 +48,9 @@ export const colors = {
         containerAgGridRecords: ' #646A78',
         agGridBachground: '#EEEEEE',
         toolbarButton: '#2180C2',
-        displayOffButton: '#EDEFF4'
+        displayOffButton: '#EDEFF4',
+        mouseHOverForm:'rgba(3, 135, 176, 0.1)',
+        textColorMenu:'#111111'
     },
     light: {
         header: '#1A3F59',
@@ -126,3 +128,4 @@ export const sizes = {
         54: '54px'
     }
 };
+export default colors;
