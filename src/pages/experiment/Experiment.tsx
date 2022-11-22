@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { wsconnect } from '../../query';
 import './experiment.scss';
+import { dia, g, linkTools, shapes, ui } from '@antuit/rappid-v1';
 import {
     Button,
     DrawerBody,
@@ -28,8 +29,9 @@ const ExperimentsPage = () => {
     const [message, setMessage] = useState('Status');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {i18n,  config } = useAppStore();
+    const canvas: any = useRef(null);
     const [currentLang, setCurrentLang] = useState('en_US');
-    const [translationToUse, setTranslationToUse] = useState(i18n[currentLang].translations);
+    const [translationToUse, setTranslationToUse] = useState(i18n.translations);
     const btnRef: any = React.useRef();
     const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
@@ -224,8 +226,95 @@ const ExperimentsPage = () => {
        setCurrentLang(language);
     };
     useEffect(() => {
-        setTranslationToUse(i18n[currentLang].translations);
+        setTranslationToUse(i18n.translations);
     }, [currentLang]);
+
+    useEffect(() => {
+        const graph = new dia.Graph({}, { cellNamespace: shapes });
+        const paper = new dia.Paper({
+            model: graph,
+            background: {
+                color: '#F8F9FA',
+            },
+            width: 200,
+            height: 200,
+            gridSize: 1,
+            interactive: { linkMove: false },
+            frozen: true,
+            async: true,
+            sorting: dia.Paper.sorting.APPROX,
+            cellViewNamespace: shapes,
+            defaultLink: new dia.Link({
+                attrs: { ".marker-target": { d: "M 10 0 L 0 5 L 10 10 z" } }
+            }),
+            validateConnection: function(
+                cellViewS,
+                magnetS,
+                cellViewT,
+                magnetT,
+                end,
+                linkView
+            ) {
+                // Prevent loop linking
+                return magnetS !== magnetT;
+            },
+            // Enable link snapping within 75px lookup radius
+            snapLinks: { radius: 150 }
+        });
+
+        const scroller = new ui.PaperScroller({
+            paper,
+            autoResizePaper: true,
+            scrollWhileDragging: true,
+            cursor: 'grab'
+        });
+
+        canvas.current.appendChild(scroller.el);
+        scroller.render().center();
+        const m1 = new shapes.devs.Model({
+            position: { x: 50, y: 50 },
+            size: { width: 90, height: 90 },
+            inPorts: ["in1", "in2"],
+            outPorts: ["out"],
+            ports: {
+                groups: {
+                    in: {
+                        attrs: {
+                            ".port-body": {
+                                fill: "#16A085",
+                                magnet: "passive"
+                            }
+                        }
+                    },
+                    out: {
+                        attrs: {
+                            ".port-body": {
+                                fill: "#E74C3C"
+                            }
+                        }
+                    }
+                }
+            },
+            attrs: {
+                ".label": { text: "Model", "ref-x": 0.5, "ref-y": 0.2 },
+                rect: { fill: "#2ECC71" }
+            }
+        });
+        graph.addCell(m1);
+
+        const m2 = m1.clone();
+        m2.translate(300, 0);
+        graph.addCell(m2);
+        m2.attr(".label/text", "Model 2");
+        paper.unfreeze();
+
+        return () => {
+            scroller.remove();
+            paper.remove();
+            paper.fitToContent();
+        };
+
+    }, []);
     return (
         <>
             <Box width={'100%'}>
@@ -257,35 +346,36 @@ const ExperimentsPage = () => {
                         </Box>
                         <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
                     </Box>
-                    <div className="wrap">
-                        <a>{translationToUse[config['title']]}</a>
-                        <br></br>
-                        {message}
-                        <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
-                            Open
-                        </Button>
-                        <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>
-                            Change Translation
-                        </Button>
-                        <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
-                            <DrawerOverlay />
-                            <DrawerContent mt="44px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
-                                <DrawerCloseButton />
-                                <DrawerHeader>Example React Schema Form</DrawerHeader>
+                    <Box>
+                        <div className="canvas" ref={canvas}/>
+                        {/*<a>{translationToUse[config['title']]}</a>*/}
+                        {/*<br></br>*/}
+                        {/*{message}*/}
+                        {/*<Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>*/}
+                        {/*    Open*/}
+                        {/*</Button>*/}
+                        {/*<Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>*/}
+                        {/*    Change Translation*/}
+                        {/*</Button>*/}
+                        {/*<Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>*/}
+                        {/*    <DrawerOverlay />*/}
+                        {/*    <DrawerContent mt="44px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>*/}
+                        {/*        <DrawerCloseButton />*/}
+                        {/*        <DrawerHeader>Example React Schema Form</DrawerHeader>*/}
 
-                                <DrawerBody>
-                                    <Form schema={schema} formData={formData} uiSchema={layout} validator={validator} liveValidate />
-                                </DrawerBody>
+                        {/*        <DrawerBody>*/}
+                        {/*            <Form schema={schema} formData={formData} uiSchema={layout} validator={validator} liveValidate />*/}
+                        {/*        </DrawerBody>*/}
 
-                                <DrawerFooter>
-                                    <Button variant="outline" mr={3} onClick={onClose}>
-                                        Cancel
-                                    </Button>
-                                    <Button colorScheme="blue">Save</Button>
-                                </DrawerFooter>
-                            </DrawerContent>
-                        </Drawer>
-                    </div>
+                        {/*        <DrawerFooter>*/}
+                        {/*            <Button variant="outline" mr={3} onClick={onClose}>*/}
+                        {/*                Cancel*/}
+                        {/*            </Button>*/}
+                        {/*            <Button colorScheme="blue">Save</Button>*/}
+                        {/*        </DrawerFooter>*/}
+                        {/*    </DrawerContent>*/}
+                        {/*</Drawer>*/}
+                    </Box>
                 </Flex>
             </Box>
         </>

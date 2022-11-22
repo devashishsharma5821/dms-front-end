@@ -5,7 +5,7 @@ import toolbarDataIcons from '../../models/toolbarData';
 
 const Toolbar = () => {
     return (
-            <Flex height={'56px'} minWidth='max-content' alignItems='center' gap='2' pl={35}>
+            <Flex height={'56px'} minWidth='max-content' alignItems='center' gap='2' pl={35} pr={55}>
                     {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                         return (
                             <>
