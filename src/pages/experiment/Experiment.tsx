@@ -146,7 +146,7 @@ const ExperimentsPage = () => {
             }
         }
     });
-
+    const test = 100;
     const formData = {
         stringFormats: {
             email: 'chuck@norris.net',
@@ -236,8 +236,6 @@ const ExperimentsPage = () => {
             background: {
                 color: '#F8F9FA',
             },
-            width: 200,
-            height: 200,
             gridSize: 1,
             interactive: { linkMove: false },
             frozen: true,
@@ -307,11 +305,10 @@ const ExperimentsPage = () => {
         graph.addCell(m2);
         m2.attr(".label/text", "Model 2");
         paper.unfreeze();
-
+        paper.on('blank:pointerdown', scroller.startPanning);
         return () => {
             scroller.remove();
             paper.remove();
-            paper.fitToContent();
         };
 
     }, []);
