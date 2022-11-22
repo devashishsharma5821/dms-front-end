@@ -40,13 +40,13 @@ const Header = () => {
                     </Button>
                 </Box>
                 <Menu>
-                    <MenuButton height={'36px'}>
-                        <Avatar borderRadius="full" boxSize="34px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
+                    <MenuButton>
+                        <Avatar borderRadius="full" boxSize="32px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
-                    <MenuList borderRadius={'0px'} mr={'-18px'} mt={'-4px'} fontSize={'16'}  >
-                        <MenuItem  _hover={{ bg: "default.mouseHOverForm" }} pl={'16px'} pr={'39px'} >My Profile</MenuItem>
-                        <MenuItem _hover={{ bg: "default.mouseHOverForm" }} pl={'16px'}>Settings</MenuItem>
-                        <MenuItem _hover={{ bg: "default.mouseHOverForm" }} pl={'16px'}> Signout</MenuItem>
+                    <MenuList width={127} borderRadius={'0px'} mr={'-18px'} mt={'-4px'} fontSize={'16'}  >
+                        <MenuItem>My Profile asdflksdjflkgjklsdfjgkldjsflgjdkfljg</MenuItem>
+                        <MenuItem>Settings</MenuItem>
+                        <MenuItem> Signout</MenuItem>
                     </MenuList>
                 </Menu>
                 <Box color={'default.whiteText'} >
