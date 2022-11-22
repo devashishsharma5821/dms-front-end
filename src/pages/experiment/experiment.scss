@@ -1,8 +1,11 @@
 @import "~@antuit/rappid-v1/build/package/rappid.css";
 
 #root {
+  overflow: hidden;
+  position: relative;
   .canvas {
-    height: 100vh;
+    position: relative;
+    height: 95vh;
     width: 100vw;
 
     .joint-paper {

@@ -233,10 +233,11 @@ const ExperimentsPage = () => {
         const graph = new dia.Graph({}, { cellNamespace: shapes });
         const paper = new dia.Paper({
             model: graph,
-            background: {
-                color: '#F8F9FA',
-            },
-            gridSize: 1,
+            gridSize:           20,
+            drawGrid: true,
+            snapLinks:          { radius: 600 },
+            markAvailable:      true,
+            background:         { color: 'white' },
             interactive: { linkMove: false },
             frozen: true,
             async: true,
@@ -256,8 +257,6 @@ const ExperimentsPage = () => {
                 // Prevent loop linking
                 return magnetS !== magnetT;
             },
-            // Enable link snapping within 75px lookup radius
-            snapLinks: { radius: 150 }
         });
 
         const scroller = new ui.PaperScroller({
@@ -306,6 +305,7 @@ const ExperimentsPage = () => {
         m2.attr(".label/text", "Model 2");
         paper.unfreeze();
         paper.on('blank:pointerdown', scroller.startPanning);
+        paper.setDimensions(200, 300);
         return () => {
             scroller.remove();
             paper.remove();
@@ -343,7 +343,7 @@ const ExperimentsPage = () => {
                         </Box>
                         <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
                     </Box>
-                    <Box>
+                    <Box width={'100%'}>
                         <div className="canvas" ref={canvas}/>
                         {/*<a>{translationToUse[config['title']]}</a>*/}
                         {/*<br></br>*/}
