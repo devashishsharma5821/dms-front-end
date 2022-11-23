@@ -48,7 +48,8 @@ export const colors = {
         containerAgGridRecords: ' #646A78',
         agGridBachground: '#EEEEEE',
         toolbarButton: '#2180C2',
-        displayOffButton: '#EDEFF4'
+        displayOffButton: '#EDEFF4',
+        downArrowHeader:'#A3B4D1'
     },
     light: {
         header: '#1A3F59',
@@ -102,7 +103,8 @@ export const spacing = {
         40: '40px',
         44: '44px',
         54: '54px',
-        57: '57px'
+        57: '57px',
+        110:'110px'
     }
 };
 
@@ -123,6 +125,7 @@ export const sizes = {
         35: '35px',
         38: '38px',
         44: '44px',
-        54: '54px'
+        54: '54px',
+        110:'110px'
     }
 };

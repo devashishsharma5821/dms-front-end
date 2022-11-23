@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
-import { DownArrow, PencilIcon, LogoLight } from '../../assets/icons';
+import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 
 const Header = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -30,15 +30,33 @@ const Header = () => {
             </Center>
 
             <Center flex="3" mr={5} justifyContent={'flex-end'}>
-                <Box>
-                    {' '}
-                    <ColorModeSwitcher />
-                </Box>
-                <Box pl={'6'} pr={'6'}>
+            <Box pl={'6'} pr={'6'}>
                     <Button colorScheme="default.lightGrayHeader" variant="outline">
                         Share
                     </Button>
                 </Box>
+                <Box>
+                    {' '}
+                    <ColorModeSwitcher />
+                </Box>
+              
+
+                <Menu>
+                    <MenuButton ml={'24'} >
+                    < GridCanvas/>
+                    </MenuButton>
+                    <MenuList borderRadius={'0'} width={'110'}>
+                        <MenuItem>< GridCanvas/><Text  ml={'12'}>Dot</Text></MenuItem>
+                        <MenuItem><LineCanvasLogo/><Text  ml={'12'}>Line</Text></MenuItem>
+                        <MenuItem><NoneCanvasLogo/><Text  ml={'12'}>None</Text></MenuItem>
+                    </MenuList>
+                </Menu>
+
+                <Box mr={'27'}  ml={'11'}>
+                <DownArrow />
+                </Box>
+               
+
                 <Menu>
                     <MenuButton height={'36px'}>
                         <Avatar borderRadius="full" boxSize="34px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
@@ -49,8 +67,8 @@ const Header = () => {
                         <MenuItem>Signout</MenuItem>
                     </MenuList>
                 </Menu>
-                <Box color={'default.whiteText'} >
-                    {' '}
+                <Box ml={'12'}  mr={'23'}>
+                
                     <DownArrow />
                 </Box>
             </Center>
