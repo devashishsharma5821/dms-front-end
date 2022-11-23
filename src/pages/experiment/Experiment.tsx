@@ -33,8 +33,8 @@ const ExperimentsPage = () => {
     const [currentLang, setCurrentLang] = useState('en_US');
     const [translationToUse, setTranslationToUse] = useState(i18n.translations);
     const btnRef: any = React.useRef();
-    const [leftMenuOpen, setLeftMenuOpen] = useState(false);
-    const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+    
+    
     const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     const [schema] = React.useState<JSONSchema7>({
         title: 'Widgets',
@@ -217,9 +217,7 @@ const ExperimentsPage = () => {
     useEffect(() => {
         wsconnect(setMessage);
     }, []);
-    const toggleLeftMenu = () => {
-        setLeftMenuOpen(!leftMenuOpen);
-    };
+   
     const changeTranslation = () => {
 
         let language = (currentLang === 'en_US') ?  'en_SP' :  'en_US';
@@ -319,31 +317,8 @@ const ExperimentsPage = () => {
                     <Toolbar />
                 </Box>
                 <Flex>
-                    <Box height="100%" width="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={'30'}>
-                        <Box textAlign="center">
-                            <IconButton
-                                aria-label="expand"
-                                minWidth="0"
-                                border="1px"
-                                width="24px"
-                                height="24px"
-                                borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
-                                background={bgColor}
-                                _active={{ background: bgColor }}
-                                _hover={{ background: bgColor }}
-                                icon={<DoubleAngleRightIcon />}
-                                mt={-85}
-                                onClick={toggleLeftMenu}
-                            />
-                        </Box>
-                        <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={30} textAlign="right">
-                            <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
-                                Transformers
-                            </Box>
-                        </Box>
-                        <TransformerMenu isLeftMenuOpen={leftMenuOpen} toggleLeftMenu={setLeftMenuOpen}></TransformerMenu>
-                    </Box>
-                    <Box width={'100%'}>
+                <TransformerMenu />
+                    <Box >
                         <div className="canvas" ref={canvas}/>
                         {/*<a>{translationToUse[config['title']]}</a>*/}
                         {/*<br></br>*/}

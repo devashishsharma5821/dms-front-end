@@ -16,7 +16,7 @@ const SideBarMenu = () => {
     };
 
     return (
-        <div style={zIndexStyle} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
+        <div style={{...zIndexStyle, position:'absolute'}} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
             <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
                 <VStack>
                     {!isHovering && (

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import Header from '../src/component/header/Header';
 import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } from './pages';
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 
 export const AppRouter = () => {
@@ -12,6 +12,7 @@ export const AppRouter = () => {
                 <Header />
                 <Flex overflowY={'hidden'}>
                             <SideBarMenu />
+                            <Box ml={54}>
                             <Routes>
                                 <Route path="/" element={<PageNotFound />} />
                                 <Route path="/home" element={<HomePage />} />
@@ -21,6 +22,7 @@ export const AppRouter = () => {
                                 <Route path="/compute" element={<Compute />} />
                                 <Route path="/project" element={<Project />} />
                             </Routes>
+                            </Box>
                 </Flex>
             </Suspense>
         </Router>
