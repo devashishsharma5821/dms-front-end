@@ -107,7 +107,8 @@ export const spacing = {
         54: '54px',
         57: '57px',
         127: '127px',
-       
+        60: '60px'
+
     }
 };
 
@@ -130,7 +131,8 @@ export const sizes = {
         35: '35px',
         38: '38px',
         44: '44px',
-        54: '54px'
+        54: '54px',
+       
     }
 };
 export default colors;

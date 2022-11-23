@@ -1,4 +1,4 @@
-import { Box, Button, useColorModeValue, Divider, Flex, Center, useColorMode } from "@chakra-ui/react";
+import { Box, Button, useColorModeValue, Divider, Flex, Center, useColorMode, IconButton } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react-use-disclosure";
 import { useRef, useState, useEffect } from "react";
 import { useApolloClient } from "@apollo/client";
@@ -35,6 +35,7 @@ import { getTransformersData } from "../../query";
 import SearchComponent from "../search/SearchComponent";
 import client from "../../apollo-client";
 import TransformerMenuItem from "./TransformerMenuItem";
+import DoubleAngleRightIcon from "../../assets/icons/DoubleAngleRightIcon";
 
 interface DynamicObject {
     [key: string]: any
@@ -173,6 +174,7 @@ const TransformerMenu = (props: any) => {
     const [transformarsData, setTransformarsData] = useState(new Array<TransformerDetail>());
     const [formatedTransformersData, setFormatedTransformersData] = useState<DynamicObject>({});
     const [sortedTransformersData, setSortedTransformersData] = useState(Array<string>);
+    const [leftMenuOpen, setLeftMenuOpen] = useState(false);
     const client = useApolloClient();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef: any = useRef();
@@ -182,7 +184,8 @@ const TransformerMenu = (props: any) => {
     const accordianItemBorder = useColorModeValue('light.slightlyDesaturatedBlue', 'dark.lightGrayishBlue');
     const accordianTextColor = useColorModeValue('light.veryDarkBlue', 'dark.veryDarkGray');
     const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
-
+    const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+    const accordianItemColor = useColorModeValue('light.veryDarkBlue', 'dark.gray');
     /*
      * for grouping transformers data by category and returning formatted object
     */
@@ -271,6 +274,9 @@ const TransformerMenu = (props: any) => {
         //     // });
         // })
     };
+    const toggleLeftMenu = () => {
+        setLeftMenuOpen(!leftMenuOpen);
+    };
 
     /*
     * Query to  get transformers data
@@ -290,25 +296,44 @@ const TransformerMenu = (props: any) => {
     }, [])
 
     useEffect(() => {
-        props.isLeftMenuOpen ? onOpen() : onClose();
-    }, [props.isLeftMenuOpen]);
-    useEffect(() => {
-        props.toggleLeftMenu(isOpen);
-    }, [isOpen]);
+        leftMenuOpen ? onOpen() : onClose();
+    }, [leftMenuOpen]);
+    
 
     // const assignColors = (darkColor: string, lightColor: string) => {
     //     return useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     // }
 
     return (
-        <div>
-            <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
+        <Box  flex="0 0 60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={'30'}>
+            <Box textAlign="center">
+                            <IconButton
+                                aria-label="expand"
+                                minWidth="0"
+                                border="1px"
+                                width="24px"
+                                height="24px"
+                                borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
+                                background={bgColor}
+                                _active={{ background: bgColor }}
+                                _hover={{ background: bgColor }}
+                                icon={<DoubleAngleRightIcon />}
+                                mt={-85}
+                                onClick={toggleLeftMenu}
+                            />
+                        </Box>
+                        <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={30} textAlign="right">
+                            <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
+                                Transformers
+                            </Box>
+                        </Box>
+            <Drawer isOpen={isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
                 <DrawerOverlay bg="transparent" />
                 <DrawerContent bg={themeBg} mt="44" ml="54" pl="18" w="292px" maxWidth="292px">
                     <DrawerCloseButton bg={panelCloseBtnBg} _hover={{ background: panelCloseBtnBg }} border="px" mt="17" mr={2.5} w="24px" h="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}>
                         <DoubleAngleLeftIcon></DoubleAngleLeftIcon>
                     </DrawerCloseButton>
-                    <DrawerHeader mt="18" p="0" >Transformers</DrawerHeader>
+                    <DrawerHeader mt="17" p="0" >Transformers</DrawerHeader>
 
                     <DrawerBody pl='0' pt='14' pr="17">
                         <SearchComponent searchChange={(val: string) => { onSearchChange(val) }} />
@@ -332,7 +357,7 @@ const TransformerMenu = (props: any) => {
                                 let iconName = transformerMenuConf[sortedTransformersData[index]].icon;
                                 let CurrentIconComponent = (colorMode === 'light')? iconComponents[iconName]:iconComponentsDark[iconName];
                                 return (
-                                    <AccordionItem border="none" _last={{ border: 'none' }} borderStyle="none" mb='22'>
+                                    <AccordionItem border="none" _last={{ border: 'none' }} color={accordianItemColor} borderStyle="none" mb='22'>
                                         {({ isExpanded }) => (
                                             <>
                                                 <h2 style={{ border: 'none', borderStyle: 'none' }}>
@@ -376,7 +401,7 @@ const TransformerMenu = (props: any) => {
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>
-        </div >
+        </Box >
     );
 };
 
