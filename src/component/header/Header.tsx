@@ -49,7 +49,7 @@ const Header = () => {
                         <MenuItem>Signout</MenuItem>
                     </MenuList>
                 </Menu>
-                <Box color={'default.whiteText'} ml={'5'} mr={'11'}>
+                <Box color={'default.whiteText'} ml={'2'}>
                     {' '}
                     <DownArrow />
                 </Box>
