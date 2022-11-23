@@ -185,6 +185,7 @@ const TransformerMenu = (props: any) => {
     const accordianTextColor = useColorModeValue('light.veryDarkBlue', 'dark.veryDarkGray');
     const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+    const accordianItemColor = useColorModeValue('light.veryDarkBlue', 'dark.gray');
     /*
      * for grouping transformers data by category and returning formatted object
     */
@@ -332,7 +333,7 @@ const TransformerMenu = (props: any) => {
                     <DrawerCloseButton bg={panelCloseBtnBg} _hover={{ background: panelCloseBtnBg }} border="px" mt="17" mr={2.5} w="24px" h="24px" borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')} color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}>
                         <DoubleAngleLeftIcon></DoubleAngleLeftIcon>
                     </DrawerCloseButton>
-                    <DrawerHeader mt="18" p="0" >Transformers</DrawerHeader>
+                    <DrawerHeader mt="17" p="0" >Transformers</DrawerHeader>
 
                     <DrawerBody pl='0' pt='14' pr="17">
                         <SearchComponent searchChange={(val: string) => { onSearchChange(val) }} />
@@ -356,7 +357,7 @@ const TransformerMenu = (props: any) => {
                                 let iconName = transformerMenuConf[sortedTransformersData[index]].icon;
                                 let CurrentIconComponent = (colorMode === 'light')? iconComponents[iconName]:iconComponentsDark[iconName];
                                 return (
-                                    <AccordionItem border="none" _last={{ border: 'none' }} borderStyle="none" mb='22'>
+                                    <AccordionItem border="none" _last={{ border: 'none' }} color={accordianItemColor} borderStyle="none" mb='22'>
                                         {({ isExpanded }) => (
                                             <>
                                                 <h2 style={{ border: 'none', borderStyle: 'none' }}>
