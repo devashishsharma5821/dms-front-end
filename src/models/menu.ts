@@ -15,8 +15,9 @@ export const Menu = helpers.defineMultiStyleConfig({
       minWidth: '50px'
     },
     item: {
-      color: colors.default.textColorMenu,
-      // Font size, Font color, Font Bold, Font Family
+      //Font color
+     
+      //Font Bold, Font Family
       _focus: {
         background: 'none'
       },
@@ -25,6 +26,7 @@ export const Menu = helpers.defineMultiStyleConfig({
       }
     },
   },
+  
   sizes: {
     sm: {
       item: {
@@ -35,7 +37,7 @@ export const Menu = helpers.defineMultiStyleConfig({
     },
     md: {
       item: {
-        fontSize: '0.875rem',
+        fontSize: '1rem',
         px: 3,
         py: 2,
       },
