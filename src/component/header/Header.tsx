@@ -5,7 +5,7 @@ import { DownArrow, PencilIcon, LogoLight } from '../../assets/icons';
 
 const Header = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
-
+    const textColor = useColorModeValue('light.header', 'default.whiteText');
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
@@ -40,16 +40,16 @@ const Header = () => {
                     </Button>
                 </Box>
                 <Menu>
-                    <MenuButton height={'36px'}>
-                        <Avatar borderRadius="full" boxSize="34px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
+                    <MenuButton>
+                        <Avatar borderRadius="full" boxSize="32px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
-                    <MenuList borderRadius={'0'}>
+                    <MenuList width={127} borderRadius={'0'} mr={'-20'} mt={'-2'} color={textColor}>
                         <MenuItem>My Profile</MenuItem>
                         <MenuItem>Settings</MenuItem>
                         <MenuItem>Signout</MenuItem>
                     </MenuList>
                 </Menu>
-                <Box color={'default.whiteText'} >
+                <Box color={'default.whiteText'} ml={'2'}>
                     {' '}
                     <DownArrow />
                 </Box>

@@ -8,8 +8,8 @@ export const dmsTheme = extendTheme({
     ...spacing,
     ...sizes,
     components: {
-        Button,
-        Drawer,
         Menu,
+        Button,
+        Drawer
     }
 });

@@ -1,103 +1,67 @@
-import { menuAnatomy as parts } from "@chakra-ui/anatomy"
-import {
-  createMultiStyleConfigHelpers,
-  cssVar,
-  defineStyle,
-} from "@chakra-ui/styled-system"
+import { createMultiStyleConfigHelpers } from '@chakra-ui/styled-system'
+import colors from './theme';
+// This function creates a set of function that helps us create multipart component styles.
+const helpers = createMultiStyleConfigHelpers(['menu', 'item'])
 
-const { defineMultiStyleConfig, definePartsStyle } =
-  createMultiStyleConfigHelpers(parts.keys)
-
-const $bg = cssVar("menu-bg")
-const $shadow = cssVar("menu-shadow")
-
-const baseStyleList = defineStyle({
-  [$bg.variable]: "#fff",
-  [$shadow.variable]: "shadows.sm",
-  _dark: {
-    [$bg.variable]: "colors.gray.700",
-    [$shadow.variable]: "shadows.dark-lg",
-  },
-  color: "inherit",
-  minW: "3xs",
-  py: "2",
-  zIndex: 1,
-  borderRadius: "md",
-  borderWidth: "1px",
-  bg: $bg.reference,
-  boxShadow: $shadow.reference,
-})
-
-const baseStyleItem = defineStyle({
-  py: "1.5",
-  px: "3",
-  transitionProperty: "background",
-  transitionDuration: "ultra-fast",
-  transitionTimingFunction: "ease-in",
-  _focus: {
-    [$bg.variable]: "colors.gray.100",
-    _dark: {
-      [$bg.variable]: "colors.whiteAlpha.100",
+export const Menu = helpers.defineMultiStyleConfig({
+  baseStyle: {
+    menu: {
+      boxShadow: 'lg',
+      rounded: 'lg',
+      flexDirection: 'column',
+      py: '2'
+    },
+    list: {
+      minWidth: '50px'
+    },
+    item: {
+      //Font color
+     
+      //Font Bold, Font Family
+      _focus: {
+        background: 'none'
+      },
+      _hover: {
+        background: colors.default.mouseHOverForm
+      }
     },
   },
-  _hover:{
-    [$bg.variable]: "yellow",
-    _dark: {
-      [$bg.variable]: "red",
+  
+  sizes: {
+    sm: {
+      item: {
+        fontSize: '0.75rem',
+        px: 2,
+        py: 1,
+      },
+    },
+    md: {
+      item: {
+        fontSize: '1rem',
+        px: 3,
+        py: 2,
+      },
     },
   },
-    _active: {
-    [$bg.variable]: "colors.gray.200",
-    _dark: {
-      [$bg.variable]: "colors.whiteAlpha.200",
+  variants: {
+    bold: {
+      item: {
+        fontWeight: 'bold',
+      },
+      menu: {
+        boxShadow: 'xl',
+      },
+    },
+    colorful: {
+      item: {
+        color: 'orange.600',
+      },
+      menu: {
+        bg: 'orange.100',
+      },
     },
   },
-  _expanded: {
-    [$bg.variable]: "colors.gray.100",
-    _dark: {
-      [$bg.variable]: "colors.whiteAlpha.100",
-    },
+  defaultProps: {
+    size: 'md',
   },
-  _disabled: {
-    opacity: 0.4,
-    cursor: "not-allowed",
-  },
-  bg: $bg.reference,
-})
-
-const baseStyleGroupTitle = defineStyle({
-  mx: 4,
-  my: 2,
-  fontWeight: "semibold",
-  fontSize: "sm",
-})
-
-const baseStyleCommand = defineStyle({
-  opacity: 0.6,
-})
-
-const baseStyleDivider = defineStyle({
-  border: 0,
-  borderBottom: "1px solid",
-  borderColor: "inherit",
-  my: "2",
-  opacity: 0.6,
-})
-
-const baseStyleButton = defineStyle({
-  transitionProperty: "common",
-  transitionDuration: "normal",
-})
-
-const baseStyle = definePartsStyle({
-  button: baseStyleButton,
-  list: baseStyleList,
-  item: baseStyleItem,
-  groupTitle: baseStyleGroupTitle,
-  command: baseStyleCommand,
-  divider: baseStyleDivider,
-})
-
-export const Menu = defineMultiStyleConfig({
-  baseStyle,
-})
+});
