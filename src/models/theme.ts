@@ -49,7 +49,8 @@ export const colors = {
         agGridBachground: '#EEEEEE',
         toolbarButton: '#2180C2',
         displayOffButton: '#EDEFF4',
-        downArrowHeader:'#A3B4D1'
+        downArrowHeader:'#A3B4D1',
+        mouseHOverForm:'rgba(3, 135, 176, 0.1)'
     },
     light: {
         header: '#1A3F59',
@@ -99,19 +100,23 @@ export const spacing = {
         20: '20px',
         22: '22px',
         24: '24px',
+        32: '32px',
         38: '38px',
         40: '40px',
         44: '44px',
         54: '54px',
         57: '57px',
         110:'110px',
+        127: '127px',
         60: '60px'
+
     }
 };
 
 //sizes
 export const sizes = {
     spacing: {
+        0: '0px',
         2: '2px',
         3: '3px',
         4: '4px',
@@ -123,6 +128,7 @@ export const sizes = {
         17: '17px',
         24: '24px',
         30: '30px',
+        32: '32px',
         35: '35px',
         38: '38px',
         44: '44px',
@@ -131,3 +137,4 @@ export const sizes = {
        
     }
 };
+export default colors;
