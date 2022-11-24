@@ -11,7 +11,6 @@ const Header = () => {
             <Box flex="3" ml={'2'}>
                 <LogoLight />
             </Box>
-
             <Center flex="3">
                 <Text color={'default.lightGrayHeader'} fontSize={'18'} fontStyle={'normal'}>
                     Project Name
@@ -39,37 +38,31 @@ const Header = () => {
                     {' '}
                     <ColorModeSwitcher />
                 </Box>
-              
-
                 <Menu>
                     <MenuButton ml={'24'} >
                     < GridCanvas/>
                     </MenuButton>
-                    <MenuList borderRadius={'0'} width={'110'}>
+                    <MenuList borderRadius={'0'} width={'110'} color={textColor} ml={'-46'}>
                         <MenuItem>< GridCanvas/><Text  ml={'12'}>Dot</Text></MenuItem>
                         <MenuItem><LineCanvasLogo/><Text  ml={'12'}>Line</Text></MenuItem>
                         <MenuItem><NoneCanvasLogo/><Text  ml={'12'}>None</Text></MenuItem>
                     </MenuList>
                 </Menu>
-
                 <Box mr={'27'}  ml={'11'}>
                 <DownArrow />
                 </Box>
-               
-
                 <Menu>
                     <MenuButton>
                         <Avatar borderRadius="full" boxSize="32px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
-                    <MenuList width={127} borderRadius={'0'} mr={'-20'} mt={'-2'} color={textColor}>
+                    <MenuList width={127} borderRadius={'0'} mr={'-26'} mt={'-2'} color={textColor}>
                         <MenuItem>My Profile</MenuItem>
                         <MenuItem>Settings</MenuItem>
                         <MenuItem>Signout</MenuItem>
                     </MenuList>
                 </Menu>
                 <Box ml={'12'}  mr={'23'}>
-                
-                    <DownArrow />
+                   <DownArrow />
                 </Box>
             </Center>
         </Flex>
