@@ -5,11 +5,11 @@ import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } f
 import { Box, Flex } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 
-export const AppRouter = () => {
+export const AppRouter = ({ user }: any) => {
     return (
         <Router>
             <Suspense fallback={<div>Loading...</div>}>
-                <Header />
+                <Header firstName={user?.firstName} lastName={user?.lastName}/>
                 <Flex overflowY={'hidden'}>
                             <SideBarMenu />
                             <Box ml={54}>

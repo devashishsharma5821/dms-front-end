@@ -3,9 +3,15 @@ import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, M
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight } from '../../assets/icons';
 
-const Header = () => {
+interface HeaderProps {
+    firstName: string,
+    lastName: string,
+}
+
+const Header = ({firstName, lastName}: HeaderProps) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
+    console.log(`${firstName} ${lastName}`)
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
@@ -41,7 +47,7 @@ const Header = () => {
                 </Box>
                 <Menu>
                     <MenuButton>
-                        <Avatar borderRadius="full" boxSize="32px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
+                        <Avatar borderRadius="full" boxSize="32px" name={`${firstName} ${lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'-20'} mt={'-2'} color={textColor}>
                         <MenuItem>My Profile</MenuItem>
