@@ -18,3 +18,6 @@ export { SwitchOn } from './SwitchOn';
 export { DownArrow } from './DownArrow';
 export { PencilIcon } from './PencilIcon';
 export { LogoLight } from './LogoLight';
+export { GridCanvas} from './GridCanvas';
+export { LineCanvasLogo} from './LineCanvasLogo';
+export { NoneCanvasLogo} from './NoneCanvasLogo';
