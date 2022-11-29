@@ -2,13 +2,10 @@ import React from 'react';
 import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight } from '../../assets/icons';
+import {UserConfiguration,User} from '../../models/profile';
 
-interface HeaderProps {
-    firstName: string,
-    lastName: string,
-}
 
-const Header = ({firstName, lastName}: HeaderProps) => {
+const Header = ({firstName, lastName}: User) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     console.log(`${firstName} ${lastName}`)

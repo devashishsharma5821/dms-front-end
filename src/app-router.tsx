@@ -4,8 +4,8 @@ import Header from '../src/component/header/Header';
 import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } from './pages';
 import { Box, Flex } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
-
-export const AppRouter = ({ user }: any) => {
+import {UserConfiguration, User} from './models/profile'
+export const AppRouter = ({ user }: User) => {
     return (
         <Router>
             <Suspense fallback={<div>Loading...</div>}>
