@@ -6,7 +6,7 @@ import { DownArrow, PencilIcon, LogoLight } from '../../assets/icons';
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
-    console.log(`${props.firstName} ${props.lastName}`)
+   // console.log(`${props.firstName} ${props.lastName}`)
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
