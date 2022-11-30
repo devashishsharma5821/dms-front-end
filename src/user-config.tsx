@@ -39,14 +39,11 @@ function  UserConfiguration() {
         }
 
     }, [data]);
-    
-
    if (isLoading) return <p>Loading...</p>;
    if (isError) return <p>Error : `${isError.toString()}`</p>;
 
-
-    return <>
-        { isConfigAvailable ? <AppRouter></AppRouter> : <span className="fail"> Configuration access Failed... </span> }
+   return <>
+        { isConfigAvailable ? <AppRouter user={data?.userConfiguration?.user}></AppRouter> : <span className="fail"> Configuration access Failed... </span> }
     </>
 }
 

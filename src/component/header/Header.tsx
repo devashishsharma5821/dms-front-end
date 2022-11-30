@@ -4,10 +4,9 @@ import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import { config } from 'process';
 
-const Header = () => {
+const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
-
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
@@ -55,7 +54,7 @@ const Header = () => {
                 </Box>
                 <Menu>
                     <MenuButton>
-                        <Avatar borderRadius="full" boxSize="32px" name={'Shirin Bampoori'} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
+                        <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'-26'} mt={'-2'} color={textColor}>
                         <MenuItem>My Profile</MenuItem>
