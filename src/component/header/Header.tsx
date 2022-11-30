@@ -2,13 +2,11 @@ import React from 'react';
 import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight } from '../../assets/icons';
-import {UserConfiguration,User} from '../../models/profile';
 
-
-const Header = ({firstName, lastName}: User) => {
+const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
-    console.log(`${firstName} ${lastName}`)
+    console.log(`${props.firstName} ${props.lastName}`)
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
@@ -44,7 +42,7 @@ const Header = ({firstName, lastName}: User) => {
                 </Box>
                 <Menu>
                     <MenuButton>
-                        <Avatar borderRadius="full" boxSize="32px" name={`${firstName} ${lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
+                        <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'-20'} mt={'-2'} color={textColor}>
                         <MenuItem>My Profile</MenuItem>

@@ -46,7 +46,7 @@ function  UserConfiguration() {
 
 
     return <>
-        { isConfigAvailable ? <AppRouter user={data?.UserConfiguration?.user}></AppRouter> : <span className="fail"> Configuration access Failed... </span> }
+        { isConfigAvailable ? <AppRouter user={data?.userConfiguration?.user}></AppRouter> : <span className="fail"> Configuration access Failed... </span> }
     </>
 }
 
