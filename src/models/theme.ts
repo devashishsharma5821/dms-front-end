@@ -54,7 +54,11 @@ export const colors = {
         modalShareText:'#2D373E',
         BlackText:' #111111',
         shareModalButton:'#2180C2',
-        defaultTextColorInBox:'rgba(51, 51, 51, 0.5)'
+        defaultTextColorInBox:'rgba(51, 51, 51, 0.5)',
+        dividerColor:'#EAEAEA',
+        titleForShare:'#4C4C4C',
+        veryLightGrayTextColor:' #B3B3B3'
+      
     },
     light: {
         header: '#1A3F59',
@@ -66,7 +70,7 @@ export const colors = {
         hoverSideBarMenu: '#0387B0',
         slightlyDesaturatedBlue: '#9792C8',
         veryDarkBlue: '#08192E',
-        grayishBlue: '#ECEAFD'
+        grayishBlue: '#ECEAFD',
     },
     dark: {
         header: '#3D3D3F',

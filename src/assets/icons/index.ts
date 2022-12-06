@@ -21,3 +21,5 @@ export { LogoLight } from './LogoLight';
 export { GridCanvas} from './GridCanvas';
 export { LineCanvasLogo} from './LineCanvasLogo';
 export { NoneCanvasLogo} from './NoneCanvasLogo';
+export { DownArrowShare} from './DownArrowShare';
+export { LinkChain} from './LinkChain';
