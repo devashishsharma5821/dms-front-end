@@ -50,7 +50,11 @@ export const colors = {
         toolbarButton: '#2180C2',
         displayOffButton: '#EDEFF4',
         downArrowHeader:'#A3B4D1',
-        mouseHOverForm:'rgba(3, 135, 176, 0.1)'
+        mouseHOverForm:'rgba(3, 135, 176, 0.1)',
+        modalShareText:'#2D373E',
+        BlackText:' #111111',
+        shareModalButton:'#2180C2',
+        defaultTextColorInBox:'rgba(51, 51, 51, 0.5)'
     },
     light: {
         header: '#1A3F59',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input, ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Stack } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import { config } from 'process';
@@ -7,6 +7,9 @@ import { config } from 'process';
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const initialRef = React.useRef(null)
+    const finalRef = React.useRef(null)
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
@@ -29,11 +32,49 @@ const Header = (props: any) => {
                 </Editable>
             </Center>
 
-            <Center flex="3" mr={5} justifyContent={'flex-end'}>
-            <Box pl={'6'} pr={'6'}>
-                    <Button colorScheme="default.lightGrayHeader" variant="outline">
+            <Center flex="3" mr={5} justifyContent={'flex-end'} >
+            <Box pl={'6'} pr={'6'} >
+                    <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
                         Share
                     </Button>
+                <Modal size={'3xl'}
+                     initialFocusRef={initialRef}
+                     finalFocusRef={finalRef}
+                     isOpen={isOpen}
+                     onClose={onClose}
+                     isCentered
+                     >        
+                    <ModalOverlay />
+                    <ModalContent width={'713px'} borderRadius={'2'} height={'734px'}>
+                     <ModalHeader  color={"default.modalShareText"} mt={'13'} ml={20}>Share</ModalHeader>
+                    <ModalCloseButton  mt={'12'} mr={8} />
+                    <Divider/>
+                  <ModalBody pb={6} >
+                    <FormControl>
+                     <FormLabel  color={"default.BlackText"} mt={'20'} ml={20} mb={10}>Send to</FormLabel>
+                      <Flex>
+                      <Input   _placeholder={{ opacity: 2, color: 'default.defaultTextColorInBox' }} borderRadius={'2'} width={'581px'} ml={20} height={'8'} ref={initialRef} placeholder='Type name or email with comma seperated' />
+                      <Button bg={'default.shareModalButton'} mr={3} borderRadius={'2'}  ml={22}>
+                         Share
+                    </Button>
+                    </Flex>
+                    </FormControl>
+
+                    <FormControl mt={4}>
+                   
+                   <Box  borderColor='red' border={2}  mt={20}  mb={20} ml={20}  mr={20} bg={'black'} width={'667px'} height={'472px'}>
+
+                   </Box>
+                    </FormControl>
+                </ModalBody>
+               
+                <Divider/>
+                  <ModalFooter>
+                   
+                    <Button onClick={onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={22} mt={'22'}>Close</Button>
+                  </ModalFooter>
+                 </ModalContent>
+                  </Modal>
                 </Box>
                 <Box>
                     {' '}
