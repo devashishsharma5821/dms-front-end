@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { dia, shapes, ui } from '@antuit/rappid-v1';
 import './designer.scss';
-import { Flex, Wrap, Button, Box, IconButton } from '@chakra-ui/react';
+import { Flex, Wrap, Button, Box, IconButton, useColorModeValue, useColorMode } from '@chakra-ui/react';
 import * as appShapes from '../../models/app-shapes';
 import ZoomInIcon from '../../assets/icons/ZoomInIcon';
 import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
@@ -10,6 +10,12 @@ const Designer = (props: any) => {
     const designerElement = React.useRef<HTMLDivElement | null>(null);
     const [ paperState, setPaperState ] = React.useState<dia.Paper | undefined>(undefined);
     const [ paperScrollerState, setPaperScrollerState ] = React.useState<any>(undefined);
+    const [ canvasBackground, setCanvasBackground ] = React.useState<any>();
+    const [ canvasBackgroundSize, setCanvasBackgroundSize ] = React.useState<any>();
+    const [ dotSpace, setDotSpace ] = React.useState<any>(20);
+    const [ dotSize, setDotSize ] = React.useState<any>(1);
+    const {colorMode} = useColorMode();
+    const canvasBg = useColorModeValue('white', '#171717');
     let paperScroller: any;
     useEffect(() => {
         const graph = new dia.Graph({}, { cellNamespace: shapes });
@@ -21,7 +27,7 @@ const Designer = (props: any) => {
             drawGrid: true,
             snapLinks:          { radius: 600 },
             markAvailable:      true,
-            background:         { color: 'white' },
+            background:         { color: canvasBg },
             interactive: { linkMove: false },
             frozen: true,
             async: true,
@@ -103,7 +109,7 @@ const Designer = (props: any) => {
         m2.attr(".label/text", "Model 2");
         paper.unfreeze();
         paper.on('blank:pointerdown', paperScroller.startPanning);
-        setPaperScrollerState(paperScroller)
+        setPaperScrollerState(paperScroller);
         setPaperState(paper);
         return () => {
             paperScroller.remove();
@@ -114,24 +120,58 @@ const Designer = (props: any) => {
 
     const zoomIn = () => {
         paperScrollerState.zoom(0.2, { max: 4 });
+        if(dotSpace < 80)
+        setDotSpace(dotSpace+4);
+        if(dotSize < 4)
+        setDotSize(dotSize+0.2);
     };
     const zoomOut = () => {
         paperScrollerState.zoom(-0.2, { min: 0.2 });
+        if(dotSpace >4)
+        setDotSpace(dotSpace-4);
+        if(dotSize > 0.4)
+            setDotSize(dotSize-0.2);
     };
+
+    const setCanvasBackgroundMode = () =>{
+        let bg = "";
+        let bgSize = "";
+        if(colorMode === "light"){
+            bg = "linear-gradient(90deg, #ffffff, "+(dotSpace - dotSize)+"px, transparent 1%) center, linear-gradient(#ffffff, "+(dotSpace - dotSize)+"px, transparent 1%) center, #aaaaaa";
+            bgSize = dotSpace+"px "+dotSpace+"px";
+            paperState?.setGrid(true);
+            paperState?.drawGrid( {name:'dot'});
+        }else{
+            bg = "#171717";
+            bgSize = "unset";
+            paperState?.setGrid(false);
+        }
+        
+            setCanvasBackground(bg);
+            setCanvasBackgroundSize(bgSize);
+    }
     React.useEffect( () => {
         const setPaperDimensions = () =>{
             let width = designerElement.current?.clientWidth || 20;
             let height = designerElement.current?.clientHeight || 20; 
             paperState?.setDimensions(width, height);
+           
         }
         setPaperDimensions();
+         setCanvasBackgroundMode();
         window.addEventListener('resize', setPaperDimensions);
+        
         return () => {window.removeEventListener('resize', setPaperDimensions); }
         },
-        [paperState]
+        [paperState, dotSpace, canvasBg]
     );
+    React.useEffect( () => {
+        paperState?.drawBackground({color:canvasBg});       
+        setCanvasBackgroundMode();
+        
+    },[canvasBg]);
     return (
-        <Box position="relative">
+        <Box position="relative" background={canvasBackground} backgroundSize={canvasBackgroundSize}>
             <Box position="absolute" zIndex={10} bottom="75px" right="180px">
                 {/* <Button onClick={zoomIn} mr="5px" backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom In</Button>
                 <Button onClick={zoomOut} backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom Out</Button> */}
