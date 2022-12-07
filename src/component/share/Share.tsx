@@ -1,34 +1,27 @@
 import React from 'react';
 import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input, ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Stack, Link } from '@chakra-ui/react';
-import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
-import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo, DownArrowShare, LinkChain } from '../../assets/icons';
-
-
-
+import {  DownArrowShare, LinkChain } from '../../assets/icons';
 
 const Share = (props: any) => {
-    const themebg = useColorModeValue('light.header', 'dark.header');
+  
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const {  onClose } = useDisclosure()
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
     return (
-        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
-            
 
-            <Center flex="3" mr={5} justifyContent={'flex-end'} >
-            <Box pl={'6'} pr={'6'} >
                    
                 <Modal size={'3xl'}
                      initialFocusRef={initialRef}
                      finalFocusRef={finalRef}
-                     isOpen={isOpen}
-                     onClose={onClose}
+                     isOpen={props.isOpen}
+                     onClose={props.onClose}
                      isCentered
+                    
                      >        
                     <ModalOverlay />
                     <ModalContent width={'713px'} borderRadius={'2'} maxHeight={'734px'}>
@@ -55,7 +48,7 @@ const Share = (props: any) => {
                               <Avatar ml={16}  borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                               <Box mt={'17px'}>
                                  <Text  ml={12} color={accesstextColor}>{props.firstName} {props.lastName}</Text>
-                                 <Text ml={12} color={'default.veryLightGrayTextColor'}>{props.email} </Text>
+                                 <Text ml={12} pb={'10px'} color={'default.veryLightGrayTextColor'}>{props.email} </Text>
                               </Box>
                            </Center>
                            <Center mr={'36px'} >  
@@ -92,10 +85,7 @@ const Share = (props: any) => {
                   </ModalFooter>
                  </ModalContent>
                   </Modal>
-                </Box>
-                
-            </Center>
-        </Flex>
+        
     );
 };
 
