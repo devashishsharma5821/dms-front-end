@@ -21,7 +21,8 @@ const sideBarMenuIcons = [
             {
                 icon: <CreateIcon />,
                 iconName: 'Create',
-                route: '/project'
+                hasSubMenu: [],
+                isClicked: false
             },
             {
                 icon: <WhiteHome />,
@@ -31,12 +32,14 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteRecentIcon />,
                 iconName: 'Recent',
-                hasSubMenu: []
+                hasSubMenu: [],
+                isClicked: false
             },
             {
                 icon: <WhiteExperiment />,
                 iconName: 'Explorer',
-                route: '/experiment'
+                hasSubMenu: [],
+                isClicked: false
             }
         ]
     },
