@@ -5,6 +5,7 @@ import { Flex, Wrap, Button, Box, IconButton, useColorModeValue, useColorMode } 
 import * as appShapes from '../../models/app-shapes';
 import ZoomInIcon from '../../assets/icons/ZoomInIcon';
 import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
+import FitToContent from '../../assets/icons/FitToContent';
 const Designer = (props: any) => {
     const canvas: any = useRef(null);
     const designerElement = React.useRef<HTMLDivElement | null>(null);
@@ -133,6 +134,12 @@ const Designer = (props: any) => {
             setDotSize(dotSize-0.2);
     };
 
+    const fitToContent = () => {
+        const opt = {padding:150, scaleGrid:0.2}
+        paperScrollerState.zoomToFit(opt);
+        paperScrollerState.zoomToRect();
+    };
+
     const setCanvasBackgroundMode = () =>{
         let bg = "";
         let bgSize = "";
@@ -172,14 +179,15 @@ const Designer = (props: any) => {
     },[canvasBg]);
     return (
         <Box position="relative" background={canvasBackground} backgroundSize={canvasBackgroundSize}>
-            <Box position="absolute" zIndex={10} bottom="75px" right="180px">
+            <Box position="absolute" zIndex={10} bottom="75px" right="180px" display="flex" flexDirection="column">
                 {/* <Button onClick={zoomIn} mr="5px" backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom In</Button>
                 <Button onClick={zoomOut} backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom Out</Button> */}
-                <IconButton aria-label='Zoom In' variant='outline' icon={<ZoomInIcon />} onClick={zoomIn}/>
-                 <IconButton aria-label='Zoom Out' variant='outline' icon={<ZoomOutIcon />} onClick={zoomOut} />
+                <IconButton aria-label='Fit' variant='outline' icon={<FitToContent />} onClick={fitToContent} height="57px" width="56px" marginBottom="16px" />
+                <IconButton aria-label='Zoom In' variant='outline' icon={<ZoomInIcon />} onClick={zoomIn} height="57px" width="56px" borderBottomRadius="none"/>
+                 <IconButton aria-label='Zoom Out' variant='outline' icon={<ZoomOutIcon />} onClick={zoomOut} height="57px" width="56px" borderTopRadius="none"/>
             </Box>
             <Box ref={designerElement} className="designer"><Wrap className="canvas" ref={canvas} /></Box>
-            <Box position="absolute" bottom="75px"><Wrap id="navigator" /></Box>
+            <Box position="absolute" bottom="75px"><Wrap id="navigator" overflow="unset"/></Box>
         </Box>
 
     );
