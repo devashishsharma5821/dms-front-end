@@ -11,7 +11,7 @@ export const AppRouter = (props: any) => {
     return (
         <Router>
             <Suspense fallback={<div>Loading...</div>}>
-                <Header firstName={user?.firstName} lastName={user?.lastName}/>
+                <Header firstName={user?.firstName} lastName={user?.lastName}  email={user?.email}/>
                 <Flex overflowY={'hidden'}>
                             <SideBarMenu />
                             <Box ml={54}>

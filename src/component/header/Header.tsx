@@ -1,12 +1,14 @@
 import React from 'react';
-import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input, ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Stack, Link } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
-import { config } from 'process';
+import Share from '../share/Share';
 
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
@@ -29,11 +31,14 @@ const Header = (props: any) => {
                 </Editable>
             </Center>
 
-            <Center flex="3" mr={5} justifyContent={'flex-end'}>
-            <Box pl={'6'} pr={'6'}>
-                    <Button colorScheme="default.lightGrayHeader" variant="outline">
+            <Center flex="3" mr={5} justifyContent={'flex-end'} >
+                
+            <Box pl={'6'} pr={'6'} >
+                    <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
                         Share
                     </Button>
+                    <Share isOpen={isOpen} onClose={onClose}  ></Share>
+              
                 </Box>
                 <Box>
                     {' '}
