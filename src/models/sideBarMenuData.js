@@ -31,7 +31,7 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteRecentIcon />,
                 iconName: 'Recent',
-                route: '/notfound'
+                hasSubMenu: []
             },
             {
                 icon: <WhiteExperiment />,
