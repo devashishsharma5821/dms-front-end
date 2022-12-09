@@ -3,12 +3,12 @@ import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, M
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import Share from '../share/Share';
-//import {ShareData} from '../../models/share';
+
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const { isOpen, onOpen, onClose } = useDisclosure()
-    //const share = props.share as ShareData;
+
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
