@@ -144,12 +144,12 @@ const Designer = (props: any) => {
         let bg = "";
         let bgSize = "";
         if(colorMode === "light"){
-            bg = "linear-gradient(90deg, #ffffff, "+(dotSpace - dotSize)+"px, transparent 1%) center, linear-gradient(#ffffff, "+(dotSpace - dotSize)+"px, transparent 1%) center, #aaaaaa";
+            bg = "linear-gradient(90deg, white, "+(dotSpace - dotSize)+"px, transparent 1%) center, linear-gradient(white, "+(dotSpace - dotSize)+"px, transparent 1%) center, #aaaaaa";
             bgSize = dotSpace+"px "+dotSpace+"px";
             paperState?.setGrid(true);
             paperState?.drawGrid( {name:'dot'});
         }else{
-            bg = "#171717";
+            bg = "dark.veryDarkGray";
             bgSize = "unset";
             paperState?.setGrid(false);
         }
@@ -179,15 +179,15 @@ const Designer = (props: any) => {
     },[canvasBg]);
     return (
         <Box position="relative" background={canvasBackground} backgroundSize={canvasBackgroundSize}>
-            <Box position="absolute" zIndex={10} bottom="75px" right="180px" display="flex" flexDirection="column">
+            <Box position="absolute" zIndex={10} bottom="var(--chakra-space-75)" right="var(--chakra-space-180)" display="flex" flexDirection="column">
                 {/* <Button onClick={zoomIn} mr="5px" backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom In</Button>
                 <Button onClick={zoomOut} backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom Out</Button> */}
-                <IconButton aria-label='Fit' variant='outline' icon={<FitToContent />} onClick={fitToContent} height="57px" width="56px" marginBottom="16px" />
-                <IconButton aria-label='Zoom In' variant='outline' icon={<ZoomInIcon />} onClick={zoomIn} height="57px" width="56px" borderBottomRadius="none"/>
-                 <IconButton aria-label='Zoom Out' variant='outline' icon={<ZoomOutIcon />} onClick={zoomOut} height="57px" width="56px" borderTopRadius="none"/>
+                <IconButton aria-label='Fit' variant='outline' icon={<FitToContent />} onClick={fitToContent} height={57} width="var(--chakra-space-56)" marginBottom={16} />
+                <IconButton aria-label='Zoom In' variant='outline' icon={<ZoomInIcon />} onClick={zoomIn} height={57} width="var(--chakra-space-56)" borderBottomRadius="none"/>
+                 <IconButton aria-label='Zoom Out' variant='outline' icon={<ZoomOutIcon />} onClick={zoomOut} height={57} width="var(--chakra-space-56)" borderTopRadius="none"/>
             </Box>
             <Box ref={designerElement} className="designer"><Wrap className="canvas" ref={canvas} /></Box>
-            <Box position="absolute" bottom="75px"><Wrap id="navigator" overflow="unset"/></Box>
+            <Box position="absolute" bottom="var(--chakra-space-75)"><Wrap id="navigator" overflow="unset"/></Box>
         </Box>
 
     );

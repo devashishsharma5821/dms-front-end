@@ -57,7 +57,8 @@ export const colors = {
         defaultTextColorInBox:'rgba(51, 51, 51, 0.5)',
         dividerColor:'#EAEAEA',
         titleForShare:'#4C4C4C',
-        veryLightGrayTextColor:' #B3B3B3'
+        veryLightGrayTextColor:' #B3B3B3',
+        silverGray: '#aaaaaa'
       
     },
     light: {
@@ -80,7 +81,7 @@ export const colors = {
         veryDarkGrayishBlue: '#313133',
         veryLightDarkGrayishBlue: '#434248',
         lightGrayishBlue: '#C9C5E9',
-        veryDarkGray: '#171717'
+        veryDarkGray: '#171717',
     },
     brand: {
         500: '#0387B0'
@@ -114,10 +115,13 @@ export const spacing = {
         40: '40px',
         44: '44px',
         54: '54px',
+        56: '56px',
         57: '57px',
+        75: "75px",
         110:'110px',
         127: '127px',
-        60: '60px'
+        60: '60px',
+        180: '180px'
 
     }
 };
@@ -153,6 +157,7 @@ export const sizes = {
         54: '54px',
         66: '66px',
         72: '72px',
+        75: '75px',
         110: '110px',
         300: '300px',
         472: '472px',
