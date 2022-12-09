@@ -1,9 +1,11 @@
 import React from 'react';
-import { Box, Flex, Text, Button, Center, Divider, Stack, Switch, Spacer } from '@chakra-ui/react';
+import { Box, Flex, Text, Button, Center, Divider, Stack, Switch, Spacer, useDisclosure } from '@chakra-ui/react';
 import RunArrow from '../../assets/icons/RunArrow';
 import toolbarDataIcons from '../../models/toolbarData';
+import Comments from '../comments/Comments';
 
 const Toolbar = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     return (
             <Flex height={'56px'} minWidth='max-content' alignItems='center' gap='2' pl={60} pr={55}>
                     {toolbarDataIcons.section1.map((sections, sectionIndex) => {
@@ -24,7 +26,7 @@ const Toolbar = () => {
                                 {sections.type === 'switch' && (
                                     <>
                                         <Stack align="center" direction="row">
-                                            <Switch size="sm" />
+                                            <Switch onChange={onOpen} size="sm" />
                                         </Stack>
                                         <Box ml={'6'}>{sections.name}</Box>
                                     </>
@@ -84,6 +86,7 @@ const Toolbar = () => {
                             );
                         })}
                         </Flex>
+                <Comments isOpen={isOpen} onClose={onClose}></Comments>
             </Flex>
     );
 };

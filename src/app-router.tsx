@@ -4,12 +4,14 @@ import Header from '../src/component/header/Header';
 import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } from './pages';
 import { Box, Flex } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
+import {User} from './models/profile';
 
-export const AppRouter = () => {
+export const AppRouter = (props: any) => {
+    const user = props.user as User;
     return (
         <Router>
             <Suspense fallback={<div>Loading...</div>}>
-                <Header />
+                <Header firstName={user?.firstName} lastName={user?.lastName}/>
                 <Flex overflowY={'hidden'}>
                             <SideBarMenu />
                             <Box ml={54}>
