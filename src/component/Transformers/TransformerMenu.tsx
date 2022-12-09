@@ -305,7 +305,7 @@ const TransformerMenu = (props: any) => {
     // }
 
     return (
-        <Box  flex="0 0 60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left" mr={'30'}>
+        <Box  flex="0 0 60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left">
             <Box textAlign="center">
                             <IconButton
                                 aria-label="expand"
