@@ -50,7 +50,15 @@ export const colors = {
         toolbarButton: '#2180C2',
         displayOffButton: '#EDEFF4',
         downArrowHeader:'#A3B4D1',
-        mouseHOverForm:'rgba(3, 135, 176, 0.1)'
+        mouseHOverForm:'rgba(3, 135, 176, 0.1)',
+        modalShareText:'#2D373E',
+        BlackText:' #111111',
+        shareModalButton:'#2180C2',
+        defaultTextColorInBox:'rgba(51, 51, 51, 0.5)',
+        dividerColor:'#EAEAEA',
+        titleForShare:'#4C4C4C',
+        veryLightGrayTextColor:' #B3B3B3'
+      
     },
     light: {
         header: '#1A3F59',
@@ -62,7 +70,7 @@ export const colors = {
         hoverSideBarMenu: '#0387B0',
         slightlyDesaturatedBlue: '#9792C8',
         veryDarkBlue: '#08192E',
-        grayishBlue: '#ECEAFD'
+        grayishBlue: '#ECEAFD',
     },
     dark: {
         header: '#3D3D3F',
@@ -121,21 +129,37 @@ export const sizes = {
         2: '2px',
         3: '3px',
         4: '4px',
+        5: '5px',
         6: '6px',
         8: '8px',
+        9: '9px', 
         10: '10px',
+        12: '12px',
+        13: '13px',
         15: '15px',
         16: '16px',
         17: '17px',
+        19: '19px',
+        20: '20px',
         24: '24px',
         26: '26px',
         30: '30px',
         32: '32px',
         35: '35px',
+        36:'36px',
         38: '38px',
+        40:'40px',
         44: '44px',
         54: '54px',
-        110:'110px'
+        66: '66px',
+        72: '72px',
+        110: '110px',
+        300: '300px',
+        472: '472px',
+        581: '581px',
+        667: '667px',
+        734: '734px',
+
        
     }
 };

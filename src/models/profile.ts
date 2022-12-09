@@ -3,9 +3,9 @@ export interface AppAlerts {
 
 export interface Applications {
     applicationId: number;
-applicationName: string;
-configJson: any;
-i18n: any;
+    applicationName: string;
+    configJson: any;
+    i18n: any;
 }
 export interface User {
     userId: string;
