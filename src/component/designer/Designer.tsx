@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { dia, shapes, ui } from '@antuit/rappid-v1';
 import './designer.scss';
-import { Flex, Wrap, Button, Box, IconButton, useColorModeValue, useColorMode } from '@chakra-ui/react';
+import { Wrap, Box, IconButton, useColorModeValue, useColorMode } from '@chakra-ui/react';
 import * as appShapes from '../../models/app-shapes';
 import ZoomInIcon from '../../assets/icons/ZoomInIcon';
 import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
