@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { dia, shapes, ui } from '@antuit/rappid-v1';
 import './designer.scss';
-import { Flex, Wrap, Button, Box, IconButton, useColorModeValue, useColorMode } from '@chakra-ui/react';
+import { Wrap, Box, IconButton, useColorModeValue, useColorMode } from '@chakra-ui/react';
 import * as appShapes from '../../models/app-shapes';
 import ZoomInIcon from '../../assets/icons/ZoomInIcon';
 import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
@@ -73,6 +73,9 @@ const Designer = (props: any) => {
         });
         nav.$el.appendTo('#navigator');
         nav.render();
+        const selection = new ui.Selection({
+            paper: paper,
+        });
         const m1 = new shapes.devs.Model({
             position: { x: 50, y: 50 },
             size: { width: 90, height: 90 },
@@ -109,9 +112,12 @@ const Designer = (props: any) => {
         graph.addCell(m2);
         m2.attr(".label/text", "Model 2");
         paper.unfreeze();
-        paper.on('blank:pointerdown', paperScroller.startPanning);
         setPaperScrollerState(paperScroller);
         setPaperState(paper);
+        paper.on('blank:pointerdown', (evt) => {
+            if (evt.shiftKey) selection.startSelecting(evt);
+            if (evt.altKey) paperScroller.startPanning(evt);
+        });
         return () => {
             paperScroller.remove();
             nav.remove();

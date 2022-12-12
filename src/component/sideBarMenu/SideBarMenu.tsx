@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, Flex, Divider, useColorModeValue, Center, VStack, Link } from '@chakra-ui/react';
+import { Box, Flex, Divider, useColorModeValue, Center, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
 import './style.scss';
