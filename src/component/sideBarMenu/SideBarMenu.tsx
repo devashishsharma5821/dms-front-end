@@ -9,6 +9,7 @@ const SideBarMenu = () => {
     const [isHovering, setIsHovering] = React.useState(false);
     const [activateSubMenu, setActivateSubMenu] = React.useState(false);
     const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
+     const [currentIndex, setCurrentIndex] = React.useState(0);
     const navigate = useNavigate();
     const hoverIn = () => {
         setIsHovering(true);
@@ -28,13 +29,17 @@ const SideBarMenu = () => {
             setActivateSubMenu(false);
             setIsHovering(false);
     };
-    const checkForSubMenuOrNavigation = (data: any) => {
+    const checkForSubMenuOrNavigation = (data: any, index:any) => {
         console.log('Data', data);
         if(data.route) {
+            sideBarMenuIcons[0].section[currentIndex].isClicked = false;
             navigate(data.route);
         } else if (data.hasSubMenu) {
             // Turn on the Sub Menu
-            data.isClicked = true;
+            //data.isClicked = true;
+             sideBarMenuIcons[0].section[currentIndex].isClicked = false;
+            setCurrentIndex(index);
+            sideBarMenuIcons[0].section[index].isClicked = true;
             setActivateSubMenu(true);
         }
     };
@@ -45,9 +50,15 @@ const SideBarMenu = () => {
              <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={'white'} color={'black'}>
                  <VStack>
                      {
-                         !sideBarMenuIcons[0].section[2].isClicked &&
+                         sideBarMenuIcons[0].section[0].isClicked &&
                          <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
                              Create
+                         </Box>
+                     }
+                     {
+                         sideBarMenuIcons[0].section[1].isClicked &&
+                         <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
+                             Home
                          </Box>
                      }
                      {
@@ -57,7 +68,7 @@ const SideBarMenu = () => {
                          </Box>
                      }
                      {
-                         !sideBarMenuIcons[0].section[2].isClicked &&
+                         sideBarMenuIcons[0].section[3].isClicked &&
                          <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
                              Explorer
                          </Box>
@@ -106,7 +117,7 @@ const SideBarMenu = () => {
                                         if (lastItemLength === iconIndex) {
                                             return (
                                                 <>
-                                                        <Center onClick={() => {checkForSubMenuOrNavigation(icons)}} className={'sidebar'}>
+                                                        <Center onClick={() => {checkForSubMenuOrNavigation(icons,iconIndex)}} className={'sidebar'}>
                                                             <Box className={'sidebarIon'} mt="17">
                                                                 {icons.icon}
                                                             </Box>
@@ -121,7 +132,7 @@ const SideBarMenu = () => {
                                             );
                                         } else {
                                             return (
-                                                    <Center onClick={() => {checkForSubMenuOrNavigation(icons)}} className={'sidebar'}>
+                                                    <Center onClick={() => {checkForSubMenuOrNavigation(icons, iconIndex)}} className={'sidebar'}>
                                                         <Box className={'sidebarIon'} mt="17">
                                                             {' '}
                                                             {icons.icon}
