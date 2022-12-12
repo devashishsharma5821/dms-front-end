@@ -50,27 +50,17 @@ const SideBarMenu = () => {
              <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={'white'} color={'black'}>
                  <VStack>
                      {
-                         sideBarMenuIcons[0].section[0].isClicked &&
+                         sideBarMenuIcons[0].section[currentIndex].isClicked &&
                          <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
-                             Create
-                         </Box>
-                     }
-                     {
-                         sideBarMenuIcons[0].section[1].isClicked &&
-                         <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
-                             Home
-                         </Box>
-                     }
-                     {
-                         sideBarMenuIcons[0].section[2].isClicked &&
-                         <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
-                             Recent
-                         </Box>
-                     }
-                     {
-                         sideBarMenuIcons[0].section[3].isClicked &&
-                         <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
-                             Explorer
+                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' &&
+                                <h3>Add the Create Component Here</h3>
+                             }
+                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
+                             <h3>Add the Recent Component Here</h3>
+                             }
+                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' &&
+                             <h3>Add the Explorer Component Here</h3>
+                             }
                          </Box>
                      }
                  </VStack>
