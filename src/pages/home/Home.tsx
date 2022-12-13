@@ -22,7 +22,7 @@ const HomePage = () => {
     return (
         <>
             <div className="wrap">
-                <Wrap mt={10}>
+                <Wrap   ml={54} mt={10}>
                     {statuses.map((status: any, i: number) => (
                         <WrapItem key={i}>
                             <Button

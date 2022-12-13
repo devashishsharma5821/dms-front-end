@@ -23,3 +23,4 @@ export { LineCanvasLogo} from './LineCanvasLogo';
 export { NoneCanvasLogo} from './NoneCanvasLogo';
 export { DownArrowShare} from './DownArrowShare';
 export { LinkChain} from './LinkChain';
+export { PageNotFoundLogo} from './NotFoundPageLogo';

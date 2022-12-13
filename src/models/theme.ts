@@ -58,8 +58,9 @@ export const colors = {
         dividerColor:'#EAEAEA',
         titleForShare:'#4C4C4C',
         veryLightGrayTextColor:' #B3B3B3',
-        silverGray: '#aaaaaa'
-      
+        silverGray: '#aaaaaa',
+        redLigh:' #E05F70',
+        linkColor:'#017BA1'
     },
     light: {
         header: '#1A3F59',
@@ -114,6 +115,7 @@ export const spacing = {
         38: '38px',
         40: '40px',
         44: '44px',
+        49: '49px',
         54: '54px',
         56: '56px',
         57: '57px',
@@ -154,6 +156,7 @@ export const sizes = {
         38: '38px',
         40:'40px',
         44: '44px',
+        49: '49px',
         54: '54px',
         66: '66px',
         72: '72px',
