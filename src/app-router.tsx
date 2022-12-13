@@ -14,7 +14,7 @@ export const AppRouter = (props: any) => {
                 <Header firstName={user?.firstName} lastName={user?.lastName}  email={user?.email}/>
                 <Flex overflowY={'hidden'}>
                             <SideBarMenu />
-                            <Box ml={54}>
+                            <Box m={'auto'} >
                             <Routes>
                                 <Route path="/" element={<PageNotFound />} />
                                 <Route path="/home" element={<HomePage />} />

@@ -58,8 +58,9 @@ export const colors = {
         dividerColor:'#EAEAEA',
         titleForShare:'#4C4C4C',
         veryLightGrayTextColor:' #B3B3B3',
-        silverGray: '#aaaaaa'
-      
+        silverGray: '#aaaaaa',
+        redLigh:' #E05F70',
+        linkColor:'#017BA1'
     },
     light: {
         header: '#1A3F59',
