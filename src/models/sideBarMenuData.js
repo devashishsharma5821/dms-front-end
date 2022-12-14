@@ -12,18 +12,15 @@ import {
     PipelineIcon,
     WhiteInfoIcon,
     WhiteSettingIcon,
-    WhiteFluentIcon
+    WhiteFluentIcon,
+    WideCreateIcon
 } from '../assets/icons';
 
 const sideBarMenuIcons = [
+   
     {
         section: [
-            {
-                icon: <CreateIcon />,
-                iconName: 'Create',
-                hasSubMenu: [],
-                isClicked: false
-            },
+          
             {
                 icon: <WhiteHome />,
                 iconName: 'Home',
@@ -108,6 +105,7 @@ const sideBarMenuIcons = [
                 route: '/notfound'
             }
         ]
-    }
+    },
+
 ];
 export default sideBarMenuIcons;
