@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
-import { Box, Flex, Divider, useColorModeValue, Center, VStack } from '@chakra-ui/react';
+import { Box, Flex, Divider, useColorModeValue, Center, VStack, Square } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
 import './style.scss';
+import { CreateIcon, WideCreateIcon } from '../../assets/icons';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -47,7 +48,7 @@ const SideBarMenu = () => {
        console.log('Switch', sideBarMenuIcons);
      return (
          <div style={{...zIndexStyle, position:'absolute', marginLeft:'221px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
-             <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={'white'} color={'black'}>
+             <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={'white'} color={'black'}>
                  <VStack>
                      {
                          sideBarMenuIcons[0].section[currentIndex].isClicked &&
@@ -73,8 +74,11 @@ const SideBarMenu = () => {
             <div style={{...zIndexStyle, position:'absolute'}} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
                 <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
                     <VStack>
-                        {!isHovering && (
-                            <Box ml="15" mr="15">
+                       {!isHovering && (
+                            <Box ml="6" mr="6" mt="30" >
+                                <Box  width={'38px'}  height={'40px'}>
+                                    <Square ><CreateIcon/></Square>
+                                </Box>
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
@@ -82,15 +86,19 @@ const SideBarMenu = () => {
                                             return (
                                                 <>
 
-                                                        <Box mt="17">{icons.icon}</Box>
+                                                    <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'}>
+                                                        <Square >{icons.icon}</Square>
+                                                    </Box>
                                                     <Center>
-                                                        <Divider mt="17" orientation="horizontal" bg={'dark.borderColor'} />
+                                                        <Divider  orientation="horizontal" bg={'dark.borderColor'} />
                                                     </Center>
                                                 </>
                                             );
                                         } else {
                                             return (
-                                                    <Box mt="17">{icons.icon}</Box>
+                                                    <Box  m={'8px auto'}  width={'38px'} pt={'20%'} height={'40px'}>
+                                                        <Square >{icons.icon}</Square>
+                                                    </Box>
                                             );
                                         }
                                     });
@@ -98,37 +106,39 @@ const SideBarMenu = () => {
                                     return listSections;
                                 })}
                             </Box>
-                        )}
+                        )} 
                         {isHovering && (
-                            <Box width={'212px'} ml="15" mr="15" pl={'0px'} mt="17">
+                            <Box width="212px"  mt="30">
+                                  <Box  width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'} >
+                                    <Square ><WideCreateIcon/></Square>
+                                 </Box>
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
                                         if (lastItemLength === iconIndex) {
                                             return (
                                                 <>
-                                                        <Center onClick={() => {checkForSubMenuOrNavigation(icons,iconIndex)}} className={'sidebar'}>
-                                                            <Box className={'sidebarIon'} mt="17">
-                                                                {icons.icon}
-                                                            </Box>
-                                                            <Box mt="17" pl={'6'} fontSize={'14px'} color={'default.whiteText'}>
-                                                                {icons.iconName}
-                                                            </Box>
-                                                        </Center>
-                                                    <Center>
-                                                        <Divider mt="17" orientation="horizontal" bg={'dark.borderColor'} />
-                                                    </Center>
+                                                <Center onClick={() => {checkForSubMenuOrNavigation(icons,iconIndex)}} className={'sidebar'} >
+                                                    <Box m={'8px 8px'}width={'30px'} height={'32px'} >
+                                                        <Square >{icons.icon}</Square>
+                                                    </Box>
+                                                    <Box pl={'6px'} fontSize={'14px'}  m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'} >
+                                                        <Square className='text'>{icons.iconName}</Square>
+                                                    </Box>
+                                                </Center>
+                                                <Center>
+                                                    <Divider mb={'8px'} ml={'8px'} mr={'8px'} orientation="horizontal" bg={'dark.borderColor'} />
+                                                </Center>
                                                 </>
                                             );
                                         } else {
                                             return (
                                                     <Center onClick={() => {checkForSubMenuOrNavigation(icons, iconIndex)}} className={'sidebar'}>
-                                                        <Box className={'sidebarIon'} mt="17">
-                                                            {' '}
-                                                            {icons.icon}
+                                                        <Box m={'8px 8px'}width={'30px'} height={'32px'} >
+                                                            <Square>{icons.icon}</Square>
                                                         </Box>
-                                                        <Box mt="17" pl={'6'} fontSize={'14px'} color={'default.whiteText'}>
-                                                            {icons.iconName}
+                                                        <Box pl={'6px'} fontSize={'14px'}  m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                          <Square className='text'>{icons.iconName}</Square> 
                                                         </Box>
                                                     </Center>
                                             );
