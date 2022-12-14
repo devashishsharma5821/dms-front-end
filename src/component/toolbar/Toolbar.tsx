@@ -7,7 +7,7 @@ import Comments from '../comments/Comments';
 const Toolbar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
-            <Flex height={'56px'} minWidth='max-content' alignItems='center' gap='2' pl={60} pr={55}>
+            <Flex height={'56px'} minWidth='max-content' alignItems='center' gap='2' pl={90} >
                     {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                         return (
                             <>

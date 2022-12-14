@@ -12,9 +12,9 @@ export const AppRouter = (props: any) => {
         <Router>
             <Suspense fallback={<div>Loading...</div>}>
                 <Header firstName={user?.firstName} lastName={user?.lastName}  email={user?.email}/>
-                <Flex overflowY={'hidden'}>
+                <Flex overflowY={'hidden'} flexDirection="column">
                             <SideBarMenu />
-                            <Box m={'auto'} >
+                            <Box >
                             <Routes>
                                 <Route path="/" element={<PageNotFound />} />
                                 <Route path="/home" element={<HomePage />} />

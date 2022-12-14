@@ -185,7 +185,7 @@ const Designer = (props: any) => {
     },[canvasBg]);
     return (
         <Box position="relative" background={canvasBackground} backgroundSize={canvasBackgroundSize}>
-            <Box position="absolute" zIndex={10} bottom="var(--chakra-space-75)" right="var(--chakra-space-180)" display="flex" flexDirection="column">
+            <Box position="absolute" zIndex={10} bottom="var(--chakra-space-19)" right="var(--chakra-space-0)" display="flex" flexDirection="column">
                 {/* <Button onClick={zoomIn} mr="5px" backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom In</Button>
                 <Button onClick={zoomOut} backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom Out</Button> */}
                 <IconButton aria-label='Fit' variant='outline' icon={<FitToContent />} onClick={fitToContent} height={57} width="var(--chakra-space-56)" marginBottom={16} />
@@ -193,7 +193,7 @@ const Designer = (props: any) => {
                  <IconButton aria-label='Zoom Out' variant='outline' icon={<ZoomOutIcon />} onClick={zoomOut} height={57} width="var(--chakra-space-56)" borderTopRadius="none"/>
             </Box>
             <Box ref={designerElement} className="designer"><Wrap className="canvas" ref={canvas} /></Box>
-            <Box position="absolute" bottom="var(--chakra-space-75)"><Wrap id="navigator" overflow="unset"/></Box>
+            <Box position="absolute" bottom="var(--chakra-space-10)"><Wrap id="navigator" overflow="unset"/></Box>
         </Box>
 
     );
