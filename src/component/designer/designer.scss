@@ -5,8 +5,8 @@
   position: relative;
   .canvas {
     position: relative;
-    height: 95vh;
-    width: 100vw;
+    height: 87vh;
+    width: 91vw;
 
     .joint-paper {
       
@@ -17,4 +17,12 @@
   .current-view{
       transform: translate(50%,50%);
     }
+}
+
+.joint-paper-scroller {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.joint-paper-scroller::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }

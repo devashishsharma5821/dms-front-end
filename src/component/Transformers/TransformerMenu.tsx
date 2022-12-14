@@ -305,8 +305,8 @@ const TransformerMenu = (props: any) => {
     // }
 
     return (
-        <Box  flex="0 0 60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" float="left">
-            <Box textAlign="center">
+        <Box  w="var(--chakra-space-60)" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
+            <Box textAlign="right" ml="26">
                             <IconButton
                                 aria-label="expand"
                                 minWidth="0"
@@ -319,10 +319,11 @@ const TransformerMenu = (props: any) => {
                                 _hover={{ background: bgColor }}
                                 icon={<DoubleAngleRightIcon />}
                                 mt={-85}
+                                mr={18}
                                 onClick={toggleLeftMenu}
                             />
                         </Box>
-                        <Box position="absolute" width="150px" transform="rotate(270deg)" left={7} mt={30} textAlign="right">
+                        <Box position="relative" width="104px" transform="rotate(270deg)" left={-16} mt={30} textAlign="right">
                             <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
                                 Transformers
                             </Box>

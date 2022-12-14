@@ -51,9 +51,9 @@ const ExperimentsPage = () => {
                         {/*<a>{translationToUse[config['title']]}</a>*/}
                         {/*<br></br>*/}
                         {/*{message}*/}
-                        <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
+                        {/* <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
                             Open
-                        </Button>
+                        </Button> */}
                         <Details isOpen={isOpen} onClose={onClose}></Details>
                         {/*<Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>*/}
                         {/*    Change Translation*/}
