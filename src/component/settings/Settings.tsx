@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field } from "formik";
-import { Button, Divider, useDisclosure, VStack, Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ModalBody, FormControl, Input, FormLabel, ModalFooter, FormErrorMessage } from '@chakra-ui/react';
-
+import { Button, Divider, VStack, Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ModalBody, FormControl, Input, FormLabel, ModalFooter, FormErrorMessage } from '@chakra-ui/react';
+import {setSettingsData} from "../../query";
+import { useApolloClient } from "@apollo/client";
 const Settings = (props: any) => {
-    const {  onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
+    const client = useApolloClient();
     interface databricksSettings {
     userName: string;
     token: string;
-  }
+     }
     return (
         <Modal
         initialFocusRef={initialRef}
@@ -19,8 +20,8 @@ const Settings = (props: any) => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader mt={'20px'}  ml={'15px'}>Settings</ModalHeader>
+          <ModalCloseButton mt={'20px'} />
           <Divider color={"default.dividerColor"} mt={'20px'} mb={'20px'}/>
           <ModalBody pb={6}  mr={'10px'} ml={'10px'}>
             <Formik
@@ -30,6 +31,17 @@ const Settings = (props: any) => {
                 } as databricksSettings}
                 onSubmit={(values) => {
                  console.log('Values', values)
+                 client.mutate({
+                    mutation: setSettingsData(values.userName ,values.token)
+                })
+                    .then((response) => {
+                    console.log('Response is:',response)
+                    if(response.data.dmsSetDatabricksCredentials){
+                        props.onClose()
+                    }
+                    })
+                    .catch((err) => console.log(err));
+                    
                 }}
             >
               {({ handleSubmit, errors, touched }) => (
@@ -40,18 +52,16 @@ const Settings = (props: any) => {
                         <Field
                             as={Input}
                             id="userName"
-                            name="userName"
-                            type="userName"
+                            name="userName"    
                             variant="filled"
                         />
                       </FormControl>
                       <FormControl isInvalid={!!errors.token && touched.token}>
-                        <FormLabel htmlFor="password">Password</FormLabel>
+                        <FormLabel htmlFor="token">Token</FormLabel>
                         <Field
                             as={Input}
                             id="token"
                             name="token"
-                            type="token"
                             variant="filled"
                             validate={(value: any) => {
                               let error;
@@ -64,30 +74,21 @@ const Settings = (props: any) => {
                         />
                         <FormErrorMessage>{errors.token}</FormErrorMessage>
                       </FormControl>
-                      <Button type="submit" colorScheme="purple" width="full">
-                        Login
+                      <Button type="submit" colorScheme="blue" width="65px" >
+                       Ok
                       </Button>
                     </VStack>
                   </form>
               )}
             </Formik>
-            {/*<FormControl>*/}
-            {/*  <FormLabel as='b'>Username</FormLabel>*/}
-            {/*  <Input ref={initialRef} placeholder='User Name' />*/}
-            {/*</FormControl>*/}
-
-            {/*<FormControl mt={4}>*/}
-            {/*  <FormLabel as='b'>Token</FormLabel>*/}
-            {/*  <Input placeholder='Token' />*/}
-            {/*</FormControl>*/}
+        
           </ModalBody>
-          <Divider color={"default.dividerColor"} mt={'20px'} mb={'20px'}/>
-          <ModalFooter mb={'20px'}>
-            <Button colorScheme='blue' mr={3}>
-              Save
-            </Button>
-            <Button onClick={props.onClose}>Cancel</Button>
-          </ModalFooter>
+          <Divider color={"default.dividerColor"} mt={'20px'} mb={'20px'} width="full"/>
+                      <ModalFooter mb={'20px'} >
+                     
+                      
+                    <Button onClick={props.onClose} colorScheme='blue' ml={'5px'}>Cancel</Button>
+                    </ModalFooter>
         </ModalContent>
       </Modal>
     );
