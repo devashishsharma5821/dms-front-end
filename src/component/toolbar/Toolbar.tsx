@@ -75,7 +75,7 @@ const Toolbar = (props: any) => {
                     })}
                 <Spacer />
                     <Flex height={'56px'} gap='2'>
-                        {toolbarDataIcons.section2.map((sections, sectionIndex) => {
+                        { props.computeData.length !== 0 && toolbarDataIcons.section2.map((sections, sectionIndex) => {
                             return (
                                 <>
                                     <Center>
@@ -107,7 +107,7 @@ const Toolbar = (props: any) => {
                                                     variant="responsive"
                                                 >
                                                     <PopoverTrigger>
-                                                        <Button><Box pl={'2'}>{sections.component}</Box></Button>
+                                                        <Button disabled={props.computeData.length === 0}><Box pl={'2'}>{sections.component}</Box></Button>
                                                     </PopoverTrigger>
                                                     <PopoverContent>
                                                         <PopoverBody mt={'5px'}>
@@ -128,13 +128,6 @@ const Toolbar = (props: any) => {
                                                                         </Flex>
                                                                     )
                                                                 })}
-                                                            { props.computeData.length === 0 &&
-                                                            <Flex pb={'10px'} justifyContent={'center'}>
-                                                                <Center>
-                                                                    <Box fontWeight={'600'} fontSize={'16px'} color={textColor}>No Compute Found</Box>
-                                                                </Center>
-                                                            </Flex>
-                                                            }
                                                         </PopoverBody>
                                                         <PopoverFooter
                                                             border='0'
@@ -157,6 +150,15 @@ const Toolbar = (props: any) => {
                                 </>
                             );
                         })}
+                        { props.computeData.length === 0 &&
+                            <Center mr={'40px'}>
+                                <ButtonGroup size='sm'>
+                                    <Link color='teal.500' href='#'>
+                                        No Compute Found
+                                    </Link>
+                                </ButtonGroup>
+                            </Center>
+                        }
                         </Flex>
                 <Comments isOpen={isOpen} onClose={onClose}></Comments>
             </Flex>

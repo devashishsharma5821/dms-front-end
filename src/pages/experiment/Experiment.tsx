@@ -67,7 +67,7 @@ const ExperimentsPage = () => {
         <>
             <Box width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar computeData={computeDataEmpty} />
+                    <Toolbar computeData={computeData} />
                 </Box>
                 <Flex>
                 <TransformerMenu />
