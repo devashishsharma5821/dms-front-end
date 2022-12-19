@@ -25,3 +25,4 @@ export { DownArrowShare} from './DownArrowShare';
 export { LinkChain} from './LinkChain';
 export { PageNotFoundLogo} from './NotFoundPageLogo';
 export { WideCreateIcon} from './WideCreateIcon';
+export {DeployedNotRunningIcon} from './DeployNotRunning';
