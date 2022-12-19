@@ -36,12 +36,39 @@ const ExperimentsPage = () => {
     // useEffect(() => {
     //     setTranslationToUse(i18n.translations);
     // }, [currentLang]);
-
+    const computeData = [
+        {
+            active: true,
+            name: 'my-compute1',
+            memory: '8 GB',
+            cpu: '3 Cores'
+        },
+        {
+            active: false,
+            name: 'my-compute1',
+            memory: '8 GB',
+            cpu: '3 Cores'
+        },
+        {
+            active: false,
+            name: 'my-compute1',
+            memory: '8 GB',
+            cpu: '3 Cores'
+        },
+        {
+            active: false,
+            name: 'my-compute1',
+            memory: '8 GB',
+            cpu: '3 Cores'
+        }
+    ];
+    const computeDataEmpty: any = [];
+    // React Hook
     return (
         <>
             <Box width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar />
+                    <Toolbar computeData={computeDataEmpty} />
                 </Box>
                 <Flex>
                 <TransformerMenu />
