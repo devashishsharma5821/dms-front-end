@@ -47,7 +47,7 @@ const SideBarMenu = () => {
    const secondLevelMenu = () => {
        console.log('Switch', sideBarMenuIcons);
      return (
-         <div style={{...zIndexStyle, position:'absolute', marginLeft:'221px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
+         <div style={{...zIndexStyle, position:'absolute', marginLeft:'200px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
              <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={'white'} color={'black'}>
                  <VStack>
                      {
@@ -76,9 +76,9 @@ const SideBarMenu = () => {
                     <VStack>
                        {!isHovering && (
                             <Box ml="6" mr="6" mt="30" >
-                                <Box  width={'38px'}  height={'40px'}>
-                                    <Square ><CreateIcon/></Square>
-                                </Box>
+                                {/*<Box  width={'38px'}  height={'40px'}>*/}
+                                {/*    <Square ><CreateIcon/></Square>*/}
+                                {/*</Box>*/}
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
@@ -108,10 +108,10 @@ const SideBarMenu = () => {
                             </Box>
                         )} 
                         {isHovering && (
-                            <Box width="212px"  mt="30">
-                                  <Box  width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'} >
-                                    <Square ><WideCreateIcon/></Square>
-                                 </Box>
+                            <Box width="212px" mt="30">
+                                 {/* <Box  width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'} >*/}
+                                 {/*   <Square ><WideCreateIcon/></Square>*/}
+                                 {/*</Box>*/}
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
