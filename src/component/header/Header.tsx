@@ -3,12 +3,13 @@ import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, M
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import Share from '../share/Share';
+import Settings from '../settings/Settings';
 
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const { isOpen, onOpen, onClose } = useDisclosure()
-
+    const settingsModal =useDisclosure()
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'2'}>
@@ -63,7 +64,8 @@ const Header = (props: any) => {
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'-26'} mt={'-2'} color={textColor}>
                         <MenuItem>My Profile</MenuItem>
-                        <MenuItem>Settings</MenuItem>
+                        <MenuItem onClick={settingsModal.onOpen}>Settings</MenuItem>
+                        <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose}  ></Settings>
                         <MenuItem>Signout</MenuItem>
                     </MenuList>
                 </Menu>

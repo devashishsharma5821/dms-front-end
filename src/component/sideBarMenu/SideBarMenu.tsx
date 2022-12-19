@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Box, Flex, Divider, useColorModeValue, Center, VStack, Square } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
-import './style.scss';
+import './SideBarMenu.scss';
 import { CreateIcon, WideCreateIcon } from '../../assets/icons';
 
 const SideBarMenu = () => {

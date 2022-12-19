@@ -65,3 +65,13 @@ export const getTransformersData = () =>{
         `;
         return { GET_TRANSFORMERS };
 }
+export const setSettingsData = (userName:string,token:string) =>{
+   return gql`
+    mutation
+         {   dmsSetDatabricksCredentials(  
+               databricks_token: "${token}"  
+               databricks_username: "${userName}" 
+                  ) } 
+        `;
+       
+}
