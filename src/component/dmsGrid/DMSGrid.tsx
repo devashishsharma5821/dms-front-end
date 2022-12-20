@@ -1,92 +1,47 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box, Button, Center, Divider, Flex, Stack, Text, Switch } from '@chakra-ui/react';
+import React, { useMemo, useRef, useState } from 'react';
+import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 import SearchComponent from '../search/SearchComponent';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { ColDef } from 'ag-grid-community';
-import path from 'path';
-import PlayIcon from '../../assets/icons/PlayIcon';
-import ReStartIcon from '../../assets/icons/ReStartIcon';
-import EditIcon from '../../assets/icons/EditIcon';
-import DeleteIcon from '../../assets/icons/DeleteIcon';
-import SwitchComponent from './SwitchComponent';
 
-import client from '../../apollo-client';
-import { getComputeListData } from '../../query';
-import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
-
-
-interface ComputeData {
-    computeName: string;
+interface ICar {
+    project: string;
     created: string;
-    activeCores: number;
-    activeMemory: number;
-    status: string;
-    default: boolean;
+    Creator: string;
+    tags: string;
+    experiment: number;
+    dataset: number;
+    pipeline: number;
 }
 
 // specify the data
-var rowDataA: ComputeData[] = [
-    { computeName: 'My-Compute 1', created: ' 06/06/2022 02:00 PM',  activeCores: 4, activeMemory: 1, status: "Active", default: true },
-    { computeName: 'My-Compute 2', created: '05/12/2022 11:15 AM',  activeCores: 3, activeMemory: 2, status: "In Active", default: false },
-    { computeName: 'My-Compute 3', created: '05/02/2022 11:00 AM',  activeCores: 2, activeMemory: 3, status: "Active", default: true }
+var rowDataA: ICar[] = [
+    { project: 'My Project', created: ' 06/06/2022 02:00 PM', Creator: 'Shirin Bampoori', tags: '', experiment: 1, dataset: 1, pipeline: 3 },
+    { project: 'Test Project', created: '05/12/2022 11:15 AM', Creator: 'Shirin Bampoori', tags: '', experiment: 2, dataset: 3, pipeline: 1 },
+    { project: 'Test Project 2', created: '05/02/2022 11:00 AM', Creator: 'Shirin Bampoori', tags: '', experiment: 3, dataset: 1, pipeline: 2 }
 ];
 const DMSGrid = () => {
-    const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
+    const gridRef = useRef<AgGridReact<ICar>>(null);
     //const textColor = useColorModeValue('light.header', 'dark.white');
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
-    const actionsRow = (params: any) =>{
-        console.log(params);
-        return (
-            <Flex height={'inherit'} justifyContent='space-between' alignItems={'center'}>
-                <PlayIcon />
-                <ReStartIcon />
-                <EditIcon />
-                <DeleteIcon />
-            </Flex>
-        )
-    }
-    const defaultChange = (checked:boolean) =>{
-        checked = !checked
-    }
-    const defaultRow = (params: any) => {
-        console.log(params);
-        let isChecked = params.data.default;
-        return (
-            <SwitchComponent params={params}/>
-        )
-    }
-    const [rowData, setRowData] = useState<ComputeDetail[]>();
+    const [rowData] = useState<ICar[]>(rowDataA);
     const [columnDefs] = useState<ColDef[]>([
-        { headerName:"Compute Name", field: 'name' },
-        { headerName:"created On", field: 'created_at' },
-        { headerName:"Active Cores", field: 'resources.num_workers' },
-        { headerName:"Active Memory", field: 'activeMemory' },
-        { headerName:"Status", field: 'status' },
-        { headerName:"Set As Default", field: 'default', cellRenderer:defaultRow },
-        { headerName:"Actions", field: 'Actions', cellRenderer:actionsRow}
+        { field: 'project' },
+        { field: 'created' },
+        { field: 'Creator' },
+        { field: 'tags' },
+        { field: 'experiment' },
+        { field: 'dataset' },
+        { field: 'pipeline' }
     ]);
-
-    useEffect(() => {
-        const { GET_COMPUTELIST } = getComputeListData();
-        client.query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-            query: GET_COMPUTELIST
-        })
-            .then((response) => {
-                let computedata = [...response.data.dmsComputes];   
-                setRowData(computedata);
-                //updateTransformersData(transformerdata)
-            })
-            .catch((err) => console.error(err));
-    }, [])
-    
     return (
-        <Box >
-            <Box borderWidth="1px"  ml={'24'} borderRadius="lg" mt={'24'}>
+        <Flex as="nav" align="center" justify="space-between" wrap="wrap">
+            <Box w="100%" borderWidth="1px" borderRadius="lg" ml={'24'} mt={'24'}>
                 <Center flex="3" mt="17" fontWeight={'700'} mb="17">
-                    <Box ml={'23'} color={'textColor'}>
-                        <Text>Compute Details</Text>
+                    <Box ml={'17'} color={'textColor'}>
+                        <Text>Project Details</Text>
                     </Box>
                     <Box color={'default.containerAgGridRecords'}>
                         <Text ml={'14'}>4 Records</Text>
@@ -103,23 +58,20 @@ const DMSGrid = () => {
 
                         <Box>
                             <Button color={'default.whiteText'} bg={'default.hoverSideBarMenu'} variant="outline">
-                                Create Compute
+                                Create Project
                             </Button>
                         </Box>
                     </Center>
                 </Center>
 
                 <Box mr={'17'} mb={'17'}>
-                    <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
-                        <AgGridReact<ComputeDetail> ref={gridRef} rowData={rowData} columnDefs={columnDefs} rowSelection={'single'} animateRows={true}></AgGridReact>
+                    <Box style={gridStyle} className="ag-theme-alpine" ml={'17'}>
+                        <AgGridReact<ICar> ref={gridRef} rowData={rowData} columnDefs={columnDefs} rowSelection={'single'} animateRows={true}></AgGridReact>
                     </Box>
                 </Box>
             </Box>
-        </Box>
+        </Flex>
     );
 };
 
-
 export default DMSGrid;
-
-

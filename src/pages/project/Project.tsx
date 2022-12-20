@@ -8,7 +8,7 @@ const Project = () => {
         <>
             <Box marginLeft={36}>
                 <Box fontSize={'24px'} fontWeight={700} ml={'24'} mt={'35'} mb={'24'}>
-                    Compute
+                    Projects
                 </Box>
                 <Stack spacing={4}>
                     <Text fontSize="md" ml={'24'} noOfLines={[2]}>
