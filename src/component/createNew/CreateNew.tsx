@@ -27,24 +27,24 @@ const CreateNew = (props: any) => {
         {
             sections: [
                 {
-                    name: 'Compute',
-                    icon: <WhiteComputeIcon  color={'#666C80'}/>,
+                    name: 'Dataset',
+                    icon:  <WhiteDatasetIcon color={'#666C80'} />,
                 },
                 {
-                    name: 'Project',
-                    icon: <WhiteCollection  color={'#666C80'}/>,
+                    name: 'Experiment',
+                    icon: <WhiteExperiment color={'#666C80'}/>,
                 }
             ]
         },
         {
             sections: [
                 {
-                    name: 'Compute',
-                    icon: <WhiteComputeIcon  color={'#666C80'}/>,
+                    name: 'Notebook',
+                    icon: <WhiteNotebookIcon color={'#666C80'} />,
                 },
                 {
-                    name: 'Project',
-                    icon: <WhiteCollection  color={'#666C80'}/>,
+                    name: 'Workflow',
+                    icon: <WhiteWorkflowsIcon color={'#666C80'}/>,
                 }
             ]
         }
@@ -58,13 +58,12 @@ const CreateNew = (props: any) => {
             <Text fontWeight={800}  ml={'11px'} color={textColor}> Create New</Text>
         </Flex>
         <Divider mt={'16px'} mb={'10px'} orientation="horizontal" bg={'dark.borderColor'} />
-            {
-                subMenuForCreate && subMenuForCreate.map(row => {
+            { subMenuForCreate && subMenuForCreate.map(row => {
                     return (
                         <Flex>
                             { row.sections && row.sections.map(section => {
                                 return (
-                                    <Box ml={'14px'} mr={'7px'} bg='default.lightGray' width={'106px'} height="76px" mt={'14px'} borderRadius={'2'} onClick={ () => triggerAction(section.name) }>
+                                    <Box ml={'14px'}  bg='default.lightGray' width={'106px'} height="76px" mt={'14px'} borderRadius={'2'} onClick={ () => triggerAction(section.name) }>
                                         <Center mt={'17px'} >
                                             {section.icon}
                                         </Center>
@@ -76,55 +75,8 @@ const CreateNew = (props: any) => {
                     );
 
                 })
-            }
-        {/*<Flex>*/}
-        {/*    <Box ml={'14px'} mr={'7px'} bg='default.lightGray'  width={'106px'} height="76px" mt={'14px'} borderRadius={'2'} onClick={ () => triggerAction('Compute') }>*/}
-        {/*        <Center mt={'17px'} >*/}
-        {/*        <WhiteComputeIcon  color={'#666C80'}/>*/}
-        {/*        </Center>*/}
-        {/*        <Text textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}> {section.name} </Text>*/}
-        {/*    </Box >*/}
-        {/*    <Box mr={'14px'} ml={'7px'} bg='default.lightGray'  width={'106px'} height="76px" mt={'14px'} borderRadius={'2'}>*/}
-        {/*        <Center mt={'17px'}>*/}
-        {/*        <WhiteCollection color={'#666C80'} />*/}
-        {/*        </Center>*/}
-        {/*        <Text textAlign={'center'} mb={'14px'} mt={'4px'}color={'black'} > Project </Text>*/}
-        {/*    </Box >*/}
-
-        {/*</Flex>*/}
-        {/*<Flex >*/}
-        {/*    <Box ml={'14px'} mr={'7px'} bg='default.lightGray'  width={'106px'} height="76px" mt={'14px'} borderRadius={'2'}>*/}
-        {/*        <Center mt={'17px'} >*/}
-        {/*        <WhiteDatasetIcon color={'#666C80'} />*/}
-        {/*        </Center>*/}
-        {/*        <Text textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}> Dataset </Text>*/}
-        {/*    </Box >*/}
-        {/*    <Box mr={'14px'} ml={'7px'} bg='default.lightGray'  width={'106px'} height="76px" mt={'14px'} borderRadius={'2'}>*/}
-        {/*        <Center mt={'17px'}>*/}
-        {/*        <WhiteExperiment color={'#666C80'}/>*/}
-        {/*        </Center>*/}
-        {/*        <Text textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}> Experiment </Text>*/}
-        {/*    </Box >*/}
-
-        {/*</Flex>*/}
-        {/*<Flex>*/}
-        {/*    <Box ml={'14px'} mr={'7px'} bg='default.lightGray'  width={'106px'} height="76px" mt={'14px'} borderRadius={'2'}>*/}
-        {/*        <Center mt={'17px'} >*/}
-        {/*        <WhiteNotebookIcon color={'#666C80'} />*/}
-        {/*        </Center>*/}
-        {/*        <Text textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}> Notebook </Text>*/}
-        {/*    </Box >*/}
-        {/*    <Box mr={'14px'} ml={'7px'} bg='default.lightGray'  width={'106px'} height="76px" mt={'14px'} borderRadius={'2'}>*/}
-        {/*        <Center mt={'17px'}>*/}
-        {/*        <WhiteWorkflowsIcon color={'#666C80'}/>*/}
-        {/*        </Center>*/}
-        {/*        <Text textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}> Workflow </Text>*/}
-        {/*    </Box >*/}
-
-        {/*</Flex>*/}
-        
+            }       
         </>
-
     );
 };
 

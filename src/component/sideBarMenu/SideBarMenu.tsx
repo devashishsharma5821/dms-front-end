@@ -86,11 +86,11 @@ const SideBarMenu = () => {
                     <VStack>
                         {!isHovering && (
                             <Box ml="6" mr="6" mt="30">
-                                <Box width={'38px'} height={'40px'}>
+                                {/* <Box width={'38px'} height={'40px'}>
                                     <Square>
                                         <CreateIcon />
                                     </Square>
-                                </Box>
+                                </Box> */}
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
@@ -120,11 +120,11 @@ const SideBarMenu = () => {
                         )}
                         {isHovering && (
                             <Box width="212px" mt="30">
-                                <Box width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'}>
+                                {/* <Box width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'}>
                                     <Square>
                                         <WideCreateIcon />
                                     </Square>
-                                </Box>
+                                </Box> */}
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
