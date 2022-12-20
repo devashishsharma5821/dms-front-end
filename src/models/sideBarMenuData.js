@@ -37,7 +37,7 @@ const sideBarMenuIcons = [
                 isClicked: false
             },
             {
-                icon: <WhiteExperiment />,
+                icon: <WhiteExperiment color="white" />,
                 iconName: 'Explorer',
                 hasSubMenu: [],
                 isClicked: false
@@ -47,7 +47,7 @@ const sideBarMenuIcons = [
     {
         section: [
             {
-                icon: <WhiteCollection />,
+                icon: <WhiteCollection color="white"/>,
                 iconName: 'Projects',
                 route: '/notfound'
             },
@@ -57,12 +57,12 @@ const sideBarMenuIcons = [
                 route: '/notfound'
             },
             {
-                icon: <WhiteComputeIcon />,
+                icon: <WhiteComputeIcon color="white"/>,
                 iconName: 'Compute',
                 route: '/compute'
             },
             {
-                icon: <WhiteDatasetIcon />,
+                icon: <WhiteDatasetIcon color="white"/>,
                 iconName: 'Dataset',
                 route: '/notfound'
             }
@@ -71,7 +71,7 @@ const sideBarMenuIcons = [
     {
         section: [
             {
-                icon: <WhiteNotebookIcon />,
+                icon: <WhiteNotebookIcon color="white"/>,
                 iconName: 'Notebook',
                 route: '/notebook'
             },
@@ -81,7 +81,7 @@ const sideBarMenuIcons = [
                 route: '/notfound'
             },
             {
-                icon: <WhiteWorkflowsIcon />,
+                icon: <WhiteWorkflowsIcon color="white"/>,
                 iconName: 'Workflows',
                 route: '/notfound'
             }
@@ -89,7 +89,7 @@ const sideBarMenuIcons = [
     },
     {
         section: [
-            {
+            { 
                 icon: <WhiteInfoIcon />,
                 iconName: 'Help',
                 route: '/notfound'
