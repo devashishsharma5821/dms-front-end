@@ -26,3 +26,5 @@ export { LinkChain} from './LinkChain';
 export { PageNotFoundLogo} from './NotFoundPageLogo';
 export { WideCreateIcon} from './WideCreateIcon';
 export {DeployedNotRunningIcon} from './DeployNotRunning';
+export {PlusIcont} from './PlusIcont';
+

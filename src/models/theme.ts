@@ -73,7 +73,9 @@ export const colors = {
         veryLightGrayTextColor:' #B3B3B3',
         silverGray: '#aaaaaa',
         redLigh:' #E05F70',
-        linkColor:'#017BA1'
+        linkColor:'#017BA1',
+        lightGray: '#F2F4F5',
+        darkGrayCreate: '#666C80',
     },
     light: {
         header: '#1A3F59',
@@ -96,6 +98,7 @@ export const colors = {
         veryLightDarkGrayishBlue: '#434248',
         lightGrayishBlue: '#C9C5E9',
         veryDarkGray: '#171717',
+        bgDark:'#1a202c'
     },
     brand: {
         500: '#0387B0'

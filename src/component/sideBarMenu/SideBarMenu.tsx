@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
-import { Box, Flex, Divider, useColorModeValue, Center, VStack, Square } from '@chakra-ui/react';
+import { Box, Flex, Divider, useColorModeValue, Center, VStack, Square,Text, HStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
 import './SideBarMenu.scss';
-import { CreateIcon, WideCreateIcon } from '../../assets/icons';
+import { CreateIcon, WhiteComputeIcon, WideCreateIcon } from '../../assets/icons';
+import CreateNew from '../createNew/CreateNew';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
+    const themeSecondLevel = useColorModeValue('default.whiteText', 'dark.bgDark');
     const [isHovering, setIsHovering] = React.useState(false);
     const [activateSubMenu, setActivateSubMenu] = React.useState(false);
     const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
@@ -46,15 +48,16 @@ const SideBarMenu = () => {
     };
    const secondLevelMenu = () => {
        console.log('Switch', sideBarMenuIcons);
+       
      return (
-         <div style={{...zIndexStyle, position:'absolute', marginLeft:'200px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
-             <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={'white'} color={'black'}>
+         <div style={{...zIndexStyle, position:'absolute', marginLeft:'212px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
+             <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
                  <VStack>
                      {
                          sideBarMenuIcons[0].section[currentIndex].isClicked &&
-                         <Box width={'254px'} ml="15" mr="15" pl={'0px'} mt="17">
+                         <Box width={'254px'}  pl={'0px'} mt="17" >
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' &&
-                                <h3>Add the Create Component Here</h3>
+                                <h3><CreateNew/>  </h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
                              <h3>Add the Recent Component Here</h3>
