@@ -19,7 +19,6 @@ export function wsconnect(callback: any) {
                 wsconnect(callback);
             }, 1000);
         };
-
         ws.onerror = function (err) {
             console.error('Socket encountered error: ', err, 'Closing socket');
             ws.close();

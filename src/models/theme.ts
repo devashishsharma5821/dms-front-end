@@ -33,18 +33,31 @@ export const Button = defineStyleConfig({
     }
 });
 
+// PopOver Component Overrides
+export const Popover = defineStyleConfig({
+    // Two variants: outline and solid
+    variants: {
+        responsive: {
+            popper: {
+                maxWidth: 'unset',
+                width: '314px'
+            }
+        }
+    }
+});
+
 // Color Overrides
 export const colors = {
     default: {
         lightText: '#C7D0E0',
         lightGrayHeader: '#C7D0E0',
         whiteText: '#FFFFFF',
+        blackText: '#333333',
         userCircleHeaderFont: '#1A3F59',
         userCircleHeaderBg: '#B3DDEB',
         hoverSideBarMenu: '#0387B0',
         darkGray: '#878787',
         gray: '#B8B8B8',
-        blackText: '#333333',
         containerAgGridRecords: ' #646A78',
         agGridBachground: '#EEEEEE',
         toolbarButton: '#2180C2',
@@ -125,7 +138,8 @@ export const spacing = {
         110:'110px',
         127: '127px',
         60: '60px',
-        180: '180px'
+        180: '180px',
+        464: '464px'
 
     }
 };
