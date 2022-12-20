@@ -12,7 +12,6 @@ const useDmsCheckDatabricksCred = () => {
                 query: GET_DATABRICKS_CREDS
             })
             .then((response) => {
-                // console.log('query token response ===>', response.data.dmsCheckDatabricksCredentials.valid);
                 setToken(response.data.dmsCheckDatabricksCredentials.valid);
             });
     }, []);

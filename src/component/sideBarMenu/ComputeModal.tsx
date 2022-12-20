@@ -1,4 +1,3 @@
-// import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useApolloClient, gql, DocumentNode } from '@apollo/client';
 import {
@@ -24,12 +23,13 @@ import BlackbottomedTriangleIcon from '../../assets/icons/BlackbottomedTriangleI
 import InfoIcon from '../../assets/icons/InfoIcon';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import useGetDbSettings from '../../hooks/useGetDbSettings';
 
 const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
     const [error, setError] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
     const client = useApolloClient();
-    // const navigate = useNavigate();
+    const dbSettingsData = useGetDbSettings();
 
     const validationSchema = Yup.object().shape({
         enableAutoScaling: Yup.boolean(),
@@ -60,7 +60,8 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
             max_workers: 0,
             enableAutoScaling: false,
             spot_instances: false,
-            max_inactivity_min: 10
+            max_inactivity_min: 0,
+            terminate_after: false
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -78,7 +79,7 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                                     num_workers: ${values.workers} ,
                                     spot_instances: ${values.spot_instances}
                                 } ,
-                                max_inactivity_min: ${values.max_inactivity_min}
+                                max_inactivity_min: ${values.terminate_after ? values.max_inactivity_min : 0}
                                 )
                         }
                         `;
@@ -96,7 +97,7 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                                 max_workers: ${values.max_workers}
                             }
                         },
-                          max_inactivity_min: ${values.max_inactivity_min},
+                          max_inactivity_min: ${values.terminate_after ? values.max_inactivity_min : 0},
                         )
                       }
                       `;
@@ -106,7 +107,6 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                     mutation: mutation
                 })
                 .then((response) => {
-                    console.log('response ===>', response);
                     formik.handleReset();
                     cancel();
                     // props.onClose();
@@ -116,8 +116,7 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
     });
 
     const cancel = () => {
-        console.log('cancel running');
-        props.onClose((prev: any) => {
+        props.onClose((prev: boolean) => {
             return !prev;
         });
     };
@@ -128,7 +127,10 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
 
     const handleSpotInstances = (event: React.ChangeEvent<HTMLInputElement>) => {
         formik.setFieldValue('spot_instances', event.target.checked);
-        console.log('toggling');
+    };
+
+    const handleTerminateAfter = (event: React.ChangeEvent<HTMLInputElement>) => {
+        formik.setFieldValue('terminate_after', event.target.checked);
     };
 
     return (
@@ -168,6 +170,11 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                                         </Text>
                                     }
                                 >
+                                    {dbSettingsData &&
+                                        dbSettingsData.map((item) => {
+                                            return <option>{item.node_type_id} </option>;
+                                        })}
+
                                     <option>Standard_DS3_v2 56 GB | 16 Cores </option>
                                     <option>UnStandard_DS3_v2 56 GB | 16 Cores </option>
                                     <option>DisStandard_DS3_v2 56 GB | 16 Cores </option>
@@ -207,12 +214,19 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                                 Enable autoscaling
                             </FormLabel>
                         </FormControl>
-                        <FormControl display="flex" alignItems="center">
-                            <Switch id="terminate-after" />
+                        <FormControl display="flex" alignItems="center" onChange={formik.handleChange}>
+                            <Switch id="terminate-after" onChange={handleTerminateAfter} />
                             <FormLabel htmlFor="terminate-after" mb="0" ml={7}>
                                 Terminate after
                             </FormLabel>
-                            <Input type="text" id="max_inactivity_min" name="max_inactivity_min" value={formik.values.max_inactivity_min} onChange={formik.handleChange} />
+                            <Input
+                                type="text"
+                                id="max_inactivity_min"
+                                disabled={!formik.values.terminate_after}
+                                name="max_inactivity_min"
+                                value={formik.values.max_inactivity_min}
+                                onChange={formik.handleChange}
+                            />
                             <FormLabel mb="0" ml={8}>
                                 minutes of inactivity
                             </FormLabel>
@@ -220,7 +234,7 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                     </ModalBody>
 
                     <ModalFooter height="var(--chakra-space-75)" borderTop="1px solid #EAEAEA" padding={'20'}>
-                        <Button colorScheme="blue" type="button" onClick={cancel} fontSize={16} variant="outline" pt={'10'} pb={'10'} pl={'17'} pr={'17'}>
+                        <Button colorScheme="blue" type="button" onClick={cancel} disabled fontSize={16} variant="outline" pt={'10'} pb={'10'} pl={'17'} pr={'17'}>
                             Cancel
                         </Button>
                         <Button colorScheme="blue" type="submit" fontSize={16} ml={15} pt={'10'} pb={'10'} pl={'17'} pr={'17'}>
