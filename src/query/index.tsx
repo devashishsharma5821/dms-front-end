@@ -100,6 +100,38 @@ export const setSettingsData = (userName: string, token: string) => {
         `;
 };
 
+export const getComputeListData = () =>{
+    const GET_COMPUTELIST = gql`
+        query {
+            dmsComputes {
+                id
+                name    
+                resources {
+                instance_pool {
+                    worker_pool_id
+                    driver_pool_id
+                }
+                node_type {
+                    worker_type_id
+                    driver_type_id
+                }
+                autoscale {
+                    min_workers
+                    max_workers
+                }
+                num_workers
+                spot_instances
+                }
+                max_inactivity_min
+                cluster_policy_id
+                status
+                created_by
+                created_at
+            }
+            }
+        `;
+        return { GET_COMPUTELIST };
+};
 export const GET_DB_SETTINGS = gql`
     query db_settings {
         dmsDatabricksSettings {
