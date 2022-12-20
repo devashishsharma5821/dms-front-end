@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 
-import { Box, Flex, Divider, useColorModeValue, Center, VStack, Square,Text, HStack } from '@chakra-ui/react';
+import { Box, Flex, Divider, useColorModeValue, Center, VStack, Square, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
 import './SideBarMenu.scss';
-import { CreateIcon, WhiteComputeIcon, WideCreateIcon } from '../../assets/icons';
+import { CreateIcon, WideCreateIcon } from '../../assets/icons';
 import CreateNew from '../createNew/CreateNew';
-
+import CommuteModal from './ComputeModal';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -15,7 +15,7 @@ const SideBarMenu = () => {
     const [activateSubMenu, setActivateSubMenu] = React.useState(false);
     const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
     const [currentIndex, setCurrentIndex] = React.useState(0);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const createModal = useDisclosure();
     const navigate = useNavigate();
     const hoverIn = () => {
         setIsHovering(true);
@@ -49,6 +49,9 @@ const SideBarMenu = () => {
         }
     };
 
+   const triggerCreateModal = () => {
+       createModal.onOpen();
+   };
    const secondLevelMenu = () => {
        console.log('Switch', sideBarMenuIcons);
        
@@ -60,7 +63,7 @@ const SideBarMenu = () => {
                          sideBarMenuIcons[0].section[currentIndex].isClicked &&
                          <Box width={'254px'}  pl={'0px'} mt="17" >
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' &&
-                                <h3><CreateNew/>  </h3>
+                                <h3><CreateNew openCreateModal={() => triggerCreateModal()}/></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
                              <h3>Add the Recent Component Here</h3>
@@ -83,11 +86,11 @@ const SideBarMenu = () => {
                     <VStack>
                         {!isHovering && (
                             <Box ml="6" mr="6" mt="30">
-                                <Box width={'38px'} height={'40px'}>
+                                {/* <Box width={'38px'} height={'40px'}>
                                     <Square>
                                         <CreateIcon />
                                     </Square>
-                                </Box>
+                                </Box> */}
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
@@ -117,11 +120,11 @@ const SideBarMenu = () => {
                         )}
                         {isHovering && (
                             <Box width="212px" mt="30">
-                                <Box width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'} onClick={onOpen}>
+                                {/* <Box width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'}>
                                     <Square>
                                         <WideCreateIcon />
                                     </Square>
-                                </Box>
+                                </Box> */}
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
@@ -171,8 +174,7 @@ const SideBarMenu = () => {
                         )}
                     </VStack>
                 </Flex>
-
-                <CommuteModal isOpen={isOpen} onClose={onClose}></CommuteModal>
+                <CommuteModal isOpen={createModal.isOpen} onClose={createModal.onClose}></CommuteModal>
             </div>
             {activateSubMenu && secondLevelMenu()}
         </Flex>
