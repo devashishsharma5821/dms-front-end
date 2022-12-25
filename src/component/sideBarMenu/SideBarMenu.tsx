@@ -63,7 +63,7 @@ const SideBarMenu = () => {
                          sideBarMenuIcons[0].section[currentIndex].isClicked &&
                          <Box width={'254px'}  pl={'0px'} mt="17" >
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' &&
-                                <h3><CreateNew openCreateModal={() => triggerCreateModal()}/></h3>
+                                <h3><CreateNew openCreateModal={() => triggerCreateModal()} /></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
                              <h3>Add the Recent Component Here</h3>
@@ -86,14 +86,23 @@ const SideBarMenu = () => {
                     <VStack>
                         {!isHovering && (
                             <Box ml="6" mr="6" mt="30">
-                                {/* <Box width={'38px'} height={'40px'}>
+                               {/* <Box width={'38px'} height={'40px'}>
                                     <Square>
                                         <CreateIcon />
                                     </Square>
-                                </Box> */}
+                                </Box>  */}
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
+                                        if (icons.iconName === 'Create') {
+                                            return (
+                                                <Box width={'38px'} height={'40px'}>
+                                    <Square>
+                                        <CreateIcon />
+                                    </Square>
+                                </Box>
+                                            )
+                                        }
                                         if (lastItemLength === iconIndex) {
                                             return (
                                                 <>
@@ -128,10 +137,23 @@ const SideBarMenu = () => {
                                 {sideBarMenuIcons.map((sections, sectionIndex) => {
                                     const lastItemLength = sections.section.length - 1;
                                     const listSections = sections.section.map((icons, iconIndex) => {
+                                        if (icons.iconName === 'Create') {
+                                            return (
+                                                <Box onClick={() => {
+                                                    checkForSubMenuOrNavigation(icons, iconIndex);
+                                                }} width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'}>
+                                    <Square>
+                                        <WideCreateIcon />
+                                    </Square>
+                                </Box>
+                                            )
+                                        }
                                         if (lastItemLength === iconIndex) {
                                             return (
                                                 <>
-                                                    <Center
+                                                    <Flex
+                                                        align="center"
+                                                        justify="left"
                                                         onClick={() => {
                                                             checkForSubMenuOrNavigation(icons, iconIndex);
                                                         }}
@@ -143,7 +165,7 @@ const SideBarMenu = () => {
                                                         <Box pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
                                                             <Square className="text">{icons.iconName}</Square>
                                                         </Box>
-                                                    </Center>
+                                                    </Flex>
                                                     <Center>
                                                         <Divider mb={'8px'} ml={'8px'} mr={'8px'} orientation="horizontal" bg={'dark.borderColor'} />
                                                     </Center>
@@ -151,7 +173,9 @@ const SideBarMenu = () => {
                                             );
                                         } else {
                                             return (
-                                                <Center
+                                                <Flex
+                                                    align="center"
+                                                    justify="left"
                                                     onClick={() => {
                                                         checkForSubMenuOrNavigation(icons, iconIndex);
                                                     }}
@@ -163,7 +187,7 @@ const SideBarMenu = () => {
                                                     <Box pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
                                                         <Square className="text">{icons.iconName}</Square>
                                                     </Box>
-                                                </Center>
+                                                </Flex>
                                             );
                                         }
                                     });

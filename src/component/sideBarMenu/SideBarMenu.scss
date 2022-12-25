@@ -1,7 +1,9 @@
 .sidebar {
     justify-content: flex-end;
-    margin-right: 60%;
    .text{
     width: max-content;
    }
+}
+.sidebar:hover {
+    background-color: red;
 }
