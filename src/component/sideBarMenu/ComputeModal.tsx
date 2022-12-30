@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useApolloClient, gql, DocumentNode } from '@apollo/client';
+import React, { useState, useEffect } from 'react';
+import { useApolloClient, DocumentNode } from '@apollo/client';
 import {
     Box,
     Modal,
@@ -17,19 +17,44 @@ import {
     Switch,
     Text,
     Tooltip,
-    FormErrorMessage
+    FormErrorMessage,
+    useToast
 } from '@chakra-ui/react';
 import BlackbottomedTriangleIcon from '../../assets/icons/BlackbottomedTriangleIcon';
 import InfoIcon from '../../assets/icons/InfoIcon';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import useGetDbSettings from '../../hooks/useGetDbSettings';
+import { dmsCreateComputeOnEnableAutoscaling, dmsCreateComputeOffEnableAutoscaling, GET_DB_SETTINGS, getComputeListData, wsconnect } from '../../query/index';
+import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
+import { COMPUTE_MODAL_PROPS, dbSettingstype } from '../../models/types';
+import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
+import useAppStore from '../../store';
 
-const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
+const ComputeModal = (props: COMPUTE_MODAL_PROPS) => {
+    const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
+    const [dbSettingsData, setDbSettingsData] = useState<dbSettingstype[]>();
+    const [rowData, setRowData] = useState<ComputeDetail[]>();
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const client = useApolloClient();
-    const dbSettingsData = useGetDbSettings();
+    const toast = useToast();
+    useEffect(() => {
+        wsconnect((e: any) => {
+            console.log('Inside calback', e);
+        });
+    }, []);
+    // useEffect(() => {
+    //     client
+    //         .query<any>({
+    //             query: GET_DB_SETTINGS
+    //         })
+    //         .then((response) => {
+    //             setDbSettingsData(response.data.dmsDatabricksSettings.node_types);
+    //         })
+    //         .catch((err) => {
+    //             console.log('catch', err);
+    //         });
+    // }, []);
 
     const validationSchema = Yup.object().shape({
         enableAutoScaling: Yup.boolean(),
@@ -65,61 +90,57 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
+            setIsLoading(true);
             setError('');
             let mutation: DocumentNode | null = null;
             if (!formik?.values?.enableAutoScaling) {
-                mutation = gql`
-                        mutation {
-                            dmsCreateCompute(
-                                name: "${values.compute_name}",
-                                resources:{
-                                node_type: { 
-                                    worker_type_id: "${values.worker_type_id}" 
-                                    },
-                                    num_workers: ${values.workers} ,
-                                    spot_instances: ${values.spot_instances}
-                                } ,
-                                max_inactivity_min: ${values.terminate_after ? values.max_inactivity_min : 0}
-                                )
-                        }
-                        `;
+                mutation = dmsCreateComputeOffEnableAutoscaling(values);
             } else {
-                mutation = gql`mutation {
-                        dmsCreateCompute(
-                          name: "${values.compute_name}",
-                          resources: {
-                            node_type: { 
-                                worker_type_id: "${values.worker_type_id}" 
-                            },
-                            spot_instances: ${values.spot_instances},
-                            autoscale: {
-                                min_workers: ${values.min_workers},
-                                max_workers: ${values.max_workers}
-                            }
-                        },
-                          max_inactivity_min: ${values.terminate_after ? values.max_inactivity_min : 0},
-                        )
-                      }
-                      `;
+                mutation = dmsCreateComputeOnEnableAutoscaling(values);
+            }
+
+            interface createCompute {
+                dmsCreateCompute: string;
             }
             client
-                .mutate<any>({
+                .mutate<dmsCreateComputeResponse<createCompute>>({
                     mutation: mutation
                 })
                 .then((response) => {
+                    setIsLoading(false);
+                    toast({
+                        title: `Compute created successfully`,
+                        status: 'success',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                    const { GET_COMPUTELIST } = getComputeListData();
+                    client
+                        .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                            query: GET_COMPUTELIST
+                        })
+                        .then((response) => {
+                            let computedata = [...response.data.dmsComputes];
+                            updateDmsComputeData(computedata);
+                            setRowData(computedata);
+                            //updateTransformersData(transformerdata)
+                        })
+                        .catch((err) => console.error(err));
                     formik.handleReset();
-                    cancel();
-                    // props.onClose();
+                    props.onClose();
                 })
-                .catch((err) => console.error(err));
+                .catch((err) => {
+                    toast({
+                        title: `${err}`,
+                        status: 'error',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                });
         }
     });
-
-    const cancel = () => {
-        props.onClose((prev: boolean) => {
-            return !prev;
-        });
-    };
 
     const handleAutoScaling = (event: React.ChangeEvent<HTMLInputElement>) => {
         formik.setFieldValue('enableAutoScaling', event.target.checked);
@@ -174,10 +195,6 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                                         dbSettingsData.map((item) => {
                                             return <option>{item.node_type_id} </option>;
                                         })}
-
-                                    <option>Standard_DS3_v2 56 GB | 16 Cores </option>
-                                    <option>UnStandard_DS3_v2 56 GB | 16 Cores </option>
-                                    <option>DisStandard_DS3_v2 56 GB | 16 Cores </option>
                                 </Select>
                             </FormControl>
                             {formik.values.enableAutoScaling && (
@@ -234,10 +251,10 @@ const ComputeModal = (props: { isOpen: boolean; onClose: any }) => {
                     </ModalBody>
 
                     <ModalFooter height="var(--chakra-space-75)" borderTop="1px solid #EAEAEA" padding={'20'}>
-                        <Button colorScheme="blue" type="button" onClick={cancel} disabled fontSize={16} variant="outline" pt={'10'} pb={'10'} pl={'17'} pr={'17'}>
+                        <Button colorScheme="blue" type="button" onClick={props.onClose} fontSize={16} variant="outline" pt={'10'} pb={'10'} pl={'17'} pr={'17'}>
                             Cancel
                         </Button>
-                        <Button colorScheme="blue" type="submit" fontSize={16} ml={15} pt={'10'} pb={'10'} pl={'17'} pr={'17'}>
+                        <Button colorScheme="blue" type="submit" disabled={isLoading ? true : false} fontSize={16} ml={15} pt={'10'} pb={'10'} pl={'17'} pr={'17'}>
                             Create
                         </Button>
                     </ModalFooter>

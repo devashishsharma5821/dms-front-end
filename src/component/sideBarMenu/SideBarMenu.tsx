@@ -49,35 +49,33 @@ const SideBarMenu = () => {
         }
     };
 
-   const triggerCreateModal = () => {
-       createModal.onOpen();
-   };
-   const secondLevelMenu = () => {
-       console.log('Switch', sideBarMenuIcons);
-       
-     return (
-         <div style={{...zIndexStyle, position:'absolute', marginLeft:'212px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
-             <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
-                 <VStack>
-                     {
-                         sideBarMenuIcons[0].section[currentIndex].isClicked &&
-                         <Box width={'254px'}  pl={'0px'} mt="17" >
-                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' &&
-                                <h3><CreateNew openCreateModal={() => triggerCreateModal()}/></h3>
-                             }
-                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
-                             <h3>Add the Recent Component Here</h3>
-                             }
-                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' &&
-                             <h3>Add the Explorer Component Here</h3>
-                             }
-                         </Box>
-                     }
-                 </VStack>
-             </Flex>
-         </div>
-     );
-   };
+    const triggerCreateModal = () => {
+        createModal.onOpen();
+        navigate('/compute');
+    };
+    const secondLevelMenu = () => {
+        console.log('Switch', sideBarMenuIcons);
+
+        return (
+            <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
+                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
+                    <VStack>
+                        {sideBarMenuIcons[0].section[currentIndex].isClicked && (
+                            <Box width={'254px'} pl={'0px'} mt="17">
+                                {sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' && (
+                                    <h3>
+                                        <CreateNew openCreateModal={() => triggerCreateModal()} />
+                                    </h3>
+                                )}
+                                {sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' && <h3>Add the Recent Component Here</h3>}
+                                {sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' && <h3>Add the Explorer Component Here</h3>}
+                            </Box>
+                        )}
+                    </VStack>
+                </Flex>
+            </div>
+        );
+    };
 
     return (
         <Flex>
