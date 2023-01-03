@@ -5,7 +5,7 @@ import { SwitchOff, SwitchOn } from '../../assets/icons';
 export const ColorModeSwitcher = (props: Omit<IconButtonProps, 'aria-label'>) => {
     const { toggleColorMode } = useColorMode();
     const text = useColorModeValue('Dark Mode', 'Light Mode');
-    const SwitchIcon = useColorModeValue(SwitchOff, SwitchOn);
+    const SwitchIcon: any = useColorModeValue(SwitchOff, SwitchOn);
 
     return (
         <Flex>
