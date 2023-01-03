@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './CreateNew.scss';
 import { Box, Center, Divider, Flex, Square, Text, useColorModeValue } from '@chakra-ui/react';
+
 import PlusIcont from '../../assets/icons/PlusIcont';
 import {  WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteWorkflowsIcon, } from '../../assets/icons';
 
@@ -10,7 +11,7 @@ const CreateNew = (props: any) => {
         if(type === 'Compute') {
             props.openCreateModal();
         }
-    };
+    };     
     const subMenuForCreate = [
         {
             sections: [
@@ -52,22 +53,35 @@ const CreateNew = (props: any) => {
     return (
         <>
   
-         <Flex mt={'16px'}>
+         <Flex mt={'1px'}>
             <Square ml={'16px'}><PlusIcont/></Square>
             
             <Text fontWeight={800}  ml={'11px'} color={textColor}> Create New</Text>
         </Flex>
-        <Divider mt={'16px'} mb={'10px'} orientation="horizontal" bg={'dark.borderColor'} />
+        <Divider mt={'16px'} mb={'10px'} orientation="horizontal" bg={'light.lighterGrayishBlue'} />
             { subMenuForCreate && subMenuForCreate.map(row => {
                     return (
                         <Flex>
                             { row.sections && row.sections.map(section => {
                                 return (
-                                    <Box ml={'14px'}  bg='default.lightGray' width={'106px'} height="76px" mt={'14px'} borderRadius={'2'} onClick={ () => triggerAction(section.name) }>
-                                        <Center mt={'17px'} >
-                                            {section.icon}
+                                    <Box
+                                      _hover={{ bg: "default.toolbarButton", color: "white" }} 
+                                      ml={'14px'} 
+                                      bg='default.lightGray'
+                                      width={'106px'} 
+                                      height="76px"
+                                      mt={'14px'}
+                                      className="sidebar-box"
+                                      borderRadius={'4'} 
+                                      onClick={ () => triggerAction(section.name) } >
+
+                                        <Center mt={'14px'}  >
+                                            {section.icon }
                                         </Center>
-                                        <Text textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}> {section.name} </Text>
+                                      
+                                       
+                                        <Box  textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}> {section.name} </Box>
+                                        
                                     </Box >
                                 )
                             })}

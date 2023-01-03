@@ -1,16 +1,12 @@
 .sidebar {
     justify-content: flex-end;
-    margin-right: 60%;
-    .text {
-        width: max-content;
-    }
-}
 
-.main-container {
-    display: flex;
-    justify-content: flex-end;
-    .cancel-button {
-        margin-right: 10px;
-    }
-    margin-top: 5px;
-}
+   .text{
+    width: max-content;
+   }
+// .sidebar:hover {
+//     background: #2180C2;
+//     border-radius: 2px;
+//     width: 200px;
+//     margin: auto;
+// }
