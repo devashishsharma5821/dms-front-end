@@ -72,10 +72,10 @@ const CreateNew = (props: any) => {
                                       height="76px"
                                       mt={'14px'}
                                       className="sidebar-box"
-                                      borderRadius={'2'} 
+                                      borderRadius={'4'} 
                                       onClick={ () => triggerAction(section.name) } >
 
-                                        <Center mt={'17px'}  >
+                                        <Center mt={'14px'}  >
                                             {section.icon }
                                         </Center>
                                       
