@@ -1,0 +1,71 @@
+{
+    "compute_name": {
+        "type": "text",
+        "label": "Compute Name",
+        "required": true,
+        "show": true,
+        "errormessage": "Compute Name is required",
+        "className": "computeName"
+    },
+    "worker_type_id": {
+        "type": "select",
+        "label": "Worker Type",
+        "className": "workerType",
+        "errormessage": "Select Worker Type Id",
+        "child": "child",
+        "options": []
+    },
+    "workers": {
+        "type": "number",
+        "label": "Workers",
+        "required": true,
+        "show": true,
+        "child": "child",
+        "errormessage": "Workers is required",
+        "className": "Workers",
+        "min": "0"
+    },
+    "min_workers": {
+        "type": "number",
+        "label": "Min Workers",
+        "show": false,
+        "errormessage": "Workers is required",
+        "className": "minWorkers",
+        "min": "0"
+    },
+    "max_workers": {
+        "type": "number",
+        "label": "Max Workers",
+        "show": false,
+        "errormessage": "Workers is required",
+        "className": "maxWorkers",
+        "min": "0"
+    },
+    "spot_instances": {
+        "type": "switch",
+        "label": "Spot Instances",
+        "className": "spotInstances",
+        "min": "0"
+    },
+    "enable_autoscaling": {
+        "type": "switch",
+        "label": "Enable autoscalings",
+        "className": "enableAutoscaling",
+        "min": "0"
+    },
+    "terminate_after": {
+        "type": "switch",
+        "label": "Terminate after",
+        "className": "terminateAfter",
+        "min": "0"
+    },
+    "max_inactivity_min": {
+        "type": "number",
+        "label": "minutes of inactivity",
+        "show": true,
+        "disable": true,
+        "errormessage": "minutes of inactivity",
+        "className": "minutesOfInactivity",
+        "min": "0"
+    }
+}

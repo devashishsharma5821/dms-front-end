@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import './compute.scss';
 import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -10,14 +10,19 @@ import ReStartIcon from '../../assets/icons/ReStartIcon';
 import EditIcon from '../../assets/icons/EditIcon';
 import DeleteIcon from '../../assets/icons/DeleteIcon';
 import SwitchComponent from './SwitchComponent';
-
+import { SwitchOff } from '../../assets/icons';
 import client from '../../apollo-client';
 import { getComputeListData } from '../../query';
 import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
 import { AgGridReact } from 'ag-grid-react';
 import SearchComponent from '../../component/search/SearchComponent';
 import ComputeJsonModal from '../../component/sideBarMenu/ComputeJsonModal';
+import StopComputeRunningModals from '../../pages/compute/StopComputeRunningModals';
 import useAppStore from '../../store';
+import { gql } from '@apollo/client';
+
+import { Spinner } from '@chakra-ui/react';
+import DeleteComputeModal from './DeleteComputeModal';
 
 interface ComputeData {
     computeName: string;
@@ -30,19 +35,77 @@ interface ComputeData {
 const Compute = () => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const StopComputeRunning = useDisclosure();
+    const [loading, setLoading] = useState(false);
     const [updateDmsComputeStatus, DmsComputeStatus] = useAppStore((state: any) => [state.updateDmsComputeStatus, state.DmsComputeStatus]);
-
+    const [cellId, setCellId] = useState<any>();
     const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
-    //const textColor = useColorModeValue('light.header', 'dark.white');
+    const deleteCompute = useDisclosure();
+    const [deleteCellId, setdeleteCellId] = useState<any>();
+    const [stopCellId, setStopCellId] = useState<any>();
+
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
+
+    const onPlayClickHandler: any = (cellId: string | undefined) => {
+        setLoading(true);
+        console.log('running', cellId);
+        const mutation = gql` 
+        mutation {
+            dmsRunCompute(  
+               id: "${cellId}"  
+                  ) {
+                    job_id,
+                    job_run_id
+                  }
+            }`;
+
+        client
+            .mutate<any>({
+                mutation: mutation
+            })
+            .then((response) => {
+                setLoading(false);
+                const { GET_COMPUTELIST } = getComputeListData();
+                client
+                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                        query: GET_COMPUTELIST
+                    })
+                    .then((response) => {
+                        console.log('response data of get ===>', response);
+                        let computedata = [...response.data.dmsComputes];
+                        updateDmsComputeStatus(computedata);
+                    })
+                    .catch((err) => console.error(err));
+            });
+    };
+
+    const onDeleteClickHandler: any = (cellId: string | undefined) => {
+        setdeleteCellId(cellId);
+        deleteCompute.onOpen();
+    };
+
+    const onStopClickHandler: any = (cellId: string | undefined) => {
+        setStopCellId(cellId);
+        StopComputeRunning.onOpen();
+    };
+
     const actionsRow = (params: any) => {
-        console.log(params);
         return (
             <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
-                <PlayIcon />
+                {params.data.status === 'STOPPED' ? (
+                    <div onClick={() => onPlayClickHandler(params.data.id)}>
+                        <PlayIcon />
+                    </div>
+                ) : (
+                    <div onClick={() => onStopClickHandler(params.data.id)}>
+                        <SwitchOff />
+                    </div>
+                )}
                 <ReStartIcon />
                 <EditIcon />
-                <DeleteIcon />
+                <div onClick={() => onDeleteClickHandler(params.data.id)}>
+                    <DeleteIcon />
+                </div>
             </Flex>
         );
     };
@@ -50,7 +113,6 @@ const Compute = () => {
         checked = !checked;
     };
     const defaultRow = (params: any) => {
-        console.log(params);
         let isChecked = params.data.default;
         return <SwitchComponent params={params} />;
     };
@@ -82,7 +144,13 @@ const Compute = () => {
         } else {
             setRowData(DmsComputeStatus);
         }
-    }, []);
+    }, [DmsComputeStatus]);
+
+    const onCellClicked = (params: any) => {
+        setCellId(params.data.id);
+        actionsRow(params.data.id);
+    };
+
     return (
         <>
             <Box marginLeft={36}>
@@ -124,11 +192,22 @@ const Compute = () => {
 
                         <Box mr={'17'} mb={'17'}>
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
-                                <AgGridReact<ComputeDetail> ref={gridRef} rowData={rowData} columnDefs={columnDefs} rowSelection={'single'} animateRows={true}></AgGridReact>
+                                {loading && <Spinner></Spinner>}
+                                <AgGridReact<ComputeDetail>
+                                    ref={gridRef}
+                                    rowData={rowData}
+                                    columnDefs={columnDefs}
+                                    onCellClicked={onCellClicked}
+                                    onRowClicked={(e) => console.log('row clicked', e.rowIndex)}
+                                    rowSelection={'single'}
+                                    animateRows={true}
+                                ></AgGridReact>
                             </Box>
                         </Box>
                     </Box>
                     <ComputeJsonModal isOpen={isOpen} onClose={onClose}></ComputeJsonModal>
+                    <DeleteComputeModal cellId={deleteCellId} isOpen={deleteCompute.isOpen} onClose={deleteCompute.onClose} />
+                    <StopComputeRunningModals cellId={stopCellId} isOpen={StopComputeRunning.isOpen} onClose={StopComputeRunning.onClose} />
                 </Box>
             </Box>
         </>

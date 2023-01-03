@@ -205,7 +205,6 @@ const JsonComputeModal = (props: any) => {
         }
     };
 
-    // const log = (type: any) => console.log.bind(console, type);
     const onSubmit = ({ formData }: any, e: any) => {
         let mutation: DocumentNode | null = null;
         if (formData.enableAutoScalingConditional.enable_autoscaling) {
