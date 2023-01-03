@@ -1,0 +1,84 @@
+.mainContainer {
+    width: 100%;
+    display: grid;
+}
+
+.computeName {
+    margin-bottom: 4px;
+}
+
+.workerType {
+    width: 50%;
+    margin-right: 10px;
+    display: inline-block;
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.Workers {
+    display: inline-block;
+    grid-column-start: 2;
+    grid-column-end: 4;
+}
+
+.minWorkers {
+    width: 20%;
+    display: inline-block;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    margin-right: 10px;
+}
+
+.maxWorkers {
+    width: 20%;
+    display: inline-block;
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.spotInstances {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-top: 25px;
+    margin-bottom: 5px;
+    label {
+        margin-right: 7px;
+    }
+}
+
+.enableAutoscaling {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    label {
+        margin-right: 7px;
+    }
+}
+
+.terminateAfter {
+    width: 30%;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    label {
+        margin-right: 7px;
+    }
+}
+
+.minutesOfInactivity {
+    width: 70%;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    input {
+        margin-right: 7px;
+    }
+}
+
+.minmaxWorkerIsEnableAutoscaling {
+    width: 0% !important;
+}

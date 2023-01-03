@@ -79,6 +79,7 @@ const SideBarMenu = () => {
      );
    };
 
+
     return (
         <Flex>
             <div style={{ ...zIndexStyle, position: 'absolute' }} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>

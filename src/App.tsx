@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { useMsal, useAccount, useIsAuthenticated  } from '@azure/msal-react';
+import { useMsal, useAccount, useIsAuthenticated } from '@azure/msal-react';
 import { EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { protectedResources } from './authConfig';
 
-import UserConfiguration  from './user-config';
+import UserConfiguration from './user-config';
 
 const App = () => {
     const { instance, accounts, inProgress } = useMsal();
@@ -40,6 +40,8 @@ const App = () => {
     }, [account, inProgress, instance]);
 
     useEffect(() => {
+        // instance.logout();
+
         const callbackId = instance.addEventCallback((event: any) => {
             if (event.eventType === EventType.LOGIN_FAILURE) {
                 instance.logout();
@@ -56,10 +58,7 @@ const App = () => {
         };
     }, [instance]);
 
-   
-    return <>
-        { isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span> }
-    </>
+    return <>{isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span>}</>;
 };
 
 export default App;

@@ -1,0 +1,87 @@
+[
+    {
+        "page_label": "Create Compute",
+        "fields": [
+            {
+                "field_id": "Compute_name",
+                "field_label": "Compute Name",
+                "field_className": "computeName",
+                "field_mandatory": "yes",
+                "field_type": "text",
+                "field_value": "",
+                "field_show": true,
+                "field_required": true
+            },
+            {
+                "field_id": "Worker Type",
+                "field_label": "Worker Type",
+                "field_mandatory": "yes",
+                "field_type": "select",
+                "field_className": "workerType",
+                "field_options": ["Standard_DS3_v2 56 GB | 16 Cores", "UnStandard_DS3_v2 56 GB | 16 Cores", "DisStandard_DS3_v2 56 GB | 16 Cores"]
+            },
+            {
+                "field_id": "Workers",
+                "field_label": "Workers",
+                "field_className": "workers",
+                "field_mandatory": "yes",
+                "field_type": "number",
+                "field_value": "",
+                "field_show": true,
+                "field_required": true
+            },
+            {
+                "field_id": "min_workers",
+                "field_className": "minWorkers",
+                "field_label": "Min Workers",
+                "field_mandatory": "yes",
+                "field_type": "number",
+                "field_value": "",
+                "field_show": false,
+                "field_required": true
+            },
+            {
+                "field_id": "max_workers",
+                "field_label": "Max Workers",
+                "field_className": "maxWorkers",
+                "field_mandatory": "yes",
+                "field_type": "number",
+                "field_value": "",
+                "field_show": false,
+                "field_required": true
+            },
+            {
+                "field_id": "Spot instances",
+                "field_label": "Spot instances",
+                "field_className": "spotInstances",
+                "field_type": "checkbox",
+                "field_value": false
+            },
+            {
+                "field_id": "Enable autoscaling",
+                "field_label": "Enable autoscalings",
+                "field_className": "enableAutoscaling",
+                "field_type": "checkbox",
+                "field_value": false
+            },
+            {
+                "field_id": "Terminate after",
+                "field_label": "Terminate after",
+                "field_className": "terminateAfter",
+                "field_type": "checkbox",
+                "field_value": false
+            },
+            {
+                "field_id": "minutes of inactivity",
+                "field_label": "minutes of inactivity",
+                "field_className": "minutesOfInactivity",
+                "field_mandatory": "yes",
+                "field_type": "number",
+                "field_value": "",
+                "field_show": true,
+                "field_disabled": true,
+                "field_required": true
+            }
+        ]
+    }
+]

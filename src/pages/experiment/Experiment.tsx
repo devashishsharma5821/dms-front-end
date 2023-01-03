@@ -1,33 +1,111 @@
 import React, { useState, useEffect } from 'react';
-import { wsconnect } from '../../query';
+import { getComputeListData, wsconnect } from '../../query';
 import './experiment.scss';
+import { useNavigate } from 'react-router';
 import { Button, Box, Flex, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import Toolbar from '../../component/toolbar/Toolbar';
 import Designer from '../../component/designer/Designer';
 import Details from '../../component/details/Details';
-import useDmsCheckDatabricksCred from '../../hooks/useDmsCheckDatabricksCred';
-import useDmsComputeStatus from '../../hooks/useDmsComputeStatus';
 import ComputeModal from '../../component/sideBarMenu/ComputeModal';
 import Settings from '../../component/settings/Settings';
+import { useApolloClient } from '@apollo/client';
+import { GET_DMS_COMPUTE_STATUS } from '../../query/index';
+import { ComputeDetailListResponse, ComputeDetail } from '../../models/computeDetails';
+import { GET_DATABRICKS_CREDS } from '../../query/index';
+import { DataBricksTokenResponse } from '../../models/dataBricksTokenResponse';
+import { DataBricksTokenDetails } from '../../models/types';
+import useAppStore from '../../store';
+import ComputeJsonModal from '../../component/sideBarMenu/ComputeJsonModal';
+import IsRunningModal from './IsRunningModal';
 
 const ExperimentsPage = () => {
+    const [updateDmsDatabricksCredentialsValidToken, token, updateDmsComputeStatus, DmsComputeStatus, DmsComputeData, updateDmsComputeData] = useAppStore((state: any) => [
+        state.updateDmsDatabricksCredentialsValidToken,
+        state.DmsDatabricksCredentialsValidToken,
+        state.updateDmsComputeStatus,
+        state.DmsComputeStatus,
+        state.DmsComputeData,
+        state.updateDmsComputeData
+    ]);
+    const computeRunningModal = useDisclosure();
     const [message, setMessage] = useState('Status');
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const computeModal = useDisclosure();
+    const client = useApolloClient();
     const settingsModal = useDisclosure();
-    let dataBricksToken = useDmsCheckDatabricksCred();
-    const computeData = useDmsComputeStatus();
+
+    let dmsComputeRunningStatusIsDefaultOne;
     useEffect(() => {
-        if (dataBricksToken) {
-            if (computeData) {
-                setIsModalOpen(true);
-            }
-        } else {
-            // here we will open settingsModal which will set the databricks token. We have settings modal, so open it by uncommenting line below and for now staticly make dataBricksToken false.
-            settingsModal.onOpen();
-        }
-    }, [dataBricksToken, computeData]);
+        client
+            .query<DataBricksTokenResponse<DataBricksTokenDetails>>({
+                query: GET_DATABRICKS_CREDS
+            })
+            .then((response) => {
+                updateDmsDatabricksCredentialsValidToken(response.data.dmsCheckDatabricksCredentials.valid);
+                const { GET_COMPUTELIST } = getComputeListData();
+
+                if (response.data.dmsCheckDatabricksCredentials.valid) {
+                    if (DmsComputeStatus.length === 0) {
+                        client
+                            .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                                query: GET_COMPUTELIST
+                            })
+                            .then((response) => {
+                                if (!(response.data.dmsComputes.length === 0)) {
+                                    computeModal.onOpen();
+                                } else {
+                                    const dmsComputeRunningStatus = response.data.dmsComputes.filter((compute) => compute.status === 'RUNNING');
+                                    if (dmsComputeRunningStatus.length === 0) {
+                                        computeRunningModal.onOpen();
+                                    } else {
+                                        const dmsComputeRunningStatusIsDefault = dmsComputeRunningStatus.filter((compute) => compute?.is_default === true);
+                                        if (dmsComputeRunningStatusIsDefault.length === 0) {
+                                            response.data.dmsComputes[0].is_default = true;
+                                            dmsComputeRunningStatusIsDefaultOne = response.data.dmsComputes[0];
+                                        } else {
+                                            dmsComputeRunningStatusIsDefaultOne = dmsComputeRunningStatusIsDefault[0];
+                                        }
+                                    }
+                                }
+                                updateDmsComputeStatus(response.data.dmsComputes);
+                            });
+                    } else {
+                        if (DmsComputeStatus.length === 0) {
+                            computeModal.onOpen();
+                        } else {
+                            const dmsComputeRunningStatus = DmsComputeStatus.filter((compute: any) => compute.status === 'RUNNING');
+                            if (!(dmsComputeRunningStatus.length === 0)) {
+                                computeRunningModal.onOpen();
+                            } else {
+                                const dmsComputeRunningStatusIsDefault = dmsComputeRunningStatus.filter((compute: any) => compute?.is_default === true);
+                                if (dmsComputeRunningStatusIsDefault.length === 0) {
+                                    DmsComputeStatus[0].is_default = true;
+                                    dmsComputeRunningStatusIsDefaultOne = DmsComputeStatus[0];
+                                } else {
+                                    dmsComputeRunningStatusIsDefaultOne = dmsComputeRunningStatusIsDefault[0];
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    settingsModal.onOpen();
+                }
+            });
+    }, []);
+
+    useEffect(() => {
+        const { GET_COMPUTELIST } = getComputeListData();
+        client
+            .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                query: GET_COMPUTELIST
+            })
+            .then((response) => {
+                let computedata = [...response.data.dmsComputes];
+                updateDmsComputeData(computedata);
+            })
+            .catch((err) => console.error(err));
+    }, []);
 
     // const {i18n,  config } = useAppStore();
     // const [currentLang, setCurrentLang] = useState('en_US');
@@ -81,7 +159,7 @@ const ExperimentsPage = () => {
         <>
             <Box width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar computeData={computeData} />
+                    <Toolbar computeData={DmsComputeData} is_default={dmsComputeRunningStatusIsDefaultOne} />
                 </Box>
                 <Flex>
                     <TransformerMenu />
@@ -99,8 +177,10 @@ const ExperimentsPage = () => {
                         {/*</Button>*/}
                     </Box>
                 </Flex>
-                <ComputeModal isOpen={isModalOpen} onClose={setIsModalOpen}></ComputeModal>
+                {computeModal.isOpen && <ComputeJsonModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeJsonModal>}
+                {/* <ComputeModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeModal> */}
                 <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose}></Settings>
+                <IsRunningModal isOpen={computeRunningModal.isOpen} onClose={computeRunningModal.onClose}></IsRunningModal>
             </Box>
         </>
     );
