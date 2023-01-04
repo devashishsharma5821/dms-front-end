@@ -27,4 +27,5 @@ export { PageNotFoundLogo} from './NotFoundPageLogo';
 export { WideCreateIcon} from './WideCreateIcon';
 export {DeployedNotRunningIcon} from './DeployNotRunning';
 export {PlusIcont} from './PlusIcont';
+export {StopCompute} from './StopComputeIcon';
 

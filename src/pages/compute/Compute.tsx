@@ -10,7 +10,7 @@ import ReStartIcon from '../../assets/icons/ReStartIcon';
 import EditIcon from '../../assets/icons/EditIcon';
 import DeleteIcon from '../../assets/icons/DeleteIcon';
 import SwitchComponent from './SwitchComponent';
-import { SwitchOff } from '../../assets/icons';
+import { SwitchOff, StopCompute } from '../../assets/icons';
 import client from '../../apollo-client';
 import { getComputeListData } from '../../query';
 import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
@@ -98,7 +98,7 @@ const Compute = () => {
                     </div>
                 ) : (
                     <div onClick={() => onStopClickHandler(params.data.id)}>
-                        <SwitchOff />
+                        <StopCompute />
                     </div>
                 )}
                 <ReStartIcon />
@@ -137,12 +137,14 @@ const Compute = () => {
                 .then((response) => {
                     let computedata = [...response.data.dmsComputes];
                     setRowData(computedata);
+                    gridRef.current!.api.sizeColumnsToFit();
                     updateDmsComputeStatus(response.data.dmsComputes);
                     //updateTransformersData(transformerdata)
                 })
                 .catch((err) => console.error(err));
         } else {
             setRowData(DmsComputeStatus);
+            gridRef.current!.api.sizeColumnsToFit();
         }
     }, [DmsComputeStatus]);
 
