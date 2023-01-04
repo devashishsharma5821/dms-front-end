@@ -151,6 +151,9 @@ const Compute = () => {
         actionsRow(params.data.id);
     };
 
+    const onSearchChange = (searchValue: string) => {
+        gridRef.current!.api.setQuickFilter(searchValue);
+    };
     return (
         <>
             <Box marginLeft={36}>
@@ -175,7 +178,7 @@ const Compute = () => {
 
                             <Center flex="3" mr={5} justifyContent={'flex-end'} ml={'17'}>
                                 <Box>
-                                    <SearchComponent />
+                                    <SearchComponent searchChange={onSearchChange} />
                                 </Box>
                                 <Stack direction="row" height={'30'} border={'3'}>
                                     {' '}
