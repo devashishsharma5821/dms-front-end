@@ -12,17 +12,17 @@ const Header = (props: any) => {
     const settingsModal =useDisclosure()
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
-            <Box flex="3" ml={'2'}>
+            <Box flex="3" ml={'16px'} mt={'7px'} mb={'7px'}>
                 <LogoLight />
             </Box>
             <Center flex="3">
-                <Text color={'default.lightGrayHeader'} fontSize={'18'} fontStyle={'normal'}>
+                <Text color={'default.lightGrayHeader'} mr={'8px'} fontSize={'18'} fontWeight={'400'} fontStyle={'normal'}>
                     Project Name
                 </Text>
                 <Text color={'default.lightGrayHeader'} pl={'2'}>
                     /
                 </Text>
-                <Text color={'default.whiteText'} pl={'2'} fontSize={'18'} fontWeight={'700'} fontStyle={'normal'}>
+                <Text color={'default.whiteText'} pl={'2'} fontSize={'18'} fontWeight={'700'} fontStyle={'normal'} ml={'8px'}>
                     {' '}
                     My New Experiment
                 </Text>
@@ -34,7 +34,7 @@ const Header = (props: any) => {
 
             <Center flex="3" mr={5} justifyContent={'flex-end'} >
                 
-            <Box pl={'6'} pr={'6'} >
+             <Box pl={'6'} pr={'6'} >
                     <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
                         Share
                     </Button>

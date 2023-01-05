@@ -7,6 +7,7 @@ import './SideBarMenu.scss';
 import { CreateIcon, WideCreateIcon } from '../../assets/icons';
 import CreateNew from '../createNew/CreateNew';
 import CommuteModal from './ComputeModal';
+import Recent from '../recent/Recent';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -66,7 +67,7 @@ const SideBarMenu = () => {
                                 <h3><CreateNew openCreateModal={() => triggerCreateModal()} /></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
-                             <h3>Add the Recent Component Here</h3>
+                             <h3><Recent/></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' &&
                              <h3>Add the Explorer Component Here</h3>
