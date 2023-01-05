@@ -34,7 +34,7 @@ const Header = (props: any) => {
 
             <Center flex="3" mr={5} justifyContent={'flex-end'} >
                 
-            <Box pl={'6'} pr={'6'} >
+             <Box pl={'6'} pr={'6'} >
                     <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
                         Share
                     </Button>

@@ -7,6 +7,7 @@ import {  WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, 
 
 const CreateNew = (props: any) => {
     const textColor = useColorModeValue( 'dark.header','default.whiteText');
+    const headerIconColor = useColorModeValue( 'black','white');
     const triggerAction = (type: string) => {
         if(type === 'Compute') {
             props.openCreateModal();
@@ -54,7 +55,7 @@ const CreateNew = (props: any) => {
         <>
   
          <Flex mt={'1px'}>
-            <Square ml={'16px'}><PlusIcont/></Square>
+            <Square ml={'16px'}><PlusIcont  color={headerIconColor}/></Square>
             
             <Text fontWeight={800}  ml={'11px'} color={textColor}> Create New</Text>
         </Flex>
