@@ -12,14 +12,9 @@ function GetFormElements(props: any) {
             options: elementSchema.options,
             show: elementSchema.show,
             disable: elementSchema.disable,
-            child: elementSchema.child
+            child: elementSchema.child,
+            value: elementSchema.value
         };
-        const container = [];
-
-        if (elementSchema.child === 'child') {
-            container.push(elementSchema);
-            console.log('container', container);
-        }
 
         if (elementSchema.type === 'text' || elementSchema.type === 'email' || elementSchema.type === 'number') {
             return <TextField {...props} />;

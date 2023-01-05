@@ -29,7 +29,6 @@ function DeleteComputeModal({ cellId, isOpen, onClose }: any) {
                         query: GET_COMPUTELIST
                     })
                     .then((response) => {
-                        console.log('response data of get ===>', response);
                         let computedata = [...response.data.dmsComputes];
                         updateDmsComputeData(computedata);
                         onClose();

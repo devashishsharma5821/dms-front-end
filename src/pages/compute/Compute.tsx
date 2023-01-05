@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback, useContext } from 'react';
 import './compute.scss';
 import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -23,6 +23,7 @@ import { gql } from '@apollo/client';
 
 import { Spinner } from '@chakra-ui/react';
 import DeleteComputeModal from './DeleteComputeModal';
+import { ComputeContext } from '../../context/computeContext';
 
 interface ComputeData {
     computeName: string;
@@ -34,21 +35,22 @@ interface ComputeData {
 }
 const Compute = () => {
     const textColor = useColorModeValue('light.header', 'dark.white');
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const EditComputeJsonModal = useDisclosure();
     const StopComputeRunning = useDisclosure();
     const [loading, setLoading] = useState(false);
     const [updateDmsComputeStatus, DmsComputeStatus] = useAppStore((state: any) => [state.updateDmsComputeStatus, state.DmsComputeStatus]);
     const [cellId, setCellId] = useState<any>();
+    const [isEdit, setIsEdit] = useState<boolean | undefined>();
     const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
     const deleteCompute = useDisclosure();
     const [deleteCellId, setdeleteCellId] = useState<any>();
     const [stopCellId, setStopCellId] = useState<any>();
+    const context = useContext(ComputeContext);
 
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
 
     const onPlayClickHandler: any = (cellId: string | undefined) => {
         setLoading(true);
-        console.log('running', cellId);
         const mutation = gql` 
         mutation {
             dmsRunCompute(  
@@ -71,7 +73,6 @@ const Compute = () => {
                         query: GET_COMPUTELIST
                     })
                     .then((response) => {
-                        console.log('response data of get ===>', response);
                         let computedata = [...response.data.dmsComputes];
                         updateDmsComputeStatus(computedata);
                     })
@@ -89,6 +90,22 @@ const Compute = () => {
         StopComputeRunning.onOpen();
     };
 
+    const onEditClickHandler: any = (data: any) => {
+        context.updateFormData({
+            id: data.id,
+            max_inactivity_min: data?.max_inactivity_min,
+            name: data.name,
+            autoscale: data.resources.autoscale,
+            num_workers: data.resources?.num_workers,
+            spot_instances: data.resources.spot_instances,
+            worker_type_id: data.resources.node_type.worker_type_id,
+            min_workers: data.resources?.autoscale?.min_workers,
+            max_workers: data.resources?.autoscale?.max_workers
+        });
+        setIsEdit(true);
+        EditComputeJsonModal.onOpen();
+    };
+
     const actionsRow = (params: any) => {
         return (
             <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
@@ -102,7 +119,9 @@ const Compute = () => {
                     </div>
                 )}
                 <ReStartIcon />
-                <EditIcon />
+                <div onClick={() => onEditClickHandler(params.data)}>
+                    <EditIcon />
+                </div>
                 <div onClick={() => onDeleteClickHandler(params.data.id)}>
                     <DeleteIcon />
                 </div>
@@ -188,7 +207,15 @@ const Compute = () => {
                                 </Stack>
 
                                 <Box>
-                                    <Button color={'default.whiteText'} bg={'default.hoverSideBarMenu'} variant="outline">
+                                    <Button
+                                        color={'default.whiteText'}
+                                        bg={'default.hoverSideBarMenu'}
+                                        variant="outline"
+                                        onClick={() => {
+                                            setIsEdit(false);
+                                            EditComputeJsonModal.onOpen();
+                                        }}
+                                    >
                                         Create Compute
                                     </Button>
                                 </Box>
@@ -210,7 +237,7 @@ const Compute = () => {
                             </Box>
                         </Box>
                     </Box>
-                    <ComputeJsonModal isOpen={isOpen} onClose={onClose}></ComputeJsonModal>
+                    <ComputeJsonModal isEdit={isEdit} isOpen={EditComputeJsonModal.isOpen} onClose={EditComputeJsonModal.onClose} />
                     <DeleteComputeModal cellId={deleteCellId} isOpen={deleteCompute.isOpen} onClose={deleteCompute.onClose} />
                     <StopComputeRunningModals cellId={stopCellId} isOpen={StopComputeRunning.isOpen} onClose={StopComputeRunning.onClose} />
                 </Box>
