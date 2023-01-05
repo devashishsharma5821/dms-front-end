@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useApolloClient, DocumentNode } from '@apollo/client';
 import { Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, useToast } from '@chakra-ui/react';
 import { dmsCreateComputeOnEnableAutoscaling, dmsCreateComputeOffEnableAutoscaling, GET_DB_SETTINGS, getComputeListData, wsconnect } from '../../query/index';
-import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
 import { COMPUTE_MODAL_PROPS, dbSettingstype } from '../../models/types';
 import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
 import useAppStore from '../../store';

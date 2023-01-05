@@ -1,32 +1,33 @@
 import { useApolloClient } from '@apollo/client';
 import { Button } from '@chakra-ui/button';
-import { useDisclosure } from '@chakra-ui/hooks';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
 import React from 'react';
-import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
-import { getComputeListData } from '../../query';
+import { ComputeDetail, ComputeDetailListResponse, ComputeStop, StopComputeDetail } from '../../models/computeDetails';
+import { dmsStopComputeRun, getComputeListData } from '../../query';
 import useAppStore from '../../store';
-import { gql } from '@apollo/client';
+import { useToast } from '@chakra-ui/toast';
+import { STOP_COMPUTE_RUNNING_MODALS_PROPS } from '../../models/computeDetails';
 
-function StopComputeRunningModals({ cellId, isOpen, onClose }: any) {
-    // const { isOpen, onOpen, onClose } = useDisclosure();
+function StopComputeRunningModals({ cellId, isOpen, onClose }: STOP_COMPUTE_RUNNING_MODALS_PROPS) {
     const client = useApolloClient();
+    const toast = useToast();
     const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
 
     const onClickHandler = () => {
-        const mutation = gql` 
-        mutation {
-            dmsCancelComputeRun(  
-               id: "${cellId}"  
-                  )
-            }`;
-
         client
-            .mutate<any>({
-                mutation: mutation
+            .mutate<ComputeStop<StopComputeDetail>>({
+                mutation: dmsStopComputeRun(cellId)
             })
             .then((response) => {
+                console.log('stop response ===>', response);
                 const { GET_COMPUTELIST } = getComputeListData();
+                toast({
+                    title: `Compute is stopped`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
                 client
                     .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
                         query: GET_COMPUTELIST
@@ -38,6 +39,15 @@ function StopComputeRunningModals({ cellId, isOpen, onClose }: any) {
                         onClose();
                     })
                     .catch((err) => console.error(err));
+            })
+            .catch(() => {
+                toast({
+                    title: `Compute is not stopped`,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
             });
     };
 

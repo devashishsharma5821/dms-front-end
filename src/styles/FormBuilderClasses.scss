@@ -3,6 +3,14 @@
     display: grid;
 }
 
+.main-container {
+    display: flex;
+    justify-content: flex-end;
+    Button {
+        margin: 4px;
+    }
+}
+
 .computeName {
     margin-bottom: 4px;
 }

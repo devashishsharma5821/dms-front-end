@@ -1,28 +1,32 @@
 import { useApolloClient } from '@apollo/client';
 import { Button } from '@chakra-ui/button';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
-import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
-import { getComputeListData } from '../../query';
+import { ComputeDelete, ComputeDetail, ComputeDetailListResponse, DeleteComputeDetail } from '../../models/computeDetails';
+import { dmsDeleteCompute, getComputeListData } from '../../query';
 import useAppStore from '../../store';
-import { gql } from '@apollo/client';
+import { useToast } from '@chakra-ui/toast';
+import { DELETE_COMPUTE_MODAL_PROPS } from '../../models/computeDetails';
 
-function DeleteComputeModal({ cellId, isOpen, onClose }: any) {
+function DeleteComputeModal({ cellId, isOpen, onClose }: DELETE_COMPUTE_MODAL_PROPS) {
+    const toast = useToast();
     const client = useApolloClient();
     const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
 
     const onClickHandler = () => {
-        const mutation = gql` 
-        mutation {
-            dmsDeleteCompute(  
-               id: "${cellId}"  
-                  ) 
-            }`;
-
         client
-            .mutate<any>({
-                mutation: mutation
+            .mutate<ComputeDelete<DeleteComputeDetail>>({
+                mutation: dmsDeleteCompute(cellId)
             })
             .then((response) => {
+                console.log('response of mutation', response);
+                console.log('after deleting');
+                toast({
+                    title: `Compute is deleted successfully`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
                 const { GET_COMPUTELIST } = getComputeListData();
                 client
                     .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
@@ -34,7 +38,19 @@ function DeleteComputeModal({ cellId, isOpen, onClose }: any) {
                         updateDmsComputeData(computedata);
                         onClose();
                     })
-                    .catch((err) => console.error(err));
+                    .catch((err) => {
+                        onClose();
+                    });
+            })
+            .catch((response) => {
+                toast({
+                    title: `A running compute can't be deleted`,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                onClose();
             });
     };
 

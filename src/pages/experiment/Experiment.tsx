@@ -18,24 +18,42 @@ import { DataBricksTokenDetails } from '../../models/types';
 import useAppStore from '../../store';
 import ComputeJsonModal from '../../component/sideBarMenu/ComputeJsonModal';
 import IsRunningModal from './IsRunningModal';
-
+import { BusHelper } from '../../helpers/BusHelper';
+import { v4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 const ExperimentsPage = () => {
-    const [updateDmsDatabricksCredentialsValidToken, token, updateDmsComputeStatus, DmsComputeStatus, DmsComputeData, updateDmsComputeData] = useAppStore((state: any) => [
-        state.updateDmsDatabricksCredentialsValidToken,
-        state.DmsDatabricksCredentialsValidToken,
-        state.updateDmsComputeStatus,
-        state.DmsComputeStatus,
-        state.DmsComputeData,
-        state.updateDmsComputeData
-    ]);
+    const opid = v4();
+    const [updateDmsDatabricksCredentialsValidToken, token, updateDmsComputeStatus, DmsComputeStatus, DmsComputeData, updateDmsComputeData, submitMessage, config, UserConfig] = useAppStore(
+        (state: any) => [
+            state.updateDmsDatabricksCredentialsValidToken,
+            state.DmsDatabricksCredentialsValidToken,
+            state.updateDmsComputeStatus,
+            state.DmsComputeStatus,
+            state.DmsComputeData,
+            state.updateDmsComputeData,
+            state.submitMessage,
+            state.config,
+            state.UserConfig
+        ]
+    );
     const computeRunningModal = useDisclosure();
     const [message, setMessage] = useState('Status');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const computeModal = useDisclosure();
     const client = useApolloClient();
     const settingsModal = useDisclosure();
+    const [computeId, setComputeId] = useState<any>();
+    const [loadingMessage, setLoadingMessage] = useState<string | undefined>();
+    const [loaderOpen, setLoaderOpen] = useState<boolean | undefined>();
+    const [connected, setConnected] = useState<boolean | undefined>();
+    const [modalSettings, setModalSettings] = useState<{ openModal: boolean }>({ openModal: false });
+    const [computeStatus, setComputeStatus] = useState<{ started: boolean }>({ started: false });
+    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
+    const [clearTimeouts, setClearTimeouts] = useState<{ clear: boolean }>({ clear: false });
+    const [computeStats, setComputeStats] = useState<any>();
 
     let dmsComputeRunningStatusIsDefaultOne;
+
     useEffect(() => {
         client
             .query<DataBricksTokenResponse<DataBricksTokenDetails>>({
@@ -52,14 +70,29 @@ const ExperimentsPage = () => {
                                 query: GET_COMPUTELIST
                             })
                             .then((response) => {
-                                if (!(response.data.dmsComputes.length === 0)) {
+                                // setComputeId(response.id);
+                                if (response.data.dmsComputes.length === 0) {
                                     computeModal.onOpen();
                                 } else {
-                                    const dmsComputeRunningStatus = response.data.dmsComputes.filter((compute) => compute.status === 'RUNNING');
-                                    if (dmsComputeRunningStatus.length === 0) {
+                                    const dmsComputeRunningStartingStatus = response.data.dmsComputes.filter((compute) => compute.status === 'RUNNING' || compute.status === 'STARTING');
+                                    console.log('dmsComputeRunningStatus', dmsComputeRunningStartingStatus);
+
+                                    if (dmsComputeRunningStartingStatus.length === 0) {
                                         computeRunningModal.onOpen();
                                     } else {
-                                        const dmsComputeRunningStatusIsDefault = dmsComputeRunningStatus.filter((compute) => compute?.is_default === true);
+                                        dmsComputeRunningStartingStatus.map((response) => {
+                                            if (response.status && response.id) {
+                                                onPidStart();
+                                                submitMessage({
+                                                    content: BusHelper.GetKeepAliveRequestMessage({
+                                                        experimentId: parseInt(response.id),
+                                                        opId: opid,
+                                                        userId: UserConfig
+                                                    })
+                                                });
+                                            }
+                                        });
+                                        const dmsComputeRunningStatusIsDefault = dmsComputeRunningStartingStatus.filter((compute) => compute?.is_default === true);
                                         if (dmsComputeRunningStatusIsDefault.length === 0) {
                                             response.data.dmsComputes[0].is_default = true;
                                             dmsComputeRunningStatusIsDefaultOne = response.data.dmsComputes[0];
@@ -93,6 +126,37 @@ const ExperimentsPage = () => {
                 }
             });
     }, []);
+
+    const onPidStarted = () => {
+        let currentValue;
+        if (currentValue) {
+            setComputeStats(currentValue);
+            setConnected(true);
+        }
+    };
+
+    const waitForPid = (waitTime: number) => {
+        let timeout = setTimeout(() => {
+            setLoaderOpen(false);
+            if (computeId) {
+                setModalSettings({ openModal: true });
+                setComputeStatus({ started: false });
+            }
+            setClearTimeouts({ clear: true });
+        }, waitTime);
+        setTimeoutId(timeout);
+    };
+
+    const onPidStart = () => {
+        setLoadingMessage('Starting session....');
+        setLoaderOpen(true);
+        setConnected(false);
+        waitForPid(360000);
+    };
+
+    // const select = (state: RootState) => {
+    //     return state.socket.lastAliveMessage;
+    // };
 
     useEffect(() => {
         const { GET_COMPUTELIST } = getComputeListData();
@@ -177,8 +241,8 @@ const ExperimentsPage = () => {
                         {/*</Button>*/}
                     </Box>
                 </Flex>
-                {computeModal.isOpen && <ComputeJsonModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeJsonModal>}
-                {/* <ComputeModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeModal> */}
+                {/* {computeModal.isOpen && <ComputeJsonModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeJsonModal>} */}
+                <ComputeModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeModal>
                 <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose}></Settings>
                 <IsRunningModal isOpen={computeRunningModal.isOpen} onClose={computeRunningModal.onClose}></IsRunningModal>
             </Box>

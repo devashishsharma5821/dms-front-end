@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import './compute.scss';
-import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, useToast } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { ColDef } from 'ag-grid-community';
@@ -12,8 +12,8 @@ import DeleteIcon from '../../assets/icons/DeleteIcon';
 import SwitchComponent from './SwitchComponent';
 import { SwitchOff } from '../../assets/icons';
 import client from '../../apollo-client';
-import { getComputeListData } from '../../query';
-import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
+import { dmsRunCompute, getComputeListData } from '../../query';
+import { ComputeDetail, ComputeDetailListResponse, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
 import { AgGridReact } from 'ag-grid-react';
 import SearchComponent from '../../component/search/SearchComponent';
 import ComputeJsonModal from '../../component/sideBarMenu/ComputeJsonModal';
@@ -23,7 +23,7 @@ import { gql } from '@apollo/client';
 
 import { Spinner } from '@chakra-ui/react';
 import DeleteComputeModal from './DeleteComputeModal';
-
+import { agGridClickHandler } from '../../models/computeDetails';
 interface ComputeData {
     computeName: string;
     created: string;
@@ -32,40 +32,42 @@ interface ComputeData {
     status: string;
     default: boolean;
 }
+
 const Compute = () => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const StopComputeRunning = useDisclosure();
     const [loading, setLoading] = useState(false);
     const [updateDmsComputeStatus, DmsComputeStatus] = useAppStore((state: any) => [state.updateDmsComputeStatus, state.DmsComputeStatus]);
-    const [cellId, setCellId] = useState<any>();
+    const [cellId, setCellId] = useState<string>();
     const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
     const deleteCompute = useDisclosure();
-    const [deleteCellId, setdeleteCellId] = useState<any>();
-    const [stopCellId, setStopCellId] = useState<any>();
+    const [deleteCellId, setdeleteCellId] = useState<string | undefined>();
+    const [stopCellId, setStopCellId] = useState<string | undefined>();
+    const toast = useToast();
 
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
 
-    const onPlayClickHandler: any = (cellId: string | undefined) => {
+    const onPlayClickHandler: agGridClickHandler = (cellId) => {
         setLoading(true);
         console.log('running', cellId);
-        const mutation = gql` 
-        mutation {
-            dmsRunCompute(  
-               id: "${cellId}"  
-                  ) {
-                    job_id,
-                    job_run_id
-                  }
-            }`;
 
         client
-            .mutate<any>({
-                mutation: mutation
+            .mutate<ComputeRun<RunComputeDetail>>({
+                mutation: dmsRunCompute(cellId)
             })
             .then((response) => {
+                console.log('run compute response', response);
                 setLoading(false);
                 const { GET_COMPUTELIST } = getComputeListData();
+                console.log('starting get api');
+                toast({
+                    title: `Compute is starting`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
                 client
                     .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
                         query: GET_COMPUTELIST
@@ -76,26 +78,42 @@ const Compute = () => {
                         updateDmsComputeStatus(computedata);
                     })
                     .catch((err) => console.error(err));
+            })
+            .catch((err) => {
+                setLoading(false);
+                console.log(err);
+                toast({
+                    title: `${err}`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
             });
     };
 
-    const onDeleteClickHandler: any = (cellId: string | undefined) => {
+    const onDeleteClickHandler: agGridClickHandler = (cellId) => {
         setdeleteCellId(cellId);
         deleteCompute.onOpen();
     };
 
-    const onStopClickHandler: any = (cellId: string | undefined) => {
+    const onStopClickHandler: agGridClickHandler = (cellId) => {
         setStopCellId(cellId);
         StopComputeRunning.onOpen();
     };
 
     const actionsRow = (params: any) => {
+        // console.log('inside action row params ===>', params);
         return (
             <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
-                {params.data.status === 'STOPPED' ? (
-                    <div onClick={() => onPlayClickHandler(params.data.id)}>
-                        <PlayIcon />
-                    </div>
+                {params?.data?.status === 'STOPPED' ? (
+                    loading ? (
+                        <Spinner />
+                    ) : (
+                        <div onClick={() => onPlayClickHandler(params.data.id)}>
+                            <PlayIcon />
+                        </div>
+                    )
                 ) : (
                     <div onClick={() => onStopClickHandler(params.data.id)}>
                         <SwitchOff />
@@ -113,6 +131,7 @@ const Compute = () => {
         checked = !checked;
     };
     const defaultRow = (params: any) => {
+        // console.log('default row ===>', params);
         let isChecked = params.data.default;
         return <SwitchComponent params={params} />;
     };
@@ -147,6 +166,7 @@ const Compute = () => {
     }, [DmsComputeStatus]);
 
     const onCellClicked = (params: any) => {
+        // console.log('onCellClicked params ===>', params);
         setCellId(params.data.id);
         actionsRow(params.data.id);
     };
@@ -192,7 +212,7 @@ const Compute = () => {
 
                         <Box mr={'17'} mb={'17'}>
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
-                                {loading && <Spinner></Spinner>}
+                                {loading && <Spinner ml={20}></Spinner>}
                                 <AgGridReact<ComputeDetail>
                                     ref={gridRef}
                                     rowData={rowData}

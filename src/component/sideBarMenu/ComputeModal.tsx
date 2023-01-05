@@ -43,18 +43,18 @@ const ComputeModal = (props: COMPUTE_MODAL_PROPS) => {
             console.log('Inside calback', e);
         });
     }, []);
-    // useEffect(() => {
-    //     client
-    //         .query<any>({
-    //             query: GET_DB_SETTINGS
-    //         })
-    //         .then((response) => {
-    //             setDbSettingsData(response.data.dmsDatabricksSettings.node_types);
-    //         })
-    //         .catch((err) => {
-    //             console.log('catch', err);
-    //         });
-    // }, []);
+    useEffect(() => {
+        client
+            .query<any>({
+                query: GET_DB_SETTINGS
+            })
+            .then((response) => {
+                setDbSettingsData(response.data.dmsDatabricksSettings.node_types);
+            })
+            .catch((err) => {
+                console.log('catch', err);
+            });
+    }, []);
 
     const validationSchema = Yup.object().shape({
         enableAutoScaling: Yup.boolean(),
@@ -124,7 +124,6 @@ const ComputeModal = (props: COMPUTE_MODAL_PROPS) => {
                             let computedata = [...response.data.dmsComputes];
                             updateDmsComputeData(computedata);
                             setRowData(computedata);
-                            //updateTransformersData(transformerdata)
                         })
                         .catch((err) => console.error(err));
                     formik.handleReset();
