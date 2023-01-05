@@ -27,7 +27,7 @@ const Help = (props: any) => {
         <>
   
          <Flex mt={'1px'}>
-            <Square ml={'16px'}  className="sidebar-box-icon" ><WhiteRecentIcon color={iconsColor}/></Square>
+            <Square ml={'16px'}  className="sidebar-box-icon" ><WhiteInfoIcon color={iconsColor}/></Square>
             <Text fontWeight={800}  ml={'11px'} color={textColor}>Help</Text>
           
         </Flex>
