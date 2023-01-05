@@ -31,7 +31,7 @@ const sideBarMenuIcons = [
                 route: '/home'
             },
             {
-                icon: <WhiteRecentIcon />,
+                icon: <WhiteRecentIcon color="white"/>,
                 iconName: 'Recent',
                 hasSubMenu: [],
                 isClicked: false
