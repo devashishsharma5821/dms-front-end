@@ -12,6 +12,8 @@ import { ComputeContext } from '../../context/computeContext';
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const { formData, updateFormData } = useContext(ComputeContext);
     console.log('formDta', formData);
+    console.log('Props', props);
+    console.log('Props', props);
     const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
     const client = useApolloClient();
 
