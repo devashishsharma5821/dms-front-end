@@ -11,9 +11,6 @@ import { ComputeContext } from '../../context/computeContext';
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const { formData, updateFormData } = useContext(ComputeContext);
-    console.log('formDta', formData);
-    console.log('Props', props);
-    console.log('Props', props);
     const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
     const client = useApolloClient();
 
@@ -38,14 +35,16 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
 
     // We are currently trying below approach
 
-    // if (props.isEdit === true) {
-    //     formSchema.compute_name.value = formData.name;
-    //     formSchema.worker_type_id.value = formData.worker_type_id;
-    //     formSchema.workers.value = formData.num_workers;
-    // } else {
-    //     formSchema.compute_name.value = '';
-    //     formSchema.worker_type_id.value = '';
-    // }
+    if (props.isEdit === true) {
+        console.log('1', formData);
+        formSchema.compute_name.value = formData.name;
+        formSchema.worker_type_id.value = formData.worker_type_id;
+        formSchema.workers.value = formData.num_workers;
+    } else {
+        console.log('2', formData);
+        formSchema.compute_name.value = '';
+        formSchema.worker_type_id.value = '';
+    }
     return (
         <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />

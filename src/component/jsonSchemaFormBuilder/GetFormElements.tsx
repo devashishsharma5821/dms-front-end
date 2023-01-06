@@ -3,6 +3,7 @@ import { TextField, SelectField, FieldSwitch } from './Elements/FormElements';
 
 function GetFormElements(props: any) {
     const getFormElement = (elementName: any, elementSchema: any) => {
+        console.log('Element', elementSchema, elementName)
         const props = {
             name: elementName,
             label: elementSchema.label,
