@@ -4,7 +4,8 @@ import { EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { protectedResources } from './authConfig';
 
 import UserConfiguration from './user-config';
-
+import { CONFIG } from './environments';
+console.log("dms: ", CONFIG.VERSION);
 const App = () => {
     const { instance, accounts, inProgress } = useMsal();
     const account = useAccount(accounts[0] || {});

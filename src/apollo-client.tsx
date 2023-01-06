@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { DMS_CONFIG } from './environments';
+import { CONFIG } from './environments';
 
 const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
@@ -18,7 +18,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const httpLink = createHttpLink({
-    uri: DMS_CONFIG.GRAPHQL_SERVER
+    uri: CONFIG.GRAPHQL_SERVER
 });
 
 const client = new ApolloClient({
