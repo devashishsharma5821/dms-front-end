@@ -7,6 +7,8 @@ import './SideBarMenu.scss';
 import { CreateIcon, WideCreateIcon } from '../../assets/icons';
 import CreateNew from '../createNew/CreateNew';
 import CommuteModal from './ComputeModal';
+import Recent from '../recent/Recent';
+import Help from '../help/Help';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -37,7 +39,7 @@ const SideBarMenu = () => {
     };
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
         if (data.route) {
-            sideBarMenuIcons[0].section[currentIndex].isClicked = false;
+            sideBarMenuIcons[0].section[currentIndex].isClicked = false;          
             navigate(data.route);
         } else if (data.hasSubMenu) {
             // Turn on the Sub Menu
@@ -46,7 +48,7 @@ const SideBarMenu = () => {
             setCurrentIndex(index);
             sideBarMenuIcons[0].section[index].isClicked = true;
             setActivateSubMenu(true);
-        }
+      }  
     };
 
    const triggerCreateModal = () => {
@@ -60,19 +62,22 @@ const SideBarMenu = () => {
              <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
                  <VStack>
                      {
-                         sideBarMenuIcons[0].section[currentIndex].isClicked &&
+                         sideBarMenuIcons[0].section[currentIndex].isClicked &&(
                          <Box width={'254px'}  pl={'0px'} mt="17" >
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' &&
                                 <h3><CreateNew openCreateModal={() => triggerCreateModal()} /></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
-                             <h3>Add the Recent Component Here</h3>
+                             <h3><Recent/></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' &&
                              <h3>Add the Explorer Component Here</h3>
+                             } 
+                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' &&
+                             <h3><Help/></h3>
                              }
                          </Box>
-                     }
+                     )}
                  </VStack>
              </Flex>
          </div>

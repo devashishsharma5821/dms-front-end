@@ -31,7 +31,7 @@ const sideBarMenuIcons = [
                 route: '/home'
             },
             {
-                icon: <WhiteRecentIcon />,
+                icon: <WhiteRecentIcon color="white"/>,
                 iconName: 'Recent',
                 hasSubMenu: [],
                 isClicked: false
@@ -41,7 +41,13 @@ const sideBarMenuIcons = [
                 iconName: 'Explorer',
                 hasSubMenu: [],
                 isClicked: false
-            }
+            },
+              { 
+                icon: <WhiteInfoIcon color="white"/>,
+                iconName: 'Help',
+                hasSubMenu: [],
+                isClicked: false
+            },
         ]
     },
     {
@@ -89,11 +95,7 @@ const sideBarMenuIcons = [
     },
     {
         section: [
-            { 
-                icon: <WhiteInfoIcon />,
-                iconName: 'Help',
-                route: '/notfound'
-            },
+          
             {
                 icon: <WhiteSettingIcon />,
                 iconName: 'Settings',
