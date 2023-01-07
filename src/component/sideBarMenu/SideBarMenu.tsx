@@ -9,6 +9,7 @@ import CreateNew from '../createNew/CreateNew';
 import CommuteModal from './ComputeModal';
 import Recent from '../recent/Recent';
 import Help from '../help/Help';
+import Explorer from '../explorer/Explorer';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -71,7 +72,7 @@ const SideBarMenu = () => {
                              <h3><Recent/></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' &&
-                             <h3>Add the Explorer Component Here</h3>
+                             <h3><Explorer/></h3>
                              } 
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' &&
                              <h3><Help/></h3>
