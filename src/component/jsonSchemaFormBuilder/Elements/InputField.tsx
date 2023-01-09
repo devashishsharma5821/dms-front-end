@@ -5,8 +5,7 @@ import { Input, InputProps as ChakraInputProps } from '@chakra-ui/react';
 
 const InputField = ({ ...props }: any) => {
     const [field] = useField(props.name);
-    console.log('props disable', props, field);
-    return <Input {...props} {...field} value={props.value} disabled={props?.disable ? props.disable : false} />;
+    return <Input {...props} {...field} disabled={props?.disable ? props.disable : false} />;
 };
 
 export default InputField;
