@@ -3,6 +3,7 @@ import { TextField, SelectField, FieldSwitch } from './Elements/FormElements';
 
 function GetFormElements(props: any) {
     const getFormElement = (elementName: any, elementSchema: any) => {
+        console.log('Element', elementSchema, elementName)
         const props = {
             name: elementName,
             label: elementSchema.label,
@@ -12,14 +13,9 @@ function GetFormElements(props: any) {
             options: elementSchema.options,
             show: elementSchema.show,
             disable: elementSchema.disable,
-            child: elementSchema.child
+            child: elementSchema.child,
+            value: elementSchema.value
         };
-        const container = [];
-
-        if (elementSchema.child === 'child') {
-            container.push(elementSchema);
-            console.log('container', container);
-        }
 
         if (elementSchema.type === 'text' || elementSchema.type === 'email' || elementSchema.type === 'number') {
             return <TextField {...props} />;

@@ -28,6 +28,7 @@ import DeployedNotRunningIcon from '../../assets/icons/DeployNotRunning';
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
     const { isOpen, onOpen, onClose } = useDisclosure();
+    console.log('Pros', props.computeData)
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
@@ -113,7 +114,7 @@ const Toolbar = (props: any) => {
                                                                 return (
                                                                     <Flex pb={'10px'} justifyContent={'space-between'}>
                                                                         <Center>
-                                                                            {compute?.active ? (
+                                                                            {compute?.default ? (
                                                                                 <Box mr={'8'}>
                                                                                     {' '}
                                                                                     <DeployedIcon />

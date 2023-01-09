@@ -249,6 +249,7 @@ export interface dmsCreateComputeOnEnableAutoscalingValues {
 export interface COMPUTE_MODAL_PROPS {
     isOpen: boolean;
     onClose: () => void;
+    isEdit?: boolean | undefined;
 }
 export interface dbSettingstype {
     __typename: String;
