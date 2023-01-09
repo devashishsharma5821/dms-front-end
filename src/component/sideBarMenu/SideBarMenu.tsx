@@ -16,6 +16,7 @@ const SideBarMenu = () => {
     const themeSecondLevel = useColorModeValue('default.whiteText', 'dark.bgDark');
     const [isHovering, setIsHovering] = React.useState(false);
     const [activateSubMenu, setActivateSubMenu] = React.useState(false);
+    const [activateThirdSubMenu, setActivateThirdSubMenu] = React.useState(false);
     const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const createModal = useDisclosure();
@@ -25,10 +26,21 @@ const SideBarMenu = () => {
     };
     const hoverOut = () => {
         // Turn Off the Sub Menu
-        if (!activateSubMenu) {
+        if (!activateSubMenu && !activateThirdSubMenu) {
             setActivateSubMenu(false);
+            setActivateThirdSubMenu(false);
             setIsHovering(false);
         }
+    };
+    const hoverInThirdSubMenu = () => {
+        setActivateThirdSubMenu(true);
+        setActivateSubMenu(true);
+        setIsHovering(true);
+    };
+    const hoverOutThirdSubMenu = () => {
+        setActivateThirdSubMenu(false);
+        setActivateSubMenu(false);
+        setIsHovering(false);
     };
     const hoverInSubMenu = () => {
         setActivateSubMenu(true);
@@ -38,6 +50,10 @@ const SideBarMenu = () => {
         setActivateSubMenu(false);
         setIsHovering(false);
     };
+    const hasThirdLevelMenu = (data:string) => {
+        console.log("Third Level Menu In Parent", data);
+        setActivateThirdSubMenu(true);
+    }
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
         if (data.route) {
             sideBarMenuIcons[0].section[currentIndex].isClicked = false;          
@@ -55,9 +71,20 @@ const SideBarMenu = () => {
    const triggerCreateModal = () => {
        createModal.onOpen();
    };
+    const thirdLevelMenu = () => {
+        return (
+            <div style={{...zIndexStyle, position:'absolute', marginLeft:'445px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
+                <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
+                    <VStack>
+                        <Box width={'254px'}  pl={'0px'} mt="17" >
+                            <h3><Help/></h3>
+                        </Box>
+                    </VStack>
+                </Flex>
+            </div>
+        );
+    };
    const secondLevelMenu = () => {
-       console.log('Switch', sideBarMenuIcons);
-       
      return (
          <div style={{...zIndexStyle, position:'absolute', marginLeft:'212px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
              <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
@@ -72,7 +99,7 @@ const SideBarMenu = () => {
                              <h3><Recent/></h3>
                              }
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' &&
-                             <h3><Explorer/></h3>
+                             <h3><Explorer hasThirdLevelMenu={hasThirdLevelMenu}/></h3>
                              } 
                              { sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' &&
                              <h3><Help/></h3>
@@ -208,6 +235,7 @@ const SideBarMenu = () => {
                 <CommuteModal isOpen={createModal.isOpen} onClose={createModal.onClose}></CommuteModal>
             </div>
             {activateSubMenu && secondLevelMenu()}
+            {activateThirdSubMenu && thirdLevelMenu()}
         </Flex>
     );
 };
