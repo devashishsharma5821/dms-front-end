@@ -52,7 +52,6 @@ const SideBarMenu = () => {
         setIsHovering(false);
     };
     const hasThirdLevelMenu = (data:string) => {
-        console.log("Third Level Menu In Parent", data);
         setActivateThirdSubMenu(true);
     }
     const checkForSubMenuOrNavigation = (data: any, index: any) => {

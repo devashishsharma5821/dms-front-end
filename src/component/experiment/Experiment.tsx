@@ -19,7 +19,6 @@ const Experiment = (props: any) => {
 ];
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
         if (data.hasSubMenu) {
-            console.log("I Have Level 3 Menu", data, index)
             props.hasThirdLevelMenu(data.name);
         }
     };
