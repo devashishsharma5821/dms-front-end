@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import './Explorer.scss';
-import { Box, Center, Divider, Flex, Square, Text, useColorModeValue } from '@chakra-ui/react';
-import {  RightArrow, WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteRecentIcon } from '../../assets/icons';
+import { Box, Center, Divider, Flex, Square, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import {  RightArrow, WhiteExperiment } from '../../assets/icons';
+import sideBarMenuIcons from '../../models/sideBarMenuData';
 
 const Explorer = (props: any) => {
     const textColor = useColorModeValue( 'dark.header','default.whiteText');
     const iconsColor = useColorModeValue( ' #666C80','white');
-    const subMenuForRecent = [
+    const subMenuForExplorer = [
         {
             name: 'Dataset',
           },
@@ -21,7 +22,12 @@ const Explorer = (props: any) => {
     
 
 ];
-
+    const checkForSubMenuOrNavigation = (data: any, index: any) => {
+        if (data.hasSubMenu) {
+            console.log("I Have Level 3 Menu", data, index)
+            props.hasThirdLevelMenu(data.name);
+        }
+    };
     return (
         <>
   
@@ -32,24 +38,21 @@ const Explorer = (props: any) => {
         
         <Divider mt={'16px'}  orientation="horizontal" bg={'light.lighterGrayishBlue'} />
           
-        { subMenuForRecent && subMenuForRecent.map(section => {
+        { subMenuForExplorer && subMenuForExplorer.map((section, sectionIndex) => {
                     return (
-                        <Box  className="sidebar-box-recent">
-                        <Flex  mr={'10px'}  height={'44px'}>   
-                            
-                            <Box  textAlign={'center'} ml={'17px'} mt={'10px'}  color={textColor}> {section.name} </Box>
+                        <Box  onClick={() => { checkForSubMenuOrNavigation(section, sectionIndex) }} className="sidebar-box-recent">
+                        <Flex  mr={'10px'}  height={'44px'}>
+                            <Box
+                                 textAlign={'center'} ml={'17px'} mt={'10px'}  color={textColor}> {section.name} </Box>
                             <Center flex="2" justifyContent={'flex-end'} mr={'24px'}>
                                 <RightArrow color={iconsColor}/>
                             </Center>
-
                         </Flex>
                         </Box>
                     );
 
                 })
-            }       
-                
-                  
+            }
         </>
     );
 };

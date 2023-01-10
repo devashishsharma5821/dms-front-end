@@ -33,7 +33,6 @@ function StopComputeRunningModals({ cellId, isOpen, onClose }: STOP_COMPUTE_RUNN
                         query: GET_COMPUTELIST
                     })
                     .then((response) => {
-                        console.log('response data of get ===>', response);
                         let computedata = [...response.data.dmsComputes];
                         updateDmsComputeData(computedata);
                         onClose();

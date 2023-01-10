@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useApolloClient, DocumentNode } from '@apollo/client';
 import { Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, useToast } from '@chakra-ui/react';
 import { dmsCreateComputeOnEnableAutoscaling, dmsCreateComputeOffEnableAutoscaling, GET_DB_SETTINGS, getComputeListData, wsconnect } from '../../query/index';
 import { COMPUTE_MODAL_PROPS, dbSettingstype } from '../../models/types';
-import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';
 import useAppStore from '../../store';
-import jsonData from '../jsonSchemaBuilder/jsonData.json';
-import Element from '../jsonSchemaBuilder/Element';
-import { auto } from '@popperjs/core';
-import { FormContext } from '../jsonSchemaBuilder/FormContext';
 import '../../styles/FormBuilderClasses.scss';
 import FormBuilder from '../jsonSchemaFormBuilder/FormBuilder';
 import formSchema from './formSchema.json';
+import { ComputeContext } from '../../context/computeContext';
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
+    const { formData, updateFormData } = useContext(ComputeContext);
     const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
     const client = useApolloClient();
 
@@ -36,6 +33,18 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             });
     }, []);
 
+    // We are currently trying below approach
+
+    if (props.isEdit === true) {
+        console.log('1', formData);
+        formSchema.compute_name.value = formData.name;
+        formSchema.worker_type_id.value = formData.worker_type_id;
+        formSchema.workers.value = formData.num_workers;
+    } else {
+        console.log('2', formData);
+        formSchema.compute_name.value = '';
+        formSchema.worker_type_id.value = '';
+    }
     return (
         <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />

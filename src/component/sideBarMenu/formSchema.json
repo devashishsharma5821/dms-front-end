@@ -5,7 +5,8 @@
         "required": true,
         "show": true,
         "errormessage": "Compute Name is required",
-        "className": "computeName"
+        "className": "computeName",
+        "value": ""
     },
     "worker_type_id": {
         "type": "select",
@@ -13,7 +14,8 @@
         "className": "workerType",
         "errormessage": "Select Worker Type Id",
         "child": "child",
-        "options": []
+        "options": [],
+        "value": ""
     },
     "workers": {
         "type": "number",
@@ -23,7 +25,8 @@
         "child": "child",
         "errormessage": "Workers is required",
         "className": "Workers",
-        "min": "0"
+        "min": "0",
+        "value": null
     },
     "min_workers": {
         "type": "number",
@@ -31,7 +34,8 @@
         "show": false,
         "errormessage": "Workers is required",
         "className": "minWorkers",
-        "min": "0"
+        "min": "0",
+        "value": null
     },
     "max_workers": {
         "type": "number",
@@ -39,25 +43,29 @@
         "show": false,
         "errormessage": "Workers is required",
         "className": "maxWorkers",
-        "min": "0"
+        "min": "0",
+        "value": null
     },
     "spot_instances": {
         "type": "switch",
         "label": "Spot Instances",
         "className": "spotInstances",
-        "min": "0"
+        "min": "0",
+        "value": false
     },
     "enable_autoscaling": {
         "type": "switch",
         "label": "Enable autoscalings",
         "className": "enableAutoscaling",
-        "min": "0"
+        "min": "0",
+        "value": false
     },
     "terminate_after": {
         "type": "switch",
         "label": "Terminate after",
         "className": "terminateAfter",
-        "min": "0"
+        "min": "0",
+        "value": false
     },
     "max_inactivity_min": {
         "type": "number",
@@ -66,6 +74,7 @@
         "disable": true,
         "errormessage": "minutes of inactivity",
         "className": "minutesOfInactivity",
-        "min": "0"
+        "min": "0",
+        "value": null
     }
 }

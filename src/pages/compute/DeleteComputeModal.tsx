@@ -33,7 +33,6 @@ function DeleteComputeModal({ cellId, isOpen, onClose }: DELETE_COMPUTE_MODAL_PR
                         query: GET_COMPUTELIST
                     })
                     .then((response) => {
-                        console.log('response data of get ===>', response);
                         let computedata = [...response.data.dmsComputes];
                         updateDmsComputeData(computedata);
                         onClose();
