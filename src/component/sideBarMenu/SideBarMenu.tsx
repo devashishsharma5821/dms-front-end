@@ -10,6 +10,7 @@ import CommuteModal from './ComputeModal';
 import Recent from '../recent/Recent';
 import Help from '../help/Help';
 import Explorer from '../explorer/Explorer';
+import Experiment from '../experiment/Experiment';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -77,7 +78,7 @@ const SideBarMenu = () => {
                 <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
                     <VStack>
                         <Box width={'254px'}  pl={'0px'} mt="17" >
-                            <h3><Help/></h3>
+                            <h3><Experiment/></h3>
                         </Box>
                     </VStack>
                 </Flex>
