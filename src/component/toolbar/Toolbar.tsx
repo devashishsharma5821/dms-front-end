@@ -113,7 +113,7 @@ const Toolbar = (props: any) => {
                                                                 return (
                                                                     <Flex pb={'10px'} justifyContent={'space-between'}>
                                                                         <Center>
-                                                                            {compute?.active ? (
+                                                                            {compute?.default ? (
                                                                                 <Box mr={'8'}>
                                                                                     {' '}
                                                                                     <DeployedIcon />

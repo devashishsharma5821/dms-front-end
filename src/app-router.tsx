@@ -6,6 +6,7 @@ import { Box, Flex } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 import { User } from './models/profile';
 import JsonForm from './component/jsonSchemaBuilder/JsonForm';
+import { ContextCompute } from './context/computeContext';
 
 export const AppRouter = (props: any) => {
     const user = props.user as User;
@@ -22,7 +23,14 @@ export const AppRouter = (props: any) => {
                             <Route path="/experiment" element={<ExperimentsPage />} />
                             <Route path="/notfound" element={<PageNotFound />} />
                             <Route path="/notebook" element={<Notebook />} />
-                            <Route path="/compute" element={<Compute />} />
+                            <Route
+                                path="/compute"
+                                element={
+                                    <ContextCompute>
+                                        <Compute />
+                                    </ContextCompute>
+                                }
+                            />
                             <Route path="/project" element={<Project />} />
                             <Route path="/jsonform" element={<JsonForm />} />
                         </Routes>
