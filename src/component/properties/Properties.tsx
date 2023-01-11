@@ -1,19 +1,39 @@
 import React from 'react';
-import { Box, Flex, Text, useColorModeValue, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input, ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Link, Textarea, Editable } from '@chakra-ui/react';
-import {  DownArrowShare, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
+import { Box, Flex, Text, useColorModeValue, Button, Center, Avatar, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input, ModalCloseButton, ModalFooter, Modal, Divider, Link, Editable, ButtonGroup, useEditableControls, EditablePreview,EditableInput } from '@chakra-ui/react';
+import {  CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
 import { ShareData } from '../../models/share';
 
 const Properties = (props: any) => {
   
-    const textColor = useColorModeValue('light.header', 'default.whiteText');
+    const textColorIcon = useColorModeValue('#666C80', 'white');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
-    const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
     const {  onClose } = useDisclosure()
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
-
+    function EditableControls() {
+        const {
+          isEditing,
+          getSubmitButtonProps,
+          getCancelButtonProps,
+          getEditButtonProps,
+        } = useEditableControls()
+    
+        return isEditing ? (
+          <ButtonGroup justifyContent='center'>
+            <PencilIcon {...getSubmitButtonProps()} />
+            <PencilIcon  {...getCancelButtonProps()} />
+          </ButtonGroup>
+        ) : (
+          <Flex justifyContent='center'>
+           
+            <Button {...getEditButtonProps()} bg={'white'} mt={'10px'} ml={'12px'} width={'33px'} height={'33px'}>
+            <Text color={'#2180C2'}>Edit</Text>
+            </Button>
+          </Flex>
+        )
+      }
 const shareData1 = {
     data:[
             {
@@ -49,7 +69,7 @@ const shareData1 = {
           <ModalOverlay />
           <ModalContent width={'714px'} borderRadius={'2'} maxHeight={'852px'}>
             <ModalHeader  color={shretextColor} mt={'13'} ml={20}>Properties</ModalHeader>
-                <ModalCloseButton  mt={'12'} mr={8} color={'default.blackText'} />
+                <ModalCloseButton  mt={'12'} mr={8} color={textColor2} />
                 <Divider color={"default.dividerColor"}/>
             <ModalBody pb={6} >
 
@@ -66,25 +86,39 @@ const shareData1 = {
                        
                         <Flex >
                           <Center ml={'19px'}>
-                            <WhiteExperiment color="#666C80" />
-                           
+                            <Box  mt={'-10px'}>
+                             <WhiteExperiment color={textColorIcon} />
+                            </Box>
+                           <Flex>
                                 <Box ml={12}>   
                                     <Text  mt={17}  color={accesstextColor}>Experiment Name </Text>
                                     <Center>
-                                    <Text  color={accesstextColor} fontWeight={700}>My New Experiment </Text>
-                                    <Editable pl={'10'} defaultValue="Take some chakra">
-                                        <PencilIcon color={'#666C80'} />
-                                    </Editable>
+                                        <Text  color={accesstextColor} fontWeight={700} mr={'4px'}>My New Experiment </Text>
+                                        <PencilIcon  color={textColorIcon} />
+                                    </Center>
+                                    <Center>
+                                        <Box mt={12} mr={'4px'} ml={'-32px'} borderRadius="full" boxSize="14px"  bg={'#ED6D74'} />
+                                        <Text  mt={15} fontSize={14} fontWeight={700} color={'#ED6D74'}>Not Yet Deployed </Text>
                                     </Center>
                                 </Box>
+                            </Flex>
                             </Center>
                         </Flex >
-
-                       
-
                         <Flex  mb={'21px'}>
                             <Center  >
                                 <Text  color={textColor2} mt={'20'} ml={20}  >Tag:</Text>
+                                <Center  >
+                                  <Box ml={14} mt={16} bg={' #F2F4F8'}  height={'24px'}  borderRadius={3} minWidth={70}>
+                                    <Flex >
+                                    <Center >
+                                                <Text color={'#1A3F59'} fontSize={'14px'}  mt={'2px'} ml={6}  >Demo</Text>
+                                                <Box justifyContent={'flex-end'}  ml={'14px'} >
+                                                  <CloseIcon color={'#666C80'} />
+                                                </Box>
+                                    </Center>
+                                    </Flex>
+                                  </Box>
+                                </Center>
                                 <Text  color={'#2180C2'} mt={'20'} ml={20}  >+ Add Tag</Text>
                             </Center>
                         </Flex>
@@ -94,15 +128,15 @@ const shareData1 = {
                         <Box width={671}>
                             <Center>
                               <Flex ml={'36px'} mt={'-51px'}>
-                                <Avatar  p={'5px'}  borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} />
+                                <Avatar  p={'5px'}  borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'21px'}/>
                                 <Center>
                                     
                                         <Box width={'300px'}>
-                                            <Text ml={12} color={accesstextColor}>Created by</Text>
+                                            <Text ml={12} color={accesstextColor} mt={'21px'}>Created by</Text>
                                             <Text ml={12}  color={accesstextColor} fontWeight={700}>Shirin Bampoori</Text>
-                                            <Text ml={12} color={accesstextColor}>Created On</Text>
+                                            <Text ml={12} color={accesstextColor} mt={'14px'}>Created On</Text>
                                             <Text ml={12}  color={accesstextColor} fontWeight={700}>10/05/2022  10:20 AM</Text>
-                                            <Text ml={12} color={accesstextColor}>Last Modifies</Text>
+                                            <Text ml={12} color={accesstextColor} mt={'14px'}>Last Modifies</Text>
                                             <Text ml={12}  color={accesstextColor} fontWeight={700}>10 Mins ago</Text>
                                         </Box>
                                 </Center>
@@ -113,7 +147,10 @@ const shareData1 = {
                                 
                                 <Flex >
                                     <Center flex="2">                       
-                                        <Text mt={'21px'} ml={12}>Access by</Text>
+                                            <Text mt={'21px'} ml={12}>Access by</Text>
+                                            <Box ml={14} mt={16} bg={' #F2F4F8'} width={'29px'} height={'24px'} textAlign='center' borderRadius={3}>
+                                            <Text color={'#75858F'} fontSize={'14px'}  mt={4}>10</Text>
+                                            </Box>
                                         <Center flex="2"  justifyContent={'flex-end'} mr={46}>
                                             <Text  color={'#2180C2'}  mt={'21px'} > Edit</Text> 
                                             <Text  color={'#2180C2'}  mt={'21px'} ml={16}> Copy Link</Text>  
@@ -132,36 +169,50 @@ const shareData1 = {
                                             </Box>
                                         </Center>
                                         <Center mr={'36px'}>
-                                        
-                                    </Center></>
+                                   </Center></>
                                     
                                 ) })}   
-                        
+
                                 </Box>
                               </Flex>
-
-                      
                             </Center>
-                        
-                          
                                 <Flex >
                                     <Center>                       
                                         <Text  color={textColor2} mt={'20'} ml={16} mb={10} >Link To </Text>
-                                        <Text  color={'#2180C2'} mt={'20'} ml={10} mb={10} > Edit </Text>  
+                                        <Text   color={'#2180C2'} mt={'20'} ml={10} mb={10} > Edit </Text>  
                                     </Center>     
                                 </Flex>
                                 <Flex >
                                     <Box>
                                         <Center ml={16}>
-                                            <LinkChain />
-                                            <Link  ml={8} mt={-8} color={'light.button'}href='https://chakra-ui.com' isExternal>Experiment 2  </Link>
+                                            <Box mb={'10px'}>
+                                              <LinkChain />
+                                            </Box>
+                                            <Link  ml={8} mt={-8} color={'light.button'} href='https://chakra-ui.com' isExternal>Experiment 2  </Link>
                                         </Center>
                                     </Box>
                                 </Flex>
                                 <Flex >
                                     <Box>
-                                        <Text mt={16} ml={16} mb={6}>Description</Text>
-                                        <Textarea  width={'639px'} height={'97px'} ml={16} mr={16} placeholder='Type your description here...'  />
+                                      
+                                        <Editable
+                                            textAlign='left'
+                                            fontWeight={400}
+                                            color={textColor2}
+                                            defaultValue='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  '
+                                            width={'639px'}
+                                            isPreviewFocusable={false}
+                                            ml={16}
+                                            >
+                                              <Flex>
+                                                <Center>
+                                                  <Text mt={16}  mb={6} color={textColor2}>Description</Text>
+                                                  <EditableControls />
+                                                </Center>
+                                              </Flex>
+                                            <EditablePreview />
+                                            <Input as={EditableInput}  height={'97px'} />
+                                        </Editable>
                                     </Box>
                                 </Flex>
                         </Box>
