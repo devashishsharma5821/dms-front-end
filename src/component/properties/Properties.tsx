@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Flex, Text, useColorModeValue, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input, ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Link, Textarea } from '@chakra-ui/react';
-import {  DownArrowShare, LinkChain, WhiteExperiment } from '../../assets/icons';
+import { Box, Flex, Text, useColorModeValue, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input, ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Link, Textarea, Editable } from '@chakra-ui/react';
+import {  DownArrowShare, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
 import { ShareData } from '../../models/share';
 
 const Properties = (props: any) => {
@@ -70,8 +70,12 @@ const shareData1 = {
                            
                                 <Box ml={12}>   
                                     <Text  mt={17}  color={accesstextColor}>Experiment Name </Text>
+                                    <Center>
                                     <Text  color={accesstextColor} fontWeight={700}>My New Experiment </Text>
-
+                                    <Editable pl={'10'} defaultValue="Take some chakra">
+                                        <PencilIcon color={'#666C80'} />
+                                    </Editable>
+                                    </Center>
                                 </Box>
                             </Center>
                         </Flex >
@@ -81,7 +85,7 @@ const shareData1 = {
                         <Flex  mb={'21px'}>
                             <Center  >
                                 <Text  color={textColor2} mt={'20'} ml={20}  >Tag:</Text>
-                                <Text  color={'blue'} mt={'20'} ml={20}  >+ Add Tag</Text>
+                                <Text  color={'#2180C2'} mt={'20'} ml={20}  >+ Add Tag</Text>
                             </Center>
                         </Flex>
 
@@ -95,11 +99,11 @@ const shareData1 = {
                                     
                                         <Box width={'300px'}>
                                             <Text ml={12} color={accesstextColor}>Created by</Text>
-                                            <Text ml={12}  color={'default.blackText'} fontWeight={700}>Shirin Bampoori</Text>
+                                            <Text ml={12}  color={accesstextColor} fontWeight={700}>Shirin Bampoori</Text>
                                             <Text ml={12} color={accesstextColor}>Created On</Text>
-                                            <Text ml={12}  color={'default.blackText'} fontWeight={700}>10/05/2022  10:20 AM</Text>
+                                            <Text ml={12}  color={accesstextColor} fontWeight={700}>10/05/2022  10:20 AM</Text>
                                             <Text ml={12} color={accesstextColor}>Last Modifies</Text>
-                                            <Text ml={12}  color={'default.blackText'} fontWeight={700}>10 Mins ago</Text>
+                                            <Text ml={12}  color={accesstextColor} fontWeight={700}>10 Mins ago</Text>
                                         </Box>
                                 </Center>
                              
@@ -111,8 +115,8 @@ const shareData1 = {
                                     <Center flex="2">                       
                                         <Text mt={'21px'} ml={12}>Access by</Text>
                                         <Center flex="2"  justifyContent={'flex-end'} mr={46}>
-                                            <Text  color={'Blue'}  mt={'21px'} > Edit</Text> 
-                                            <Text  color={'Blue'}  mt={'21px'} ml={16}> Copy Link</Text>  
+                                            <Text  color={'#2180C2'}  mt={'21px'} > Edit</Text> 
+                                            <Text  color={'#2180C2'}  mt={'21px'} ml={16}> Copy Link</Text>  
                                         </Center>
                                     </Center>     
                                 </Flex>
@@ -143,7 +147,7 @@ const shareData1 = {
                                 <Flex >
                                     <Center>                       
                                         <Text  color={textColor2} mt={'20'} ml={16} mb={10} >Link To </Text>
-                                        <Text  color={'Blue'} mt={'20'} ml={10} mb={10} > Edit </Text>  
+                                        <Text  color={'#2180C2'} mt={'20'} ml={10} mb={10} > Edit </Text>  
                                     </Center>     
                                 </Flex>
                                 <Flex >

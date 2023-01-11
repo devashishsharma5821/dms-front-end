@@ -30,7 +30,7 @@ const Header = (props: any) => {
                 </Text>
 
                 <Editable pl={'10'} defaultValue="Take some chakra">
-                    <PencilIcon />
+                    <PencilIcon color={'white'}  />
                 </Editable>
             </Center>
 
