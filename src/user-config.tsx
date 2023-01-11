@@ -18,7 +18,6 @@ function UserConfiguration() {
 
     isLoading = loading;
     isError = error;
-    console.log('userConfig ==>', data);
     updateUserConfig(data);
 
     useEffect(() => {

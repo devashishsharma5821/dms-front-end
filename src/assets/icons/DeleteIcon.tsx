@@ -1,8 +1,5 @@
 /* eslint-disable max-len */
-import React, { useState } from 'react';
-
-import DeleteComputeModal from '../../pages/compute/DeleteComputeModal';
-import { useDisclosure } from '@chakra-ui/react-use-disclosure';
+import React from 'react';
 
 type LogoProps = {
     children?: never;

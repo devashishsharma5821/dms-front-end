@@ -1,70 +1,50 @@
-import React, { useContext } from 'react';
-import { Formik, Form as FormikForm, Field, ErrorMessage, useFormikContext, FormikProps } from 'formik';
-import { FormLabel, Input, Select, Button, Switch } from '@chakra-ui/react';
-import { FormContext } from '../../jsonSchemaBuilder/FormContext';
+import { Formik, ErrorMessage } from 'formik';
+import { FormLabel } from '@chakra-ui/react';
 import InputField from './InputField';
-import SelectFieldChakra from './SelectField';
 import SwitchField from './SwitchField';
+import { FieldPropsType } from '../../../models/formBuilder';
 
-export function Form(props: any) {
-    return (
-        <Formik {...props}>
-            <form className="needs-validation">{props.children}</form>
-        </Formik>
-    );
-}
-
-export function TextField(props: any) {
-    console.log('props', props.show);
+export function TextField(props: FieldPropsType) {
     if (!props.show) {
         return <></>;
     }
 
     return (
-        <div className={props?.className && props.className}>
-            <FormLabel htmlFor={props.name} style={props.uioptions?.label} className={props.className + '_' + props.label}>
+        <div className={props?.className && props.className} style={props.uiSchema} key={props?.uniqueKey}>
+            <FormLabel htmlFor={props.name} style={props?.uiSchemaOptions?.label ? props.uiSchemaOptions.label : {}} className={props.className + '_' + props.label}>
                 {props.label}
             </FormLabel>
-            <InputField {...props}></InputField>
-            <ErrorMessage name={props.name} render={(msg) => <div style={{ color: 'red' }}>{msg}</div>} />
+            <InputField {...props} />
+            <ErrorMessage name={props.name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
         </div>
     );
 }
 
-export function SelectField(props: any) {
-    const { name, label, uioptions, options } = props;
+export function SelectField(props: FieldPropsType) {
+    const { name, label, options, uiSchema, uiSchemaOptions, className } = props;
     return (
-        <div className={props?.className && props.className}>
-            {label && <label htmlFor={name}>{label}</label>}
-            <SelectFieldChakra as="select" id={name} name={name} style={uioptions?.select}>
+        <div className={className} style={uiSchema}>
+            {label && (
+                <label htmlFor={name} style={uiSchemaOptions?.label ? uiSchemaOptions.label : {}}>
+                    {label}
+                </label>
+            )}
+            <InputField as="select" {...props}>
                 <option value="">Choose...</option>
                 {options.map((optn: any, index: any) => (
                     <option key={index} value={optn.node_type_id} label={optn.label || optn.node_type_id} />
                 ))}
-            </SelectFieldChakra>
-            <ErrorMessage name={name} render={(msg) => <div style={{ color: 'red' }}>{msg}</div>} />
+            </InputField>
+            <ErrorMessage name={name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
         </div>
     );
 }
 
-export const FieldSwitch = (props: any) => {
-    const { name, label, uioptions } = props;
-    const { handleChange } = useContext(FormContext);
+export const FieldSwitch = (props: FieldPropsType) => {
     return (
-        <div className={props?.className && props.className}>
-            {label && <FormLabel style={uioptions?.label}>{label}</FormLabel>}
-            {/* <Switch value={props.field_value} onChange={(event) => handleChange(props.field_id, event)}></Switch> */}
-            <SwitchField {...props}></SwitchField>
+        <div className={props?.className && props.className} style={props.uiSchema}>
+            {props.label && <FormLabel style={props?.uiSchemaOptions?.label && props.uiSchemaOptions.label}>{props.label}</FormLabel>}
+            <SwitchField {...props} />
         </div>
     );
 };
-
-export function SubmitButton(props: any) {
-    const { title, ...rest } = props;
-
-    return (
-        <Button type="submit" {...rest}>
-            {title}
-        </Button>
-    );
-}

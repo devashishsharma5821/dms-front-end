@@ -1,11 +1,13 @@
 import { Event } from '@antuit/pipeline-interactive-driver-client';
 import { Message } from '@antuit/web-sockets-gateway-client';
 import { WebsocketBuilder, Websocket, ExponentialBackoff } from 'websocket-ts';
+// import useAppStore from '../store';
 // import { connectionEstablished, disconnected, receiveMessage, startConnecting, submitMessage } from './socketSlice';
 import { SessionHelper } from './../helpers/SessionHelper';
 
-export function wsconnect(callback: any) {
+export function wsconnect(values: any) {
     if (localStorage.espUserToken) {
+        // const { connectionEstablished } = useAppStore;
         //TODO: Move host to env
         const host = `wss://ws.espdev.antuits.com`;
         let wsUrl = `${host}?token=${localStorage.accessToken}&espToken=${localStorage.espUserToken}`;
@@ -14,9 +16,10 @@ export function wsconnect(callback: any) {
         var ws = new WebsocketBuilder(wsUrl)
             .withBackoff(new ExponentialBackoff(100, 10))
             .onOpen((i, ev) => {
-                console.debug('Connected to websocket');
-
+                console.debug('Connected to websocket', ev, values);
+                // connectionEstablished();
                 // store.dispatch(connectionEstablished());
+                //subscription
                 setTimeout(() => {
                     ws.send(JSON.stringify({ action: 'subscribe', subject: 'dms_pid.out.bb99409d-7aca-49df-859e-b6c394318ca0.1' }));
                 }, 5000);
@@ -32,7 +35,7 @@ export function wsconnect(callback: any) {
             })
             .onMessage((i, ev) => {
                 let message = JSON.parse(ev.data) as Message<Event>;
-                console.log('Message, i, ev', i, ev);
+                console.log('Message, i', i, 'ev is', ev);
                 // store.dispatch(receiveMessage(message));
                 // const payload = JSON.parse(message).payload;
                 // callback(JSON.stringify(payload));

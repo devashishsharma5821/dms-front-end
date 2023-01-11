@@ -18,8 +18,6 @@ function DeleteComputeModal({ cellId, isOpen, onClose }: DELETE_COMPUTE_MODAL_PR
                 mutation: dmsDeleteCompute(cellId)
             })
             .then((response) => {
-                console.log('response of mutation', response);
-                console.log('after deleting');
                 toast({
                     title: `Compute is deleted successfully`,
                     status: 'success',

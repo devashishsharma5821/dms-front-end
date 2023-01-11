@@ -12,14 +12,12 @@ function StopComputeRunningModals({ cellId, isOpen, onClose }: STOP_COMPUTE_RUNN
     const client = useApolloClient();
     const toast = useToast();
     const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
-
     const onClickHandler = () => {
         client
             .mutate<ComputeStop<StopComputeDetail>>({
                 mutation: dmsStopComputeRun(cellId)
             })
             .then((response) => {
-                console.log('stop response ===>', response);
                 const { GET_COMPUTELIST } = getComputeListData();
                 toast({
                     title: `Compute is stopped`,

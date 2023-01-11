@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink, DefaultOptions } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { CONFIG } from './environments';
 
@@ -20,10 +20,21 @@ const authLink = setContext((_, { headers }) => {
 const httpLink = createHttpLink({
     uri: CONFIG.GRAPHQL_SERVER
 });
+const defaultOptions: DefaultOptions = {
+    watchQuery: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'ignore'
+    },
+    query: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all'
+    }
+};
 
 const client = new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    defaultOptions: defaultOptions
 });
 
 export default client;

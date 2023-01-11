@@ -104,7 +104,6 @@ export class BusHelper {
 
     static GetKeepAliveRequestMessage(request: BaseRequest): Message<Request> {
         let keepAliveRequest: KeepAliveRequest = {};
-
         let msg = new Message<Request>();
         msg.action = Action.Publish;
         msg.subject = `dms_pid.in.${request.userId}`;
