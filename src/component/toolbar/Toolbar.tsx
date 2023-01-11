@@ -34,7 +34,7 @@ const Toolbar = (props: any) => {
                 return (
                     <>
                         {sections.type === 'icon' && (
-                            <Center ml={'16'} mr={'16'}>
+                            <Center ml={'16'} mr={'16'} >
                                 <Box mr={'8'}>{sections.component}</Box>
                                 <Box>{sections.name}</Box>
                             </Center>
