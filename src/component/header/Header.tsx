@@ -4,12 +4,14 @@ import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import Share from '../share/Share';
 import Settings from '../settings/Settings';
+import Properties from '../properties/Properties';
 
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const { isOpen, onOpen, onClose } = useDisclosure()
     const settingsModal =useDisclosure()
+    const propertiesModal=useDisclosure()
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'16px'} mt={'7px'} mb={'7px'}>
@@ -28,7 +30,7 @@ const Header = (props: any) => {
                 </Text>
 
                 <Editable pl={'10'} defaultValue="Take some chakra">
-                    <PencilIcon />
+                    <PencilIcon color={'white'}  />
                 </Editable>
             </Center>
 
@@ -63,7 +65,8 @@ const Header = (props: any) => {
                         <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'-26'} mt={'-2'} color={textColor}>
-                        <MenuItem>My Profile</MenuItem>
+                        <MenuItem onClick={propertiesModal.onOpen}>My Profile</MenuItem>
+                        <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose}  ></Properties>
                         <MenuItem onClick={settingsModal.onOpen}>Settings</MenuItem>
                         <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose}  ></Settings>
                         <MenuItem>Signout</MenuItem>

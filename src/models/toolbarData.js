@@ -11,7 +11,7 @@ const toolbarDataIcons = {
     section1:  [
         {
             component: <Settings />,
-            name: 'Setting',
+            name: 'Properties',
             type: 'icon'
         },
         {
