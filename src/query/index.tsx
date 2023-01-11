@@ -206,6 +206,33 @@ export const dmsCreateComputeOnEnableAutoscalingJson = (values: dmsCreateCompute
                       `;
 };
 
+export const dmsRunCompute = (cellId: string | undefined) => {
+    return gql` mutation {
+            dmsRunCompute(  
+               id: "${cellId}"  
+                  ) {
+                    job_id,
+                    job_run_id
+                  }
+            }`;
+};
+
+export const dmsDeleteCompute = (cellId: string | undefined) => {
+    return gql` mutation {
+            dmsDeleteCompute(  
+               id: "${cellId}"  
+                  ) 
+            }`;
+};
+
+export const dmsStopComputeRun = (cellId: string | undefined) => {
+    return gql`mutation {
+            dmsCancelComputeRun(  
+               id: "${cellId}"  
+                  )
+            }`;
+};
+
 export const getComputeListData = () => {
     const GET_COMPUTELIST = gql`
         query {

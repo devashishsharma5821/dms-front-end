@@ -1,10 +1,9 @@
-import React from 'react';
 import { TextField, SelectField, FieldSwitch } from './Elements/FormElements';
+import { FormSchemaType, GetFormElementsPropType } from '../.././models/formBuilder';
 
-function GetFormElements(props: any) {
-    const getFormElement = (elementName: any, elementSchema: any) => {
-        console.log('Element', elementSchema, elementName)
-        const props = {
+function GetFormElements(props: GetFormElementsPropType) {
+    const getFormElement = (elementName: string, elementSchema: FormSchemaType) => {
+        const fieldProps = {
             name: elementName,
             label: elementSchema.label,
             type: elementSchema.type,
@@ -14,23 +13,25 @@ function GetFormElements(props: any) {
             show: elementSchema.show,
             disable: elementSchema.disable,
             child: elementSchema.child,
-            value: elementSchema.value
+            uiSchema: elementSchema.uiSchema,
+            uiSchemaOptions: elementSchema.uiSchemaOptions,
+            uniqueKey: props.uniqueKey
         };
 
         if (elementSchema.type === 'text' || elementSchema.type === 'email' || elementSchema.type === 'number') {
-            return <TextField {...props} />;
+            return <TextField {...fieldProps} />;
         }
 
         if (elementSchema.type === 'select') {
-            return <SelectField {...props} />;
+            return <SelectField {...fieldProps} />;
         }
 
         if (elementSchema.type === 'switch') {
-            return <FieldSwitch {...props} />;
+            return <FieldSwitch {...fieldProps} />;
         }
     };
 
-    return <>{getFormElement(props.keey, props.formSchemaKey)}</>;
+    return <>{getFormElement(props.elementName, props.formSchemaKey)}</>;
 }
 
 export default GetFormElements;

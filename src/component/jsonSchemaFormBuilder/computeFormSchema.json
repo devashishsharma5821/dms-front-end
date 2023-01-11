@@ -1,0 +1,134 @@
+{
+    "compute_name": {
+        "type": "text",
+        "label": "Compute Name",
+        "required": true,
+        "show": true,
+        "errormessage": "Compute Name is required",
+        "className": "computeName",
+        "uiSchema": {
+            "grid-column": "auto / span 8"
+        }
+    },
+    "worker_type_id": {
+        "type": "select",
+        "label": "Worker Type",
+        "className": "workerType",
+        "required": true,
+        "errormessage": "Select Worker Type Id",
+        "child": "child",
+        "options": [{ "category": "random", "memory_mb": 23, "node_type_id": "44", "num_cores": 33 }],
+        "uiSchema": {
+            "grid-column": "auto / span 4"
+        }
+    },
+    "workers": {
+        "type": "number",
+        "label": "Workers",
+        "required": false,
+        "show": true,
+        "conditionalRender": true,
+        "child": "child",
+        "errormessage": "Workers is required",
+        "className": "Workers",
+        "min": "0",
+        "uiSchema": {
+            "grid-column": "auto / span 4"
+        }
+    },
+    "min_workers": {
+        "type": "number",
+        "label": "Min Workers",
+        "show": false,
+        "required": false,
+        "conditionalRender": true,
+        "errormessage": "min workers is required",
+        "className": "minWorkers",
+        "min": "0",
+        "uiSchema": {
+            "grid-column": "auto / span 2"
+        }
+    },
+    "max_workers": {
+        "type": "number",
+        "label": "Max Workers",
+        "show": false,
+        "required": false,
+        "conditionalRender": true,
+        "errormessage": "max workers is required",
+        "className": "maxWorkers",
+        "min": "0",
+        "uiSchema": {
+            "grid-column": "auto / span 2"
+        }
+    },
+    "spot_instances": {
+        "type": "switch",
+        "label": "Spot Instances",
+        "className": "spotInstances",
+        "uiSchema": {
+            "grid-column": "auto / span 8",
+            "display": "flex",
+            "justify-content": "flex-end",
+            "flex-direction": "row-reverse"
+        },
+        "uiSchemaOptions": {
+            "label": {
+                "margin-left": "7px"
+            }
+        }
+    },
+    "enable_autoscaling": {
+        "type": "switch",
+        "label": "Enable autoscalings",
+        "className": "enableAutoscaling",
+        "uiSchema": {
+            "grid-column": "auto / span 8",
+            "display": "flex",
+            "justify-content": "flex-end",
+            "flex-direction": "row-reverse"
+        },
+        "uiSchemaOptions": {
+            "label": {
+                "margin-left": "7px"
+            }
+        }
+    },
+    "terminate_after": {
+        "type": "switch",
+        "label": "Terminate after",
+        "className": "terminateAfter",
+        "uiSchema": {
+            "grid-column": "auto / span 2",
+            "display": "flex",
+            "justify-content": "flex-end",
+            "flex-direction": "row-reverse"
+        },
+        "uiSchemaOptions": {
+            "label": {
+                "margin-left": "7px"
+            }
+        }
+    },
+    "max_inactivity_min": {
+        "type": "number",
+        "label": "minutes of inactivity",
+        "show": true,
+        "disable": true,
+        "conditionalRender": true,
+        "errormessage": "minutes of inactivity",
+        "className": "minutesOfInactivity",
+        "min": "0",
+        "uiSchema": {
+            "grid-column": "auto / span 6",
+            "display": "flex",
+            "justify-content": "flex-end",
+            "flex-direction": "row-reverse"
+        },
+        "uiSchemaOptions": {
+            "label": {
+                "margin-left": "7px"
+            }
+        }
+    }
+}

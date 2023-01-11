@@ -6,11 +6,11 @@ import sideBarMenuIcons from '../../models/sideBarMenuData';
 import './SideBarMenu.scss';
 import { CreateIcon, WideCreateIcon } from '../../assets/icons';
 import CreateNew from '../createNew/CreateNew';
-import CommuteModal from './ComputeModal';
 import Recent from '../recent/Recent';
 import Help from '../help/Help';
 import Explorer from '../explorer/Explorer';
 import Experiment from '../experiment/Experiment';
+import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -51,12 +51,12 @@ const SideBarMenu = () => {
         setActivateSubMenu(false);
         setIsHovering(false);
     };
-    const hasThirdLevelMenu = (data:string) => {
+    const hasThirdLevelMenu = (data: string) => {
         setActivateThirdSubMenu(true);
-    }
+    };
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
         if (data.route) {
-            sideBarMenuIcons[0].section[currentIndex].isClicked = false;          
+            sideBarMenuIcons[0].section[currentIndex].isClicked = false;
             navigate(data.route);
         } else if (data.hasSubMenu) {
             // Turn on the Sub Menu
@@ -65,126 +65,149 @@ const SideBarMenu = () => {
             setCurrentIndex(index);
             sideBarMenuIcons[0].section[index].isClicked = true;
             setActivateSubMenu(true);
-      }  
+        }
     };
 
-   const triggerCreateModal = () => {
-       createModal.onOpen();
-   };
-    const thirdLevelMenu = () => {
+    const triggerCreateModal = () => {
+        createModal.onOpen();
+    };
+    const secondLevelMenu = () => {
         return (
-            <div style={{...zIndexStyle, position:'absolute', marginLeft:'445px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
-                <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
+            <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
+                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
-                        <Box width={'254px'}  pl={'0px'} mt="17" >
-                            <h3><Experiment/></h3>
-                        </Box>
+                        {sideBarMenuIcons[0].section[currentIndex].isClicked && (
+                            <Box width={'254px'} pl={'0px'} mt="17">
+                                {sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' && (
+                                    <h3>
+                                        <CreateNew openCreateModal={() => triggerCreateModal()} />
+                                    </h3>
+                                )}
+                                {sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' && (
+                                    <h3>
+                                        <Recent />
+                                    </h3>
+                                )}
+                                {sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' && (
+                                    <h3>
+                                        <Explorer />
+                                    </h3>
+                                )}
+                                {sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' && (
+                                    <h3>
+                                        <Help />
+                                    </h3>
+                                )}
+                            </Box>
+                        )}
                     </VStack>
                 </Flex>
             </div>
         );
     };
-   const secondLevelMenu = () => {
-     return (
-         <div style={{...zIndexStyle, position:'absolute', marginLeft:'212px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
-             <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
-                 <VStack>
-                     {
-                         sideBarMenuIcons[0].section[currentIndex].isClicked &&(
-                         <Box width={'254px'}  pl={'0px'} mt="17" >
-                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' &&
-                                <h3><CreateNew openCreateModal={() => triggerCreateModal()} /></h3>
-                             }
-                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' &&
-                             <h3><Recent/></h3>
-                             }
-                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' &&
-                             <h3><Explorer hasThirdLevelMenu={hasThirdLevelMenu}/></h3>
-                             } 
-                             { sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' &&
-                             <h3><Help/></h3>
-                             }
-                         </Box>
-                     )}
-                 </VStack>
-             </Flex>
-         </div>
-     );
-   };
-
 
     return (
         <Flex>
-            <div style={{ ...zIndexStyle, position: 'absolute' }} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
-                <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
-                    <VStack>
-                        {!isHovering && (
-                            <Box ml="6" mr="6" mt="30">
-                               {/* <Box width={'38px'} height={'40px'}>
+            <>
+                <div style={{ ...zIndexStyle, position: 'absolute' }} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
+                    <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
+                        <VStack>
+                            {!isHovering && (
+                                <Box ml="6" mr="6" mt="30">
+                                    {/* <Box width={'38px'} height={'40px'}>
                                     <Square>
                                         <CreateIcon />
                                     </Square>
                                 </Box>  */}
-                                {sideBarMenuIcons.map((sections, sectionIndex) => {
-                                    const lastItemLength = sections.section.length - 1;
-                                    const listSections = sections.section.map((icons, iconIndex) => {
-                                        if (icons.iconName === 'Create') {
-                                            return (
-                                                <Box width={'38px'} height={'40px'}>
-                                    <Square>
-                                        <CreateIcon />
-                                    </Square>
-                                </Box>
-                                            )
-                                        }
-                                        if (lastItemLength === iconIndex) {
-                                            return (
-                                                <>
-                                                    <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'}>
+                                    {sideBarMenuIcons.map((sections, sectionIndex) => {
+                                        const lastItemLength = sections.section.length - 1;
+                                        const listSections = sections.section.map((icons, iconIndex) => {
+                                            if (icons.iconName === 'Create') {
+                                                return (
+                                                    <Box width={'38px'} height={'40px'}>
+                                                        <Square>
+                                                            <CreateIcon />
+                                                        </Square>
+                                                    </Box>
+                                                );
+                                            }
+                                            if (lastItemLength === iconIndex) {
+                                                return (
+                                                    <>
+                                                        <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'}>
+                                                            <Square>{icons.icon}</Square>
+                                                        </Box>
+                                                        <Center>
+                                                            <Divider orientation="horizontal" bg={'dark.borderColor'} />
+                                                        </Center>
+                                                    </>
+                                                );
+                                            } else {
+                                                return (
+                                                    <Box m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'}>
                                                         <Square>{icons.icon}</Square>
                                                     </Box>
-                                                    <Center>
-                                                        <Divider orientation="horizontal" bg={'dark.borderColor'} />
-                                                    </Center>
-                                                </>
-                                            );
-                                        } else {
-                                            return (
-                                                <Box m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'}>
-                                                    <Square>{icons.icon}</Square>
-                                                </Box>
-                                            );
-                                        }
-                                    });
+                                                );
+                                            }
+                                        });
 
-                                    return listSections;
-                                })}
-                            </Box>
-                        )}
-                        {isHovering && (
-                            <Box width="212px" mt="30">
-                                {/* <Box width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'}>
+                                        return listSections;
+                                    })}
+                                </Box>
+                            )}
+                            {isHovering && (
+                                <Box width="212px" mt="30">
+                                    {/* <Box width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'}>
                                     <Square>
                                         <WideCreateIcon />
                                     </Square>
                                 </Box> */}
-                                {sideBarMenuIcons.map((sections, sectionIndex) => {
-                                    const lastItemLength = sections.section.length - 1;
-                                    const listSections = sections.section.map((icons, iconIndex) => {
-                                        if (icons.iconName === 'Create') {
-                                            return (
-                                                <Box onClick={() => {
-                                                    checkForSubMenuOrNavigation(icons, iconIndex);
-                                                }} width={'200px'} ml={'6px'} mr={'6px'} height={'40px'} mb={'9px'}>
-                                    <Square>
-                                        <WideCreateIcon />
-                                    </Square>
-                                </Box>
-                                            )
-                                        }
-                                        if (lastItemLength === iconIndex) {
-                                            return (
-                                                <>
+                                    {sideBarMenuIcons.map((sections, sectionIndex) => {
+                                        const lastItemLength = sections.section.length - 1;
+                                        const listSections = sections.section.map((icons, iconIndex) => {
+                                            if (icons.iconName === 'Create') {
+                                                return (
+                                                    <Box
+                                                        onClick={() => {
+                                                            checkForSubMenuOrNavigation(icons, iconIndex);
+                                                        }}
+                                                        width={'200px'}
+                                                        ml={'6px'}
+                                                        mr={'6px'}
+                                                        height={'40px'}
+                                                        mb={'9px'}
+                                                    >
+                                                        <Square>
+                                                            <WideCreateIcon />
+                                                        </Square>
+                                                    </Box>
+                                                );
+                                            }
+                                            if (lastItemLength === iconIndex) {
+                                                return (
+                                                    <>
+                                                        <Flex
+                                                            align="center"
+                                                            justify="left"
+                                                            onClick={() => {
+                                                                checkForSubMenuOrNavigation(icons, iconIndex);
+                                                            }}
+                                                            className={'sidebar'}
+                                                        >
+                                                            <Box m={'8px 8px'} width={'30px'} height={'32px'}>
+                                                                <Square>{icons.icon}</Square>
+                                                            </Box>
+                                                            <Box pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                                <Square className="text">{icons.iconName}</Square>
+                                                            </Box>
+                                                        </Flex>
+                                                        <Center>
+                                                            <Divider mb={'8px'} ml={'8px'} mr={'8px'} orientation="horizontal" bg={'dark.borderColor'} />
+                                                        </Center>
+                                                    </>
+                                                );
+                                            } else {
+                                                return (
                                                     <Flex
                                                         align="center"
                                                         justify="left"
@@ -200,42 +223,21 @@ const SideBarMenu = () => {
                                                             <Square className="text">{icons.iconName}</Square>
                                                         </Box>
                                                     </Flex>
-                                                    <Center>
-                                                        <Divider mb={'8px'} ml={'8px'} mr={'8px'} orientation="horizontal" bg={'dark.borderColor'} />
-                                                    </Center>
-                                                </>
-                                            );
-                                        } else {
-                                            return (
-                                                <Flex
-                                                    align="center"
-                                                    justify="left"
-                                                    onClick={() => {
-                                                        checkForSubMenuOrNavigation(icons, iconIndex);
-                                                    }}
-                                                    className={'sidebar'}
-                                                >
-                                                    <Box m={'8px 8px'} width={'30px'} height={'32px'}>
-                                                        <Square>{icons.icon}</Square>
-                                                    </Box>
-                                                    <Box pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
-                                                        <Square className="text">{icons.iconName}</Square>
-                                                    </Box>
-                                                </Flex>
-                                            );
-                                        }
-                                    });
+                                                );
+                                            }
+                                        });
 
-                                    return listSections;
-                                })}
-                            </Box>
-                        )}
-                    </VStack>
-                </Flex>
-                <CommuteModal isOpen={createModal.isOpen} onClose={createModal.onClose}></CommuteModal>
-            </div>
-            {activateSubMenu && secondLevelMenu()}
-            {activateThirdSubMenu && thirdLevelMenu()}
+                                        return listSections;
+                                    })}
+                                </Box>
+                            )}
+                        </VStack>
+                    </Flex>
+                    {createModal.isOpen && <ComputeJsonModal isOpen={createModal.isOpen} onClose={createModal.onClose} />}
+                </div>
+                {activateSubMenu && secondLevelMenu()}
+                {activateThirdSubMenu && hasThirdLevelMenu('third')}
+            </>
         </Flex>
     );
 };

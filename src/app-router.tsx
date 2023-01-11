@@ -5,7 +5,6 @@ import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } f
 import { Box, Flex } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 import { User } from './models/profile';
-import JsonForm from './component/jsonSchemaBuilder/JsonForm';
 import { ContextCompute } from './context/computeContext';
 
 export const AppRouter = (props: any) => {
@@ -32,7 +31,6 @@ export const AppRouter = (props: any) => {
                                 }
                             />
                             <Route path="/project" element={<Project />} />
-                            <Route path="/jsonform" element={<JsonForm />} />
                         </Routes>
                     </Box>
                 </Flex>

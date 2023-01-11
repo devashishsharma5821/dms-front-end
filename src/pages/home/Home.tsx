@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { wsconnect } from '../../query';
 import './home.scss';
-import {
-    Button,
-    Wrap,
-    WrapItem,
-    Tooltip,
-    useToast,
-    useColorModeValue
-} from '@chakra-ui/react';
+import { Button, Wrap, WrapItem, Tooltip, useToast, useColorModeValue } from '@chakra-ui/react';
 import ModalComponent from '../../component/modalSystem/modal';
 
 const HomePage = () => {
@@ -16,13 +9,13 @@ const HomePage = () => {
     const toast = useToast();
     const statuses = ['success', 'error', 'warning', 'info'];
 
-    useEffect(() => {
-        wsconnect(setMessage);
-    }, []);
+    // useEffect(() => {
+    //     wsconnect(setMessage);
+    // }, []);
     return (
         <>
             <div className="wrap">
-                <Wrap   ml={54} mt={10}>
+                <Wrap ml={54} mt={10}>
                     {statuses.map((status: any, i: number) => (
                         <WrapItem key={i}>
                             <Button

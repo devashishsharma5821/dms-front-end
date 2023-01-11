@@ -1,11 +1,11 @@
 import { FieldHookConfig, useField } from 'formik';
-import { Input, InputProps as ChakraInputProps, Switch } from '@chakra-ui/react';
+import { InputProps as ChakraInputProps, Switch } from '@chakra-ui/react';
 
-// type Props = ChakraInputProps & FieldHookConfig<"input">;
+type Props = ChakraInputProps & FieldHookConfig<'input'>;
 
-const SwitchField = ({ ...props }: any) => {
+const SwitchField = (props: Props) => {
     const [field] = useField(props.name);
-    return <Switch {...field}></Switch>;
+    return <Switch {...field} />;
 };
 
 export default SwitchField;
