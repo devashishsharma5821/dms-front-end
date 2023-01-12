@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Help.scss';
 import { Box, Center, Divider, Flex, Square, Text, useColorModeValue } from '@chakra-ui/react';
-import {  Documentation,  WhiteInfoIcon, WhiteResourceCenterIcon } from '../../assets/icons';
+import {  Documentation,  WhiteInfoIcon, WhiteResourceCenterIcon } from '../../../assets/icons';
 
 const Help = (props: any) => {
     const textColor = useColorModeValue( 'dark.header','default.whiteText');
