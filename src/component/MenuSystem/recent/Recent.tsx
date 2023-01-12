@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Recent.scss';
 import { Box, Center, Divider, Flex, Square, Text, useColorModeValue } from '@chakra-ui/react';
-import {  WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteRecentIcon } from '../../assets/icons';
+import {  WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteRecentIcon } from '../../../assets/icons';
 
 const Recent = (props: any) => {
     const textColor = useColorModeValue( 'dark.header','default.whiteText');

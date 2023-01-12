@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import './Explorer.scss';
 import { Box, Center, Divider, Flex, Square, Text, useColorModeValue, VStack } from '@chakra-ui/react';
-import { RightArrow, WhiteExperiment } from '../../assets/icons';
-import sideBarMenuIcons from '../../models/sideBarMenuData';
+import { RightArrow, WhiteExperiment } from '../../../assets/icons';
+import sideBarMenuIcons from '../../../models/sideBarMenuData';
 
 const Explorer = (props: any) => {
     const textColor = useColorModeValue('dark.header', 'default.whiteText');

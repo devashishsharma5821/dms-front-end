@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import './CreateNew.scss';
 import { Box, Center, Divider, Flex, Square, Text, useColorModeValue } from '@chakra-ui/react';
 
-import PlusIcont from '../../assets/icons/PlusIcont';
-import {  WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteWorkflowsIcon, } from '../../assets/icons';
+import PlusIcont from '../../../assets/icons/PlusIcont';
+import {  WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteWorkflowsIcon, } from '../../../assets/icons';
 
 const CreateNew = (props: any) => {
     const textColor = useColorModeValue( 'dark.header','default.whiteText');
