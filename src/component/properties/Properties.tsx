@@ -225,7 +225,7 @@ const shareData1 = {
                 <Divider color={"default.dividerColor"}/>
                 <ModalFooter >
 
-                 <Button onClick={onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'22'} width={'72px'} height={'40px'}>Close</Button>
+                 <Button onClick={onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'19'} width={'72px'} height={'40px'}>Close</Button>
                   
                 </ModalFooter>
           </ModalContent>

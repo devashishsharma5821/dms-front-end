@@ -24,17 +24,26 @@ import toolbarDataIcons from '../../models/toolbarData';
 import Comments from '../comments/Comments';
 import DeployedIcon from '../../assets/icons/DeployedIcon';
 import DeployedNotRunningIcon from '../../assets/icons/DeployNotRunning';
+import Properties from '../properties/Properties';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const propertiesModal = useDisclosure();
+    const triggerActions = (type: string)=>{
+        if(type === 'Properties') {
+            propertiesModal.onOpen();
+        }
+        
+
+    };
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                 return (
                     <>
                         {sections.type === 'icon' && (
-                            <Center ml={'16'} mr={'16'} >
+                            <Center onClick={()=> triggerActions(sections.name)} ml={'16'} mr={'16'} >
                                 <Box mr={'8'}>{sections.component}</Box>
                                 <Box>{sections.name}</Box>
                             </Center>
@@ -162,6 +171,7 @@ const Toolbar = (props: any) => {
                 )}
             </Flex>
             <Comments isOpen={isOpen} onClose={onClose}></Comments>
+            {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
         </Flex>
     );
 };
