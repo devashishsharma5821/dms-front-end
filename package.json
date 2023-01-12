@@ -9,6 +9,7 @@
         "@apollo/client": "^3.6.9",
         "@azure/msal-browser": "^2.28.2",
         "@azure/msal-react": "^1.4.6",
+        "@chakra-ui/icons": "^2.0.16",
         "@chakra-ui/react": "^2.3.5",
         "@emotion/react": "^11.9.0",
         "@emotion/styled": "^11.8.1",
