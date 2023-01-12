@@ -12,7 +12,7 @@ const toolbarDataIcons = {
         {
             component: <Settings />,
             name: 'Properties',
-            type: 'icon'
+            type: 'icon',
         },
         {
             component: <Output />,

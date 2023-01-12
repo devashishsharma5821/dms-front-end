@@ -59,7 +59,7 @@ const shareData1 = {
                     <ModalOverlay />
                     <ModalContent width={'713px'} borderRadius={'2'} maxHeight={'734px'}>
                      <ModalHeader  color={shretextColor} mt={'13'} ml={20}>Share</ModalHeader>
-                    <ModalCloseButton  mt={'12'} mr={8} color={'light.lighterGrayishBlue'} />
+                    <ModalCloseButton  mt={'12'} mr={8} color={textColor2} />
                     <Divider color={"default.dividerColor"}/>
                    
                   <ModalBody pb={6} >
