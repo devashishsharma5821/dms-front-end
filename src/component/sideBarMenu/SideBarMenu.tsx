@@ -10,6 +10,7 @@ import Recent from '../recent/Recent';
 import Help from '../help/Help';
 import Explorer from '../explorer/Explorer';
 import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
+import Experiment from '../experiment/Experiment';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -70,6 +71,19 @@ const SideBarMenu = () => {
     const triggerCreateModal = () => {
         createModal.onOpen();
     };
+     const thirdLevelMenu = () => {
+         return (
+             <div style={{...zIndexStyle, position:'absolute', marginLeft:'445px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
+                 <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
+                     <VStack>
+                         <Box width={'254px'}  pl={'0px'} mt="17" >
+                             <h3><Experiment/></h3>
+                         </Box>
+                     </VStack>
+                 </Flex>
+             </div>
+         );
+     };
     const secondLevelMenu = () => {
         return (
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
