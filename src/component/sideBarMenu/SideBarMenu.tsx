@@ -102,9 +102,7 @@ const SideBarMenu = () => {
                                     </h3>
                                 )}
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' && (
-                                    <h3>
-                                        <Explorer />
-                                    </h3>
+                                       <h3><Explorer hasThirdLevelMenu={hasThirdLevelMenu}/></h3>
                                 )}
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' && (
                                     <h3>
