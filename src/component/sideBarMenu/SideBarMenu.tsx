@@ -9,7 +9,6 @@ import CreateNew from '../createNew/CreateNew';
 import Recent from '../recent/Recent';
 import Help from '../help/Help';
 import Explorer from '../explorer/Explorer';
-import Experiment from '../experiment/Experiment';
 import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 
 const SideBarMenu = () => {

@@ -4,7 +4,7 @@ import {  CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets
 import { ShareData } from '../../models/share';
 
 const Properties = (props: any) => {
-  
+    const textColor = useColorModeValue('light.header', 'default.whiteText');
     const textColorIcon = useColorModeValue('#666C80', 'white');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
@@ -28,7 +28,7 @@ const Properties = (props: any) => {
         ) : (
           <Flex justifyContent='center'>
            
-            <Button {...getEditButtonProps()} bg={'white'} mt={'10px'} ml={'12px'} width={'33px'} height={'33px'}>
+            <Button {...getEditButtonProps()} bg={'textColor'} mt={'10px'} ml={'12px'} width={'33px'} height={'33px'}>
             <Text color={'#2180C2'}>Edit</Text>
             </Button>
           </Flex>
@@ -111,10 +111,10 @@ const shareData1 = {
                                   <Box ml={14} mt={16} bg={' #F2F4F8'}  height={'24px'}  borderRadius={3} minWidth={70}>
                                     <Flex >
                                     <Center >
-                                                <Text color={'#1A3F59'} fontSize={'14px'}  mt={'2px'} ml={6}  >Demo</Text>
-                                                <Box justifyContent={'flex-end'}  ml={'14px'} >
-                                                  <CloseIcon color={'#666C80'} />
-                                                </Box>
+                                        <Text color={'#1A3F59'} fontSize={'14px'}  mt={'2px'} ml={6}  >Demo</Text>
+                                        <Box justifyContent={'flex-end'}  ml={'14px'} >
+                                          <CloseIcon color={'#666C80'} />
+                                        </Box>
                                     </Center>
                                     </Flex>
                                   </Box>
@@ -130,15 +130,15 @@ const shareData1 = {
                               <Flex ml={'36px'} mt={'-51px'}>
                                 <Avatar  p={'5px'}  borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'21px'}/>
                                 <Center>
-                                    
-                                        <Box width={'300px'}>
-                                            <Text ml={12} color={accesstextColor} mt={'21px'}>Created by</Text>
-                                            <Text ml={12}  color={accesstextColor} fontWeight={700}>Shirin Bampoori</Text>
-                                            <Text ml={12} color={accesstextColor} mt={'14px'}>Created On</Text>
-                                            <Text ml={12}  color={accesstextColor} fontWeight={700}>10/05/2022  10:20 AM</Text>
-                                            <Text ml={12} color={accesstextColor} mt={'14px'}>Last Modifies</Text>
-                                            <Text ml={12}  color={accesstextColor} fontWeight={700}>10 Mins ago</Text>
-                                        </Box>
+                                
+                                    <Box width={'300px'}>
+                                        <Text ml={12} color={accesstextColor} mt={'21px'}>Created by</Text>
+                                        <Text ml={12}  color={accesstextColor} fontWeight={700}>Shirin Bampoori</Text>
+                                        <Text ml={12} color={accesstextColor} mt={'14px'}>Created On</Text>
+                                        <Text ml={12}  color={accesstextColor} fontWeight={700}>10/05/2022  10:20 AM</Text>
+                                        <Text ml={12} color={accesstextColor} mt={'14px'}>Last Modifies</Text>
+                                        <Text ml={12}  color={accesstextColor} fontWeight={700}>10 Mins ago</Text>
+                                    </Box>
                                 </Center>
                              
                               </Flex>
@@ -217,8 +217,7 @@ const shareData1 = {
                                 </Flex>
                         </Box>
                  </Box>
-                        
-                    
+  
                 </FormControl>    
             </ModalBody>
                 

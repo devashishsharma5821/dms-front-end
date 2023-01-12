@@ -24,7 +24,7 @@ import toolbarDataIcons from '../../models/toolbarData';
 import Comments from '../comments/Comments';
 import DeployedIcon from '../../assets/icons/DeployedIcon';
 import DeployedNotRunningIcon from '../../assets/icons/DeployNotRunning';
-import Properties from '../properties/Properties';
+import Properties from '../modalSystem/Properties';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
