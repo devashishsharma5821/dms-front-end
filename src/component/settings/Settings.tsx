@@ -26,7 +26,7 @@ const Settings = (props: any) => {
           <ModalHeader mt={'20px'}  ml={'15px'}>Settings</ModalHeader>
           <ModalCloseButton mt={'20px'} />
           <Divider color={"default.dividerColor"} mt={'20px'} mb={'20px'}/>
-          <ModalBody pb={6}  mr={'10px'} ml={'10px'}>
+          <ModalBody  mr={'10px'} ml={'10px'}>
             <Formik
                 initialValues={{
                   validateOnMount: true,
@@ -89,15 +89,16 @@ const Settings = (props: any) => {
                         <FormErrorMessage>{errors.token}</FormErrorMessage>
                         <Divider color={"default.dividerColor"} mt={'20px'} mb={'20px'} width="full"/>
 
-                      </FormControl>
+                      
                       <ModalFooter mb={'20px'} >
                           {
                               (loading) ?
-                                  <Button isLoading disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object) } onSubmit={props.onSubmit} type="submit" colorScheme="blue" width="65px" >Ok</Button>
-                                  : <Button  disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object) } onSubmit={props.onSubmit} type="submit" colorScheme="blue" width="65px" >Ok</Button>
+                                  <Button  width={'81px'} height={'40px'} borderRadius={3} isLoading disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object) } onSubmit={props.onSubmit} type="submit" colorScheme="blue"  >Ok</Button>
+                                  : <Button  width={'81px'} height={'40px'} borderRadius={3} disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object) } onSubmit={props.onSubmit} type="submit" colorScheme="blue"  >Ok</Button>
                           }
-                          <Button disabled={loading} onClick={props.onClose} colorScheme='blue' ml={'5px'}>Cancel</Button>
+                          <Button disabled={loading} onClick={props.onClose} colorScheme='blue' ml={'5px'}  width={'81px'} height={'40px'} borderRadius={3}>Cancel</Button>
                     </ModalFooter>
+                    </FormControl>
                     </VStack>
                   </form>
               )}

@@ -25,14 +25,18 @@ import Comments from '../comments/Comments';
 import DeployedIcon from '../../assets/icons/DeployedIcon';
 import DeployedNotRunningIcon from '../../assets/icons/DeployNotRunning';
 import Properties from '../modalSystem/Properties';
+import SaveAs from '../modalSystem/SaveAs';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const propertiesModal = useDisclosure();
+    const saveAsModal = useDisclosure();
     const triggerActions = (type: string)=>{
         if(type === 'Properties') {
             propertiesModal.onOpen();
+        }else if(type === 'SaveAs') {
+            saveAsModal.onOpen();
         }
         
 
@@ -172,6 +176,7 @@ const Toolbar = (props: any) => {
             </Flex>
             <Comments isOpen={isOpen} onClose={onClose}></Comments>
             {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
+            {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
         </Flex>
     );
 };
