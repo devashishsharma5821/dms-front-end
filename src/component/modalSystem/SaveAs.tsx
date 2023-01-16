@@ -43,16 +43,17 @@ const SaveAs = (props: any) => {
                 validateOnChange={true}
                 onSubmit={(values) => {
                  setLoading(true);
-                 client.mutate({
-                    mutation: setSettingsData(values.projectName ,values.experimentName)
-                })
-                    .then((response) => {
-                    if(response.data.dmsSetDatabricksCredentials){
-                        props.onClose();
-                        setLoading(false);
-                    }
-                    })
-                    .catch((err) => console.error(err));
+                 // The below api will be available when needs to be integrated
+                //  client.mutate({
+                //     mutation: setSettingsData(values.projectName ,values.experimentName)
+                // })
+                //     .then((response) => {
+                //     if(response.data.dmsSetDatabricksCredentials){
+                //         props.onClose();
+                //         setLoading(false);
+                //     }
+                //     })
+                //     .catch((err) => console.error(err));
                 }}
             >
               {({ handleSubmit, errors, touched ,isValid}) => (

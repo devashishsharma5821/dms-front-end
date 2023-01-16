@@ -102,6 +102,15 @@ export const setSettingsData = (userName: string, token: string) => {
                   ) } 
         `;
 };
+export const setSaveAs = (userName: string, token: string) => {
+    return gql`
+    mutation
+         {   dmsSetDatabricksCredentials(  
+               databricks_token: "${token}"  
+               databricks_username: "${userName}" 
+                  ) } 
+        `;
+};
 
 // export const dmsCreateCompute = (values: any) => {
 //     return gql`
