@@ -39,9 +39,9 @@ const ComputeModal = (props: COMPUTE_MODAL_PROPS) => {
     const client = useApolloClient();
     const toast = useToast();
     useEffect(() => {
-        wsconnect((e: any) => {
-            console.log('Inside calback', e);
-        });
+        // wsconnect((e: any) => {
+        //     console.log('Inside calback', e);
+        // });
     }, []);
     useEffect(() => {
         client

@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
 import './SideBarMenu.scss';
 import { CreateIcon, WideCreateIcon } from '../../assets/icons';
-import CreateNew from '../menuSystem/createNew/CreateNew';
-import Recent from '../menuSystem/recent/Recent';
-import Help from '../menuSystem/help/Help';
-import Explorer from '../menuSystem/explorer/Explorer';
+import CreateNew from '../MenuSystem/createNew/CreateNew';
+import Recent from '../MenuSystem/recent/Recent';
+import Help from '../MenuSystem/help/Help';
+import Explorer from '../MenuSystem/explorer/Explorer';
 import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
-import Experiment from '../menuSystem/experiment/Experiment';
+import Experiment from '../MenuSystem/experiment/Experiment';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -71,19 +71,21 @@ const SideBarMenu = () => {
     const triggerCreateModal = () => {
         createModal.onOpen();
     };
-     const thirdLevelMenu = () => {
-         return (
-             <div style={{...zIndexStyle, position:'absolute', marginLeft:'445px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
-                 <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
-                     <VStack>
-                         <Box width={'254px'}  pl={'0px'} mt="17" >
-                             <h3><Experiment/></h3>
-                         </Box>
-                     </VStack>
-                 </Flex>
-             </div>
-         );
-     };
+    const thirdLevelMenu = () => {
+        return (
+            <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '445px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
+                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
+                    <VStack>
+                        <Box width={'254px'} pl={'0px'} mt="17">
+                            <h3>
+                                <Experiment />
+                            </h3>
+                        </Box>
+                    </VStack>
+                </Flex>
+            </div>
+        );
+    };
     const secondLevelMenu = () => {
         return (
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
@@ -102,7 +104,9 @@ const SideBarMenu = () => {
                                     </h3>
                                 )}
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' && (
-                                       <h3><Explorer hasThirdLevelMenu={hasThirdLevelMenu}/></h3>
+                                    <h3>
+                                        <Explorer hasThirdLevelMenu={hasThirdLevelMenu} />
+                                    </h3>
                                 )}
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' && (
                                     <h3>

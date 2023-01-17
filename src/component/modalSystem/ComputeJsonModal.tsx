@@ -8,7 +8,7 @@ import FormBuilder from '../jsonSchemaFormBuilder/FormBuilder';
 import formSchema from '../jsonSchemaFormBuilder/computeFormSchema.json';
 import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscaling, getComputeListData } from '../../query';
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
-import { ComputeDetail, ComputeDetailListResponse, createCompute, DbSettingsDetail, GetDbSettingsType } from '../../models/computeDetails';
+import { ComputeDetail, ComputeDetailListResponse, createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues } from '../../models/computeDetails';
 import useAppStore from '../../store';
 import { useNavigate } from 'react-router';
 
@@ -54,8 +54,9 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             }
         }
     }, [isComputeCreated]);
-    //TODO: Define proper types
-    const handleSubmitCompute = (values: any) => {
+
+    const handleSubmitCompute = (values: CreateComputeSubmitHandlerValues) => {
+        console.log('inside handle submit', values);
         let mutation: DocumentNode | null = null;
         if (!values.enable_autoscaling) {
             mutation = dmsCreateComputeOffEnableAutoscaling(values);
@@ -68,6 +69,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                 mutation: mutation
             })
             .then((response) => {
+                console.log('this is response', response);
                 toast({
                     title: `Compute created successfully`,
                     status: 'success',

@@ -8,7 +8,7 @@ interface AppState {
     DmsDatabricksCredentialsValidToken: boolean;
     DmsComputeData: any;
     UserConfig: [];
-    lastAliveMessage: string;
+    lastAliveMessage: any;
     inferStartedMessaage: any;
     runStageCompleted: any;
     runStageError: any;
@@ -19,6 +19,8 @@ interface AppState {
     connectionState: { connected: boolean; subscribed: boolean };
     message: any;
     runStageData: any;
+    createdById: any;
+    computeState: any;
     updateI18N: (translation: {}) => void;
     updateAppConfig: (config: {}) => void;
     updateDmsDatabricksCredentialsValidToken: (token: boolean) => void;
@@ -30,6 +32,8 @@ interface AppState {
     hasSubscribed: () => void;
     disconnected: () => void;
     startConnecting: () => void;
+    updateCreatedById: (computeId: string) => void;
+    setComputeState: (value: any) => void;
 }
 
 const useAppStore = create<AppState>((set) => ({
@@ -38,27 +42,33 @@ const useAppStore = create<AppState>((set) => ({
     DmsDatabricksCredentialsValidToken: false,
     DmsComputeData: null,
     UserConfig: [],
-    lastAliveMessage: 'this is lastAlive message',
+    lastAliveMessage: null,
     inferStartedMessaage: null,
     runStageCompleted: null,
     runStageError: null,
     runStageStarted: null,
     runStageData: null,
     shutdownMessage: null,
+    createdById: null,
     uncategorizedEvents: [],
     currentRunState: { running: false, lastStageId: null },
     connectionState: { connected: false, subscribed: false },
     message: {},
+    computeState: '',
     updateI18N: (translation = {}) => set((state: { i18n: {} }) => ({ i18n: translation })),
     updateAppConfig: (config = {}) => set((state: { config: {} }) => ({ config: config })),
     updateDmsDatabricksCredentialsValidToken: (token) => set(() => ({ DmsDatabricksCredentialsValidToken: token })),
     updateDmsComputeData: (ComputeData) => set(() => ({ DmsComputeData: ComputeData })),
     updateUserConfig: (UserConfig) => set(() => ({ UserConfig: UserConfig })),
     submitMessage: (content: Message) => set(() => ({ message: content })),
-    connectionEstablished: () => set(() => ({ connectionState: { connected: true, subscribed: false } })),
+    connectionEstablished: () =>
+        set(() => {
+            console.log('connection established');
+            return { connectionState: { connected: true, subscribed: false } };
+        }),
     receiveMessage: (action: any) =>
         set((state: any) => {
-            let event = action.payload;
+            let event = action;
             if (event.payload) {
                 if (event.payload.alive) {
                     return { lastAliveMessage: event.payload.alive };
@@ -133,7 +143,9 @@ const useAppStore = create<AppState>((set) => ({
         })),
     hasSubscribed: () => set(() => ({ connectionState: { connected: true, subscribed: true } })),
     disconnected: () => set(() => ({ connectionState: { connected: false, subscribed: false } })),
-    startConnecting: () => set(() => ({}))
+    startConnecting: () => set(() => ({})),
+    updateCreatedById: (createdById: string) => set(() => ({ createdById: createdById })),
+    setComputeState: (value: any) => set({ computeState: value })
 }));
 
 export default useAppStore;
