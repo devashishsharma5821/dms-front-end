@@ -2,6 +2,7 @@
 
 FROM node:16.16.0 as build
 WORKDIR /app
+ARG NPM_TOKEN
 COPY .npmrc .npmrc 
 COPY package-lock.json .
 COPY package.json .
