@@ -25,6 +25,7 @@ import Comments from '../comments/Comments';
 import DeployedIcon from '../../assets/icons/DeployedIcon';
 import DeployedNotRunningIcon from '../../assets/icons/DeployNotRunning';
 import Properties from '../modalSystem/Properties';
+import Variables from '../modalSystem/Variables';
 import SaveAs from '../modalSystem/SaveAs';
 
 const Toolbar = (props: any) => {
@@ -32,15 +33,16 @@ const Toolbar = (props: any) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const propertiesModal = useDisclosure();
     const saveAsModal = useDisclosure();
+    const VariablesModal = useDisclosure();
     const triggerActions = (type: string)=>{
         if(type === 'Properties') {
             propertiesModal.onOpen();
         }else if(type === 'SaveAs') {
             saveAsModal.onOpen();
+        }else if(type === 'Variables') {
+            VariablesModal.onOpen();
         }
-        
-
-    };
+          };
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
@@ -177,6 +179,7 @@ const Toolbar = (props: any) => {
             <Comments isOpen={isOpen} onClose={onClose}></Comments>
             {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
+            {VariablesModal.isOpen && <Variables isOpen={VariablesModal.isOpen} onClose={VariablesModal.onClose} />}
         </Flex>
     );
 };

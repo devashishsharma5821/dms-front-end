@@ -31,3 +31,4 @@ export { Documentation } from './Documentation';
 export { StopCompute } from './StopComputeIcon';
 export { RightArrow } from './RightArrow';
 export { CloseIcon } from './CloseIcon';
+export { ExclamationIcon } from './ExclamationIcon';

@@ -166,7 +166,7 @@ const Compute = () => {
                     <EditIcon />
                 </div>
                 <div onClick={() => onDeleteClickHandler(params.data.id)}>
-                    <DeleteIcon />
+                    <DeleteIcon  height={'18px'} width={'16px'} />
                 </div>
             </Flex>
         );
