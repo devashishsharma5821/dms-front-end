@@ -76,6 +76,8 @@ export const colors = {
         linkColor:'#017BA1',
         lightGray: '#F2F4F5',
         darkGrayCreate: '#666C80',
+        bgExclamationText:'rgba(50, 150, 237, 0.2)',
+        bgExclamationIcon:'#BFE1FF'
     },
     light: {
         header: '#1A3F59',

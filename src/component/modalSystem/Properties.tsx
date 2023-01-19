@@ -4,7 +4,6 @@ import {  CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets
 import { ShareData } from '../../models/share';
 
 const Properties = (props: any) => {
-    const textColor = useColorModeValue('light.header', 'default.whiteText');
     const textColorIcon = useColorModeValue('#666C80', 'white');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
@@ -94,7 +93,7 @@ const shareData1 = {
                                     <Text  mt={17}  color={accesstextColor}>Experiment Name </Text>
                                     <Center>
                                         <Text  color={accesstextColor} fontWeight={700} mr={'4px'}>My New Experiment </Text>
-                                        <PencilIcon  color={textColorIcon} />
+                                        <PencilIcon  color={textColorIcon} height={'20px'} Height={'20px'}/>
                                     </Center>
                                     <Center>
                                         <Box mt={12} mr={'4px'} ml={'-32px'} borderRadius="full" boxSize="14px"  bg={'#ED6D74'} />
