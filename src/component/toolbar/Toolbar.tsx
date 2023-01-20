@@ -27,6 +27,7 @@ import DeployedNotRunningIcon from '../../assets/icons/DeployNotRunning';
 import Properties from '../modalSystem/Properties';
 import Variables from '../modalSystem/Variables';
 import SaveAs from '../modalSystem/SaveAs';
+import Output from '../modalSystem/Output';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -34,6 +35,7 @@ const Toolbar = (props: any) => {
     const propertiesModal = useDisclosure();
     const saveAsModal = useDisclosure();
     const VariablesModal = useDisclosure();
+    const OutputModal = useDisclosure();
     const triggerActions = (type: string)=>{
         if(type === 'Properties') {
             propertiesModal.onOpen();
@@ -41,6 +43,8 @@ const Toolbar = (props: any) => {
             saveAsModal.onOpen();
         }else if(type === 'Variables') {
             VariablesModal.onOpen();
+        }else if(type === 'Output') {
+            OutputModal.onOpen();
         }
           };
     return (
@@ -180,6 +184,7 @@ const Toolbar = (props: any) => {
             {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
             {VariablesModal.isOpen && <Variables isOpen={VariablesModal.isOpen} onClose={VariablesModal.onClose} />}
+            {OutputModal.isOpen && <Output isOpen={OutputModal.isOpen} onClose={OutputModal.onClose}/>}
         </Flex>
     );
 };
