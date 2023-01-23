@@ -5,14 +5,13 @@ import { Button } from '@chakra-ui/button';
 import { Box } from '@chakra-ui/layout';
 import { MainFormType } from '../../../models/formBuilder';
 
-const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose }: MainFormType) => {
+const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit, isDisabled }: MainFormType) => {
     useEffect(() => {
         if (values?.enable_autoscaling === false || values?.enable_autoscaling === undefined) {
             // const fieldKeys = Object.keys(props.formSchema);
             // const final = fieldKeys.filter((data: any) => {
             //     return props.formSchema[data].conditionalRender == true;
             // });
-            // console.log('fieldKeys are ====>', final);
 
             formSchema['min_workers'].show = false;
             formSchema['max_workers'].show = false;
@@ -45,8 +44,8 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose }: MainF
                 <Button type="button" variant="outline" colorScheme="blue" className="cancel-button" onClick={onClose}>
                     Cancel
                 </Button>
-                <Button type="submit" variant="solid" colorScheme="blue">
-                    Create
+                <Button type="submit" variant="solid" colorScheme="blue" isDisabled={isDisabled}>
+                    {isEdit ? 'Edit' : 'Create'}
                 </Button>
             </Box>
         </form>

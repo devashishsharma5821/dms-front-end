@@ -7,7 +7,7 @@ import useAppStore from '../../store';
 import { useToast } from '@chakra-ui/toast';
 import { DELETE_COMPUTE_MODAL_PROPS } from '../../models/computeDetails';
 
-function DeleteComputeModal({ cellId, isOpen, onClose }: DELETE_COMPUTE_MODAL_PROPS) {
+function DeleteComputeModal({ computeId, isOpen, onClose }: DELETE_COMPUTE_MODAL_PROPS) {
     const toast = useToast();
     const client = useApolloClient();
     const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
@@ -15,7 +15,7 @@ function DeleteComputeModal({ cellId, isOpen, onClose }: DELETE_COMPUTE_MODAL_PR
     const onClickHandler = () => {
         client
             .mutate<ComputeDelete<DeleteComputeDetail>>({
-                mutation: dmsDeleteCompute(cellId)
+                mutation: dmsDeleteCompute(computeId)
             })
             .then((response) => {
                 toast({

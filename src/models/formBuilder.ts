@@ -49,6 +49,8 @@ export interface MainFormType {
     initForm: (formSchema: FormSchemaType, values: any) => void;
     onClose: () => void;
     handleSubmit: (values: any) => void;
+    isEdit?: boolean;
+    isDisabled?: boolean;
 }
 
 export interface FormSchemaType {
@@ -72,6 +74,8 @@ export interface FormBuilderProps {
     formSchema: FormSchemaType;
     onClose: () => void;
     onSubmit: (values: any) => void;
+    isEdit?: boolean;
+    isDisabled?: boolean;
 }
 
 export interface FormSchemaType {

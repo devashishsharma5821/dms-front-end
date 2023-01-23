@@ -34,22 +34,22 @@ const Toolbar = (props: any) => {
     const propertiesModal = useDisclosure();
     const saveAsModal = useDisclosure();
     const VariablesModal = useDisclosure();
-    const triggerActions = (type: string)=>{
-        if(type === 'Properties') {
+    const triggerActions = (type: string) => {
+        if (type === 'Properties') {
             propertiesModal.onOpen();
-        }else if(type === 'SaveAs') {
+        } else if (type === 'SaveAs') {
             saveAsModal.onOpen();
-        }else if(type === 'Variables') {
+        } else if (type === 'Variables') {
             VariablesModal.onOpen();
         }
-          };
+    };
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                 return (
                     <>
                         {sections.type === 'icon' && (
-                            <Center onClick={()=> triggerActions(sections.name)} ml={'16'} mr={'16'} >
+                            <Center onClick={() => triggerActions(sections.name)} ml={'16'} mr={'16'}>
                                 <Box mr={'8'}>{sections.component}</Box>
                                 <Box>{sections.name}</Box>
                             </Center>

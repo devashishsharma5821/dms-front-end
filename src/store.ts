@@ -1,5 +1,20 @@
 import create from 'zustand';
 import { Message } from '@antuit/web-sockets-gateway-client';
+import client from './apollo-client';
+import { ComputeDetail, ComputeDetailListResponse, DmsComputeData } from './models/computeDetails';
+import {
+    AliveEvent,
+    Event,
+    StartedEvent,
+    InferOutputStageCompletedEvent,
+    InferOutputStageErrorEvent,
+    RunStageStartedEvent,
+    RunStageCompletedEvent,
+    RunStageErrorEvent,
+    RunStageDataEvent,
+    ShutdownEvent
+} from '@antuit/pipeline-interactive-driver-client';
+import { getComputeListData } from './query';
 
 //TODO:Change TYpe defination
 interface AppState {
@@ -8,17 +23,21 @@ interface AppState {
     DmsDatabricksCredentialsValidToken: boolean;
     DmsComputeData: any;
     UserConfig: [];
-    lastAliveMessage: string;
-    inferStartedMessaage: any;
-    runStageCompleted: any;
-    runStageError: any;
-    currentRunState: any;
-    runStageStarted: any;
-    uncategorizedEvents: any;
-    shutdownMessage: any;
+    lastAliveMessage: AliveEvent | null;
+    inferStartedMessaage: StartedEvent | null;
+    runStageCompleted: RunStageCompletedEvent | null;
+    runStageError: RunStageErrorEvent | null;
+    inferStageCompleted: InferOutputStageCompletedEvent | null;
+    inferStageError: InferOutputStageErrorEvent | null;
+    currentRunState: { running: boolean; lastStageId: string | null };
+    runStageStarted: RunStageStartedEvent | null;
+    uncategorizedEvents: Message<Event>[];
+    shutdownMessage: ShutdownEvent | null;
     connectionState: { connected: boolean; subscribed: boolean };
-    message: any;
-    runStageData: any;
+    message: Message | {};
+    runStageData: RunStageDataEvent | null;
+    createdById: any;
+    computeState: any;
     updateI18N: (translation: {}) => void;
     updateAppConfig: (config: {}) => void;
     updateDmsDatabricksCredentialsValidToken: (token: boolean) => void;
@@ -30,6 +49,9 @@ interface AppState {
     hasSubscribed: () => void;
     disconnected: () => void;
     startConnecting: () => void;
+    updateCreatedById: (computeId: string) => void;
+    setComputeState: (value: any) => void;
+    getAndUpdateDmsComputeData: () => void;
 }
 
 const useAppStore = create<AppState>((set) => ({
@@ -38,27 +60,61 @@ const useAppStore = create<AppState>((set) => ({
     DmsDatabricksCredentialsValidToken: false,
     DmsComputeData: null,
     UserConfig: [],
-    lastAliveMessage: 'this is lastAlive message',
+    lastAliveMessage: null,
     inferStartedMessaage: null,
     runStageCompleted: null,
     runStageError: null,
     runStageStarted: null,
     runStageData: null,
     shutdownMessage: null,
+    createdById: null,
+    inferStageCompleted: null,
+    inferStageError: null,
     uncategorizedEvents: [],
     currentRunState: { running: false, lastStageId: null },
     connectionState: { connected: false, subscribed: false },
     message: {},
+    computeState: '',
     updateI18N: (translation = {}) => set((state: { i18n: {} }) => ({ i18n: translation })),
     updateAppConfig: (config = {}) => set((state: { config: {} }) => ({ config: config })),
     updateDmsDatabricksCredentialsValidToken: (token) => set(() => ({ DmsDatabricksCredentialsValidToken: token })),
     updateDmsComputeData: (ComputeData) => set(() => ({ DmsComputeData: ComputeData })),
     updateUserConfig: (UserConfig) => set(() => ({ UserConfig: UserConfig })),
     submitMessage: (content: Message) => set(() => ({ message: content })),
-    connectionEstablished: () => set(() => ({ connectionState: { connected: true, subscribed: false } })),
+    getAndUpdateDmsComputeData: async () => {
+        const { GET_COMPUTELIST } = getComputeListData();
+        const response = await client.query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+            query: GET_COMPUTELIST
+        });
+
+        set(() => ({ DmsComputeData: [...response.data.dmsComputes] }));
+    },
+    //     set(() => {
+    //         console.log('inside getAndUpdateDmsComputeData');
+    //         const { GET_COMPUTELIST } = getComputeListData();
+    //         let ComputeData;
+    //         client
+    //             .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+    //                 query: GET_COMPUTELIST
+    //             })
+    //             .then((response: any) => {
+    //                 console.log('inside getAndUpdateDmsComputeData response', [...response.data.dmsComputes]);
+    //                 ComputeData = [...response.data.dmsComputes];
+    //                 console.log('ComputeData----', ComputeData);
+    //                 // return { DmsComputeData: [...response.data.dmsComputes] };
+    //             })
+    //             .catch((err) => console.log(err));
+    //         console.log('ComputeData----', ComputeData);
+    //         return { DmsComputeData: ComputeData };
+    //     }),
+    connectionEstablished: () =>
+        set(() => {
+            console.log('connection established');
+            return { connectionState: { connected: true, subscribed: false } };
+        }),
     receiveMessage: (action: any) =>
         set((state: any) => {
-            let event = action.payload;
+            let event = action;
             if (event.payload) {
                 if (event.payload.alive) {
                     return { lastAliveMessage: event.payload.alive };
@@ -133,7 +189,9 @@ const useAppStore = create<AppState>((set) => ({
         })),
     hasSubscribed: () => set(() => ({ connectionState: { connected: true, subscribed: true } })),
     disconnected: () => set(() => ({ connectionState: { connected: false, subscribed: false } })),
-    startConnecting: () => set(() => ({}))
+    startConnecting: () => set(() => ({})),
+    updateCreatedById: (createdById: string) => set(() => ({ createdById: createdById })),
+    setComputeState: (value: any) => set({ computeState: value })
 }));
 
 export default useAppStore;

@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useApolloClient, DocumentNode, useQuery } from '@apollo/client';
+import { useApolloClient, DocumentNode } from '@apollo/client';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useToast } from '@chakra-ui/react';
 import { GET_DB_SETTINGS } from '../../query/index';
 import { COMPUTE_MODAL_PROPS } from '../../models/types';
 import '../../styles/FormBuilderClasses.scss';
 import FormBuilder from '../jsonSchemaFormBuilder/FormBuilder';
 import formSchema from '../jsonSchemaFormBuilder/computeFormSchema.json';
-import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscaling, getComputeListData } from '../../query';
+import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscaling, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling, getComputeListData } from '../../query';
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
-import { ComputeDetail, ComputeDetailListResponse, createCompute, DbSettingsDetail, GetDbSettingsType } from '../../models/computeDetails';
+import { ComputeDetail, ComputeDetailListResponse, createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues } from '../../models/computeDetails';
 import useAppStore from '../../store';
-import { useNavigate } from 'react-router';
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const client = useApolloClient();
     const toast = useToast();
-    const navigate = useNavigate();
-    const [updateDmsComputeData, DmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData, state.DmsComputeData]);
+    const [isDisabled, setIsDisabled] = useState<boolean>(false);
+    const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
     const [isComputeCreated, setIsComputeCreated] = useState<boolean>(false);
     useEffect(() => {
         client
@@ -34,10 +33,8 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     useEffect(() => {
         if (isComputeCreated) {
             try {
-                console.log('isComputeCreated', isComputeCreated);
                 const { GET_COMPUTELIST } = getComputeListData();
 
-                // console.log('loading', loading, error, data);
                 client
                     .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
                         query: GET_COMPUTELIST
@@ -54,13 +51,22 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             }
         }
     }, [isComputeCreated]);
-    //TODO: Define proper types
-    const handleSubmitCompute = (values: any) => {
+
+    const handleSubmitCompute = (values: CreateComputeSubmitHandlerValues) => {
         let mutation: DocumentNode | null = null;
-        if (!values.enable_autoscaling) {
-            mutation = dmsCreateComputeOffEnableAutoscaling(values);
+        setIsDisabled(true);
+        if (props?.isEdit) {
+            if (!values.enable_autoscaling) {
+                mutation = dmsEditComputeOffEnableAutoscaling(values);
+            } else {
+                mutation = dmsEditComputeOnEnableAutoscaling(values);
+            }
         } else {
-            mutation = dmsCreateComputeOnEnableAutoscaling(values);
+            if (!values.enable_autoscaling) {
+                mutation = dmsCreateComputeOffEnableAutoscaling(values);
+            } else {
+                mutation = dmsCreateComputeOnEnableAutoscaling(values);
+            }
         }
 
         client
@@ -68,8 +74,9 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                 mutation: mutation
             })
             .then((response) => {
+                setIsDisabled(false);
                 toast({
-                    title: `Compute created successfully`,
+                    title: `Compute ${props?.isEdit ? 'edited' : 'created'} successfully`,
                     status: 'success',
                     isClosable: true,
                     duration: 5000,
@@ -78,6 +85,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                 setIsComputeCreated(true);
             })
             .catch((err) => {
+                setIsDisabled(false);
                 toast({
                     title: `${err}`,
                     status: 'error',
@@ -93,11 +101,11 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             <ModalOverlay />
             <ModalContent width={630} maxWidth={630} color="#171717">
                 <ModalHeader height="var(--chakra-space-60)" fontSize={16} borderBottom="1px solid #EAEAEA" fontWeight="700" flex={'none'} padding={20}>
-                    Create Compute
+                    {props?.isEdit ? 'Edit Compute' : 'Create Compute'}
                 </ModalHeader>
                 <ModalCloseButton mt={10} />
                 <ModalBody padding={20}>
-                    <FormBuilder formSchema={formSchema} onClose={props.onClose} onSubmit={handleSubmitCompute} />
+                    <FormBuilder isDisabled={isDisabled} formSchema={formSchema} onClose={props.onClose} isEdit={props.isEdit} onSubmit={handleSubmitCompute} />
                 </ModalBody>
             </ModalContent>
         </Modal>

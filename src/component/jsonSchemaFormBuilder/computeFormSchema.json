@@ -47,7 +47,10 @@
         "min": "0",
         "uiSchema": {
             "grid-column": "auto / span 2"
-        }
+        },
+        "lessThan": true,
+        "ref": "max_workers",
+        "msg": "Max must be greater than Min"
     },
     "max_workers": {
         "type": "number",
@@ -60,7 +63,10 @@
         "min": "0",
         "uiSchema": {
             "grid-column": "auto / span 2"
-        }
+        },
+        "moreThan": true,
+        "ref": "min_workers",
+        "msg": "Min must be less than Max"
     },
     "spot_instances": {
         "type": "switch",
@@ -76,7 +82,8 @@
             "label": {
                 "margin-left": "7px"
             }
-        }
+        },
+        "checked": "isChecked"
     },
     "enable_autoscaling": {
         "type": "switch",

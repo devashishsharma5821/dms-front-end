@@ -7,15 +7,18 @@ import { dmsStopComputeRun, getComputeListData } from '../../query';
 import useAppStore from '../../store';
 import { useToast } from '@chakra-ui/toast';
 import { STOP_COMPUTE_RUNNING_MODALS_PROPS } from '../../models/computeDetails';
+import { BusHelper } from '../../helpers/BusHelper';
+import { v4 } from 'uuid';
 
-function StopComputeRunningModals({ cellId, isOpen, onClose }: STOP_COMPUTE_RUNNING_MODALS_PROPS) {
+function StopComputeRunningModals({ computeId, isOpen, onClose }: STOP_COMPUTE_RUNNING_MODALS_PROPS) {
     const client = useApolloClient();
+    const opid = v4();
     const toast = useToast();
-    const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
-    const onClickHandler = () => {
+    const [updateDmsComputeData, UserConfig, submitMessage] = useAppStore((state: any) => [state.updateDmsComputeData, state.UserConfig, state.submitMessage]);
+    const onClickHandler = (data: any) => {
         client
             .mutate<ComputeStop<StopComputeDetail>>({
-                mutation: dmsStopComputeRun(cellId)
+                mutation: dmsStopComputeRun(computeId)
             })
             .then((response) => {
                 const { GET_COMPUTELIST } = getComputeListData();
@@ -32,7 +35,22 @@ function StopComputeRunningModals({ cellId, isOpen, onClose }: STOP_COMPUTE_RUNN
                     })
                     .then((response) => {
                         let computedata = [...response.data.dmsComputes];
+
                         updateDmsComputeData(computedata);
+                        if (UserConfig && computeId) {
+                            const shutDownRequest = BusHelper.GetShutdownRequestMessage({
+                                experimentId: parseInt(computeId),
+                                opId: opid,
+                                userId: computeId,
+                                //TODO Below are added just for fixing errors
+                                project_id: 12,
+                                get_datatables: undefined,
+                                az_blob_get_containers: undefined,
+                                az_blob_browse_container: undefined
+                            });
+
+                            submitMessage({ content: shutDownRequest });
+                        }
                         onClose();
                     })
                     .catch((err) => console.error(err));
