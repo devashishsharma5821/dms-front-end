@@ -1,5 +1,20 @@
 import create from 'zustand';
 import { Message } from '@antuit/web-sockets-gateway-client';
+import client from './apollo-client';
+import { ComputeDetail, ComputeDetailListResponse, DmsComputeData } from './models/computeDetails';
+import {
+    AliveEvent,
+    Event,
+    StartedEvent,
+    InferOutputStageCompletedEvent,
+    InferOutputStageErrorEvent,
+    RunStageStartedEvent,
+    RunStageCompletedEvent,
+    RunStageErrorEvent,
+    RunStageDataEvent,
+    ShutdownEvent
+} from '@antuit/pipeline-interactive-driver-client';
+import { getComputeListData } from './query';
 
 //TODO:Change TYpe defination
 interface AppState {
@@ -8,17 +23,19 @@ interface AppState {
     DmsDatabricksCredentialsValidToken: boolean;
     DmsComputeData: any;
     UserConfig: [];
-    lastAliveMessage: any;
-    inferStartedMessaage: any;
-    runStageCompleted: any;
-    runStageError: any;
-    currentRunState: any;
-    runStageStarted: any;
-    uncategorizedEvents: any;
-    shutdownMessage: any;
+    lastAliveMessage: AliveEvent | null;
+    inferStartedMessaage: StartedEvent | null;
+    runStageCompleted: RunStageCompletedEvent | null;
+    runStageError: RunStageErrorEvent | null;
+    inferStageCompleted: InferOutputStageCompletedEvent | null;
+    inferStageError: InferOutputStageErrorEvent | null;
+    currentRunState: { running: boolean; lastStageId: string | null };
+    runStageStarted: RunStageStartedEvent | null;
+    uncategorizedEvents: Message<Event>[];
+    shutdownMessage: ShutdownEvent | null;
     connectionState: { connected: boolean; subscribed: boolean };
-    message: any;
-    runStageData: any;
+    message: Message | {};
+    runStageData: RunStageDataEvent | null;
     createdById: any;
     computeState: any;
     updateI18N: (translation: {}) => void;
@@ -34,6 +51,7 @@ interface AppState {
     startConnecting: () => void;
     updateCreatedById: (computeId: string) => void;
     setComputeState: (value: any) => void;
+    getAndUpdateDmsComputeData: () => void;
 }
 
 const useAppStore = create<AppState>((set) => ({
@@ -50,6 +68,8 @@ const useAppStore = create<AppState>((set) => ({
     runStageData: null,
     shutdownMessage: null,
     createdById: null,
+    inferStageCompleted: null,
+    inferStageError: null,
     uncategorizedEvents: [],
     currentRunState: { running: false, lastStageId: null },
     connectionState: { connected: false, subscribed: false },
@@ -61,6 +81,32 @@ const useAppStore = create<AppState>((set) => ({
     updateDmsComputeData: (ComputeData) => set(() => ({ DmsComputeData: ComputeData })),
     updateUserConfig: (UserConfig) => set(() => ({ UserConfig: UserConfig })),
     submitMessage: (content: Message) => set(() => ({ message: content })),
+    getAndUpdateDmsComputeData: async () => {
+        const { GET_COMPUTELIST } = getComputeListData();
+        const response = await client.query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+            query: GET_COMPUTELIST
+        });
+
+        set(() => ({ DmsComputeData: [...response.data.dmsComputes] }));
+    },
+    //     set(() => {
+    //         console.log('inside getAndUpdateDmsComputeData');
+    //         const { GET_COMPUTELIST } = getComputeListData();
+    //         let ComputeData;
+    //         client
+    //             .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+    //                 query: GET_COMPUTELIST
+    //             })
+    //             .then((response: any) => {
+    //                 console.log('inside getAndUpdateDmsComputeData response', [...response.data.dmsComputes]);
+    //                 ComputeData = [...response.data.dmsComputes];
+    //                 console.log('ComputeData----', ComputeData);
+    //                 // return { DmsComputeData: [...response.data.dmsComputes] };
+    //             })
+    //             .catch((err) => console.log(err));
+    //         console.log('ComputeData----', ComputeData);
+    //         return { DmsComputeData: ComputeData };
+    //     }),
     connectionEstablished: () =>
         set(() => {
             console.log('connection established');

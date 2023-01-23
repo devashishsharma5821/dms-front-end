@@ -42,7 +42,6 @@ const ExperimentsPage = () => {
     const [loadingMessage, setLoadingMessage] = useState<string | undefined>();
     const [loaderOpen, setLoaderOpen] = useState<boolean | undefined>();
     const [connected, setConnected] = useState<boolean | undefined>();
-    const [modalSettings, setModalSettings] = useState<{ openModal: boolean }>({ openModal: false });
     const [computeStatus, setComputeStatus] = useState<{ started: boolean }>({ started: false });
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
     const [clearTimeouts, setClearTimeouts] = useState<{ clear: boolean }>({ clear: false });
@@ -65,8 +64,8 @@ const ExperimentsPage = () => {
             } else {
                 //Checking isdefualt condition
                 const defaultCompute = computeRunningStatus.filter((runningCompute: DmsComputeData) => runningCompute?.is_default === true);
-                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0].id);
-                else setComputeId(computeRunningStatus[0].id);
+                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0].created_by);
+                else setComputeId(computeRunningStatus[0].created_by);
                 //TODO:- Compute socket connect
                 computeRunningStatus.map((compute: DmsComputeData) => {
                     if (compute.status && compute.id) {
@@ -75,7 +74,13 @@ const ExperimentsPage = () => {
                             content: BusHelper.GetKeepAliveRequestMessage({
                                 experimentId: parseInt(compute.id),
                                 opId: opid,
-                                userId: UserConfig.userConfiguration.user.userId
+                                // userId: UserConfig.userConfiguration.user.userId,
+                                userId: compute?.created_by,
+                                //TODO Below are added just for fixing errors
+                                project_id: 12,
+                                get_datatables: undefined,
+                                az_blob_get_containers: undefined,
+                                az_blob_browse_container: undefined
                             })
                         });
                         unsubscribe = useAppStore.subscribe(onComputeStarted);
@@ -146,7 +151,8 @@ const ExperimentsPage = () => {
         if (connectionState && UserConfig && computeId) {
             let subscribeMessage: Message = {
                 action: Action.Subscribe,
-                subject: `dms_pid.out.${UserConfig.userConfigFromStore.user.userId}`
+                // subject: `dms_pid.out.${UserConfig.userConfigFromStore.user.userId}`
+                subject: `dms_pid.out.${computeId}`
             };
 
             // If the socket disconnects, this listener fires once but will not call subscribe
@@ -156,9 +162,16 @@ const ExperimentsPage = () => {
                     submitMessage({ content: subscribeMessage });
                     submitMessage({
                         content: BusHelper.GetKeepAliveRequestMessage({
-                            experimentId: parseInt(computeId),
+                            // experimentId: parseInt(computeId),
+                            experimentId: parseInt(UserConfig.userConfigFromStore.user.userId),
                             opId: opid,
-                            userId: UserConfig.userConfigFromStore.user.userId
+                            // userId: UserConfig.userConfigFromStore.user.userId,
+                            userId: computeId,
+                            //TODO Below are added just for fixing errors
+                            project_id: 12,
+                            get_datatables: undefined,
+                            az_blob_get_containers: undefined,
+                            az_blob_browse_container: undefined
                         })
                     });
                     hasSubscribed();
@@ -201,9 +214,16 @@ const ExperimentsPage = () => {
     const onComputeStop = () => {
         if (UserConfig && computeId) {
             const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                experimentId: parseInt(computeId),
+                // experimentId: parseInt(computeId),
+                experimentId: parseInt(UserConfig.userConfiguration.user.userId),
                 opId: opid,
-                userId: UserConfig.userConfiguration.user.userId
+                // userId: UserConfig.userConfiguration.user.userId,
+                userId: computeId,
+                //TODO Below are added just for fixing errors
+                project_id: 12,
+                get_datatables: undefined,
+                az_blob_get_containers: undefined,
+                az_blob_browse_container: undefined
             });
             submitMessage({
                 content: shutDownRequest

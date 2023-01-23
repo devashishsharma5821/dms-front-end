@@ -8,48 +8,59 @@ import { StageState, StageStatus } from '../models/types';
 import { cloneDeep } from 'lodash';
 
 export class BusHelper {
-    static GetInferOutputRunRequestMessage(request: InferRunMessageRequest, isInfer: boolean): Message<Request> {
-        // When you hit submit on the right side form
-        let inferOrRunRequest: InferOutputRequest = {
-            // experiment_id: request.experimentId,
-            stage_id: request.stageId,
-            experiment_core: {
-                stages: {}
-            }
-        };
+    // static GetInferOutputRunRequestMessage(request: InferRunMessageRequest, isInfer: boolean): Message<Request> {
+    //     // When you hit submit on the right side form
+    //     let inferOrRunRequest: InferOutputRequest = {
+    //         // experiment_id: request.experimentId,
+    //         stage_id: request.stageId,
+    //         experiment_core: {
+    //             stages: {},
+    //             variables: {},
+    //             inputs: {}
+    //         }
+    //     };
 
-        request.stages.forEach((stage) => {
-            if (inferOrRunRequest?.experiment_core) {
-                inferOrRunRequest.experiment_core.stages[stage.stageId] = {
-                    id: stage.stageId,
-                    module_conf: stage.moduleConf,
-                    module_id: stage.transformerId,
-                    inputs: stage.inputs ? stage.inputs : {},
-                    name: stage.transformerId
-                };
-            }
-        });
+    //     request.stages.forEach((stage) => {
+    //         if (inferOrRunRequest?.experiment_core) {
+    //             inferOrRunRequest.experiment_core.stages[stage.stageId] = {
+    //                 id: stage.stageId,
+    //                 module_conf: stage.moduleConf,
+    //                 module_id: stage.transformerId,
+    //                 // TODO InferOutputRequest and InferRunMessageRequest both type are defined in package file have different inputs type, which are giving conflicts.
+    //                 // inputs: stage?.inputs ? stage?.inputs : {},
+    //                 inputs: {},
+    //                 name: stage.transformerId
+    //             };
+    //         }
+    //     });
 
-        let msg = new Message<Request>();
-        msg.action = Action.Publish;
-        msg.subject = `dms_pid.in.${request.userId}`;
-        msg.payload = {
-            op_id: request.opId,
-            keep_alive: undefined,
-            shutdown: undefined,
-            experiment: {
-                experiment_id: request.experimentId,
-                infer_output: isInfer ? inferOrRunRequest : undefined,
-                start_run: !isInfer ? inferOrRunRequest : undefined,
-                get_run_status: undefined,
-                get_stage_data: undefined,
-                cancel_run: undefined,
-                close: undefined
-            },
-            get_datatables: undefined
-        };
-        return msg;
-    }
+    //     let msg = new Message<Request>();
+    //     msg.action = Action.Publish;
+    //     msg.subject = `dms_pid.in.${request.userId}`;
+    //     msg.payload = {
+    //         op_id: request.opId,
+    //         keep_alive: undefined,
+    //         shutdown: undefined,
+    //         experiment: {
+    //             experiment_id: request.experimentId,
+    //             infer_output: isInfer ? inferOrRunRequest : undefined,
+    //             // TODO start_run and inferOrRunRequest both type are defined in package file, which are giving conflicts.
+    //             // start_run: !isInfer ? inferOrRunRequest : undefined,
+    //             start_run: undefined,
+    //             get_run_status: undefined,
+    //             get_stage_data: undefined,
+    //             cancel_run: undefined,
+    //             close: undefined
+    //         },
+    //         data: {
+    //             project_id: request.project_id,
+    //             get_datatables: request.get_datatables,
+    //             az_blob_get_containers: request.az_blob_get_containers,
+    //             az_blob_browse_container: request.az_blob_browse_container
+    //         }
+    //     };
+    //     return msg;
+    // }
 
     static GetRunStatusRequestMessage(request: BaseRequest): Message<Request> {
         let runStatus: GetRunStatusRequest = {};
@@ -70,7 +81,12 @@ export class BusHelper {
                 cancel_run: undefined,
                 close: undefined
             },
-            get_datatables: undefined
+            data: {
+                project_id: request.project_id,
+                get_datatables: request.get_datatables,
+                az_blob_get_containers: request.az_blob_get_containers,
+                az_blob_browse_container: request.az_blob_browse_container
+            }
         };
         return msg;
     }
@@ -97,7 +113,12 @@ export class BusHelper {
                 cancel_run: undefined,
                 close: undefined
             },
-            get_datatables: undefined
+            data: {
+                project_id: request?.project_id,
+                get_datatables: request?.get_datatables,
+                az_blob_get_containers: request?.az_blob_get_containers,
+                az_blob_browse_container: request?.az_blob_browse_container
+            }
         };
         return msg;
     }
@@ -112,7 +133,12 @@ export class BusHelper {
             keep_alive: keepAliveRequest,
             shutdown: undefined,
             experiment: undefined,
-            get_datatables: undefined
+            data: {
+                project_id: request.project_id,
+                get_datatables: request.get_datatables,
+                az_blob_get_containers: request.az_blob_get_containers,
+                az_blob_browse_container: request.az_blob_browse_container
+            }
         };
         return msg;
     }
@@ -126,7 +152,12 @@ export class BusHelper {
             keep_alive: undefined,
             shutdown: {},
             experiment: undefined,
-            get_datatables: undefined
+            data: {
+                project_id: request.project_id,
+                get_datatables: request.get_datatables,
+                az_blob_get_containers: request.az_blob_get_containers,
+                az_blob_browse_container: request.az_blob_browse_container
+            }
         };
         return msg;
     }

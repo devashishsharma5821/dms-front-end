@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import sideBarMenuIcons from '../../models/sideBarMenuData';
 import './SideBarMenu.scss';
 import { CreateIcon, WideCreateIcon } from '../../assets/icons';
-import CreateNew from '../MenuSystem/createNew/CreateNew';
-import Recent from '../MenuSystem/recent/Recent';
-import Help from '../MenuSystem/help/Help';
-import Explorer from '../MenuSystem/explorer/Explorer';
+import CreateNew from '../menuSystem/createNew/CreateNew';
+import Recent from '../menuSystem/recent/Recent';
+import Help from '../menuSystem/help/Help';
+import Explorer from '../menuSystem/explorer/Explorer';
 import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
-import Experiment from '../MenuSystem/experiment/Experiment';
+import Experiment from '../menuSystem/experiment/Experiment';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');

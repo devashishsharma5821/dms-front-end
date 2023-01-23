@@ -157,9 +157,48 @@ export const dmsCreateComputeOffEnableAutoscaling = (values: dmsCreateComputeOff
                       `;
 };
 
+export const dmsEditComputeOffEnableAutoscaling = (values: dmsCreateComputeOffEnableAutoscalingValues) => {
+    return gql`mutation {
+                        dmsEditCompute(
+                            id:"${values.id}",
+                          name: "${values.compute_name}",
+                          resources: {
+                            node_type: {
+                                worker_type_id: "${values.worker_type_id}"
+                            },
+                            spot_instances: ${values.spot_instances},
+                            num_workers: ${values.workers}
+                            
+                        },
+                          max_inactivity_min: ${values.terminate_after ? values.max_inactivity_min : 0},
+                        )
+                      }`;
+};
+
 export const dmsCreateComputeOnEnableAutoscaling = (values: dmsCreateComputeOnEnableAutoscalingValues) => {
     return gql`mutation {
                         dmsCreateCompute(
+                          name: "${values.compute_name}",
+                          resources: {
+                            node_type: {
+                                worker_type_id: "${values.worker_type_id}"
+                            },
+                            spot_instances: ${values.spot_instances},
+                            autoscale: {
+                                min_workers: ${values.min_workers},
+                                max_workers: ${values.max_workers}
+                            }
+                        },
+                          max_inactivity_min: ${values.terminate_after ? values.max_inactivity_min : 0},
+                        )
+                      }
+                      `;
+};
+
+export const dmsEditComputeOnEnableAutoscaling = (values: dmsCreateComputeOnEnableAutoscalingValues) => {
+    return gql`mutation {
+                        dmsEditCompute(
+                            id:"${values.id}"
                           name: "${values.compute_name}",
                           resources: {
                             node_type: {

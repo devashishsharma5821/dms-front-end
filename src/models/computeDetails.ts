@@ -138,6 +138,7 @@ export interface ExperimentAppStoreState {
     createdById: string;
     updateCreatedById: (createdById: string) => void;
     setComputeState: (value: any) => void;
+    getAndUpdateDmsComputeData: () => void;
 }
 
 export interface CreateComputeSubmitHandlerValues {

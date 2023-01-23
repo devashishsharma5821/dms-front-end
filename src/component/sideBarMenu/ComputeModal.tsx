@@ -24,7 +24,7 @@ import BlackbottomedTriangleIcon from '../../assets/icons/BlackbottomedTriangleI
 import InfoIcon from '../../assets/icons/InfoIcon';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { dmsCreateComputeOnEnableAutoscaling, dmsCreateComputeOffEnableAutoscaling, GET_DB_SETTINGS, getComputeListData, wsconnect } from '../../query/index';
+import { dmsCreateComputeOnEnableAutoscaling, dmsCreateComputeOffEnableAutoscaling, GET_DB_SETTINGS, getComputeListData } from '../../query/index';
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
 import { COMPUTE_MODAL_PROPS, dbSettingstype } from '../../models/types';
 import { ComputeDetail, ComputeDetailListResponse } from '../../models/computeDetails';

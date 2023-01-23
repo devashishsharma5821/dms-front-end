@@ -16,7 +16,6 @@ function StopComputeRunningModals({ computeId, isOpen, onClose }: STOP_COMPUTE_R
     const toast = useToast();
     const [updateDmsComputeData, UserConfig, submitMessage] = useAppStore((state: any) => [state.updateDmsComputeData, state.UserConfig, state.submitMessage]);
     const onClickHandler = (data: any) => {
-        console.log('data inside stop', data);
         client
             .mutate<ComputeStop<StopComputeDetail>>({
                 mutation: dmsStopComputeRun(computeId)
@@ -42,7 +41,12 @@ function StopComputeRunningModals({ computeId, isOpen, onClose }: STOP_COMPUTE_R
                             const shutDownRequest = BusHelper.GetShutdownRequestMessage({
                                 experimentId: parseInt(computeId),
                                 opId: opid,
-                                userId: computeId
+                                userId: computeId,
+                                //TODO Below are added just for fixing errors
+                                project_id: 12,
+                                get_datatables: undefined,
+                                az_blob_get_containers: undefined,
+                                az_blob_browse_container: undefined
                             });
 
                             submitMessage({ content: shutDownRequest });

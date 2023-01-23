@@ -25,10 +25,14 @@ export const CreateYupSchema = (formSchema: any, values: any) => {
                 _validationSchema[key] = _validationSchema[key].min(0);
             }
             _validationSchema[key] = _validationSchema[key].required(formSchema[key].errormessage);
-            // if (values?.enable_autoscaling) {
-            //     _validationSchema[key] = _validationSchema[key].positive('Number of workers should be greater than zero.').lessThan(values.max_workers, 'Max must be greater than Min');
-            //     _validationSchema[key] = _validationSchema[key].moreThan(Yup.ref('min_workers'), 'Min must be less than Max');
-            // }
+        }
+
+        if (formSchema[key].lessThan) {
+            _validationSchema[key] = _validationSchema[key].lessThan(Yup.ref(formSchema[key].ref), formSchema[key].msg);
+        }
+
+        if (formSchema[key].moreThan) {
+            _validationSchema[key] = _validationSchema[key].moreThan(Yup.ref(formSchema[key].ref), formSchema[key].msg);
         }
 
         if (formSchema[key].yup) {

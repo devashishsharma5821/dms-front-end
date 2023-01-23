@@ -20,25 +20,29 @@ export const ContextCompute = (props: any) => {
     const [formData, setFormData] = useState<any>({
         id: '',
         max_inactivity_min: null,
-        name: '',
+        compute_name: '',
         autoscale: false,
-        num_workers: null,
+        workers: null,
         spot_instances: false,
         worker_type_id: '',
         min_workers: null,
-        max_workers: null
+        max_workers: null,
+        enable_autoscaling: false,
+        terminate_after: false
     });
     const updateFormData = (data: any) => {
         setFormData({
             id: data.id,
             max_inactivity_min: data?.max_inactivity_min,
-            name: data.name,
+            compute_name: data.compute_name,
             autoscale: data.autoscale,
-            num_workers: data?.num_workers,
+            workers: data?.workers,
             spot_instances: data.spot_instances,
             worker_type_id: data.worker_type_id,
             min_workers: data?.min_workers,
-            max_workers: data?.max_workers
+            max_workers: data?.max_workers,
+            enable_autoscaling: data?.enable_autoscaling,
+            terminate_after: data?.terminate_after
         });
     };
 

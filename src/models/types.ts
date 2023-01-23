@@ -228,6 +228,7 @@ export interface dmsCreateCompute {
 }
 
 export interface dmsCreateComputeOffEnableAutoscalingValues {
+    id?: string;
     compute_name: string;
     worker_type_id: string;
     workers: number;
@@ -237,6 +238,7 @@ export interface dmsCreateComputeOffEnableAutoscalingValues {
 }
 
 export interface dmsCreateComputeOnEnableAutoscalingValues {
+    id?: string;
     compute_name: string;
     worker_type_id: string;
     spot_instances: boolean;
