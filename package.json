@@ -3,7 +3,7 @@
     "version": "3.0.0",
     "private": true,
     "dependencies": {
-        "@antuit/pipeline-interactive-driver-client": "^1.1.1",
+        "@antuit/pipeline-interactive-driver-client-ts": "^1.4.3",
         "@antuit/rappid-v1": "^3.5.0",
         "@antuit/web-sockets-gateway-client": "^1.1.0",
         "@apollo/client": "^3.6.9",
@@ -38,6 +38,7 @@
         "react-icons": "^4.2.0",
         "react-router-dom": "^6.3.0",
         "react-scripts": "5.0.1",
+        "react-use-websocket": "^3.0.0",
         "rfdc": "^1.3.0",
         "typescript": "^4.8.2",
         "uuid": "^9.0.0",

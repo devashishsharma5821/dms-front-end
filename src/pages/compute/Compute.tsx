@@ -11,7 +11,7 @@ import DeleteIcon from '../../assets/icons/DeleteIcon';
 import SwitchComponent from './SwitchComponent';
 import { StopCompute } from '../../assets/icons';
 import client from '../../apollo-client';
-import { dmsRunCompute, getComputeListData, wsconnect } from '../../query';
+import { dmsRunCompute, getComputeListData } from '../../query';
 import { ComputeDetail, ComputeDetailListResponse, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
 import { AgGridReact } from 'ag-grid-react';
 import SearchComponent from '../../component/search/SearchComponent';
@@ -26,24 +26,32 @@ import { ComputeContext } from '../../context/computeContext';
 import { BusHelper } from '../../helpers/BusHelper';
 import gql from 'graphql-tag';
 import { v4 } from 'uuid';
+import { Action } from '@antuit/web-sockets-gateway-client';
 
 const Compute = () => {
     const opid = v4();
     const textColor = useColorModeValue('light.header', 'dark.white');
+    const textColorIcon = useColorModeValue('#666C80', 'white');
     const createModal = useDisclosure();
-    const EditComputeJsonModal = useDisclosure();
     const StopComputeRunning = useDisclosure();
     const [loading, setLoading] = useState<boolean>(false);
     const [cellId, setCellId] = useState<string>();
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
     const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
     const deleteCompute = useDisclosure();
-    const [deleteCellId, setdeleteCellId] = useState<string | undefined>();
-    const [stopCellId, setStopCellId] = useState<string | undefined>();
+    const [deleteComputeId, setDeleteComputeId] = useState<string | undefined>();
+    const [stopComputeId, setStopComputeId] = useState<string | undefined>();
     const toast = useToast();
     const context = useContext(ComputeContext);
 
-    const [DmsComputeData, updateDmsComputeData, submitMessage] = useAppStore((state: any) => [state.DmsComputeData, state.updateDmsComputeData, state.submitMessage]);
+    const [DmsComputeData, updateDmsComputeData, submitMessage, updateCreatedById, UserConfig, createdById] = useAppStore((state: any) => [
+        state.DmsComputeData,
+        state.updateDmsComputeData,
+        state.submitMessage,
+        state.updateCreatedById,
+        state.UserConfig,
+        state.createdById
+    ]);
 
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
     const onComputeStarted = () => {
@@ -57,12 +65,13 @@ const Compute = () => {
     const select = (state: any) => {
         return state.lastAliveMessage;
     };
-    const onPlayClickHandler: agGridClickHandler = (cellId) => {
+    const onPlayClickHandler: agGridClickHandler = (data) => {
+        updateCreatedById(data?.created_by);
         setLoading(true);
         const mutation = gql` 
         mutation {
             dmsRunCompute(  
-               id: "${cellId}"  
+               id: "${data?.id}"  
                   ) {
                     job_id,
                     job_run_id
@@ -71,7 +80,7 @@ const Compute = () => {
 
         client
             .mutate<ComputeRun<RunComputeDetail>>({
-                mutation: dmsRunCompute(cellId)
+                mutation: dmsRunCompute(data?.id)
             })
             .then((res: any) => {
                 setLoading(false);
@@ -90,17 +99,20 @@ const Compute = () => {
                     .then((response) => {
                         let computedata = [...response.data.dmsComputes];
                         updateDmsComputeData(computedata);
-                        if (cellId) {
+                        if (data?.id) {
                             const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
-                                experimentId: parseInt(cellId),
+                                experimentId: 1,
                                 opId: opid,
-                                userId: cellId
+                                userId: data?.id,
+                                //TODO Below are added just for fixing errors
+                                project_id: 12,
+                                get_datatables: undefined,
+                                az_blob_get_containers: undefined,
+                                az_blob_browse_container: undefined
                             });
                             submitMessage({
-                                content: aliveMessage
+                                content: { action: Action.Subscribe, op_id: opid, subject: `dms_pid.out.${data?.id}` }
                             });
-                            console.log('liveMessage', aliveMessage);
-                            wsconnect(aliveMessage);
                         }
                         let unsubscribe = useAppStore.subscribe(onComputeStarted);
                     })
@@ -108,7 +120,6 @@ const Compute = () => {
             })
             .catch((err) => {
                 setLoading(false);
-                console.log(err);
                 toast({
                     title: `${err}`,
                     status: 'success',
@@ -119,13 +130,13 @@ const Compute = () => {
             });
     };
 
-    const onDeleteClickHandler: agGridClickHandler = (cellId) => {
-        setdeleteCellId(cellId);
+    const onDeleteClickHandler: agGridClickHandler = (data) => {
+        setDeleteComputeId(data?.id);
         deleteCompute.onOpen();
     };
 
-    const onStopClickHandler: agGridClickHandler = (cellId) => {
-        setStopCellId(cellId);
+    const onStopClickHandler: agGridClickHandler = (data) => {
+        setStopComputeId(data?.id);
         StopComputeRunning.onOpen();
     };
 
@@ -133,16 +144,18 @@ const Compute = () => {
         context.updateFormData({
             id: data.id,
             max_inactivity_min: data?.max_inactivity_min,
-            name: data.name,
+            compute_name: data.name,
             autoscale: data.resources.autoscale,
-            num_workers: data.resources?.num_workers,
+            workers: data.resources.num_workers ? data.resources.num_workers : '0',
             spot_instances: data.resources.spot_instances,
             worker_type_id: data.resources.node_type.worker_type_id,
             min_workers: data.resources?.autoscale?.min_workers,
-            max_workers: data.resources?.autoscale?.max_workers
+            max_workers: data.resources?.autoscale?.max_workers,
+            enable_autoscaling: data.resources.autoscale ? true : false,
+            terminate_after: data?.max_inactivity_min ? true : false
         });
         setIsEdit(true);
-        EditComputeJsonModal.onOpen();
+        createModal.onOpen();
     };
 
     const actionsRow = (params: any) => {
@@ -152,21 +165,23 @@ const Compute = () => {
                     loading ? (
                         <Spinner />
                     ) : (
-                        <div onClick={() => onPlayClickHandler(params.data.id)}>
+                        <div className="icons" onClick={() => onPlayClickHandler(params.data)}>
                             <PlayIcon />
                         </div>
                     )
                 ) : (
-                    <div onClick={() => onStopClickHandler(params.data.id)}>
+                    <div className="icons" onClick={() => onStopClickHandler(params.data)}>
                         <StopCompute />
                     </div>
                 )}
-                <ReStartIcon />
-                <div onClick={() => onEditClickHandler(params.data)}>
+                <div className="icons">
+                    <ReStartIcon />
+                </div>
+                <div className="icons" onClick={() => onEditClickHandler(params.data)}>
                     <EditIcon />
                 </div>
-                <div onClick={() => onDeleteClickHandler(params.data.id)}>
-                    <DeleteIcon  height={'18px'} width={'16px'} />
+                <div className="icons" onClick={() => onDeleteClickHandler(params.data)} style={{ cursor: 'pointer' }}>
+                    <DeleteIcon color={textColorIcon} height={'18px'} width={'16px'} />
                 </div>
             </Flex>
         );
@@ -190,7 +205,6 @@ const Compute = () => {
     ]);
 
     useEffect(() => {
-        console.log('DMSCOmputrData', DmsComputeData);
         if (DmsComputeData === null) {
             const { GET_COMPUTELIST } = getComputeListData();
             client
@@ -202,7 +216,6 @@ const Compute = () => {
                     setRowData(computedata);
                     gridRef?.current!?.api?.sizeColumnsToFit();
                     updateDmsComputeData(response.data.dmsComputes);
-                    //updateTransformersData(transformerdata)
                 })
                 .catch((err) => console.error(err));
         } else if (DmsComputeData?.length > 0) {
@@ -215,10 +228,24 @@ const Compute = () => {
 
     const onCellClicked = (params: any) => {
         setCellId(params.data.id);
-        actionsRow(params.data.id);
+        actionsRow(params.data);
     };
 
     const triggerCreateModal = () => {
+        context.updateFormData({
+            id: '',
+            max_inactivity_min: null,
+            compute_name: '',
+            autoscale: false,
+            workers: null,
+            spot_instances: false,
+            worker_type_id: '',
+            min_workers: null,
+            max_workers: null,
+            enable_autoscaling: false,
+            terminate_after: false
+        });
+        setIsEdit(false);
         createModal.onOpen();
     };
 
@@ -266,7 +293,7 @@ const Compute = () => {
 
                         <Box mr={'17'} mb={'17'}>
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
-                                {loading && <Spinner ml={20}></Spinner>}
+                                {loading && <Spinner ml={20} />}
                                 <AgGridReact<ComputeDetail>
                                     ref={gridRef}
                                     rowData={rowData}
@@ -279,9 +306,9 @@ const Compute = () => {
                             </Box>
                         </Box>
                     </Box>
-                    {createModal.isOpen && <ComputeJsonModal isOpen={createModal.isOpen} onClose={createModal.onClose} />}
-                    <DeleteComputeModal cellId={deleteCellId} isOpen={deleteCompute.isOpen} onClose={deleteCompute.onClose} />
-                    <StopComputeRunningModals cellId={stopCellId} isOpen={StopComputeRunning.isOpen} onClose={StopComputeRunning.onClose} />
+                    {createModal.isOpen && <ComputeJsonModal isOpen={createModal.isOpen} isEdit={isEdit} onClose={createModal.onClose} />}
+                    <DeleteComputeModal computeId={deleteComputeId} isOpen={deleteCompute.isOpen} onClose={deleteCompute.onClose} />
+                    <StopComputeRunningModals computeId={stopComputeId} isOpen={StopComputeRunning.isOpen} onClose={StopComputeRunning.onClose} />
                 </Box>
             </Box>
         </>

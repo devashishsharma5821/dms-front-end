@@ -17,21 +17,23 @@ import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
 import IsRunningModal from './IsRunningModal';
 import { BusHelper } from '../../helpers/BusHelper';
 import { v4 } from 'uuid';
+import { Action, Message } from '@antuit/web-sockets-gateway-client';
 
 const ExperimentsPage = () => {
+    const [updateDmsDatabricksCredentialsValidToken, DmsComputeData, updateDmsComputeData, submitMessage, UserConfig, connectionState, hasSubscribed] = useAppStore(
+        (state: ExperimentAppStoreState) => [
+            state.updateDmsDatabricksCredentialsValidToken,
+            state.DmsComputeData,
+            state.updateDmsComputeData,
+            state.submitMessage,
+            state.UserConfig,
+            state.connectionState,
+            state.hasSubscribed
+        ]
+    );
+
     const opid = v4();
-    const [updateDmsDatabricksCredentialsValidToken, token, DmsComputeData, updateDmsComputeData, submitMessage, config, UserConfig, message] = useAppStore((state: ExperimentAppStoreState) => [
-        state.updateDmsDatabricksCredentialsValidToken,
-        state.DmsDatabricksCredentialsValidToken,
-        state.DmsComputeData,
-        state.updateDmsComputeData,
-        state.submitMessage,
-        state.config,
-        state.UserConfig,
-        state.message
-    ]);
     const computeRunningModal = useDisclosure();
-    // const [message, setMessage] = useState('Status');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const computeModal = useDisclosure();
     const client = useApolloClient();
@@ -40,7 +42,6 @@ const ExperimentsPage = () => {
     const [loadingMessage, setLoadingMessage] = useState<string | undefined>();
     const [loaderOpen, setLoaderOpen] = useState<boolean | undefined>();
     const [connected, setConnected] = useState<boolean | undefined>();
-    const [modalSettings, setModalSettings] = useState<{ openModal: boolean }>({ openModal: false });
     const [computeStatus, setComputeStatus] = useState<{ started: boolean }>({ started: false });
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
     const [clearTimeouts, setClearTimeouts] = useState<{ clear: boolean }>({ clear: false });
@@ -48,12 +49,13 @@ const ExperimentsPage = () => {
 
     let dmsComputeRunningStatusIsDefaultOne;
 
-    const checkComputeStatus = (dmsComputes: any) => {
+    let unsubscribe: any = null;
+    const checkComputeStatus = (dmsComputes: DmsComputeData[]) => {
         if (dmsComputes.length === 0) {
             computeModal.onOpen();
         } else {
             //Checking if compute is already in running condition.
-            const computeRunningStatus = dmsComputes.filter((compute: any) => compute.status === 'RUNNING');
+            const computeRunningStatus = dmsComputes.filter((compute: DmsComputeData) => compute.status === 'RUNNING' || 'STARTING');
             if (computeRunningStatus.length === 0) {
                 // unsubscribe = useAppStore.subscribe(onComputeStarted);
                 setLoadingMessage('Checking session status....');
@@ -61,33 +63,37 @@ const ExperimentsPage = () => {
                 computeRunningModal.onOpen();
             } else {
                 //Checking isdefualt condition
-                const defaultCompute = computeRunningStatus.filter((runningCompute: any) => runningCompute?.is_default === true);
-                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0].id);
-                else setComputeId(computeRunningStatus[0].id);
+                const defaultCompute = computeRunningStatus.filter((runningCompute: DmsComputeData) => runningCompute?.is_default === true);
+                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0].created_by);
+                else setComputeId(computeRunningStatus[0].created_by);
                 //TODO:- Compute socket connect
-                // computeRunningStatus.map((compute: any) => {
-                //     if (compute.status && compute.id) {
-                //         onComputeStart();
-                //         submitMessage({
-                //             content: BusHelper.GetKeepAliveRequestMessage({
-                //                 experimentId: parseInt(compute.id),
-                //                 opId: opid,
-                //                 userId: UserConfig.userConfiguration.user.userId
-                //             })
-                //         });
-                //         // unsubscribe = useAppStore.subscribe(onComputeStarted);
-                //     }
-                // });
+                computeRunningStatus.map((compute: DmsComputeData) => {
+                    if (compute.status && compute.id) {
+                        onComputeStart();
+                        submitMessage({
+                            content: BusHelper.GetKeepAliveRequestMessage({
+                                experimentId: parseInt(compute.id),
+                                opId: opid,
+                                // userId: UserConfig.userConfiguration.user.userId,
+                                userId: compute?.created_by,
+                                //TODO Below are added just for fixing errors
+                                project_id: 12,
+                                get_datatables: undefined,
+                                az_blob_get_containers: undefined,
+                                az_blob_browse_container: undefined
+                            })
+                        });
+                        unsubscribe = useAppStore.subscribe(onComputeStarted);
+                    }
+                });
             }
         }
     };
     useEffect(() => {
-        console.log('data of computes', DmsComputeData);
         if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
     }, [DmsComputeData]);
 
     useEffect(() => {
-        let unsubscribe: any = null;
         client
             .query<DataBricksTokenResponse<DataBricksTokenDetails>>({
                 query: GET_DATABRICKS_CREDS
@@ -97,7 +103,7 @@ const ExperimentsPage = () => {
                 const { GET_COMPUTELIST } = getComputeListData();
 
                 if (response.data.dmsCheckDatabricksCredentials.valid) {
-                    if (DmsComputeData.length === 0) {
+                    if (DmsComputeData?.length === 0) {
                         client
                             .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
                                 query: GET_COMPUTELIST
@@ -106,7 +112,7 @@ const ExperimentsPage = () => {
                                 updateDmsComputeData(response.data.dmsComputes);
                             });
                     } else {
-                        if (DmsComputeData.length === 0) {
+                        if (DmsComputeData?.length === 0) {
                             computeModal.onOpen();
                         } else {
                             const dmsComputeRunningStatus = DmsComputeData.filter((compute: DmsComputeData) => compute.status === 'RUNNING');
@@ -135,11 +141,49 @@ const ExperimentsPage = () => {
             // Clear any timeouts if set.
             setClearTimeouts({ clear: true });
             setLoaderOpen(false);
-            if (modalSettings.openModal) {
-                setComputeStatus({ started: true });
-            }
+            // if (modalSettings.openModal) {
+            setComputeStatus({ started: true });
+            // }
         }
     }, [connected]);
+
+    useEffect(() => {
+        if (connectionState && UserConfig && computeId) {
+            let subscribeMessage: Message = {
+                action: Action.Subscribe,
+                // subject: `dms_pid.out.${UserConfig.userConfigFromStore.user.userId}`
+                subject: `dms_pid.out.${computeId}`
+            };
+
+            // If the socket disconnects, this listener fires once but will not call subscribe
+            // On the next reconnect, this listener fires and will now attempt to subscribe
+            if (connectionState?.connected) {
+                if (!connectionState?.subscribed) {
+                    submitMessage({ content: subscribeMessage });
+                    submitMessage({
+                        content: BusHelper.GetKeepAliveRequestMessage({
+                            // experimentId: parseInt(computeId),
+                            experimentId: parseInt(UserConfig.userConfigFromStore.user.userId),
+                            opId: opid,
+                            // userId: UserConfig.userConfigFromStore.user.userId,
+                            userId: computeId,
+                            //TODO Below are added just for fixing errors
+                            project_id: 12,
+                            get_datatables: undefined,
+                            az_blob_get_containers: undefined,
+                            az_blob_browse_container: undefined
+                        })
+                    });
+                    hasSubscribed();
+                }
+            } else {
+                // The socket will disconnect and reconnect periodically. This is an optimization by the browser to preserve battery life.
+                // For prolonged disconnects (network down etc.) the socket will stop trying to reconnect after several attempts.
+                // In the socketmiddeware, we have a socket error listener which will attempt to manually reconnect if socketio has given up connecting
+                console.log('Disconnected.');
+            }
+        }
+    }, [connectionState]);
 
     const onComputeStarted = () => {
         let currentValue = select(useAppStore.getState());
@@ -153,7 +197,6 @@ const ExperimentsPage = () => {
         let timeout = setTimeout(() => {
             setLoaderOpen(false);
             if (computeId) {
-                setModalSettings({ openModal: true });
                 setComputeStatus({ started: false });
             }
             setClearTimeouts({ clear: true });
@@ -165,15 +208,22 @@ const ExperimentsPage = () => {
         setLoadingMessage('Starting session....');
         setLoaderOpen(true);
         setConnected(false);
-        waitForCompute(360000);
+        waitForCompute(3000);
     };
 
     const onComputeStop = () => {
         if (UserConfig && computeId) {
             const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                experimentId: parseInt(computeId),
+                // experimentId: parseInt(computeId),
+                experimentId: parseInt(UserConfig.userConfiguration.user.userId),
                 opId: opid,
-                userId: UserConfig.userConfiguration.user.userId
+                // userId: UserConfig.userConfiguration.user.userId,
+                userId: computeId,
+                //TODO Below are added just for fixing errors
+                project_id: 12,
+                get_datatables: undefined,
+                az_blob_get_containers: undefined,
+                az_blob_browse_container: undefined
             });
             submitMessage({
                 content: shutDownRequest
@@ -206,7 +256,7 @@ const ExperimentsPage = () => {
 
     useEffect(() => {
         // wsconnect(setMessage);
-        console.log('Message From Websockets', message);
+        // console.log('Message From Websockets', message);
         // eslint-disable-next-line
     }, []);
 

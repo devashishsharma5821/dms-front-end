@@ -82,16 +82,16 @@ export class GetDbSettingsType<T> {
     dmsDatabricksSettings!: T;
 }
 
-export type agGridClickHandler = (cellId: string | undefined) => void;
+export type agGridClickHandler = (data: any) => void;
 
 export interface STOP_COMPUTE_RUNNING_MODALS_PROPS {
-    cellId: string | undefined;
+    computeId: string | undefined;
     isOpen: boolean;
     onClose: () => void;
 }
 
 export interface DELETE_COMPUTE_MODAL_PROPS {
-    cellId: string | undefined;
+    computeId: string | undefined;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -126,8 +126,29 @@ export interface ExperimentAppStoreState {
     DmsDatabricksCredentialsValidToken: boolean;
     DmsComputeData: DmsComputeData[];
     updateDmsComputeData: (computeData: any) => void;
+    connectionEstablished: () => void;
     submitMessage?: any;
     UserConfig: any;
     config: any;
     message: any;
+    disconnected: () => void;
+    receiveMessage: (action: any) => void;
+    connectionState: { connected: boolean; subscribed: boolean };
+    hasSubscribed: () => void;
+    createdById: string;
+    updateCreatedById: (createdById: string) => void;
+    setComputeState: (value: any) => void;
+    getAndUpdateDmsComputeData: () => void;
+}
+
+export interface CreateComputeSubmitHandlerValues {
+    compute_name: string;
+    enable_autoscaling: boolean;
+    max_inactivity_min: number;
+    max_workers: number;
+    min_workers: number;
+    spot_instances: boolean;
+    terminate_after: boolean;
+    worker_type_id: string;
+    workers: number;
 }

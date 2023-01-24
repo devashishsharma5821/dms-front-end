@@ -1,4 +1,4 @@
-import { Event } from '@antuit/pipeline-interactive-driver-client';
+import { Event } from '@antuit/pipeline-interactive-driver-client-ts';
 import { Message } from '@antuit/web-sockets-gateway-client';
 import { WebsocketBuilder, Websocket, ExponentialBackoff } from 'websocket-ts';
 // import useAppStore from '../store';
@@ -20,9 +20,9 @@ export function wsconnect(values: any) {
                 // connectionEstablished();
                 // store.dispatch(connectionEstablished());
                 //subscription
-                setTimeout(() => {
-                    ws.send(JSON.stringify({ action: 'subscribe', subject: 'dms_pid.out.bb99409d-7aca-49df-859e-b6c394318ca0.1' }));
-                }, 5000);
+                // setTimeout(() => {
+                //     ws.send(JSON.stringify({ action: 'subscribe', subject: 'dms_pid.out.bb99409d-7aca-49df-859e-b6c394318ca0.1' }));
+                // }, 5000);
             })
             .onClose((i, ev) => {
                 console.debug('Disconnected from websocket');

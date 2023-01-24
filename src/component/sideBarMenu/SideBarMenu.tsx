@@ -71,19 +71,21 @@ const SideBarMenu = () => {
     const triggerCreateModal = () => {
         createModal.onOpen();
     };
-     const thirdLevelMenu = () => {
-         return (
-             <div style={{...zIndexStyle, position:'absolute', marginLeft:'445px', border:' 1px solid #D8DCDE'}} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
-                 <Flex h={'95vh'}  as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}  >
-                     <VStack>
-                         <Box width={'254px'}  pl={'0px'} mt="17" >
-                             <h3><Experiment/></h3>
-                         </Box>
-                     </VStack>
-                 </Flex>
-             </div>
-         );
-     };
+    const thirdLevelMenu = () => {
+        return (
+            <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '445px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
+                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
+                    <VStack>
+                        <Box width={'254px'} pl={'0px'} mt="17">
+                            <h3>
+                                <Experiment />
+                            </h3>
+                        </Box>
+                    </VStack>
+                </Flex>
+            </div>
+        );
+    };
     const secondLevelMenu = () => {
         return (
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
@@ -102,7 +104,9 @@ const SideBarMenu = () => {
                                     </h3>
                                 )}
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Explorer' && (
-                                       <h3><Explorer hasThirdLevelMenu={hasThirdLevelMenu}/></h3>
+                                    <h3>
+                                        <Explorer hasThirdLevelMenu={hasThirdLevelMenu} />
+                                    </h3>
                                 )}
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Help' && (
                                     <h3>
