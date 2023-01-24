@@ -1,149 +1,77 @@
-import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
-import { Box, Flex, Text, useColorModeValue, Button, Center, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, ModalCloseButton, ModalFooter, Modal, Divider, Checkbox, Stack, Spinner, } from '@chakra-ui/react';
-import {  DownloadIcon } from '@chakra-ui/icons';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {  useToast } from '@chakra-ui/react';
+import React, {useMemo, useRef, useState, useContext } from 'react';
+import { Box, Flex, Text, useColorModeValue, Button, Center, useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, ModalCloseButton, ModalFooter, Modal, Divider, Stack, Spinner, } from '@chakra-ui/react';
+import {  AttachmentIcon, DownloadIcon } from '@chakra-ui/icons';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import './OutputStyle.scss';
 import { ColDef } from 'ag-grid-community';
-import PlayIcon from '../../assets/icons/PlayIcon';
-import ReStartIcon from '../../assets/icons/ReStartIcon';
 import EditIcon from '../../assets/icons/EditIcon';
-import DeleteIcon from '../../assets/icons/DeleteIcon';
-import { StopCompute } from '../../assets/icons';
-import client from '../../apollo-client';
-import { dmsRunCompute, getComputeListData, wsconnect } from '../../query';
-import { ComputeDetail, ComputeDetailListResponse, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
+import { OutputDetail} from '../../models/outputDetail';
 import { AgGridReact } from 'ag-grid-react';
 import SearchComponent from '../../component/search/SearchComponent';
-import useAppStore from '../../store';
-import { agGridClickHandler } from '../../models/computeDetails';
 import { ComputeContext } from '../../context/computeContext';
-import { BusHelper } from '../../helpers/BusHelper';
-import gql from 'graphql-tag';
 import { v4 } from 'uuid';
-import SwitchComponent from '../../pages/compute/SwitchComponent';
 const Output = (props: any) => {
-    const textColorIcon = useColorModeValue('#666C80', 'white');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
-    const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const {  onClose } = useDisclosure()
     const createModal = useDisclosure();
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
     const [loading, setLoading] = useState<boolean>(false);
-    const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
+    const gridRef = useRef<AgGridReact<any>>(null);
     const onSearchChange = (searchValue: string) => {
         gridRef.current!.api.setQuickFilter(searchValue);
     };
-    const triggerCreateModal = () => {
-        createModal.onOpen();
+    const actionsRow = (params: any) => {
+        return (
+            <Flex height={'inherit'}  >
+             
+                <Box ml={'-10px'} onClick={() => onEditClickHandler(params.data)}>
+                    <EditIcon />
+                </Box>
+                <Box ml={'18px'}>
+                    <AttachmentIcon  color={'#666C80'} />
+                </Box>
+                <Box ml={'18px'}>
+                    <DownloadIcon  color={'#666C80'} />
+                </Box>
+            </Flex>
+        );
     };
-    const [rowData, setRowData] = useState<ComputeDetail[]>([]);
+    const [rowData, setRowData] = useState<any[]>([
+        {
+            'name': 'Zubin',
+            'created_at' :'2023-01-18 15:00 PM',
+            'resources_num_workers':'Extract Dataframe',
+            'activeMemory':'25KB',
+           
+
+        },
+        {
+            'name': 'Zubin',
+            'created_at' :'2023-01-18 15:00 PM',
+            'resources_num_workers':' Load Dataframe',
+            'activeMemory':'25KB',
+            
+
+        }
+    ]);
     const [columnDefs] = useState<ColDef[]>([
-        { headerName: 'File Name', field: 'name' },
-        { headerName: 'Created On', field: 'created_at' },
-        { headerName: 'Source Transformer', field: 'resources.num_workers' },
-        { headerName: 'File Size', field: 'activeMemory' },
-        { headerName: 'Actions', field: 'Actions' }
+        { headerName: 'File Name', field: 'name',editable: true },
+        { headerName: 'Created On', field: 'created_at',editable: true },
+        { headerName: 'Source Transformer', field: 'resources_num_workers',editable: true},
+        { headerName: 'File Size', field: 'activeMemory',editable: true },
+        { headerName: 'Actions', field: 'actionsRow', cellRenderer: actionsRow  }
     ]);
     const opid = v4();
     const textColor = useColorModeValue('light.header', 'dark.white');
     const EditComputeJsonModal = useDisclosure();
-    const StopComputeRunning = useDisclosure();
-    const [cellId, setCellId] = useState<string>();
+     const [cellId, setCellId] = useState<string>();
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
-    const deleteCompute = useDisclosure();
-    const [deleteCellId, setdeleteCellId] = useState<string | undefined>();
-    const [stopCellId, setStopCellId] = useState<string | undefined>();
-    const toast = useToast();
     const context = useContext(ComputeContext);
-    const [DmsComputeData, updateDmsComputeData, submitMessage] = useAppStore((state: any) => [state.DmsComputeData, state.updateDmsComputeData, state.submitMessage]);    const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
-    const onComputeStarted = () => {
-        let currentValue = select(useAppStore.getState());
-        if (currentValue) {
-            console.log('current VLUE', currentValue);
-            // setComputeStats(currentValue);
-            // setConnected(true);
-        }
-    };
-    const select = (state: any) => {
-        return state.lastAliveMessage;
-    };
-    const onPlayClickHandler: agGridClickHandler = (cellId) => {
-        setLoading(true);
-        const mutation = gql` 
-        mutation {
-            dmsRunCompute(  
-               id: "${cellId}"  
-                  ) {
-                    job_id,
-                    job_run_id
-                  }
-            }`;
-
-        client
-            .mutate<ComputeRun<RunComputeDetail>>({
-                mutation: dmsRunCompute(cellId)
-            })
-            .then((res: any) => {
-                setLoading(false);
-                const { GET_COMPUTELIST } = getComputeListData();
-                toast({
-                    title: `Compute is starting`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-                client
-                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-                        query: GET_COMPUTELIST
-                    })
-                    .then((response) => {
-                        let computedata = [...response.data.dmsComputes];
-                        updateDmsComputeData(computedata);
-                        if (cellId) {
-                            const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
-                                experimentId: parseInt(cellId),
-                                opId: opid,
-                                userId: cellId
-                            });
-                            submitMessage({
-                                content: aliveMessage
-                            });
-                            console.log('liveMessage', aliveMessage);
-                            wsconnect(aliveMessage);
-                        }
-                        let unsubscribe = useAppStore.subscribe(onComputeStarted);
-                    })
-                    .catch((err) => console.error(err));
-            })
-            .catch((err) => {
-                setLoading(false);
-                console.log(err);
-                toast({
-                    title: `${err}`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-            });
-    };
-
-    const onDeleteClickHandler: agGridClickHandler = (cellId) => {
-        setdeleteCellId(cellId);
-        deleteCompute.onOpen();
-    };
-
-    const onStopClickHandler: agGridClickHandler = (cellId) => {
-        setStopCellId(cellId);
-        StopComputeRunning.onOpen();
-    };
-
-    const onEditClickHandler: any = (data: any) => {
+    const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
+      const onEditClickHandler: any = (data: any) => {
         context.updateFormData({
             id: data.id,
             max_inactivity_min: data?.max_inactivity_min,
@@ -158,66 +86,6 @@ const Output = (props: any) => {
         setIsEdit(true);
         EditComputeJsonModal.onOpen();
     };
-
-    const actionsRow = (params: any) => {
-        return (
-            <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
-                {params?.data?.status === 'STOPPED' ? (
-                    loading ? (
-                        <Spinner />
-                    ) : (
-                        <div onClick={() => onPlayClickHandler(params.data.id)}>
-                            <PlayIcon />
-                        </div>
-                    )
-                ) : (
-                    <div onClick={() => onStopClickHandler(params.data.id)}>
-                        <StopCompute />
-                    </div>
-                )}
-                <ReStartIcon />
-                <div onClick={() => onEditClickHandler(params.data)}>
-                    <EditIcon />
-                </div>
-                <div onClick={() => onDeleteClickHandler(params.data.id)}>
-                    <DeleteIcon  height={'18px'} width={'16px'} />
-                </div>
-            </Flex>
-        );
-    };
-    const defaultChange = (checked: boolean) => {
-        checked = !checked;
-    };
-    const defaultRow = (params: any) => {
-        let isChecked = params.data.default;
-        return <SwitchComponent params={params} />;
-    };
-
-
-    useEffect(() => {
-        console.log('DMSCOmputrData', DmsComputeData);
-        if (DmsComputeData === null) {
-            const { GET_COMPUTELIST } = getComputeListData();
-            client
-                .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-                    query: GET_COMPUTELIST
-                })
-                .then((response) => {
-                    let computedata = [...response.data.dmsComputes];
-                    setRowData(computedata);
-                    gridRef?.current!?.api?.sizeColumnsToFit();
-                    updateDmsComputeData(response.data.dmsComputes);
-                    //updateTransformersData(transformerdata)
-                })
-                .catch((err) => console.error(err));
-        } else if (DmsComputeData?.length > 0) {
-            setRowData(DmsComputeData);
-            gridRef?.current!?.api?.sizeColumnsToFit();
-        } else {
-            setRowData([]);
-        }
-    }, [DmsComputeData]);
-
     const onCellClicked = (params: any) => {
         setCellId(params.data.id);
         actionsRow(params.data.id);
@@ -261,14 +129,15 @@ const Output = (props: any) => {
                                 </Stack>
 
                                 <Box >
-                                   <DownloadIcon/>
+                                   <DownloadIcon color={'#666C80'}/>
                                 </Box>
                             </Center>
                         </Center>
-                        <Box  mb={'17'}  ml={'23'} mr={'12'} >
-                            <Box style={gridStyle} className="ag-theme-alpine"  >
+                        <Box  mb={'17'}  ml={'23'} mr={'12'} borderColor={'#D8DCDE'}>
+                            <Box style={gridStyle} className="ag-theme-alpine" >
                                 {loading && <Spinner ml={20}></Spinner>}
-                                <AgGridReact<ComputeDetail>
+                                <AgGridReact<OutputDetail>
+                                   className="xxx"
                                     ref={gridRef}
                                     rowData={rowData}
                                     columnDefs={columnDefs}
