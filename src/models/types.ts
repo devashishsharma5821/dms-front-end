@@ -1,4 +1,4 @@
-import { DataframeSpec, DatasetSpec, ModelSpec } from '@antuit/pipeline-interactive-driver-client/dms_commons/protobuf/common';
+import { DataframeSpec, DatasetSpec, ModelSpec } from '@antuit/pipeline-interactive-driver-client-ts/dms_commons/protobuf/common';
 import { Schema } from './schema';
 import { dia, g } from '@antuit/rappid-v1';
 
