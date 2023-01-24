@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useWebSocket from 'react-use-websocket';
 import useAppStore from '../store';
 import { ExperimentAppStoreState, DmsComputeData } from '../models/computeDetails';
@@ -10,6 +10,7 @@ import { v4 } from 'uuid';
 function SocketWrapper(props: any) {
     const opid = v4();
     const { wsHost } = defaultConfig;
+    const [pidState, setPIDState] = useState<string>('');
     let wsUrl = `${wsHost}?token=${localStorage.accessToken}&espToken=${localStorage.espUserToken}`;
     const [connectionEstablished, disconnected, receiveMessage, createdById, message, connectionState, DmsComputeData, submitMessage, UserConfig, setComputeState, getAndUpdateDmsComputeData] =
         useAppStore((state: ExperimentAppStoreState) => [
@@ -46,11 +47,11 @@ function SocketWrapper(props: any) {
         onMessage: (ev: any) => {
             console.log('Receive message ev', JSON.parse(ev.data));
             const message = JSON.parse(ev.data);
-            if (message?.payload?.started) {
+            if (message?.payload) {
                 //TODO:- Update DMS COMPUTE LIST
                 getAndUpdateDmsComputeData();
             }
-            // pidMeassageResponseHandler(JSON.parse(ev.data));
+            pidMeassageResponseHandler(JSON.parse(ev.data));
             receiveMessage(JSON.parse(ev.data));
         }
     });
@@ -88,37 +89,40 @@ function SocketWrapper(props: any) {
     let counter = 0;
     function checkAlive(msg: Message) {
         sendJsonMessage(msg); //send an "isAlive" message to the PID
-        responseCheckInterval[msg.payload.op_id] = setInterval(() => {
+        responseCheckInterval[msg.payload?.op_id] = setInterval(() => {
             //kickoff a new timer
-            // setPIDState('unknown'); //interval reached and uncanceled means we have not received a response
-            counter++;
+            setPIDState('unknown'); //interval reached and uncanceled means we have not received a response
+            // counter++;
             setComputeState('unknown');
             setTimeout(() => {
                 //wait and retry
-                if (counter === 3) {
-                    pidMeassageResponseHandler(msg);
-                }
+                // if (counter === 1) {
+                //     pidMeassageResponseHandler(msg);
+                // }
                 checkAlive(msg);
-            }, 1500);
-        }, 3000);
+            }, 15000);
+        }, 30000);
     }
 
     function pidMeassageResponseHandler(message: Message) {
         //we received an "I am Alive" message from the PID
-        // console.log('inside pidMessageResponseHandler');
-        // clearInterval(responseCheckInterval[message.payload.op_id]); // cancel the  active responseCheckInterval
-        // delete responseCheckInterval[message.payload.op_id];
-        // // setPIDState('alive'); //set the process state as "alive"
-        // setComputeState('alive');
-        // checkAlive(message); //restart a new checkAlive sequence
+        console.log('inside pidMessageResponseHandler');
+        clearInterval(responseCheckInterval[message.payload.op_id]); // cancel the  active responseCheckInterval
+        console.log('lets check interval clear', responseCheckInterval);
+        delete responseCheckInterval[message.payload.op_id];
+        console.log('responseCheckInterval', responseCheckInterval);
+        setPIDState('alive'); //set the process state as "alive"
+        setComputeState('alive');
+        checkAlive(message); //restart a new checkAlive sequence
     }
 
     useEffect(() => {
         if (connectionState.connected && Object.keys(message).length > 0) {
             // if(message.content?.)
-            // checkAlive(message.content);
+            console.log('message', message.content);
+            checkAlive(message.content);
             console.log('running useeffect', message);
-            sendJsonMessage(message.content);
+            // sendJsonMessage(message.content);
         }
     }, [message]);
     console.log('DmsComputeData ===>', DmsComputeData);

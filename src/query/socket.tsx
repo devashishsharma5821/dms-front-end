@@ -1,4 +1,4 @@
-import { Event } from '@antuit/pipeline-interactive-driver-client';
+import { Event } from '@antuit/pipeline-interactive-driver-client-ts';
 import { Message } from '@antuit/web-sockets-gateway-client';
 import { WebsocketBuilder, Websocket, ExponentialBackoff } from 'websocket-ts';
 // import useAppStore from '../store';
