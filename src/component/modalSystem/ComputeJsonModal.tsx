@@ -83,6 +83,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                     position: 'top-right'
                 });
                 setIsComputeCreated(true);
+                props.onClose();
             })
             .catch((err) => {
                 setIsDisabled(false);

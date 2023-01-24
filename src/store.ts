@@ -13,7 +13,7 @@ import {
     RunStageErrorEvent,
     RunStageDataEvent,
     ShutdownEvent
-} from '@antuit/pipeline-interactive-driver-client';
+} from '@antuit/pipeline-interactive-driver-client-ts';
 import { getComputeListData } from './query';
 
 //TODO:Change TYpe defination
@@ -87,7 +87,7 @@ const useAppStore = create<AppState>((set) => ({
             query: GET_COMPUTELIST
         });
 
-        set(() => ({ DmsComputeData: [...response.data.dmsComputes] }));
+        set(() => ({ DmsComputeData: response.data.dmsComputes }));
     },
     //     set(() => {
     //         console.log('inside getAndUpdateDmsComputeData');
