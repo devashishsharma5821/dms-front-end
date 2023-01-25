@@ -60,7 +60,7 @@ const ComputeModal = (props: COMPUTE_MODAL_PROPS) => {
         enableAutoScaling: Yup.boolean(),
         compute_name: Yup.string().required('Compute name is required'),
         worker_type_id: Yup.string().required('Worker type id is required'),
-
+        driver_type_id: Yup.string().required('Driver type id is required'),
         workers: Yup.number().when('enableAutoScaling', {
             is: false,
             then: Yup.number().min(0)
@@ -80,6 +80,7 @@ const ComputeModal = (props: COMPUTE_MODAL_PROPS) => {
         initialValues: {
             compute_name: '',
             worker_type_id: '',
+            driver_type_id: '',
             workers: 0,
             min_workers: 0,
             max_workers: 0,

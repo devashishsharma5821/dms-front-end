@@ -150,5 +150,6 @@ export interface CreateComputeSubmitHandlerValues {
     spot_instances: boolean;
     terminate_after: boolean;
     worker_type_id: string;
+    driver_type_id: string;
     workers: number;
 }

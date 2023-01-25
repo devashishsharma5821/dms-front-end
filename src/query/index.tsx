@@ -145,7 +145,8 @@ export const dmsCreateComputeOffEnableAutoscaling = (values: dmsCreateComputeOff
                           name: "${values.compute_name}",
                           resources: {
                             node_type: {
-                                worker_type_id: "${values.worker_type_id}"
+                                worker_type_id: "${values.worker_type_id}",
+                                driver_type_id: "${values.driver_type_id}"
                             },
                             spot_instances: ${values.spot_instances},
                             num_workers: ${values.workers}
@@ -164,7 +165,8 @@ export const dmsEditComputeOffEnableAutoscaling = (values: dmsCreateComputeOffEn
                           name: "${values.compute_name}",
                           resources: {
                             node_type: {
-                                worker_type_id: "${values.worker_type_id}"
+                                worker_type_id: "${values.worker_type_id}",
+                                driver_type_id: "${values.driver_type_id}"
                             },
                             spot_instances: ${values.spot_instances},
                             num_workers: ${values.workers}
@@ -181,7 +183,8 @@ export const dmsCreateComputeOnEnableAutoscaling = (values: dmsCreateComputeOnEn
                           name: "${values.compute_name}",
                           resources: {
                             node_type: {
-                                worker_type_id: "${values.worker_type_id}"
+                                worker_type_id: "${values.worker_type_id}",
+                                driver_type_id: "${values.driver_type_id}"
                             },
                             spot_instances: ${values.spot_instances},
                             autoscale: {
@@ -202,7 +205,8 @@ export const dmsEditComputeOnEnableAutoscaling = (values: dmsCreateComputeOnEnab
                           name: "${values.compute_name}",
                           resources: {
                             node_type: {
-                                worker_type_id: "${values.worker_type_id}"
+                                worker_type_id: "${values.worker_type_id}",
+                                driver_type_id: "${values.driver_type_id}"
                             },
                             spot_instances: ${values.spot_instances},
                             autoscale: {
@@ -223,7 +227,8 @@ export const dmsCreateComputeOffEnableAutoscalingJson = (values: dmsCreateComput
                                 name: "${values.compute_name}",
                                 resources:{
                                 node_type: { 
-                                    worker_type_id: "${values.worker_type_id}" 
+                                    worker_type_id: "${values.worker_type_id}",
+                                    driver_type_id: "${values.driver_type_id}" 
                                     },
                                     num_workers: ${values.enableAutoScalingConditional.workers} ,
                                     spot_instances: ${values.spot_instances}
@@ -240,7 +245,8 @@ export const dmsCreateComputeOnEnableAutoscalingJson = (values: dmsCreateCompute
                           name: "${values.compute_name}",
                           resources: {
                             node_type: { 
-                                worker_type_id: "${values.worker_type_id}" 
+                                worker_type_id: "${values.worker_type_id}",
+                                driver_type_id: "${values.driver_type_id}" 
                             },
                             spot_instances: ${values.spot_instances},
                             autoscale: {

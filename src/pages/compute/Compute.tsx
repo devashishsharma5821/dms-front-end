@@ -149,6 +149,7 @@ const Compute = () => {
             workers: data.resources.num_workers ? data.resources.num_workers : '0',
             spot_instances: data.resources.spot_instances,
             worker_type_id: data.resources.node_type.worker_type_id,
+            driver_type_id: data.resources.node_type.driver_type_id,
             min_workers: data.resources?.autoscale?.min_workers,
             max_workers: data.resources?.autoscale?.max_workers,
             enable_autoscaling: data.resources.autoscale ? true : false,
@@ -186,22 +187,30 @@ const Compute = () => {
             </Flex>
         );
     };
-    const defaultChange = (checked: boolean) => {
-        checked = !checked;
-    };
+    // const defaultChange = (checked: boolean) => {
+    //     checked = !checked;
+    // };
+    const defaultRowOnChange = (event: any, params: any) => {
+        console.log('event form switch', event.target.checked);
+        console.log('Parmas form switch', params);
+        // Api Call here, same as edit API, but make the default true or false based on trigger
+    }
     const defaultRow = (params: any) => {
-        let isChecked = params.data.default;
-        return <SwitchComponent params={params} />;
+        return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
     };
     const [rowData, setRowData] = useState<ComputeDetail[]>([]);
     const [columnDefs] = useState<ColDef[]>([
+        { headerName: 'Compute Id', field: 'id' },
         { headerName: 'Compute Name', field: 'name' },
-        { headerName: 'created On', field: 'created_at' },
-        { headerName: 'Active Cores', field: 'resources.num_workers' },
-        { headerName: 'Active Memory', field: 'activeMemory' },
+        { headerName: 'Created On', field: 'created_at' },
+        { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },
+        { headerName: 'Driver Type', field: 'resources.node_type.driver_type_id' },
+        { headerName: 'Workers', field: 'resources.num_workers' },
+        { headerName: 'Total Cores', field: 'resources.num_workers' },
+        { headerName: 'Total Memory', field: 'activeMemory' },
         { headerName: 'Status', field: 'status' },
         { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
-        { headerName: 'Actions', field: 'Actions', cellRenderer: actionsRow }
+        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
     ]);
 
     useEffect(() => {
@@ -302,7 +311,6 @@ const Compute = () => {
                                     columnDefs={columnDefs}
                                     onCellClicked={onCellClicked}
                                     onRowClicked={(e) => console.log('row clicked', e.rowIndex)}
-                                    rowSelection={'single'}
                                     animateRows={true}
                                 ></AgGridReact>
                             </Box>
