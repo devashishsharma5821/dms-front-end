@@ -205,6 +205,7 @@ const Compute = () => {
     ]);
 
     useEffect(() => {
+        window.addEventListener('resize', () => { gridRef?.current!?.api?.sizeColumnsToFit() });
         if (DmsComputeData === null) {
             const { GET_COMPUTELIST } = getComputeListData();
             client
@@ -223,6 +224,7 @@ const Compute = () => {
             gridRef?.current!?.api?.sizeColumnsToFit();
         } else {
             setRowData([]);
+            window.removeEventListener('resize', () => { gridRef?.current!?.api?.sizeColumnsToFit() });
         }
     }, [DmsComputeData]);
 
