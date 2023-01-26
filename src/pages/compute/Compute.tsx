@@ -27,6 +27,7 @@ import { BusHelper } from '../../helpers/BusHelper';
 import gql from 'graphql-tag';
 import { v4 } from 'uuid';
 import { Action } from '@antuit/web-sockets-gateway-client';
+import AlertConfirmComponent from '../../component/modalSystem/AlertConfirmComponent';
 
 const Compute = () => {
     const opid = v4();
@@ -39,6 +40,13 @@ const Compute = () => {
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
     const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
     const deleteCompute = useDisclosure();
+    const alertConfirm = useDisclosure();
+    const alertConfirmForDefaultFlag = {
+        'title': 'Change Default',
+        'description': 'Are you sure? You can\'t undo this action afterwards.',
+        'cancelButtonTitle': 'Cancel',
+        'confirmButtonTitle': 'Confirm'
+    };
     const [deleteComputeId, setDeleteComputeId] = useState<string | undefined>();
     const [stopComputeId, setStopComputeId] = useState<string | undefined>();
     const toast = useToast();
@@ -193,8 +201,12 @@ const Compute = () => {
     const defaultRowOnChange = (event: any, params: any) => {
         console.log('event form switch', event.target.checked);
         console.log('Parmas form switch', params);
+        alertConfirm.onOpen();
         // Api Call here, same as edit API, but make the default true or false based on trigger
-    }
+    };
+    const confirmAlertAction = () => {
+        console.log('Confirm Clicked');
+    };
     const defaultRow = (params: any) => {
         return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
     };
@@ -262,6 +274,7 @@ const Compute = () => {
     const onSearchChange = (searchValue: string) => {
         gridRef.current!.api.setQuickFilter(searchValue);
     };
+
     return (
         <>
             <Box marginLeft={36}>
@@ -316,6 +329,7 @@ const Compute = () => {
                         </Box>
                     </Box>
                     {createModal.isOpen && <ComputeJsonModal isOpen={createModal.isOpen} isEdit={isEdit} onClose={createModal.onClose} />}
+                    {alertConfirm.isOpen && <AlertConfirmComponent isOpen={alertConfirm.isOpen} onClose={alertConfirm.onClose} options={alertConfirmForDefaultFlag} confirm={confirmAlertAction} />}
                     <DeleteComputeModal computeId={deleteComputeId} isOpen={deleteCompute.isOpen} onClose={deleteCompute.onClose} />
                     <StopComputeRunningModals computeId={stopComputeId} isOpen={StopComputeRunning.isOpen} onClose={StopComputeRunning.onClose} />
                 </Box>
