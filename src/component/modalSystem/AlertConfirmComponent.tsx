@@ -26,7 +26,7 @@ const AlertConfirmComponent = (props: any) => {
                             <Button ref={cancelRef} onClick={props.onClose}>
                                 {props.options.cancelButtonTitle}
                             </Button>
-                            <Button colorScheme='red' onClick={props.confirm} ml={3}>
+                            <Button onClick={props.confirm} ml={3}>
                                 {props.options.confirmButtonTitle}
                             </Button>
                         </AlertDialogFooter>
