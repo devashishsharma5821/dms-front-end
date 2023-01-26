@@ -43,7 +43,7 @@ const Compute = () => {
     const [stopComputeId, setStopComputeId] = useState<string | undefined>();
     const toast = useToast();
     const context = useContext(ComputeContext);
-
+    window.addEventListener('resize', () => { gridRef?.current!?.api?.sizeColumnsToFit() });
     const [DmsComputeData, updateDmsComputeData, submitMessage, updateCreatedById, UserConfig, createdById] = useAppStore((state: any) => [
         state.DmsComputeData,
         state.updateDmsComputeData,
@@ -214,7 +214,6 @@ const Compute = () => {
     ]);
 
     useEffect(() => {
-        window.addEventListener('resize', () => { gridRef?.current!?.api?.sizeColumnsToFit() });
         if (DmsComputeData === null) {
             const { GET_COMPUTELIST } = getComputeListData();
             client
