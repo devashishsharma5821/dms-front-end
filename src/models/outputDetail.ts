@@ -30,7 +30,7 @@ export interface NodeTypesType {
 }
 export interface DbSettingsDetail {
     cluster_policies?: [];
-    instance_pools: InstancePoolsType[];
+    // instance_pools: InstancePoolsType[];
     node_types: NodeTypesType[];
 }
 

@@ -337,20 +337,6 @@ export const GET_DB_SETTINGS = gql`
                 num_cores
                 category
             }
-            instance_pools {
-                instance_pool_id
-                instance_pool_name
-                min_idle_instances
-                min_idle_instances
-                max_capacity
-                node_type_id
-                stats {
-                    used_count
-                    idle_count
-                    pending_used_count
-                    pending_idle_count
-                }
-            }
             cluster_policies {
                 policy_id
                 policy_name
