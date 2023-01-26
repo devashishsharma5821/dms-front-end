@@ -163,7 +163,7 @@ const ExperimentsPage = () => {
                     submitMessage({
                         content: BusHelper.GetKeepAliveRequestMessage({
                             // experimentId: parseInt(computeId),
-                            experimentId: parseInt(UserConfig.userConfigFromStore.user.userId),
+                            experimentId: parseInt(UserConfig?.userConfigFromStore?.user?.userId),
                             opId: opid,
                             // userId: UserConfig.userConfigFromStore.user.userId,
                             userId: computeId,
