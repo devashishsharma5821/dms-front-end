@@ -279,6 +279,14 @@ export const dmsDeleteCompute = (cellId: string | undefined) => {
             }`;
 };
 
+export const dmsEditCompute = (computeId: number, isDefault: boolean) => {
+    return gql`mutation {
+            dmsEditCompute(  
+               id: "${computeId}",
+               is_default: ${isDefault}  
+                  )
+            }`;
+}
 export const dmsStopComputeRun = (cellId: string | undefined) => {
     return gql`mutation {
             dmsCancelComputeRun(  

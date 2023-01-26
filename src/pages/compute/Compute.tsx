@@ -11,8 +11,14 @@ import DeleteIcon from '../../assets/icons/DeleteIcon';
 import SwitchComponent from './SwitchComponent';
 import { StopCompute } from '../../assets/icons';
 import client from '../../apollo-client';
-import { dmsRunCompute, getComputeListData } from '../../query';
-import { ComputeDetail, ComputeDetailListResponse, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
+import { dmsEditCompute, dmsRunCompute, dmsStopComputeRun, getComputeListData } from '../../query';
+import {
+    ComputeDetail,
+    ComputeDetailListResponse,
+    ComputeRun,
+    ComputeStop, EditCompute,
+    RunComputeDetail, StopComputeDetail
+} from '../../models/computeDetails';
 import { AgGridReact } from 'ag-grid-react';
 import SearchComponent from '../../component/search/SearchComponent';
 import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
@@ -202,11 +208,27 @@ const Compute = () => {
         console.log('event form switch', event.target.checked);
         console.log('Parmas form switch', params);
         alertConfirm.onOpen();
-        // Api Call here, same as edit API, but make the default true or false based on trigger
     };
     const confirmAlertAction = () => {
         console.log('Confirm Clicked');
-    };
+        // dmsEditCompute
+        // Api Call here, same as edit API, but make the default true or false based on trigger
+        // Remove the hardcoding
+        client
+            .mutate<EditCompute<any>>({
+                mutation: dmsEditCompute(161, true)
+            })
+            .then((response) => {
+                alertConfirm.onClose();
+                toast({
+                    title: `Your Default is changed`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+
+    })};
     const defaultRow = (params: any) => {
         return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
     };

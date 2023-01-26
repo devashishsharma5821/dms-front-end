@@ -65,7 +65,9 @@ export class nodeType {
 export class ComputeDetailListResponse<T> {
     dmsComputes!: T;
 }
-
+export class EditCompute<T> {
+    dmsEditCompute!: T;
+}
 export class ComputeRun<T> {
     dmsRunCompute!: T;
 }
