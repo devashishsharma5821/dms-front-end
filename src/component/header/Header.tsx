@@ -5,6 +5,7 @@ import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanva
 import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
 import ViewData from '../modalSystem/ViewData';
+import HeaderDownArrow from '../../assets/icons/HeaderDownArrow';
 
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -14,30 +15,30 @@ const Header = (props: any) => {
     const ViewDataModal = useDisclosure();
 
     return (
-        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
+        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'64px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'16px'} mt={'7px'} mb={'7px'}>
                 <LogoLight />
             </Box>
             <Center flex="3">
-                <Text color={'default.lightGrayHeader'} mr={'8px'} fontSize={'18'} fontWeight={'400'} fontStyle={'normal'}>
+                <Text color={'default.headerTitleColor'} mr={'8px'} fontSize={'16'} fontWeight={'400'} fontStyle={'normal'}>
                     Project Name
                 </Text>
                 <Text color={'default.lightGrayHeader'} pl={'2'}>
                     /
                 </Text>
-                <Text color={'default.whiteText'} pl={'2'} fontSize={'18'} fontWeight={'700'} fontStyle={'normal'} ml={'8px'}>
+                <Text color={'default.headerTitleLightColor'} pl={'2'} fontSize={'18'} fontWeight={'500'} fontStyle={'normal'} ml={'8px'}>
                     {' '}
                     My New Experiment
                 </Text>
 
                 <Editable pl={'10'} defaultValue="Take some chakra">
-                    <PencilIcon color={'#A3B4D1'} height={'14px'} Height={'14px'} />
+                    <PencilIcon color={'#FFFFFF '} height={'18px'} Height={'18px'} />
                 </Editable>
             </Center>
 
             <Center flex="3" mr={5} justifyContent={'flex-end'}>
-                <Box pl={'6'} pr={'6'}>
-                    <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
+                <Box mr={'24px'}>
+                    <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline" borderRadius={4}>
                         Share
                     </Button>
                     <Share isOpen={isOpen} onClose={onClose}></Share>
@@ -48,11 +49,11 @@ const Header = (props: any) => {
                 </Box>
                 <Menu>
                     <MenuButton ml={'24'}>
-                        <GridCanvas />
+                        <GridCanvas color={'#F3F6FA'} />
                     </MenuButton>
                     <MenuList borderRadius={'0'} width={'110'} color={textColor} ml={'-46'}>
                         <MenuItem>
-                            <GridCanvas />
+                            <GridCanvas color={'#A3B4D1'} />
                             <Text ml={'12'}>Dot</Text>
                         </MenuItem>
                         <MenuItem>
@@ -65,8 +66,8 @@ const Header = (props: any) => {
                         </MenuItem>
                     </MenuList>
                 </Menu>
-                <Box mr={'27'} ml={'11'}>
-                    <DownArrow color={'#A3B4D1'} />
+                <Box mr={'41'} ml={'11'}>
+                    <HeaderDownArrow />
                 </Box>
                 <Menu>
                     <MenuButton>
@@ -81,8 +82,8 @@ const Header = (props: any) => {
                         <MenuItem>Signout</MenuItem>
                     </MenuList>
                 </Menu>
-                <Box ml={'12'} mr={'23'}>
-                    <DownArrow color={'#A3B4D1'} />
+                <Box width={'20px'} ml={'12'} mr={'23'}>
+                    <HeaderDownArrow />
                 </Box>
             </Center>
         </Flex>

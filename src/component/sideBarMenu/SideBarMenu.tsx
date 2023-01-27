@@ -13,7 +13,7 @@ import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 import Experiment from '../menuSystem/experiment/Experiment';
 
 const SideBarMenu = () => {
-    const themebg = useColorModeValue('light.header', 'dark.header');
+    const themebg = useColorModeValue('light.sideMenu', 'dark.sideMenu');
     const themeSecondLevel = useColorModeValue('default.whiteText', 'dark.bgDark');
     const [isHovering, setIsHovering] = React.useState(false);
     const [activateSubMenu, setActivateSubMenu] = React.useState(false);
