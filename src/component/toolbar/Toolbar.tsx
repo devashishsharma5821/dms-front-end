@@ -31,11 +31,12 @@ import Output from '../modalSystem/Output';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [commentChecked, setCommentChecked] = React.useState(false);
     const propertiesModal = useDisclosure();
     const saveAsModal = useDisclosure();
     const VariablesModal = useDisclosure();
     const OutputModal = useDisclosure();
+    const commentModal = useDisclosure();
     const triggerActions = (type: string)=>{
         if(type === 'Properties') {
             propertiesModal.onOpen();
@@ -47,6 +48,10 @@ const Toolbar = (props: any) => {
             OutputModal.onOpen();
         }
     };
+    const commentModalClosed = () => {
+        commentModal.onClose();
+        setCommentChecked(false);
+    }
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
@@ -67,7 +72,7 @@ const Toolbar = (props: any) => {
                         {sections.type === 'switch' && (
                             <>
                                 <Stack align="center" direction="row">
-                                    <Switch onChange={onOpen} size="sm" />
+                                    <Switch isChecked={commentChecked} onChange={(event) => {if(event.target.checked) { setCommentChecked(true); commentModal.onOpen()}}} size="sm" />
                                 </Stack>
                                 <Box ml={'6'}>{sections.name}</Box>
                             </>
@@ -180,7 +185,7 @@ const Toolbar = (props: any) => {
                     </Center>
                 )}
             </Flex>
-            <Comments isOpen={isOpen} onClose={onClose}></Comments>
+            <Comments isOpen={commentModal.isOpen} onClose={commentModal.onClose} commentClosed={commentModalClosed}></Comments>
             {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
             {VariablesModal.isOpen && <Variables isOpen={VariablesModal.isOpen} onClose={VariablesModal.onClose} />}

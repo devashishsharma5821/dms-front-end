@@ -218,6 +218,7 @@ export interface DataBricksTokenDetails {
 export interface dmsCreateCompute {
     compute_name: string;
     worker_type_id: string;
+    driver_type_id: string;
     workers: number;
     spot_instances: boolean;
     terminate_after: boolean;
@@ -231,6 +232,7 @@ export interface dmsCreateComputeOffEnableAutoscalingValues {
     id?: string;
     compute_name: string;
     worker_type_id: string;
+    driver_type_id: string;
     workers: number;
     spot_instances: boolean;
     terminate_after: boolean;
@@ -241,6 +243,7 @@ export interface dmsCreateComputeOnEnableAutoscalingValues {
     id?: string;
     compute_name: string;
     worker_type_id: string;
+    driver_type_id: string;
     spot_instances: boolean;
     terminate_after: boolean;
     max_inactivity_min: number;
@@ -275,4 +278,5 @@ export interface dmsCreateComputeCommonEnableAutoscalingValues {
         terminate_after: boolean;
     };
     worker_type_id: string;
+    driver_type_id: string;
 }

@@ -14,7 +14,7 @@ import {
 const Comments = (props: any) => {
     return (
         <>
-            <Drawer isOpen={props.isOpen} placement="right" onClose={props.onClose} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+            <Drawer onCloseComplete={props.commentClosed} isOpen={props.isOpen} placement="right" onClose={props.onClose} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                 <DrawerOverlay />
                 <DrawerContent mt="44px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
