@@ -5,6 +5,7 @@ import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanva
 import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
 import ViewData from '../modalSystem/ViewData';
+import NotebookModal from '../modalSystem/NotebookModal';
 
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -12,6 +13,7 @@ const Header = (props: any) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const settingsModal = useDisclosure();
     const ViewDataModal = useDisclosure();
+    const notebookModal = useDisclosure();
 
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
@@ -73,12 +75,14 @@ const Header = (props: any) => {
                         <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'-26'} mt={'-2'} color={textColor}>
-                        <MenuItem onClick={ViewDataModal.onOpen}>My Profile</MenuItem>
-                        <ViewData isOpen={ViewDataModal.isOpen} onClose={ViewDataModal.onClose}></ViewData>
+                        <MenuItem>My Profile</MenuItem>
                         <MenuItem onClick={settingsModal.onOpen}>Settings</MenuItem>
-
                         <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose}></Settings>
                         <MenuItem>Signout</MenuItem>
+                        <MenuItem onClick={ViewDataModal.onOpen}>View Data</MenuItem>
+                        <ViewData isOpen={ViewDataModal.isOpen} onClose={ViewDataModal.onClose}></ViewData>
+                        <MenuItem onClick={notebookModal.onOpen}>Notebook</MenuItem>
+                        <NotebookModal isOpen={notebookModal.isOpen} onClose={notebookModal.onClose}></NotebookModal>
                     </MenuList>
                 </Menu>
                 <Box ml={'12'} mr={'23'}>
