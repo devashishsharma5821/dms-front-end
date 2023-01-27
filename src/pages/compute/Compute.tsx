@@ -11,21 +11,13 @@ import DeleteIcon from '../../assets/icons/DeleteIcon';
 import SwitchComponent from './SwitchComponent';
 import { StopCompute } from '../../assets/icons';
 import client from '../../apollo-client';
-import { dmsEditCompute, dmsRunCompute, dmsStopComputeRun, getComputeListData } from '../../query';
-import {
-    ComputeDetail,
-    ComputeDetailListResponse,
-    ComputeRun,
-    ComputeStop, EditCompute,
-    RunComputeDetail, StopComputeDetail
-} from '../../models/computeDetails';
+import { dmsDeleteCompute, dmsEditCompute, dmsRunCompute, dmsStopComputeRun, getComputeListData } from '../../query';
+import { ComputeDelete, ComputeDetail, ComputeDetailListResponse, ComputeRun, ComputeStop, DeleteComputeDetail, EditCompute, RunComputeDetail, StopComputeDetail } from '../../models/computeDetails';
 import { AgGridReact } from 'ag-grid-react';
 import SearchComponent from '../../component/search/SearchComponent';
 import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
-import StopComputeRunningModals from '../../pages/compute/StopComputeRunningModals';
 import useAppStore from '../../store';
 import { Spinner } from '@chakra-ui/react';
-import DeleteComputeModal from './DeleteComputeModal';
 import { agGridClickHandler } from '../../models/computeDetails';
 import { ComputeContext } from '../../context/computeContext';
 
@@ -40,7 +32,7 @@ const Compute = () => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const textColorIcon = useColorModeValue('#666C80', 'white');
     const createModal = useDisclosure();
-    const StopComputeRunning = useDisclosure();
+    const stopComputeRunning = useDisclosure();
     const [loading, setLoading] = useState<boolean>(false);
     const [cellId, setCellId] = useState<string>();
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
@@ -50,6 +42,18 @@ const Compute = () => {
     const alertConfirmForDefaultFlag = {
         'title': 'Change Default',
         'description': 'Are you sure? You can\'t undo this action afterwards.',
+        'cancelButtonTitle': 'Cancel',
+        'confirmButtonTitle': 'Confirm'
+    };
+    const alertConfirmForDelete = {
+        'title': 'Delete Compute',
+        'description': 'Are you sure you want to delete the Compute?',
+        'cancelButtonTitle': 'Cancel',
+        'confirmButtonTitle': 'Confirm'
+    };
+    const alertConfirmForStop = {
+        'title': 'Stop Compute',
+        'description': 'Are you sure you want to stop the Compute?',
         'cancelButtonTitle': 'Cancel',
         'confirmButtonTitle': 'Confirm'
     };
@@ -151,7 +155,7 @@ const Compute = () => {
 
     const onStopClickHandler: agGridClickHandler = (data) => {
         setStopComputeId(data?.id);
-        StopComputeRunning.onOpen();
+        stopComputeRunning.onOpen();
     };
 
     const onEditClickHandler: any = (data: any) => {
@@ -209,6 +213,96 @@ const Compute = () => {
         console.log('Parmas form switch', params);
         alertConfirm.onOpen();
     };
+    const confirmAlertActionForDelete = () => {
+        console.log('Confirm Clicked for Delete');
+        client
+            .mutate<ComputeDelete<DeleteComputeDetail>>({
+                mutation: dmsDeleteCompute(deleteComputeId)
+            })
+            .then((response) => {
+                toast({
+                    title: `Compute is deleted successfully`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                const { GET_COMPUTELIST } = getComputeListData();
+                client
+                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                        query: GET_COMPUTELIST
+                    })
+                    .then((response) => {
+                        let computedata = [...response.data.dmsComputes];
+                        updateDmsComputeData(computedata);
+                        deleteCompute.onClose();
+                    })
+                    .catch((err) => {
+                        deleteCompute.onClose();
+                    });
+            })
+            .catch((response) => {
+                toast({
+                    title: `A running compute can't be deleted`,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                deleteCompute.onClose();
+            });
+    }
+    const confirmAlertActionForStop = () => {
+        console.log('Confirm Clicked for Stop');
+        client
+            .mutate<ComputeStop<StopComputeDetail>>({
+                mutation: dmsStopComputeRun(stopComputeId)
+            })
+            .then((response) => {
+                const { GET_COMPUTELIST } = getComputeListData();
+                toast({
+                    title: `Compute is stopped`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                client
+                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                        query: GET_COMPUTELIST
+                    })
+                    .then((response) => {
+                        let computedata = [...response.data.dmsComputes];
+
+                        updateDmsComputeData(computedata);
+                        if (UserConfig && stopComputeId) {
+                            const shutDownRequest = BusHelper.GetShutdownRequestMessage({
+                                experimentId: parseInt(stopComputeId),
+                                opId: opid,
+                                userId: stopComputeId,
+                                //TODO Below are added just for fixing errors
+                                project_id: 12,
+                                get_datatables: undefined,
+                                az_blob_get_containers: undefined,
+                                az_blob_browse_container: undefined
+                            });
+
+                            submitMessage({ content: shutDownRequest });
+                        }
+                        stopComputeRunning.onClose();
+                    })
+                    .catch((err) => console.error(err));
+            })
+            .catch(() => {
+                toast({
+                    title: `Compute is not stopped`,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+            });
+    }
     const confirmAlertAction = () => {
         console.log('Confirm Clicked');
         // dmsEditCompute
@@ -352,8 +446,9 @@ const Compute = () => {
                     </Box>
                     {createModal.isOpen && <ComputeJsonModal isOpen={createModal.isOpen} isEdit={isEdit} onClose={createModal.onClose} />}
                     {alertConfirm.isOpen && <AlertConfirmComponent isOpen={alertConfirm.isOpen} onClose={alertConfirm.onClose} options={alertConfirmForDefaultFlag} confirm={confirmAlertAction} />}
-                    <DeleteComputeModal computeId={deleteComputeId} isOpen={deleteCompute.isOpen} onClose={deleteCompute.onClose} />
-                    <StopComputeRunningModals computeId={stopComputeId} isOpen={StopComputeRunning.isOpen} onClose={StopComputeRunning.onClose} />
+                    {deleteCompute.isOpen && <AlertConfirmComponent isOpen={deleteCompute.isOpen} onClose={deleteCompute.onClose} options={alertConfirmForDelete} confirm={confirmAlertActionForDelete} />}
+                    {stopComputeRunning.isOpen && <AlertConfirmComponent isOpen={stopComputeRunning.isOpen} onClose={stopComputeRunning.onClose} options={alertConfirmForStop} confirm={confirmAlertActionForStop} />}
+                    {/*<StopComputeRunningModals computeId={stopComputeId} isOpen={stopComputeRunning.isOpen} onClose={stopComputeRunning.onClose} />*/}
                 </Box>
             </Box>
         </>
