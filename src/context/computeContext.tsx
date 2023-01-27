@@ -10,6 +10,7 @@ export const ComputeContext = createContext<any>({
         num_workers: null,
         spot_instances: false,
         worker_type_id: '',
+        driver_type_id: '',
         min_workers: null,
         max_workers: null
     },
@@ -25,6 +26,7 @@ export const ContextCompute = (props: any) => {
         workers: null,
         spot_instances: false,
         worker_type_id: '',
+        driver_type_id: '',
         min_workers: null,
         max_workers: null,
         enable_autoscaling: false,
@@ -39,6 +41,7 @@ export const ContextCompute = (props: any) => {
             workers: data?.workers,
             spot_instances: data.spot_instances,
             worker_type_id: data.worker_type_id,
+            driver_type_id: data.driver_type_id,
             min_workers: data?.min_workers,
             max_workers: data?.max_workers,
             enable_autoscaling: data?.enable_autoscaling,
