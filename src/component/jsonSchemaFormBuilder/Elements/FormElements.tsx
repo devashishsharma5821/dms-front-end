@@ -3,6 +3,7 @@ import { FormLabel } from '@chakra-ui/react';
 import InputField from './InputField';
 import SwitchField from './SwitchField';
 import { FieldPropsType } from '../../../models/formBuilder';
+import { options } from '../../../models/formBuilder';
 
 export function TextField(props: FieldPropsType) {
     if (!props.show) {
@@ -22,6 +23,7 @@ export function TextField(props: FieldPropsType) {
 
 export function SelectField(props: FieldPropsType) {
     const { name, label, options, uiSchema, uiSchemaOptions, className } = props;
+    console.log('options', options);
     return (
         <div className={className} style={uiSchema}>
             {label && (
@@ -31,7 +33,7 @@ export function SelectField(props: FieldPropsType) {
             )}
             <InputField as="select" {...props}>
                 <option value="">Choose...</option>
-                {options.map((optn: any, index: any) => (
+                {options.map((optn: options, index: string) => (
                     <option key={index} value={optn.node_type_id} label={optn.label || optn.node_type_id} />
                 ))}
             </InputField>

@@ -45,7 +45,7 @@ const ExperimentsPage = () => {
     const [computeStatus, setComputeStatus] = useState<{ started: boolean }>({ started: false });
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
     const [clearTimeouts, setClearTimeouts] = useState<{ clear: boolean }>({ clear: false });
-    const [computeStats, setComputeStats] = useState<any>();
+    const [computeStats, setComputeStats] = useState<string | undefined>();
 
     let dmsComputeRunningStatusIsDefaultOne;
 
@@ -64,8 +64,8 @@ const ExperimentsPage = () => {
             } else {
                 //Checking isdefualt condition
                 const defaultCompute = computeRunningStatus.filter((runningCompute: DmsComputeData) => runningCompute?.is_default === true);
-                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0].created_by);
-                else setComputeId(computeRunningStatus[0].created_by);
+                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0].id);
+                else setComputeId(computeRunningStatus[0].id);
                 //TODO:- Compute socket connect
                 computeRunningStatus.map((compute: DmsComputeData) => {
                     if (compute.status && compute.id) {
@@ -75,7 +75,7 @@ const ExperimentsPage = () => {
                                 experimentId: parseInt(compute.id),
                                 opId: opid,
                                 // userId: UserConfig.userConfiguration.user.userId,
-                                userId: compute?.created_by,
+                                userId: compute?.id,
                                 //TODO Below are added just for fixing errors
                                 project_id: 12,
                                 get_datatables: undefined,

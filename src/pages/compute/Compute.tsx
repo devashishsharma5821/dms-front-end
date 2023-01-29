@@ -1,24 +1,22 @@
 import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
-import './compute.scss';
-import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, useToast } from '@chakra-ui/react';
+import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-import PlayIcon from '../../assets/icons/PlayIcon';
-import ReStartIcon from '../../assets/icons/ReStartIcon';
-import EditIcon from '../../assets/icons/EditIcon';
-import DeleteIcon from '../../assets/icons/DeleteIcon';
-import SwitchComponent from './SwitchComponent';
-import { StopCompute } from '../../assets/icons';
+
+import { PlayIcon, ReStartIcon, EditIcon, DeleteIcon, StopCompute } from '../../assets/icons';
+
 import client from '../../apollo-client';
 import { dmsRunCompute, getComputeListData } from '../../query';
-import { ComputeDetail, ComputeDetailListResponse, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
-import { AgGridReact } from 'ag-grid-react';
+import { ComputeDetail, ComputeDetailListResponse, ComputeRun, RunComputeDetail, ComputeAppStoreState, GetComputeListResponse, DmsComputeData } from '../../models/computeDetails';
+import useAppStore from '../../store';
+
+import SwitchComponent from './SwitchComponent';
 import SearchComponent from '../../component/search/SearchComponent';
 import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
 import StopComputeRunningModals from '../../pages/compute/StopComputeRunningModals';
-import useAppStore from '../../store';
-import { Spinner } from '@chakra-ui/react';
+
 import DeleteComputeModal from './DeleteComputeModal';
 import { agGridClickHandler } from '../../models/computeDetails';
 import { ComputeContext } from '../../context/computeContext';
@@ -27,6 +25,7 @@ import { BusHelper } from '../../helpers/BusHelper';
 import gql from 'graphql-tag';
 import { v4 } from 'uuid';
 import { Action } from '@antuit/web-sockets-gateway-client';
+import './compute.scss';
 
 const Compute = () => {
     const opid = v4();
@@ -37,14 +36,14 @@ const Compute = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [cellId, setCellId] = useState<string>();
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
-    const gridRef = useRef<AgGridReact<ComputeDetail>>(null);
+    const gridRef = useRef<AgGridReact<DmsComputeData>>(null);
     const deleteCompute = useDisclosure();
     const [deleteComputeId, setDeleteComputeId] = useState<string | undefined>();
     const [stopComputeId, setStopComputeId] = useState<string | undefined>();
     const toast = useToast();
     const context = useContext(ComputeContext);
 
-    const [DmsComputeData, updateDmsComputeData, submitMessage, updateCreatedById, UserConfig, createdById] = useAppStore((state: any) => [
+    const [DmsComputeData, updateDmsComputeData, submitMessage, updateCreatedById, UserConfig, createdById] = useAppStore((state: ComputeAppStoreState) => [
         state.DmsComputeData,
         state.updateDmsComputeData,
         state.submitMessage,
@@ -54,15 +53,15 @@ const Compute = () => {
     ]);
 
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
-    const onComputeStarted = () => {
-        let currentValue = select(useAppStore.getState());
-        if (currentValue) {
-            console.log('current VLUE', currentValue);
-            // setComputeStats(currentValue);
-            // setConnected(true);
-        }
-    };
-    const select = (state: any) => {
+    // const onComputeStarted = () => {
+    //     let currentValue = select(useAppStore.getState());
+    //     if (currentValue) {
+    //         console.log('current VLUE', currentValue);
+    //         // setComputeStats(currentValue);
+    //         // setConnected(true);
+    //     }
+    // };
+    const select = (state: { lastAliveMessage: string }) => {
         return state.lastAliveMessage;
     };
     const onPlayClickHandler: agGridClickHandler = (data) => {
@@ -96,7 +95,7 @@ const Compute = () => {
                     .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
                         query: GET_COMPUTELIST
                     })
-                    .then((response) => {
+                    .then((response: GetComputeListResponse) => {
                         let computedata = [...response.data.dmsComputes];
                         updateDmsComputeData(computedata);
                         if (data?.id) {
@@ -111,14 +110,14 @@ const Compute = () => {
                                 az_blob_browse_container: undefined
                             });
                             submitMessage({
-                                content: { action: Action.Subscribe, op_id: opid, subject: `dms_pid.out.${data?.id}` }
+                                content: aliveMessage
                             });
                         }
-                        let unsubscribe = useAppStore.subscribe(onComputeStarted);
+                        // let unsubscribe = useAppStore.subscribe(onComputeStarted);
                     })
-                    .catch((err) => console.error(err));
+                    .catch((err: any) => console.error(err));
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 setLoading(false);
                 toast({
                     title: `${err}`,
@@ -140,7 +139,7 @@ const Compute = () => {
         StopComputeRunning.onOpen();
     };
 
-    const onEditClickHandler: any = (data: any) => {
+    const onEditClickHandler: agGridClickHandler = (data) => {
         context.updateFormData({
             id: data.id,
             max_inactivity_min: data?.max_inactivity_min,
@@ -193,7 +192,7 @@ const Compute = () => {
         let isChecked = params.data.default;
         return <SwitchComponent params={params} />;
     };
-    const [rowData, setRowData] = useState<ComputeDetail[]>([]);
+    const [rowData, setRowData] = useState<DmsComputeData[]>([]);
     const [columnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Name', field: 'name' },
         { headerName: 'created On', field: 'created_at' },
@@ -208,16 +207,17 @@ const Compute = () => {
         if (DmsComputeData === null) {
             const { GET_COMPUTELIST } = getComputeListData();
             client
-                .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
                     query: GET_COMPUTELIST
                 })
-                .then((response) => {
+                .then((response: { data: { dmsComputes: any } }) => {
                     let computedata = [...response.data.dmsComputes];
                     setRowData(computedata);
+                    console.log('computedata ===>', computedata);
                     gridRef?.current!?.api?.sizeColumnsToFit();
                     updateDmsComputeData(response.data.dmsComputes);
                 })
-                .catch((err) => console.error(err));
+                .catch((err: any) => console.error(err));
         } else if (DmsComputeData?.length > 0) {
             setRowData(DmsComputeData);
             gridRef?.current!?.api?.sizeColumnsToFit();
@@ -294,12 +294,12 @@ const Compute = () => {
                         <Box mr={'17'} mb={'17'}>
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
                                 {loading && <Spinner ml={20} />}
-                                <AgGridReact<ComputeDetail>
+                                <AgGridReact<DmsComputeData>
                                     ref={gridRef}
                                     rowData={rowData}
                                     columnDefs={columnDefs}
                                     onCellClicked={onCellClicked}
-                                    onRowClicked={(e) => console.log('row clicked', e.rowIndex)}
+                                    onRowClicked={(e: { rowIndex: any }) => console.log('row clicked', e.rowIndex)}
                                     rowSelection={'single'}
                                     animateRows={true}
                                 ></AgGridReact>

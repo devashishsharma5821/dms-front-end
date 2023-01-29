@@ -32,3 +32,7 @@ export { StopCompute } from './StopComputeIcon';
 export { RightArrow } from './RightArrow';
 export { CloseIcon } from './CloseIcon';
 export { ExclamationIcon } from './ExclamationIcon';
+export { PlayIcon } from './PlayIcon';
+export { ReStartIcon } from './ReStartIcon';
+export { DeleteIcon } from './DeleteIcon';
+export { EditIcon } from './EditIcon';

@@ -1,58 +1,9 @@
 import create from 'zustand';
 import { Message } from '@antuit/web-sockets-gateway-client';
 import client from './apollo-client';
-import { ComputeDetail, ComputeDetailListResponse, DmsComputeData } from './models/computeDetails';
-import {
-    AliveEvent,
-    Event,
-    StartedEvent,
-    InferOutputStageCompletedEvent,
-    InferOutputStageErrorEvent,
-    RunStageStartedEvent,
-    RunStageCompletedEvent,
-    RunStageErrorEvent,
-    RunStageDataEvent,
-    ShutdownEvent
-} from '@antuit/pipeline-interactive-driver-client-ts';
+import { ComputeDetail, ComputeDetailListResponse } from './models/computeDetails';
+import { AppState } from './models/zustandStore';
 import { getComputeListData } from './query';
-
-//TODO:Change TYpe defination
-interface AppState {
-    i18n: any;
-    config: any;
-    DmsDatabricksCredentialsValidToken: boolean;
-    DmsComputeData: any;
-    UserConfig: [];
-    lastAliveMessage: AliveEvent | null;
-    inferStartedMessaage: StartedEvent | null;
-    runStageCompleted: RunStageCompletedEvent | null;
-    runStageError: RunStageErrorEvent | null;
-    inferStageCompleted: InferOutputStageCompletedEvent | null;
-    inferStageError: InferOutputStageErrorEvent | null;
-    currentRunState: { running: boolean; lastStageId: string | null };
-    runStageStarted: RunStageStartedEvent | null;
-    uncategorizedEvents: Message<Event>[];
-    shutdownMessage: ShutdownEvent | null;
-    connectionState: { connected: boolean; subscribed: boolean };
-    message: Message | {};
-    runStageData: RunStageDataEvent | null;
-    createdById: any;
-    computeState: any;
-    updateI18N: (translation: {}) => void;
-    updateAppConfig: (config: {}) => void;
-    updateDmsDatabricksCredentialsValidToken: (token: boolean) => void;
-    updateDmsComputeData: (computeData: []) => void;
-    updateUserConfig: (UserConfig: []) => void;
-    connectionEstablished: () => void;
-    receiveMessage: (action: any) => void;
-    resetMessages: () => void;
-    hasSubscribed: () => void;
-    disconnected: () => void;
-    startConnecting: () => void;
-    updateCreatedById: (computeId: string) => void;
-    setComputeState: (value: any) => void;
-    getAndUpdateDmsComputeData: () => void;
-}
 
 const useAppStore = create<AppState>((set) => ({
     i18n: {},
@@ -191,7 +142,7 @@ const useAppStore = create<AppState>((set) => ({
     disconnected: () => set(() => ({ connectionState: { connected: false, subscribed: false } })),
     startConnecting: () => set(() => ({})),
     updateCreatedById: (createdById: string) => set(() => ({ createdById: createdById })),
-    setComputeState: (value: any) => set({ computeState: value })
+    setComputeState: (value: string) => set({ computeState: value })
 }));
 
 export default useAppStore;

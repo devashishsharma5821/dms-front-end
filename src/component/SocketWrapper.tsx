@@ -34,6 +34,7 @@ function SocketWrapper(props: any) {
 
             console.log('connection Establishedd');
             sendJsonMessage({ action: 'subscribe', subject: `dms_pid.out.161` });
+
             // }
         },
         onClose: () => {
@@ -67,8 +68,7 @@ function SocketWrapper(props: any) {
                     const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
                         experimentId: 1,
                         opId: opid,
-                        // userId: compute?.id,
-                        userId: compute?.created_by,
+                        userId: compute?.id,
                         //TODO Below are added just for fixing errors
                         project_id: 12,
                         get_datatables: undefined,
@@ -101,7 +101,7 @@ function SocketWrapper(props: any) {
                 // }
                 checkAlive(msg);
             }, 15000);
-        }, 30000);
+        }, 50000);
     }
 
     function pidMeassageResponseHandler(message: Message) {
@@ -119,17 +119,15 @@ function SocketWrapper(props: any) {
     useEffect(() => {
         if (connectionState.connected && Object.keys(message).length > 0) {
             // if(message.content?.)
-            console.log('message', message.content);
-            checkAlive(message.content);
-            console.log('running useeffect', message);
-            // sendJsonMessage(message.content);
+            // checkAlive(message.content);
+            sendJsonMessage(message.content);
         }
     }, [message]);
     console.log('DmsComputeData ===>', DmsComputeData);
 
-    useEffect(() => {
-        if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
-    }, [DmsComputeData]);
+    // useEffect(() => {
+    //     if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
+    // }, [DmsComputeData]);
 
     return <>{props.children}</>;
 }

@@ -126,7 +126,7 @@ export class BusHelper {
     static GetKeepAliveRequestMessage(request: BaseRequest): Message<Request> {
         let keepAliveRequest: KeepAliveRequest = {};
         let msg = new Message<Request>();
-        msg.action = Action.Publish;
+        msg.action = Action.Subscribe;
         msg.subject = `dms_pid.in.${request.userId}`;
         msg.payload = {
             op_id: request.opId,

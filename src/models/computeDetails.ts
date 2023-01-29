@@ -121,6 +121,12 @@ export interface DmsComputeData {
     status: string;
 }
 
+export interface GetComputeListResponse {
+    data: {
+        dmsComputes: Array<DmsComputeData>;
+    };
+}
+
 export interface ExperimentAppStoreState {
     updateDmsDatabricksCredentialsValidToken: (token: boolean) => void;
     DmsDatabricksCredentialsValidToken: boolean;
@@ -135,10 +141,19 @@ export interface ExperimentAppStoreState {
     receiveMessage: (action: any) => void;
     connectionState: { connected: boolean; subscribed: boolean };
     hasSubscribed: () => void;
-    createdById: string;
+    createdById: string | null;
     updateCreatedById: (createdById: string) => void;
     setComputeState: (value: any) => void;
     getAndUpdateDmsComputeData: () => void;
+}
+
+export interface ComputeAppStoreState {
+    DmsComputeData: DmsComputeData[];
+    updateDmsComputeData: (computeData: any) => void;
+    submitMessage?: any;
+    updateCreatedById: (createdById: string) => void;
+    UserConfig: any;
+    createdById: string | null;
 }
 
 export interface CreateComputeSubmitHandlerValues {
@@ -151,4 +166,8 @@ export interface CreateComputeSubmitHandlerValues {
     terminate_after: boolean;
     worker_type_id: string;
     workers: number;
+}
+
+export interface DeleteComputeModalStoreState {
+    updateDmsComputeData: (computeData: DmsComputeData[]) => void;
 }

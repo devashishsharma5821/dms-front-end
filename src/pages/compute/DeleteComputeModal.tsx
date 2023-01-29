@@ -1,16 +1,16 @@
 import { useApolloClient } from '@apollo/client';
 import { Button } from '@chakra-ui/button';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
-import { ComputeDelete, ComputeDetail, ComputeDetailListResponse, DeleteComputeDetail } from '../../models/computeDetails';
+import { ComputeDelete, ComputeDetail, ComputeDetailListResponse, DeleteComputeDetail, DmsComputeData } from '../../models/computeDetails';
 import { dmsDeleteCompute, getComputeListData } from '../../query';
 import useAppStore from '../../store';
 import { useToast } from '@chakra-ui/toast';
-import { DELETE_COMPUTE_MODAL_PROPS } from '../../models/computeDetails';
+import { DELETE_COMPUTE_MODAL_PROPS, DeleteComputeModalStoreState } from '../../models/computeDetails';
 
 function DeleteComputeModal({ computeId, isOpen, onClose }: DELETE_COMPUTE_MODAL_PROPS) {
     const toast = useToast();
     const client = useApolloClient();
-    const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
+    const [updateDmsComputeData] = useAppStore((state: DeleteComputeModalStoreState) => [state.updateDmsComputeData]);
 
     const onClickHandler = () => {
         client
@@ -27,7 +27,7 @@ function DeleteComputeModal({ computeId, isOpen, onClose }: DELETE_COMPUTE_MODAL
                 });
                 const { GET_COMPUTELIST } = getComputeListData();
                 client
-                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                    .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
                         query: GET_COMPUTELIST
                     })
                     .then((response) => {
