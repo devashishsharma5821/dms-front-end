@@ -6,6 +6,7 @@ export interface FormData {
     workers: number | null;
     spot_instances: boolean;
     worker_type_id: string;
+    driver_type_id: string;
     min_workers: number | null;
     max_workers: number | null;
     enable_autoscaling: boolean;
