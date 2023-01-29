@@ -24,6 +24,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             })
             .then((response) => {
                 formSchema.worker_type_id.options = response.data.dmsDatabricksSettings.node_types;
+                formSchema.driver_type_id.options = response.data.dmsDatabricksSettings.node_types;
             })
             .catch((err) => {
                 console.log('catch', err);
@@ -54,6 +55,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
 
     const handleSubmitCompute = (values: CreateComputeSubmitHandlerValues) => {
         let mutation: DocumentNode | null = null;
+        console.log('Values', values);
         setIsDisabled(true);
         if (props?.isEdit) {
             if (!values.enable_autoscaling) {

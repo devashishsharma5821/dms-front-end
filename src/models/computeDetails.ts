@@ -32,7 +32,7 @@ export interface NodeTypesType {
 }
 export interface DbSettingsDetail {
     cluster_policies?: [];
-    instance_pools: InstancePoolsType[];
+    // instance_pools: InstancePoolsType[];
     node_types: NodeTypesType[];
 }
 
@@ -65,7 +65,9 @@ export class nodeType {
 export class ComputeDetailListResponse<T> {
     dmsComputes!: T;
 }
-
+export class EditCompute<T> {
+    dmsEditCompute!: T;
+}
 export class ComputeRun<T> {
     dmsRunCompute!: T;
 }
@@ -165,6 +167,7 @@ export interface CreateComputeSubmitHandlerValues {
     spot_instances: boolean;
     terminate_after: boolean;
     worker_type_id: string;
+    driver_type_id: string;
     workers: number;
 }
 

@@ -36,3 +36,5 @@ export { PlayIcon } from './PlayIcon';
 export { ReStartIcon } from './ReStartIcon';
 export { DeleteIcon } from './DeleteIcon';
 export { EditIcon } from './EditIcon';
+export { AttachmentIcon } from './AttachmentIcon';
+export { DownloadIcon } from './DownloadIcon';

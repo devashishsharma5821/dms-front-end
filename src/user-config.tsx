@@ -42,8 +42,6 @@ function UserConfiguration() {
     if (isError) return <p>Error : `${isError.toString()}`</p>;
 
     return <>{isConfigAvailable ? <AppRouter user={data?.userConfiguration?.user}></AppRouter> : <AppRouter user={data?.userConfiguration?.user}></AppRouter>}</>;
-
-    // return <>{isConfigAvailable ? <AppRouter user={data?.userConfiguration?.user}></AppRouter> : <span className="fail"> Configuration access Failed... </span>}</>;
 }
 
 export default UserConfiguration;
