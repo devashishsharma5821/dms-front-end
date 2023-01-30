@@ -62,22 +62,22 @@ export const colors = {
         agGridBachground: '#EEEEEE',
         toolbarButton: '#2180C2',
         displayOffButton: '#EDEFF4',
-        downArrowHeader:'#A3B4D1',
-        mouseHOverForm:'rgba(3, 135, 176, 0.1)',
-        modalShareText:'#2D373E',
-        BlackText:' #111111',
-        shareModalButton:'#2180C2',
-        defaultTextColorInBox:'rgba(51, 51, 51, 0.5)',
-        dividerColor:'#EAEAEA',
-        titleForShare:'#4C4C4C',
-        veryLightGrayTextColor:' #B3B3B3',
+        downArrowHeader: '#A3B4D1',
+        mouseHOverForm: 'rgba(3, 135, 176, 0.1)',
+        modalShareText: '#2D373E',
+        BlackText: ' #111111',
+        shareModalButton: '#2180C2',
+        defaultTextColorInBox: 'rgba(51, 51, 51, 0.5)',
+        dividerColor: '#EAEAEA',
+        titleForShare: '#4C4C4C',
+        veryLightGrayTextColor: ' #B3B3B3',
         silverGray: '#aaaaaa',
-        redLigh:' #E05F70',
-        linkColor:'#017BA1',
+        redLigh: ' #E05F70',
+        linkColor: '#017BA1',
         lightGray: '#F2F4F5',
         darkGrayCreate: '#666C80',
-        bgExclamationText:'rgba(50, 150, 237, 0.2)',
-        bgExclamationIcon:'#BFE1FF'
+        bgExclamationText: 'rgba(50, 150, 237, 0.2)',
+        bgExclamationIcon: '#BFE1FF'
     },
     light: {
         header: '#1A3F59',
@@ -89,7 +89,7 @@ export const colors = {
         hoverSideBarMenu: '#0387B0',
         slightlyDesaturatedBlue: '#9792C8',
         veryDarkBlue: '#08192E',
-        grayishBlue: '#ECEAFD',
+        grayishBlue: '#ECEAFD'
     },
     dark: {
         header: '#3D3D3F',
@@ -100,7 +100,7 @@ export const colors = {
         veryLightDarkGrayishBlue: '#434248',
         lightGrayishBlue: '#C9C5E9',
         veryDarkGray: '#171717',
-        bgDark:'#1a202c'
+        bgDark: '#1a202c'
     },
     brand: {
         500: '#0387B0'
@@ -139,13 +139,12 @@ export const spacing = {
         54: '54px',
         56: '56px',
         57: '57px',
-        75: "75px",
-        110:'110px',
+        75: '75px',
+        110: '110px',
         127: '127px',
         60: '60px',
         180: '180px',
         464: '464px'
-
     }
 };
 
@@ -159,7 +158,7 @@ export const sizes = {
         5: '5px',
         6: '6px',
         8: '8px',
-        9: '9px', 
+        9: '9px',
         10: '10px',
         12: '12px',
         13: '13px',
@@ -173,9 +172,9 @@ export const sizes = {
         30: '30px',
         32: '32px',
         35: '35px',
-        36:'36px',
+        36: '36px',
         38: '38px',
-        40:'40px',
+        40: '40px',
         44: '44px',
         49: '49px',
         54: '54px',
@@ -187,9 +186,7 @@ export const sizes = {
         472: '472px',
         581: '581px',
         667: '667px',
-        734: '734px',
-
-       
+        734: '734px'
     }
 };
 export default colors;
