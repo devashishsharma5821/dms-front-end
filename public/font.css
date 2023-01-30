@@ -1,21 +1,21 @@
 @font-face {
-    font-family: 'NunitoFont';
+    font-family: 'IBM Plex Sans';
     font-weight: 400;
-    src: url('./font/nunito/nunito-regular.woff2') format('woff2');
+    src: url('./font/ibm-plex-sans/IBMPlexSans-Regular.ttf') format('ttf');
 }
 
 @font-face {
-    font-family: 'NunitoFont';
+    font-family: 'IBM Plex Sans';
     font-weight: 600;
-    src: url('./font/nunito/nunito-semibold.woff2') format('woff2');
+    src: url('./font/ibm-plex-sans/IBMPlexSans-SemiBold.ttf') format('ttf');
 }
 
 @font-face {
-    font-family: 'NunitoFont';
+    font-family: 'IBM Plex Sans';
     font-weight: 700;
-    src: url('./font/nunito/nunito-bold.woff2') format('woff2');
+    src: url('./font/ibm-plex-sans/IBMPlexSans-Bold.ttf') format('ttf');
 }
 
-.nunito {
-    font-family: 'NunitoFont', Fallback, sans-serif;
+.ibm-plex-sans {
+    font-family: 'IBM Plex Sans', sans-serif;
 }
