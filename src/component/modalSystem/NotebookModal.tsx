@@ -21,8 +21,8 @@ import {
 import { DownArrowShare } from '../../assets/icons';
 
 const NotebookModal = (props: any) => {
-    const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
-    const textColorTitle = useColorModeValue('l default.titleForShare', 'default.whiteText');
+    const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
+    const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
@@ -131,20 +131,20 @@ const NotebookModal = (props: any) => {
                                                 colorScheme="gray"
                                                 bg={'white'}
                                                 color={'#2180C2'}
-                                                width={'81px'}
+                                                width={'80px'}
                                                 border={'1px'}
                                                 borderColor={'#2180C2'}
-                                                height={'40px'}
-                                                borderRadius={3}
+                                                height={'36px'}
+                                                borderRadius={4}
                                             >
                                                 Cancel
                                             </Button>
                                             {loading ? (
                                                 <Button
-                                                    width={'68px'}
-                                                    height={'40px'}
+                                                    width={'80px'}
+                                                    height={'36px'}
                                                     ml={'11px'}
-                                                    borderRadius={3}
+                                                    borderRadius={4}
                                                     isLoading
                                                     disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
                                                     onSubmit={props.onSubmit}
@@ -155,10 +155,10 @@ const NotebookModal = (props: any) => {
                                                 </Button>
                                             ) : (
                                                 <Button
-                                                    width={'68px'}
-                                                    height={'40px'}
+                                                    width={'80px'}
+                                                    height={'36px'}
                                                     ml={'11px'}
-                                                    borderRadius={3}
+                                                    borderRadius={4}
                                                     disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
                                                     onSubmit={props.onSubmit}
                                                     type="submit"
