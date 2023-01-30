@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
-import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
+import { PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
 import ViewData from '../modalSystem/ViewData';
@@ -38,7 +38,7 @@ const Header = (props: any) => {
 
             <Center flex="3" mr={5} justifyContent={'flex-end'}>
                 <Box mr={'24px'}>
-                    <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline" borderRadius={4}>
+                    <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline" borderRadius={3}>
                         Share
                     </Button>
                     <Share isOpen={isOpen} onClose={onClose}></Share>
