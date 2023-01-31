@@ -22,13 +22,13 @@ const Header = (props: any) => {
                 <LogoLight />
             </Box>
             <Center flex="3">
-                <Text color={'default.headerTitleColor'} mr={'8px'} fontSize={'16'} fontWeight={'400'} fontStyle={'normal'}>
+                <Text color={'default.headerTitleColor'} mr={'8px'} fontSize={'16'} fontWeight={'400'}>
                     Project Name
                 </Text>
                 <Text color={'default.lightGrayHeader'} pl={'2'}>
                     /
                 </Text>
-                <Text color={'default.headerTitleLightColor'} pl={'2'} fontSize={'18'} fontWeight={'500'} fontStyle={'normal'} ml={'8px'}>
+                <Text color={'default.headerTitleLightColor'} pl={'2'} fontSize={'18'} fontWeight={'500'} ml={'8px'}>
                     {' '}
                     My New Experiment
                 </Text>
