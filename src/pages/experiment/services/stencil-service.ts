@@ -84,7 +84,7 @@ export class StencilService {
                             fontSize: 11,
                             strokeWidth: 0
                         }
-                    }
+                    },
                 },
                 {
                     type: 'standard.Ellipse',
@@ -1039,7 +1039,7 @@ export class StencilService {
                             'ref-x': null,
                             'ref-y': null,
                             'y-alignment': null,
-                            'xlink:href': '/assets/member-male.png'
+                            'xlink:href': '/icons/TransformersIcon.svg'
                         }
                     }
                 }

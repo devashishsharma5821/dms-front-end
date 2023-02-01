@@ -124,7 +124,8 @@ const ExperimentsPage = () => {
                 new KeyboardService()
             );
             rappid.startRappid(stencil, group);
-            rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
+            // Use below to load a sample Ready to go JSON
+            // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
         }
     }
     useEffect(() => {
@@ -148,6 +149,62 @@ const ExperimentsPage = () => {
                                 let stencilBg = (colorMode)?transformerMenuConf[currentObj['category']].backgroundDark:transformerMenuConf[currentObj['category']].backgroundLight;
                                 if(!transformersGroup[currentObj['category']])
                                     transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
+                                const portsIn = {
+                                    position: {
+                                        name: 'left'
+                                    },
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            r: 10,
+                                            fill: '#023047',
+                                            stroke: '#023047'
+                                        }
+                                    },
+                                    label: {
+                                        position: {
+                                            name: 'left',
+                                            args: { y: 6 }
+                                        },
+                                        markup: [{
+                                            tagName: 'text',
+                                            selector: 'label',
+                                            className: 'label-text'
+                                        }]
+                                    },
+                                    markup: [{
+                                        tagName: 'circle',
+                                        selector: 'portBody'
+                                    }]
+                                };
+
+                                const portsOut = {
+                                    position: {
+                                        name: 'right'
+                                    },
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            r: 10,
+                                            fill: '#E6A502',
+                                            stroke:'#023047'
+                                        }
+                                    },
+                                    label: {
+                                        position: {
+                                            name: 'right',
+                                            args: { y: 6 }
+                                        },
+                                        markup: [{
+                                            tagName: 'text',
+                                            selector: 'label',
+                                            className: 'label-text'
+                                        }]
+                                    },
+                                    markup: [{
+                                        // Markup
+                                    }]
+                                };
                                 let stencil = {
                                     type: 'org.Member',
                                     attrs: {
@@ -177,13 +234,11 @@ const ExperimentsPage = () => {
                                             height: 15,
                                             x: 16,
                                             y: 13,
-                                            ref: null,
-                                            'ref-x': null,
-                                            'ref-y':null,
-                                            'y-alignment': null,
-                                            xlinkHref:'src/asset/transformers.png'
-                                            //xlinkHref:'<TransformersIcon_black/>'
+                                            href: 'src/pages/experiment/services/icons/TransformersIcon.svg'
                                         }
+                                    },
+                                    ports: {
+                                        items: [ portsIn, portsIn ]
                                     },
                                     size:{
                                         width:350

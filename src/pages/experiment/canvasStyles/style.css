@@ -21,7 +21,7 @@
 
 .app-title {
     display: inline-block;
-    width: 240px;
+    width: 292px;
     height: 100%;
     padding: 0;
 }
@@ -43,7 +43,7 @@
     height: 100%;
     overflow: hidden;
     box-sizing: border-box;
-    left: 240px;
+    left: 292px;
     right: 240px;
 }
 
@@ -112,7 +112,7 @@
     display: inline-block;
     position: absolute;
     height: 100%;
-    left: 240px;
+    left: 292px;
     right: 0;
     box-sizing: border-box;
 }
