@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData } from '../../query';
-import './experiment.scss';
 import { Box, Flex, useColorModeValue, useDisclosure, Spinner } from '@chakra-ui/react';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import Toolbar from '../../component/toolbar/Toolbar';
@@ -19,7 +18,29 @@ import { BusHelper } from '../../helpers/BusHelper';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
 
+import "@antuit/rappid-v1/build/package/rappid.css";
+import './canvasStyles/style.css';
+import './canvasStyles/style.modern.css';
+import './canvasStyles/theme-picker.css';
+import './experiment.scss';
+// All this are new imports for the new Experiment Page I am trying to Design
+import {StencilService} from './services/stencil-service';
+import {ToolbarService} from './services/toolbar-service';
+import {InspectorService} from './services/inspector-service';
+import {HaloService} from './services/halo-service';
+import {KeyboardService} from './services/keyboard-service';
+import RappidService from './services/kitchensink-service';
+import {sampleGraphs} from './services/sample-graphs';
+
+
+
 const ExperimentsPage = () => {
+
+    // New Consts For the new Experiment Page I am designing.
+        let rappid: RappidService;
+        const elementRef = React.useRef<HTMLDivElement>(null);
+
+
     const [updateDmsDatabricksCredentialsValidToken, DmsComputeData, updateDmsComputeData, submitMessage, UserConfig, connectionState, hasSubscribed] = useAppStore(
         (state: ExperimentAppStoreState) => [
             state.updateDmsDatabricksCredentialsValidToken,
@@ -92,6 +113,24 @@ const ExperimentsPage = () => {
     useEffect(() => {
         if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
     }, [DmsComputeData]);
+
+    useEffect(() => {
+
+        if(!rappid) {
+            console.log('Zuin', rappid)
+            rappid = new RappidService(
+                elementRef.current,
+                new StencilService(),
+                new ToolbarService(),
+                new InspectorService(),
+                new HaloService(),
+                new KeyboardService()
+            );
+            rappid.startRappid();
+            rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
+        }
+
+    }, []);
 
     useEffect(() => {
         client
@@ -298,37 +337,23 @@ const ExperimentsPage = () => {
     // React Hook
     return (
         <>
-            {loaderOpen && (
-                <Spinner color="red.500" size="xl">
-                    Runnings
-                </Spinner>
-            )}
-            <Box width={'100%'}>
-                <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar computeData={DmsComputeData} is_default={dmsComputeRunningStatusIsDefaultOne} />
-                </Box>
-                <Flex>
-                    <TransformerMenu />
-                    <Designer></Designer>
-                    <Box>
-                        {/*<a>{translationToUse[config['title']]}</a>*/}
-                        {/*<br></br>*/}
-                        {/*{message}*/}
-                        {/* <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
-                            Open
-                        </Button> */}
-                        <Details isOpen={isOpen} onClose={onClose}></Details>
-                        {/*<Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>*/}
-                        {/*    Change Translation*/}
-                        {/*</Button>*/}
-                    </Box>
-                </Flex>
-                {computeModal.isOpen && <ComputeJsonModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeJsonModal>}
-                {/* <ComputeModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeModal> */}
-                {settingsModal.isOpen && <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose} />}
-                {computeRunningModal.isOpen && <IsRunningModal isOpen={computeRunningModal.isOpen} onClose={computeRunningModal.onClose} />}
-            </Box>
+            {/*<TransformerMenu></TransformerMenu>*/}
+            <div ref={elementRef} className="joint-app joint-theme-modern">
+                <div className="app-header">
+                    <div className="app-title">
+                        <h1>Transformer</h1>
+                    </div>
+                    <div className="toolbar-container"/>
+                </div>
+                <div className="app-body">
+                    <div className="stencil-container"/>
+                    <div className="paper-container"/>
+                    <div className="inspector-container"/>
+                    <div className="navigator-container"/>
+                </div>
+            </div>
         </>
+
     );
 };
 
