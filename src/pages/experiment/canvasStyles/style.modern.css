@@ -141,3 +141,15 @@
     padding: 0 5px 0 34px;
     background: none;
 }
+
+.joint-stencil.joint-theme-modern .search {
+    display: block;
+    width: 205px;
+    color: #000000;
+    background: white;
+    border-radius: 3px;
+    outline: none;
+    padding-left: 9px;
+    border: 1px solid #D8DCDE;
+    margin: 10px 18px;
+}

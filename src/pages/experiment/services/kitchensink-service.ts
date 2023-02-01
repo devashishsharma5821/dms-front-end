@@ -49,13 +49,13 @@ class KitchenSinkService {
         this.keyboardService = keyboardService;
     }
 
-    startRappid() {
+    startRappid(stencil: any, group: any) {
 
         // Set the Theme of the Joint JS based on the CSS included in the canvasStyles
         joint.setTheme('modern');
 
         this.initializePaper();
-        this.initializeStencil();
+        this.initializeStencil(stencil, group);
         this.initializeSelection();
         this.initializeToolsAndInspector();
         this.initializeNavigator();
@@ -102,13 +102,13 @@ class KitchenSinkService {
         paperScroller.render().center();
     }
 
-    initializeStencil() {
+    initializeStencil(stencil: any, group: any) {
 
         const { stencilService, paperScroller, snaplines } = this;
-        stencilService.create(paperScroller, snaplines);
+        stencilService.create(paperScroller, snaplines, group);
 
         this.renderPlugin('.stencil-container', stencilService.stencil);
-        stencilService.setShapes();
+        stencilService.setShapes(stencil);
 
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
             console.log('1111')
@@ -221,7 +221,7 @@ class KitchenSinkService {
                 new ns.TargetAnchor(),
                 new ns.SourceArrowhead(),
                 new ns.TargetArrowhead(),
-                new ns.Segments,
+                new ns.Segments(),
                 new ns.Boundary({ padding: 15 }),
                 new ns.Remove({ offset: -20, distance: 40 })
             ]

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getComputeListData } from '../../query';
-import { Box, Flex, useColorModeValue, useDisclosure, Spinner } from '@chakra-ui/react';
+import { getComputeListData, getTransformersData } from '../../query';
+import { Box, Flex, useColorModeValue, useDisclosure, Spinner, useColorMode } from '@chakra-ui/react';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import Toolbar from '../../component/toolbar/Toolbar';
 import Designer from '../../component/designer/Designer';
@@ -31,7 +31,9 @@ import {HaloService} from './services/halo-service';
 import {KeyboardService} from './services/keyboard-service';
 import RappidService from './services/kitchensink-service';
 import {sampleGraphs} from './services/sample-graphs';
-
+import { TransformerListResponse } from '../../models/transformerListResponse';
+import { TransformerDetail } from '../../models/transformerDetail';
+import transformerMenuConf from '../../models/transformersConfig';
 
 
 const ExperimentsPage = () => {
@@ -67,7 +69,7 @@ const ExperimentsPage = () => {
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
     const [clearTimeouts, setClearTimeouts] = useState<{ clear: boolean }>({ clear: false });
     const [computeStats, setComputeStats] = useState<any>();
-
+    const { colorMode } = useColorMode();
     let dmsComputeRunningStatusIsDefaultOne;
 
     let unsubscribe: any = null;
@@ -110,14 +112,9 @@ const ExperimentsPage = () => {
             }
         }
     };
-    useEffect(() => {
-        if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
-    }, [DmsComputeData]);
 
-    useEffect(() => {
-
+    const intializeAndStartRapid = (stencil: any,  group: any) => {
         if(!rappid) {
-            console.log('Zuin', rappid)
             rappid = new RappidService(
                 elementRef.current,
                 new StencilService(),
@@ -126,9 +123,82 @@ const ExperimentsPage = () => {
                 new HaloService(),
                 new KeyboardService()
             );
-            rappid.startRappid();
+            rappid.startRappid(stencil, group);
             rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
         }
+    }
+    useEffect(() => {
+        if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
+    }, [DmsComputeData]);
+
+    useEffect(() => {
+            console.log('Zuin', rappid)
+            const { GET_TRANSFORMERS } = getTransformersData();
+            client
+                .query<TransformerListResponse<Array<TransformerDetail>>>({
+                    query: GET_TRANSFORMERS
+                })
+                .then((response) => {
+                    let transformerData = [...response.data.dmsTransformers];
+                        let transformersGroup:any  ={};
+                        let transformedNewDataForStencil: any;
+                        if(transformerData && transformerData.length > 0) {
+                            transformedNewDataForStencil = transformerData.reduce((transformersList: any=[], currentObj: any) => {
+                                //const { colorMode } = useColorMode();
+                                let stencilBg = (colorMode)?transformerMenuConf[currentObj['category']].backgroundDark:transformerMenuConf[currentObj['category']].backgroundLight;
+                                if(!transformersGroup[currentObj['category']])
+                                    transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
+                                let stencil = {
+                                    type: 'org.Member',
+                                    attrs: {
+                                        root: {
+                                            dataTooltip: 'Member',
+                                            dataTooltipPosition: 'left',
+                                            dataTooltipPositionSelector: '.joint-stencil'
+                                        },
+                                        '.rank': {
+                                            x:'10',
+                                            y:'16',
+                                            text: currentObj.name,
+                                            fill: '#08192E',
+                                            'font-family': 'Roboto Condensed',
+                                            'font-size': 12,
+                                            'font-weight': 'Bold',
+                                            'text-decoration': 'none',
+                                        },
+                                        '.card': {
+                                            fill: stencilBg,
+                                            stroke: 'transparent',
+                                            'stroke-width': 0,
+                                            'stroke-dasharray': '0',
+                                        },
+                                        image: {
+                                            width: 15,
+                                            height: 15,
+                                            x: 16,
+                                            y: 13,
+                                            ref: null,
+                                            'ref-x': null,
+                                            'ref-y':null,
+                                            'y-alignment': null,
+                                            xlinkHref:'src/asset/transformers.png'
+                                            //xlinkHref:'<TransformersIcon_black/>'
+                                        }
+                                    },
+                                    size:{
+                                        width:350
+                                    }
+                                };
+                                (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencil);
+                                return transformersList;
+                            })
+                        }
+                    console.log('Trans', transformerData);
+                    console.log('Trans 2', transformedNewDataForStencil);
+                    console.log('Trans 3', transformersGroup);
+                    intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
+                })
+                .catch((err) => console.error(err));
 
     }, []);
 

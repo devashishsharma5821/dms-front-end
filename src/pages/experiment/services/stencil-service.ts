@@ -5,13 +5,14 @@ export class StencilService {
 
     stencil: ui.Stencil | any;
 
-    create(paperScroller: ui.PaperScroller, snaplines: ui.Snaplines) {
+    create(paperScroller: ui.PaperScroller, snaplines: ui.Snaplines, group: any) {
 
         this.stencil = new ui.Stencil({
             paper: paperScroller,
             snaplines: snaplines,
+            label: 'Transformers',
             width: 240,
-            groups: this.getStencilGroups(),
+            groups: group,
             dropAnimation: true,
             groupsToggleButtons: true,
             paperOptions: function () {
@@ -27,14 +28,19 @@ export class StencilService {
                 'org.Member': ['attrs/.rank/text', 'attrs/root/dataTooltip', 'attrs/.name/text']
             },
             // Use default Grid Layout
-            layout: true,
+            layout: {
+                columns:1,
+                columnWidth:240,
+                rowGap:0,
+                rowHeight:50
+            },
             // Remove tooltip definition from clone
             dragStartClone: (cell: dia.Cell) => cell.clone().removeAttr('root/dataTooltip')
         });
     }
 
-    setShapes() {
-        this.stencil.load(this.getStencilShapes());
+    setShapes(stencilData: any) {
+        this.stencil.load(stencilData);
     }
 
     getStencilGroups() {
@@ -995,7 +1001,6 @@ export class StencilService {
                 }
             ],
             org: [
-
                 {
                     type: 'org.Member',
                     attrs: {
