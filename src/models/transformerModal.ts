@@ -47,7 +47,7 @@ export class TransformerModel extends shapes.basic.Generic {
                     style: {
                         color: theme.palette.getContrastText(theme.palette.background.paper),
                         'text-align': 'center',
-                        'font-family': 'Nunito,"Noto Sans",Arial,Helvetica,sans-serif;',
+                        'font-family': 'ibm-plex-sans,Arial,Helvetica,sans-serif;',
                         'font-size': '10px',
                         'font-weight': 700,
                         overflow: 'hidden'
