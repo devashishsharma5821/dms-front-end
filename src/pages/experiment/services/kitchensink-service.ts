@@ -86,6 +86,25 @@ class KitchenSinkService {
             snapLinks: { radius: 20 },
             sorting: joint.dia.Paper.sorting.APPROX,
             markAvailable: true,
+
+            highlighting: {
+                'magnetAvailability': {
+                    name: 'addClass',
+                    options: {
+                        className: 'available-magnet'
+                    }
+                },
+                'elementAvailability': {
+                    name: 'stroke',
+                    options: {
+                        padding: 20,
+                        attrs: {
+                            'stroke-width': 3,
+                            'stroke': '#ED6A5A'
+                        }
+                    }
+                }
+            },
             validateConnection: function(cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
                 // Prevent linking from input ports
                 if (magnetS && magnetS.getAttribute('port-group') === 'in') return false;
