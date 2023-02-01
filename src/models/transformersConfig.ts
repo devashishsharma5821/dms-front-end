@@ -6,9 +6,8 @@ const transformerMenuConf: any = {
         backgroundDark: "#C9C5E9",
         backgroundLight: "#ECEAFD",
         backgroundLightStroke: "#9792C8",
-        backgroundDarkStroke: "#9792C8",
-        borderDark: "#C9C5E9",
-        borderLight: "#9792C8"
+        backgroundDarkStroke: "#C9C5E9",
+
     },
     'Anomaly Detection/Imputation': {
         category: 'Anomaly Detection/Imputation',
@@ -16,8 +15,9 @@ const transformerMenuConf: any = {
         icon: "AnomalyDetectionIcon",
         backgroundDark: "#83C7FB",
         backgroundLight: "#E3F7FA",
-        borderDark: "#83C7FB",
-        borderLight: "#97C2C9"
+        backgroundLightStroke: "#97C2C9",
+        backgroundDarkStroke: "#83C7FB",
+
     },
     'Promotion Model': {
         category: 'Promotion Model',
@@ -25,8 +25,8 @@ const transformerMenuConf: any = {
         icon: "PromotionModelsIcon",
         backgroundDark: "#FFC2C8",
         backgroundLight: "#FEEBEE",
-        borderDark: "#FFC2C8",
-        borderLight: "#C0999F"
+        backgroundLightStroke: "#C0999F",
+        backgroundDarkStroke: "#FFC2C8",
     },
     'Time-Series Models': {
         category: 'Time-Series Models',
@@ -34,8 +34,9 @@ const transformerMenuConf: any = {
         icon: "TimeSeriesModelsIcon",
         backgroundDark: "#E9E5CB",
         backgroundLight: "#FDFBEA",
-        borderDark: "#E9E5CB",
-        borderLight: "#C9C49C"
+        backgroundLightStroke: "#C9C49C",
+        backgroundDarkStroke: "#E9E5CB",
+
     },
     'Feature Extraction': {
         category: 'Feature Extraction',
@@ -43,8 +44,8 @@ const transformerMenuConf: any = {
         icon: "FeatureExtractionIcon",
         backgroundDark: "#F6C99F",
         backgroundLight: "#FBF3E3",
-        borderDark: "#F6C99F",
-        borderLight: "#DAC8A1"
+        backgroundLightStroke: "#DAC8A1",
+        backgroundDarkStroke: "#F6C99F",
     },
     'Dataframe Manipulation': {
         category: 'Dataframe Manipulation',
@@ -52,8 +53,8 @@ const transformerMenuConf: any = {
         icon: "DataFrameManipulationIcon",
         backgroundDark: "#80E0C0",
         backgroundLight: "#F1FFF2",
-        borderDark: "#80E0C0",
-        borderLight: "#53AC59"
+        backgroundLightStroke: "#53AC59",
+        backgroundDarkStroke: "#80E0C0",
     },
     'Aggregation/Disaggregation': {
         category: 'Aggregation/Disaggregation',
@@ -61,8 +62,8 @@ const transformerMenuConf: any = {
         icon: "AggregationDisaggregationIcon",
         backgroundDark: "#B9B8FF",
         backgroundLight: "#ECF5FF",
-        borderDark: "#B9B8FF",
-        borderLight: "#5686BD"
+        backgroundLightStroke: "#5686BD",
+        backgroundDarkStroke: "#B9B8FF",
     },
     'Artificial Neural Network': {
         category: 'Artificial Neural Network',
@@ -70,8 +71,8 @@ const transformerMenuConf: any = {
         icon: "ArtificialNeuralNetworkIcon",
         backgroundDark: "#EDEDED",
         backgroundLight: "#EDEDED",
-        borderDark: "#EDEDED",
-        borderLight: "#C1BDBD"
+        backgroundLightStroke: "#C1BDBD",
+        backgroundDarkStroke: "#EDEDED",
     },
     'Key Performance Indicator': {
         category: 'Key Performance Indicator',
@@ -79,8 +80,8 @@ const transformerMenuConf: any = {
         icon: "KeyPerformanceIndicatorIcon",
         backgroundDark: "#CEE095",
         backgroundLight: "#F8FFE9",
-        borderDark: "#CEE095",
-        borderLight: "#BEC8A9"
+        backgroundLightStroke: "#BEC8A9",
+        backgroundDarkStroke: "#CEE095",
     },
     'Machine Learning Models': {
         category: 'Machine Learning Models',
@@ -88,8 +89,8 @@ const transformerMenuConf: any = {
         icon: "MachineLearningModelsIcon",
         backgroundDark: "#F9BFFF",
         backgroundLight: "#FFF6F0",
-        borderDark: "#F9BFFF",
-        borderLight: "#A75A2E"
+        backgroundLightStroke: "#A75A2E",
+        backgroundDarkStroke: "#F9BFFF",
     },
     'Custom Transformers': {
         category: 'Custom Transformers',
@@ -97,8 +98,8 @@ const transformerMenuConf: any = {
         icon: "CustomTransformersIcon",
         backgroundDark: "#C1E0EB",
         backgroundLight: "#E8F4F4",
-        borderDark: "#C1E0EB",
-        borderLight: "#90B9BF"
+        backgroundLightStroke: "#90B9BF",
+        backgroundDarkStroke: "#C1E0EB",
     },
 }
 export default transformerMenuConf;

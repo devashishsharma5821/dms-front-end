@@ -83,7 +83,22 @@ class KitchenSinkService {
             defaultConnectionPoint: appShapes.app.Link.connectionPoint,
             interactive: { linkMove: false },
             async: true,
-            sorting: joint.dia.Paper.sorting.APPROX
+            snapLinks: { radius: 20 },
+            sorting: joint.dia.Paper.sorting.APPROX,
+            markAvailable: true,
+            validateConnection: function(cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+                // Prevent linking from input ports
+                if (magnetS && magnetS.getAttribute('port-group') === 'in') return false;
+                // Prevent linking from output ports to input ports within one element
+                if (cellViewS === cellViewT) return false;
+                // Prevent linking to output ports
+                return magnetT && magnetT.getAttribute('port-group') === 'in';
+            },
+            validateMagnet: function(cellView, magnet) {
+                // Note that this is the default behaviour. It is shown for reference purposes.
+                // Disable linking interaction for magnets marked as passive
+                return magnet.getAttribute('magnet') !== 'passive';
+            }
         });
 
         // paper.on('blank:mousewheel', _.partial(this.onMousewheel, null), this);

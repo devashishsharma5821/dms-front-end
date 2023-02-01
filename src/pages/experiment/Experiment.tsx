@@ -34,7 +34,7 @@ import {sampleGraphs} from './services/sample-graphs';
 import { TransformerListResponse } from '../../models/transformerListResponse';
 import { TransformerDetail } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
-
+import { shapes } from '@antuit/rappid-v1';
 
 const ExperimentsPage = () => {
 
@@ -150,34 +150,32 @@ const ExperimentsPage = () => {
                                 let stencilStroke = (colorMode)?transformerMenuConf[currentObj['category']].backgroundLightStroke:transformerMenuConf[currentObj['category']].backgroundLightStroke;
                                 if(!transformersGroup[currentObj['category']])
                                     transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
-                                console.log('Current Obj', currentObj);
-                                let stencil =
-                                {
-                                    type: 'standard.Rectangle',
-                                        size: { width: 257, height: 52 },
+
+                                const stencilMarkup = new shapes.standard.Rectangle({
+                                    size: { width: 257, height: 52 },
                                     attrs: {
                                         root: {
-                                            dataTooltip: 'Rectangle',
-                                                dataTooltipPosition: 'left',
-                                                dataTooltipPositionSelector: '.joint-stencil'
+                                            dataTooltip: currentObj.name,
+                                            dataTooltipPosition: 'left',
+                                            dataTooltipPositionSelector: '.joint-stencil'
                                         },
                                         body: {
                                             rx: 2,
-                                                ry: 2,
-                                                width: 50,
-                                                height: 30,
-                                                fill: stencilBg,
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1,
-                                                strokeDasharray: '0'
+                                            ry: 2,
+                                            width: 50,
+                                            height: 30,
+                                            fill: stencilBg,
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1,
+                                            strokeDasharray: '0'
                                         },
                                         label: {
-                                                text: currentObj.name,
-                                                fill: '#08192E',
-                                                fontFamily: 'ibm-plex-sans',
-                                                fontWeight: '600',
-                                                fontSize: 14,
-                                                strokeWidth: 0
+                                            text: currentObj.name,
+                                            fill: '#08192E',
+                                            fontFamily: 'ibm-plex-sans',
+                                            fontWeight: '600',
+                                            fontSize: 14,
+                                            strokeWidth: 0
                                         }
                                     },
                                     ports: {
@@ -187,19 +185,21 @@ const ExperimentsPage = () => {
                                                     tagName: 'circle',
                                                     selector: 'portBody',
                                                     attributes: {
-                                                        'r': 10
+                                                        'r': 5
                                                     }
                                                 }],
-                                                    attrs: {
+                                                attrs: {
                                                     portBody: {
                                                         magnet: true,
-                                                            fill: '#61549c',
-                                                            strokeWidth: 0
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        strokeWidth: 1
                                                     },
                                                     portLabel: {
                                                         fontSize: 11,
-                                                            fill: '#61549c',
-                                                            fontWeight: 800
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        fontWeight: 800
                                                     }
                                                 },
                                                 position: {
@@ -208,7 +208,7 @@ const ExperimentsPage = () => {
                                                 label: {
                                                     position: {
                                                         name: 'left',
-                                                            args: {
+                                                        args: {
                                                             y: 0
                                                         }
                                                     }
@@ -219,28 +219,30 @@ const ExperimentsPage = () => {
                                                     tagName: 'circle',
                                                     selector: 'portBody',
                                                     attributes: {
-                                                        'r': 10
+                                                        'r': 5
                                                     }
                                                 }],
-                                                    position: {
+                                                position: {
                                                     name: 'right'
                                                 },
                                                 attrs: {
                                                     portBody: {
                                                         magnet: true,
-                                                            fill: '#61549c',
-                                                            strokeWidth: 0
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        strokeWidth: 1
                                                     },
                                                     portLabel: {
-                                                            fontSize: 11,
-                                                            fill: '#61549c',
-                                                            fontWeight: 800
+                                                        fontSize: 11,
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        fontWeight: 800
                                                     }
                                                 },
                                                 label: {
                                                     position: {
                                                         name: 'right',
-                                                            args: {
+                                                        args: {
                                                             y: 0
                                                         }
                                                     }
@@ -248,50 +250,53 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     }
+                                });
+                                let inputPorts = [];
+                                let outputPorts = [];
+                                if(currentObj.inputs.length > 0) {
+                                    inputPorts = currentObj.inputs.map((input: any) => {
+                                        return {
+                                            group: 'in',
+                                            id: input.id,
+                                            isRequired: input.isRequired || null,
+                                            isExported: input.isExported || null,
+                                            type: input.type || null,
+                                            attrs: {
+                                                label: {
+                                                    text:  input.name
+                                                }
+                                            }
+                                        }
+                                    });
                                 };
-                                // let stencil = {
-                                //     type: 'basic.Rect',
-                                //     attrs: {
-                                //         root: {
-                                //             dataTooltip: 'Member',
-                                //             dataTooltipPosition: 'left',
-                                //             dataTooltipPositionSelector: '.joint-stencil'
-                                //         },
-                                //         '.rank': {
-                                //             x:'10',
-                                //             y:'16',
-                                //             text: currentObj.name,
-                                //             fill: '#08192E',
-                                //             'font-family': 'Roboto Condensed',
-                                //             'font-size': 12,
-                                //             'font-weight': 'Bold',
-                                //             'text-decoration': 'none',
-                                //         },
-                                //         '.card': {
-                                //             fill: stencilBg,
-                                //             stroke: 'transparent',
-                                //             'stroke-width': 0,
-                                //             'stroke-dasharray': '0',
-                                //         },
-                                //         image: {
-                                //             width: 15,
-                                //             height: 15,
-                                //             x: 16,
-                                //             y: 13,
-                                //             href: 'src/pages/experiment/services/icons/TransformersIcon.svg'
-                                //         }
-                                //     },
-                                //     size:{
-                                //         width:350
-                                //     }
-                                // };
-                                (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencil);
+                                if(currentObj.outputs.length > 0) {
+                                    outputPorts = currentObj.outputs.map((output: any) => {
+                                        return {
+                                            group: 'out',
+                                            id: output.id,
+                                            isRequired: output.isRequired || null,
+                                            isExported: output.isExported || null,
+                                            type: output.type || null,
+                                            attrs: {
+                                                label: {
+                                                    text:  output.name
+                                                }
+                                            }
+                                        }
+                                    });
+                                };
+                                const combinedGroupPorts = [...inputPorts, ...outputPorts];
+                                console.log('INput', inputPorts);
+                                console.log('Output', outputPorts);
+                                console.log('Combined', combinedGroupPorts);
+                                stencilMarkup.addPorts(combinedGroupPorts);
+                                (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
                                 return transformersList;
                             })
                         }
-                    console.log('Trans', transformerData);
-                    console.log('Trans 2', transformedNewDataForStencil);
-                    console.log('Trans 3', transformersGroup);
+                    // console.log('Trans', transformerData);
+                    // console.log('Trans 2', transformedNewDataForStencil);
+                    // console.log('Trans 3', transformersGroup);
                     intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
                 })
                 .catch((err) => console.error(err));
