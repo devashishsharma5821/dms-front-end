@@ -19,7 +19,7 @@ import {
     Stack,
     Spinner
 } from '@chakra-ui/react';
-import { AttachmentIcon, DownloadIcon } from '@chakra-ui/icons';
+
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { ColDef } from 'ag-grid-community';
@@ -29,6 +29,8 @@ import { AgGridReact } from 'ag-grid-react';
 import SearchComponent from '../../component/search/SearchComponent';
 import { ComputeContext } from '../../context/computeContext';
 import { v4 } from 'uuid';
+import { DownloadIcon } from '../../assets/icons/DownloadIcon';
+import AttachmentIcon from '../../assets/icons/AttachmentIcon';
 const Output = (props: any) => {
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
@@ -44,13 +46,13 @@ const Output = (props: any) => {
     const actionsRow = (params: any) => {
         return (
             <Flex height={'inherit'}>
-                <Box ml={'-10px'} onClick={() => onEditClickHandler(params.data)}>
+                <Box mt={'10px'} mb={'10px'} onClick={() => onEditClickHandler(params.data)}>
                     <EditIcon />
                 </Box>
-                <Box ml={'18px'}>
-                    <AttachmentIcon color={'#666C80'} />
+                <Box mt={'7px'} ml={'18px'}>
+                    <AttachmentIcon />
                 </Box>
-                <Box ml={'18px'}>
+                <Box mt={'8px'} ml={'18px'}>
                     <DownloadIcon color={'#666C80'} />
                 </Box>
             </Flex>
