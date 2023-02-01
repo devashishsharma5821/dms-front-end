@@ -1,10 +1,63 @@
-.chakra-stack div:nth-child(2){
-    margin-inline-start: 0;
-}
-.chakra-modal__body::-webkit-scrollbar{
-    display: none;
-}
-.chakra-modal__body{
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+//.chakra-stack div:nth-child(2){
+//    margin-inline-start: 0;
+//}
+//.chakra-modal__body::-webkit-scrollbar{
+//    display: none;
+//}
+//.chakra-modal__body{
+//    -ms-overflow-style: none;
+//    scrollbar-width: none;
+//    padding: 0 !important;
+//}
+//#stencil-container {
+//    width: 272px;
+//    margin: 0 auto;
+//}
+//.joint-stencil {
+//    position: relative !important;
+//    input.search {
+//        width: 257px;
+//        height: 32px;
+//        border-radius: 4px;
+//        padding: 0 13px;
+//        // margin-left: 18px;
+//    }
+//    .content {
+//        position: relative !important;
+//        width: 257px;
+//        top:20px !important;
+//    }
+//}
+//.joint-stencil.joint-theme-default .search{
+//    background: #FFFFFF;
+//    border: 1px solid #D8DCDE;
+//}
+//.joint-stencil.joint-theme-default .groups-toggle .btn {
+//    position: relative !important;
+//    left: 10px;
+//}
+//div.joint-stencil.joint-theme-default {
+//    border: none ;
+//    background: transparent;
+//}
+//div.joint-paper.joint-theme-default{
+//    background: transparent;
+//}
+//div.joint-stencil.joint-theme-default .groups-toggle .btn{
+//    width: unset;
+//    border: none;
+//    padding: 15px;
+//}
+//div.joint-stencil.joint-theme-default .groups-toggle .btn:hover{
+//    background: transparent;
+//}
+//.v-line {
+//    font-size: 16px !important;
+//}
+//div.joint-stencil.joint-theme-default .group, .joint-stencil.joint-theme-default .group:first-child{
+//    border: none;
+//}
+//text{
+//    text-align: center;
+//    text-anchor: end;
+//}

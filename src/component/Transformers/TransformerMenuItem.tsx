@@ -47,11 +47,15 @@ const TransformerMenuItem = (props: any) => {
 
     const CurrentComponent = (colorMode === 'light')?iconComponents[props.config.icon]:iconComponentsDark[props.config.icon];
 
+    const transformerAdded = (transformer:any)=>{
+        props.transformerClicked(transformer);
+    }
+
     return (
         <ListItem id={'list-' + props.index}>
             <Button leftIcon={<CurrentComponent />} h="52px" boxShadow="0px 3px 3px rgba(0, 0, 0, 0.08);" borderRadius="4px"
-                justifyContent="flex-start" textAlign="left"  borderColor={accordianItemBorder} bg={accordianItemBg}
-                _hover={{ background: accordianItemBg }} color={accordianTextColor} fontSize='16px' colorScheme='teal' variant='outline' width='257px'>{props.name}</Button>
+                    justifyContent="flex-start" textAlign="left"  borderColor={accordianItemBorder} bg={accordianItemBg}
+                    _hover={{ background: accordianItemBg }} color={accordianTextColor} fontSize='16px' colorScheme='teal' variant='outline' width='257px' onClick={()=>{transformerAdded(props.transformerData)}}>{props.transformerData.name}</Button>
         </ListItem>
     )
 }

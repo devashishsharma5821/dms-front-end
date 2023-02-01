@@ -1,151 +1,74 @@
-import { Box, Button, useColorModeValue, Divider, Flex, Center, useColorMode, IconButton } from '@chakra-ui/react';
-import { useDisclosure } from '@chakra-ui/react-use-disclosure';
-import { useRef, useState, useEffect } from 'react';
-import { useApolloClient } from '@apollo/client';
+import { Box, Button, useColorModeValue, Divider, Flex, Center, useColorMode, IconButton } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react-use-disclosure";
+import { useRef, useState, useEffect } from "react";
+import { useApolloClient } from "@apollo/client";
 import './TransformerMenu.scss';
-
-import { Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, Accordion, AccordionItem, AccordionButton, AccordionPanel, List, ListItem } from '@chakra-ui/react';
-import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
-import DownDeltaIcon from '../../assets/icons/DownDeltaIcon';
-import RightDeltaIcon from '../../assets/icons/RightDeltaIcon';
 import {
-    AggregationDisaggregationIcon,
-    AnomalyDetectionIcon,
-    ArtificialNeuralNetworkIcon,
-    CustomTransformersIcon,
-    DataFrameManipulationIcon,
-    FeatureExtractionIcon,
-    KeyPerformanceIndicatorIcon,
-    MachineLearningModelsIcon,
-    PromotionModelsIcon,
-    TimeSeriesModelsIcon,
-    TransformersIcon,
-    AggregationDisaggregationIcon_white,
-    AnomalyDetectionIcon_white,
-    ArtificialNeuralNetworkIcon_white,
-    CustomTransformersIcon_white,
-    DataFrameManipulationIcon_white,
-    FeatureExtractionIcon_white,
-    KeyPerformanceIndicatorIcon_white,
-    MachineLearningModelsIcon_white,
-    PromotionModelsIcon_white,
-    TimeSeriesModelsIcon_white,
-    TransformersIcon_white
-} from '../../assets/icons/AllTransformerIcons';
-import { TransformerDetail } from '../../models/transformerDetail';
-import { TransformerListResponse } from '../../models/transformerListResponse';
-import { getTransformersData } from '../../query';
-import SearchComponent from '../search/SearchComponent';
-import client from '../../apollo-client';
-import TransformerMenuItem from './TransformerMenuItem';
-import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
+    Drawer,
+    DrawerBody,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionPanel,
+    List,
+    ListItem,
+} from "@chakra-ui/react";
+import DoubleAngleLeftIcon from "../../assets/icons/DoubleAngleLeftIcon";
+import DownDeltaIcon from "../../assets/icons/DownDeltaIcon";
+import RightDeltaIcon from "../../assets/icons/RightDeltaIcon";
+import {
+    AggregationDisaggregationIcon, AnomalyDetectionIcon, ArtificialNeuralNetworkIcon,
+    CustomTransformersIcon, DataFrameManipulationIcon, FeatureExtractionIcon, KeyPerformanceIndicatorIcon,
+    MachineLearningModelsIcon, PromotionModelsIcon, TimeSeriesModelsIcon, TransformersIcon,
+    AggregationDisaggregationIcon_white, AnomalyDetectionIcon_white, ArtificialNeuralNetworkIcon_white,
+    CustomTransformersIcon_white, DataFrameManipulationIcon_white, FeatureExtractionIcon_white, KeyPerformanceIndicatorIcon_white,
+    MachineLearningModelsIcon_white, PromotionModelsIcon_white, TimeSeriesModelsIcon_white, TransformersIcon_white
+} from "../../assets/icons/AllTransformerIcons";
+import { TransformerDetail } from "../../models/transformerDetail";
+import { TransformerListResponse } from "../../models/transformerListResponse";
+import { getTransformersData } from "../../query";
+import SearchComponent from "../search/SearchComponent";
+import client from "../../apollo-client";
+import TransformerMenuItem from "./TransformerMenuItem";
+import DoubleAngleRightIcon from "../../assets/icons/DoubleAngleRightIcon";
+import React from "react";
+import { dia, linkTools, shapes, ui } from "@antuit/rappid-v1";
+import transformerMenuConf from "../../models/transformersConfig";
+//     AggregationDisaggregationIcon,
+//     AnomalyDetectionIcon,
+//     ArtificialNeuralNetworkIcon,
+//     CustomTransformersIcon,
+//     DataFrameManipulationIcon,
+//     FeatureExtractionIcon,
+//     KeyPerformanceIndicatorIcon,
+//     MachineLearningModelsIcon,
+//     PromotionModelsIcon,
+//     TimeSeriesModelsIcon,
+//     TransformersIcon,
+//     AggregationDisaggregationIcon_white,
+//     AnomalyDetectionIcon_white,
+//     ArtificialNeuralNetworkIcon_white,
+//     CustomTransformersIcon_white,
+//     DataFrameManipulationIcon_white,
+//     FeatureExtractionIcon_white,
+//     KeyPerformanceIndicatorIcon_white,
+//     MachineLearningModelsIcon_white,
+//     PromotionModelsIcon_white,
+//     TimeSeriesModelsIcon_white,
+//     TransformersIcon_white
+// } from '../../assets/icons/AllTransformerIcons';
 
 interface DynamicObject {
     [key: string]: any;
 }
 
 const TransformerMenu = (props: any) => {
-    const transformerMenuConf: any = {
-        'Input/Output': {
-            category: 'Input/Output',
-            order: 1,
-            icon: 'TransformersIcon',
-            backgroundDark: '#C9C5E9',
-            backgroundLight: '#ECEAFD',
-            borderDark: '#C9C5E9',
-            borderLight: '#9792C8'
-        },
-        'Anomaly Detection/Imputation': {
-            category: 'Anomaly Detection/Imputation',
-            order: 4,
-            icon: 'AnomalyDetectionIcon',
-            backgroundDark: '#83C7FB',
-            backgroundLight: '#E3F7FA',
-            borderDark: '#83C7FB',
-            borderLight: '#97C2C9'
-        },
-        'Promotion Model': {
-            category: 'Promotion Model',
-            order: 3,
-            icon: 'PromotionModelsIcon',
-            backgroundDark: '#FFC2C8',
-            backgroundLight: '#FEEBEE',
-            borderDark: '#FFC2C8',
-            borderLight: '#C0999F'
-        },
-        'Time-Series Models': {
-            category: 'Time-Series Models',
-            order: 2,
-            icon: 'TimeSeriesModelsIcon',
-            backgroundDark: '#E9E5CB',
-            backgroundLight: '#FDFBEA',
-            borderDark: '#E9E5CB',
-            borderLight: '#C9C49C'
-        },
-        'Feature Extraction': {
-            category: 'Feature Extraction',
-            order: 5,
-            icon: 'FeatureExtractionIcon',
-            backgroundDark: '#F6C99F',
-            backgroundLight: '#FBF3E3',
-            borderDark: '#F6C99F',
-            borderLight: '#DAC8A1'
-        },
-        'Dataframe Manipulation': {
-            category: 'Dataframe Manipulation',
-            order: 6,
-            icon: 'DataFrameManipulationIcon',
-            backgroundDark: '#80E0C0',
-            backgroundLight: '#F1FFF2',
-            borderDark: '#80E0C0',
-            borderLight: '#53AC59'
-        },
-        'Aggregation/Disaggregation': {
-            category: 'Aggregation/Disaggregation',
-            order: 7,
-            icon: 'AggregationDisaggregationIcon',
-            backgroundDark: '#B9B8FF',
-            backgroundLight: '#ECF5FF',
-            borderDark: '#B9B8FF',
-            borderLight: '#5686BD'
-        },
-        'Artificial Neural Network': {
-            category: 'Artificial Neural Network',
-            order: 8,
-            icon: 'ArtificialNeuralNetworkIcon',
-            backgroundDark: '#EDEDED',
-            backgroundLight: '#EDEDED',
-            borderDark: '#EDEDED',
-            borderLight: '#C1BDBD'
-        },
-        'Key Performance Indicator': {
-            category: 'Key Performance Indicator',
-            order: 9,
-            icon: 'KeyPerformanceIndicatorIcon',
-            backgroundDark: '#CEE095',
-            backgroundLight: '#F8FFE9',
-            borderDark: '#CEE095',
-            borderLight: '#BEC8A9'
-        },
-        'Machine Learning Models': {
-            category: 'Machine Learning Models',
-            order: 10,
-            icon: 'MachineLearningModelsIcon',
-            backgroundDark: '#F9BFFF',
-            backgroundLight: '#FFF6F0',
-            borderDark: '#F9BFFF',
-            borderLight: '#A75A2E'
-        },
-        'Custom Transformers': {
-            category: 'Custom Transformers',
-            order: 11,
-            icon: 'CustomTransformersIcon',
-            backgroundDark: '#C1E0EB',
-            backgroundLight: '#E8F4F4',
-            borderDark: '#C1E0EB',
-            borderLight: '#90B9BF'
-        }
-    };
+
+
     const iconComponents: any = {
         AggregationDisaggregationIcon: AggregationDisaggregationIcon,
         TransformersIcon: TransformersIcon,
@@ -161,18 +84,18 @@ const TransformerMenu = (props: any) => {
     };
 
     const iconComponentsDark: any = {
-        AggregationDisaggregationIcon: AggregationDisaggregationIcon_white,
-        TransformersIcon: TransformersIcon_white,
-        AnomalyDetectionIcon: AnomalyDetectionIcon_white,
-        PromotionModelsIcon: PromotionModelsIcon_white,
-        TimeSeriesModelsIcon: TimeSeriesModelsIcon_white,
-        FeatureExtractionIcon: FeatureExtractionIcon_white,
-        DataFrameManipulationIcon: DataFrameManipulationIcon_white,
-        ArtificialNeuralNetworkIcon: ArtificialNeuralNetworkIcon_white,
-        KeyPerformanceIndicatorIcon: KeyPerformanceIndicatorIcon_white,
-        MachineLearningModelsIcon: MachineLearningModelsIcon_white,
-        CustomTransformersIcon: CustomTransformersIcon_white
-    };
+        'AggregationDisaggregationIcon': AggregationDisaggregationIcon_white,
+        'TransformersIcon': TransformersIcon_white,
+        'AnomalyDetectionIcon': AnomalyDetectionIcon_white,
+        'PromotionModelsIcon': PromotionModelsIcon_white,
+        'TimeSeriesModelsIcon': TimeSeriesModelsIcon_white,
+        'FeatureExtractionIcon': FeatureExtractionIcon_white,
+        'DataFrameManipulationIcon': DataFrameManipulationIcon_white,
+        'ArtificialNeuralNetworkIcon': ArtificialNeuralNetworkIcon_white,
+        'KeyPerformanceIndicatorIcon': KeyPerformanceIndicatorIcon_white,
+        'MachineLearningModelsIcon': MachineLearningModelsIcon_white,
+        'CustomTransformersIcon': CustomTransformersIcon_white,
+    }
     const [transformarsData, setTransformarsData] = useState(new Array<TransformerDetail>());
     const [formatedTransformersData, setFormatedTransformersData] = useState<DynamicObject>({});
     const [sortedTransformersData, setSortedTransformersData] = useState(Array<string>);
@@ -188,12 +111,79 @@ const TransformerMenu = (props: any) => {
     const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     const accordianItemColor = useColorModeValue('light.veryDarkBlue', 'dark.gray');
+    //const [mainPaper, setMainPaper]  = React.useState<dia.Paper>(props.paper);
+    // const [mainGraph, SetMainGraph]  = React.useState<dia.Graph>(props.graph);
+    // const  [maiPaperScroller, setMainPaperScroller] = React.useState<ui.PaperScroller>(props.paperScroller);
+    //  const [snaplines, setSnaplines] = React.useState<ui.Snaplines>(props.snaplines);
+    const [mainSelection, setMainSelection] = React.useState<any>(props.mainSelection);
+    const [clipboard, setClipboard] = React.useState<ui.Clipboard>();
+
+    const canvasBg = useColorModeValue('white', '#171717');
+    let transformersGroup:any = {};
+    //new joint.ui.Snaplines({ paper: paper });
     /*
      * for grouping transformers data by category and returning formatted object
-     */
+    */
+    let  TransformerGraph = new dia.Graph({}, { cellNamespace: shapes });
+    let TransformerPaper = new dia.Paper({
+        width: 0,
+        height: 0,
+        model: TransformerGraph,
+        gridSize:           20,
+        drawGrid: true,
+        snapLinks:          { radius: 600 },
+        markAvailable:      true,
+        background:         { color: canvasBg },
+        interactive: { linkMove: false },
+        frozen: true,
+        async: true,
+        sorting: dia.Paper.sorting.APPROX,
+        cellViewNamespace: shapes,
+        defaultLink: new dia.Link({
+            attrs: { ".marker-target": { d: "M 10 0 L 0 5 L 10 10 z" } }
+        }),
+        validateConnection: function(
+            cellViewS,
+            magnetS,
+            cellViewT,
+            magnetT,
+            end,
+            linkView
+        ) {
+            // Prevent loop linking
+            return magnetS !== magnetT;
+        },
+    });
+    //setPaper(papert);
+    // const selection = new ui.Selection({
+    //         paper: paper,
+    //     });
+    // paper.on('element:pointerdown', (elementView: joint.dia.ElementView, evt: joint.dia.Event) => {
+
+    //     // Select an element if CTRL/Meta key is pressed while the element is clicked.
+    //    // if (keyboard.isActive('ctrl meta', evt)) {
+    //         selection.collection.add(elementView.model);
+    //   //  }
+
+    // });
+
+
+    let TransformerPaperScroller = new ui.PaperScroller({
+        paper:TransformerPaper,
+        autoResizePaper: true,
+        scrollWhileDragging: true,
+        cursor: 'grab'
+    });
+
+    // setPaperScroller(paperScrollert);
+
+    TransformerPaperScroller?.render().center();
+
     const formatTransformerData = (transformerdata: any) => {
         sortTransformers();
-        return transformerdata.reduce((transformersList: any, currentObj: any) => {
+        return  transformerdata.reduce((transformersList: any, currentObj: any) => {
+            if(!transformersGroup[currentObj['category']])
+                transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
             (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(currentObj);
             return transformersList;
         }, {});
@@ -280,6 +270,15 @@ const TransformerMenu = (props: any) => {
      */
 
     useEffect(() => {
+
+        // setSnaplines(props.snaplines);
+
+        //let selectionT = new ui.Selection({ paper: TransformerPaper, useModelGeometry: true });
+        //setMainSelection(selectionT);
+        // let clipboardT = new ui.Clipboard();
+        //  setClipboard(clipboardT);
+        // selection.collection.on('reset add remove', onSelectionChange());
+        //loadTransformers();
         const { GET_TRANSFORMERS } = getTransformersData();
         client
             .query<TransformerListResponse<Array<TransformerDetail>>>({
@@ -288,21 +287,91 @@ const TransformerMenu = (props: any) => {
             .then((response) => {
                 let transformerdata = [...response.data.dmsTransformers];
                 setTransformarsData(transformerdata);
-                updateTransformersData(transformerdata);
+                updateTransformersData(transformerdata)
+                //  loadTransformers();
             })
             .catch((err) => console.error(err));
     }, []);
 
     useEffect(() => {
-        leftMenuOpen ? onOpen() : onClose();
+
+        if(leftMenuOpen) {
+            onOpen();
+            // const timer = setTimeout(()=>{ loadTransformers(); },100)
+        } else onClose();
+
     }, [leftMenuOpen]);
+
+    const updateMainPaperScroller = () =>{
+        // props.updatePaperScroll(TransformerPaperScroller);
+    }
+
+
+    // const loadTransformers = () =>{
+    //     // TransformerPaper.on('blank:pointerdown', (evt) => {
+    //     //     if (evt.shiftKey) mainSelection.startSelecting(evt);
+    //     //     if (evt.altKey) TransformerPaperScroller.startPanning(evt);
+    //     // });
+    //     //updateMainPaperScroller();
+    //
+    //     console.log('ShowUp', props.mainPaper )
+    //     const snapLinesNew = new ui.Snaplines({ paper: props.mainPaper });
+    //     stencilService.loadStencil(transformarsData, colorMode);
+    //     stencilService.create(props.mainPaperscroll, snapLinesNew);
+    //     //const stencilElement: any = document.getElementById("stencil-container") as HTMLDivElement;
+    //     //stencilElement.innerHTML = "";
+    //     stencilService.stencil.$el.appendTo('#stencil-container');
+    //     stencilService.stencil.render();
+    //     stencilService.setShapes();
+    //     //props.updatestencilService(stencilService);
+    //     //let selectionc = new ui.Selection({ paper: mainPaper, useModelGeometry: true });
+    //     // setMainSelection(selectionc);
+    //     stencilService.stencil.on('element:drop', (elementView: dia.ElementView,evt: dia.Event ) => {
+    //         // if(elementView)
+    //         console.log('Do I have a drop now')
+    //         mainSelection.collection.reset([elementView.model]);
+    //     });
+    //     // stencilService.stencil.on('element:dragstart', (elementView: dia.ElementView) => {
+    //     //     if(elementView)
+    //     //         props.addNewTransformer(elementView.model);
+    //     //        // mainSelection.collection.reset([elementView.model]);
+    //     // });
+    //     updateHtml();
+    // }
+    // const updateHtml = () =>{
+    //     const stencilElement = document.getElementById("stencil-container");
+    //     const toggleElement =  stencilElement?.getElementsByClassName('groups-toggle')[0];
+    //     toggleElement?.parentNode?.removeChild(toggleElement);
+    //     const searchElement =stencilElement?.getElementsByClassName('search-wrap')[0];
+    //     const toggleElement1 = toggleElement || "";
+    //     searchElement?.after(toggleElement1);
+    //     const groupLabel = stencilElement?.getElementsByClassName('group-label')[0];
+    //     groupLabel?.parentNode?.removeChild(groupLabel);
+    //     const expandBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn-expand')[0] as HTMLButtonElement;
+    //     expandBtn.innerText = "Expand All";
+    //     const collapseBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn-collapse')[0] as HTMLButtonElement;
+    //     collapseBtn.innerText = "Collapse All";
+    //
+    // }
+
+
 
     // const assignColors = (darkColor: string, lightColor: string) => {
     //     return useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     // }
+    const transformerAdded = (transformer:any)=>{
+        props.addNewTransformer(transformer);
+    }
+    const updatestencilService = ()=>{
+        // props.updateStencilService(stencilService);
+    }
 
+    useEffect(()=>{
+        // if(transformarsData && transformarsData.length>0)
+        //     loadTransformers()
+    },[colorMode])
     return (
-        <Box w="var(--chakra-space-60)" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
+        <Box w="var(--chakra-space-60)" h='calc(90vh)' bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
             <Box textAlign="right" ml="26">
                 <IconButton
                     aria-label="expand"
@@ -345,79 +414,8 @@ const TransformerMenu = (props: any) => {
                         Transformers
                     </DrawerHeader>
 
-                    <DrawerBody pl="0" pt="14" pr="17">
-                        <SearchComponent
-                            searchChange={(val: string) => {
-                                onSearchChange(val);
-                            }}
-                        />
-
-                        <Flex mt="18">
-                            <Box
-                                pl={0}
-                                pr={13}
-                                color={useColorModeValue('light.blue', 'dark.gray')}
-                                fontWeight="bold"
-                                textDecoration="none"
-                                cursor="pointer"
-                                onClick={() => {
-                                    toggleAccordian(true);
-                                }}
-                            >
-                                Expand All
-                            </Box>
-                            <Center height="38" h={5} background={useColorModeValue('light.blue', 'dark.gray')}>
-                                <Divider orientation="vertical" />
-                            </Center>
-                            <Box
-                                pl={12}
-                                color={useColorModeValue('light.blue', 'dark.gray')}
-                                fontWeight="bold"
-                                cursor="pointer"
-                                onClick={() => {
-                                    toggleAccordian(false);
-                                }}
-                            >
-                                Collapse All
-                            </Box>
-                        </Flex>
-                        <Accordion allowMultiple mt={22}>
-                            {sortedTransformersData.map((category: any, index) => {
-                                if (formatedTransformersData[sortedTransformersData[index]]) {
-                                    let iconName = transformerMenuConf[sortedTransformersData[index]].icon;
-                                    let CurrentIconComponent = colorMode === 'light' ? iconComponents[iconName] : iconComponentsDark[iconName];
-                                    return (
-                                        <AccordionItem border="none" _last={{ border: 'none' }} color={accordianItemColor} borderStyle="none" mb="22">
-                                            {({ isExpanded }) => (
-                                                <>
-                                                    <h2 style={{ border: 'none', borderStyle: 'none' }}>
-                                                        <AccordionButton>
-                                                            {isExpanded ? <DownDeltaIcon /> : <RightDeltaIcon />}
-                                                            <Box display="flex" justifyContent="center" fontWeight={600} alignItems="center" ml="12">
-                                                                <Box>
-                                                                    <CurrentIconComponent />
-                                                                </Box>
-                                                                <Box flex="1" textAlign="left" ml="10">
-                                                                    {sortedTransformersData[index]}
-                                                                </Box>
-                                                            </Box>
-                                                        </AccordionButton>
-                                                    </h2>
-                                                    <AccordionPanel pb={4} mt="10" width="257px" paddingStart="0" paddingEnd="0">
-                                                        <List spacing={3}>
-                                                            {[...formatedTransformersData[sortedTransformersData[index]]].map((transformerData: TransformerDetail, index) => {
-                                                                let curentConfig = transformerMenuConf[transformerData.category];
-                                                                return <TransformerMenuItem config={curentConfig} index={index} name={transformerData.name} />;
-                                                            })}
-                                                        </List>
-                                                    </AccordionPanel>
-                                                </>
-                                            )}
-                                        </AccordionItem>
-                                    );
-                                }
-                            })}
-                        </Accordion>
+                    <DrawerBody pl='0' pt='14' pr="17">
+                        <div className="stencil-container"/>
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>

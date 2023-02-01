@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getComputeListData } from '../../query';
-import './experiment.scss';
-import { Box, Flex, useColorModeValue, useDisclosure, Spinner } from '@chakra-ui/react';
+import { getComputeListData, getTransformersData } from '../../query';
+import { Box, Flex, useColorModeValue, useDisclosure, Spinner, useColorMode } from '@chakra-ui/react';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import Toolbar from '../../component/toolbar/Toolbar';
 import Designer from '../../component/designer/Designer';
@@ -19,7 +18,31 @@ import { BusHelper } from '../../helpers/BusHelper';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
 
+import "@antuit/rappid-v1/build/package/rappid.css";
+import './canvasStyles/style.css';
+import './canvasStyles/style.modern.css';
+import './canvasStyles/theme-picker.css';
+import './experiment.scss';
+// All this are new imports for the new Experiment Page I am trying to Design
+import {StencilService} from './services/stencil-service';
+import {ToolbarService} from './services/toolbar-service';
+import {InspectorService} from './services/inspector-service';
+import {HaloService} from './services/halo-service';
+import {KeyboardService} from './services/keyboard-service';
+import RappidService from './services/kitchensink-service';
+import {sampleGraphs} from './services/sample-graphs';
+import { TransformerListResponse } from '../../models/transformerListResponse';
+import { TransformerDetail } from '../../models/transformerDetail';
+import transformerMenuConf from '../../models/transformersConfig';
+import { shapes } from '@antuit/rappid-v1';
+
 const ExperimentsPage = () => {
+
+    // New Consts For the new Experiment Page I am designing.
+        let rappid: RappidService;
+        const elementRef = React.useRef<HTMLDivElement>(null);
+
+
     const [updateDmsDatabricksCredentialsValidToken, DmsComputeData, updateDmsComputeData, submitMessage, UserConfig, connectionState, hasSubscribed] = useAppStore(
         (state: ExperimentAppStoreState) => [
             state.updateDmsDatabricksCredentialsValidToken,
@@ -46,7 +69,7 @@ const ExperimentsPage = () => {
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
     const [clearTimeouts, setClearTimeouts] = useState<{ clear: boolean }>({ clear: false });
     const [computeStats, setComputeStats] = useState<any>();
-
+    const { colorMode } = useColorMode();
     let dmsComputeRunningStatusIsDefaultOne;
 
     let unsubscribe: any = null;
@@ -89,9 +112,196 @@ const ExperimentsPage = () => {
             }
         }
     };
+
+    const intializeAndStartRapid = (stencil: any,  group: any) => {
+        if(!rappid) {
+            rappid = new RappidService(
+                elementRef.current,
+                new StencilService(),
+                new ToolbarService(),
+                new InspectorService(),
+                new HaloService(),
+                new KeyboardService()
+            );
+            rappid.startRappid(stencil, group);
+            // Use below to load a sample Ready to go JSON
+            // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
+        }
+    }
     useEffect(() => {
         if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
     }, [DmsComputeData]);
+
+    useEffect(() => {
+            console.log('Zuin', rappid)
+            const { GET_TRANSFORMERS } = getTransformersData();
+            client
+                .query<TransformerListResponse<Array<TransformerDetail>>>({
+                    query: GET_TRANSFORMERS
+                })
+                .then((response) => {
+                    let transformerData = [...response.data.dmsTransformers];
+                        let transformersGroup:any  ={};
+                        let transformedNewDataForStencil: any;
+                        if(transformerData && transformerData.length > 0) {
+                            transformedNewDataForStencil = transformerData.reduce((transformersList: any=[], currentObj: any) => {
+                                //const { colorMode } = useColorMode();
+                                let stencilBg = (colorMode)?transformerMenuConf[currentObj['category']].backgroundDark:transformerMenuConf[currentObj['category']].backgroundLight;
+                                let stencilStroke = (colorMode)?transformerMenuConf[currentObj['category']].backgroundLightStroke:transformerMenuConf[currentObj['category']].backgroundLightStroke;
+                                if(!transformersGroup[currentObj['category']])
+                                    transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
+
+                                const stencilMarkup = new shapes.standard.Rectangle({
+                                    size: { width: 257, height: 52 },
+                                    attrs: {
+                                        root: {
+                                            dataTooltip: currentObj.name,
+                                            dataTooltipPosition: 'left',
+                                            dataTooltipPositionSelector: '.joint-stencil'
+                                        },
+                                        body: {
+                                            rx: 2,
+                                            ry: 2,
+                                            width: 50,
+                                            height: 30,
+                                            fill: stencilBg,
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1,
+                                            strokeDasharray: '0'
+                                        },
+                                        label: {
+                                            text: currentObj.name,
+                                            fill: '#08192E',
+                                            fontFamily: 'ibm-plex-sans',
+                                            fontWeight: '600',
+                                            fontSize: 14,
+                                            strokeWidth: 0
+                                        }
+                                    },
+                                    ports: {
+                                        groups: {
+                                            'in': {
+                                                markup: [{
+                                                    tagName: 'circle',
+                                                    selector: 'portBody',
+                                                    attributes: {
+                                                        'r': 5
+                                                    }
+                                                }],
+                                                attrs: {
+                                                    portBody: {
+                                                        magnet: true,
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        strokeWidth: 1
+                                                    },
+                                                    portLabel: {
+                                                        fontSize: 11,
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        fontWeight: 800
+                                                    }
+                                                },
+                                                position: {
+                                                    name: 'left'
+                                                },
+                                                label: {
+                                                    position: {
+                                                        name: 'left',
+                                                        args: {
+                                                            y: 0
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            'out': {
+                                                markup: [{
+                                                    tagName: 'circle',
+                                                    selector: 'portBody',
+                                                    attributes: {
+                                                        'r': 5
+                                                    }
+                                                }],
+                                                position: {
+                                                    name: 'right'
+                                                },
+                                                attrs: {
+                                                    portBody: {
+                                                        magnet: true,
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        strokeWidth: 1
+                                                    },
+                                                    portLabel: {
+                                                        fontSize: 11,
+                                                        fill: '#FFFFFF',
+                                                        stroke: stencilStroke || '#000000',
+                                                        fontWeight: 800
+                                                    }
+                                                },
+                                                label: {
+                                                    position: {
+                                                        name: 'right',
+                                                        args: {
+                                                            y: 0
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                let inputPorts = [];
+                                let outputPorts = [];
+                                if(currentObj.inputs.length > 0) {
+                                    inputPorts = currentObj.inputs.map((input: any) => {
+                                        return {
+                                            group: 'in',
+                                            id: input.id,
+                                            isRequired: input.isRequired || null,
+                                            isExported: input.isExported || null,
+                                            type: input.type || null,
+                                            attrs: {
+                                                label: {
+                                                    text:  input.name
+                                                }
+                                            }
+                                        }
+                                    });
+                                };
+                                if(currentObj.outputs.length > 0) {
+                                    outputPorts = currentObj.outputs.map((output: any) => {
+                                        return {
+                                            group: 'out',
+                                            id: output.id,
+                                            isRequired: output.isRequired || null,
+                                            isExported: output.isExported || null,
+                                            type: output.type || null,
+                                            attrs: {
+                                                label: {
+                                                    text:  output.name
+                                                }
+                                            }
+                                        }
+                                    });
+                                };
+                                const combinedGroupPorts = [...inputPorts, ...outputPorts];
+                                console.log('INput', inputPorts);
+                                console.log('Output', outputPorts);
+                                console.log('Combined', combinedGroupPorts);
+                                stencilMarkup.addPorts(combinedGroupPorts);
+                                (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
+                                return transformersList;
+                            })
+                        }
+                    // console.log('Trans', transformerData);
+                    // console.log('Trans 2', transformedNewDataForStencil);
+                    // console.log('Trans 3', transformersGroup);
+                    intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
+                })
+                .catch((err) => console.error(err));
+
+    }, []);
 
     useEffect(() => {
         client
@@ -298,37 +508,23 @@ const ExperimentsPage = () => {
     // React Hook
     return (
         <>
-            {loaderOpen && (
-                <Spinner color="red.500" size="xl">
-                    Runnings
-                </Spinner>
-            )}
-            <Box width={'100%'}>
-                <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar computeData={DmsComputeData} is_default={dmsComputeRunningStatusIsDefaultOne} />
-                </Box>
-                <Flex>
-                    <TransformerMenu />
-                    <Designer></Designer>
-                    <Box>
-                        {/*<a>{translationToUse[config['title']]}</a>*/}
-                        {/*<br></br>*/}
-                        {/*{message}*/}
-                        {/* <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
-                            Open
-                        </Button> */}
-                        <Details isOpen={isOpen} onClose={onClose}></Details>
-                        {/*<Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>*/}
-                        {/*    Change Translation*/}
-                        {/*</Button>*/}
-                    </Box>
-                </Flex>
-                {computeModal.isOpen && <ComputeJsonModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeJsonModal>}
-                {/* <ComputeModal isOpen={computeModal.isOpen} onClose={computeModal.onClose}></ComputeModal> */}
-                {settingsModal.isOpen && <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose} />}
-                {computeRunningModal.isOpen && <IsRunningModal isOpen={computeRunningModal.isOpen} onClose={computeRunningModal.onClose} />}
-            </Box>
+            {/*<TransformerMenu></TransformerMenu>*/}
+            <div ref={elementRef} className="joint-app joint-theme-modern">
+                <div className="app-header">
+                    <div className="app-title">
+                        <h1>Transformer</h1>
+                    </div>
+                    <div className="toolbar-container"/>
+                </div>
+                <div className="app-body">
+                    <div className="stencil-container"/>
+                    <div className="paper-container"/>
+                    <div className="inspector-container"/>
+                    <div className="navigator-container"/>
+                </div>
+            </div>
         </>
+
     );
 };
 
