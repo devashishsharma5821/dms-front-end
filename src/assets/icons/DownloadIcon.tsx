@@ -1,10 +1,6 @@
 /* eslint-disable max-len */
-import { propNames } from '@chakra-ui/react';
-import React from 'react';
 
-type LogoProps = {
-    children?: never;
-};
+import React from 'react';
 
 export const DownloadIcon: React.FC<any> = (props: any) => {
     return (
