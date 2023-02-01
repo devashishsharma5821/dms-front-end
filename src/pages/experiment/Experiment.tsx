@@ -147,103 +147,144 @@ const ExperimentsPage = () => {
                             transformedNewDataForStencil = transformerData.reduce((transformersList: any=[], currentObj: any) => {
                                 //const { colorMode } = useColorMode();
                                 let stencilBg = (colorMode)?transformerMenuConf[currentObj['category']].backgroundDark:transformerMenuConf[currentObj['category']].backgroundLight;
+                                let stencilStroke = (colorMode)?transformerMenuConf[currentObj['category']].backgroundLightStroke:transformerMenuConf[currentObj['category']].backgroundLightStroke;
                                 if(!transformersGroup[currentObj['category']])
                                     transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
-                                const portsIn = {
-                                    position: {
-                                        name: 'left'
-                                    },
-                                    attrs: {
-                                        portBody: {
-                                            magnet: true,
-                                            r: 10,
-                                            fill: '#023047',
-                                            stroke: '#023047'
-                                        }
-                                    },
-                                    label: {
-                                        position: {
-                                            name: 'left',
-                                            args: { y: 6 }
-                                        },
-                                        markup: [{
-                                            tagName: 'text',
-                                            selector: 'label',
-                                            className: 'label-text'
-                                        }]
-                                    },
-                                    markup: [{
-                                        tagName: 'circle',
-                                        selector: 'portBody'
-                                    }]
-                                };
-
-                                const portsOut = {
-                                    position: {
-                                        name: 'right'
-                                    },
-                                    attrs: {
-                                        portBody: {
-                                            magnet: true,
-                                            r: 10,
-                                            fill: '#E6A502',
-                                            stroke:'#023047'
-                                        }
-                                    },
-                                    label: {
-                                        position: {
-                                            name: 'right',
-                                            args: { y: 6 }
-                                        },
-                                        markup: [{
-                                            tagName: 'text',
-                                            selector: 'label',
-                                            className: 'label-text'
-                                        }]
-                                    },
-                                    markup: [{
-                                        // Markup
-                                    }]
-                                };
-                                let stencil = {
-                                    type: 'org.Member',
+                                console.log('Current Obj', currentObj);
+                                let stencil =
+                                {
+                                    type: 'standard.Rectangle',
+                                        size: { width: 257, height: 52 },
                                     attrs: {
                                         root: {
-                                            dataTooltip: 'Member',
-                                            dataTooltipPosition: 'left',
-                                            dataTooltipPositionSelector: '.joint-stencil'
+                                            dataTooltip: 'Rectangle',
+                                                dataTooltipPosition: 'left',
+                                                dataTooltipPositionSelector: '.joint-stencil'
                                         },
-                                        '.rank': {
-                                            x:'10',
-                                            y:'16',
-                                            text: currentObj.name,
-                                            fill: '#08192E',
-                                            'font-family': 'Roboto Condensed',
-                                            'font-size': 12,
-                                            'font-weight': 'Bold',
-                                            'text-decoration': 'none',
+                                        body: {
+                                            rx: 2,
+                                                ry: 2,
+                                                width: 50,
+                                                height: 30,
+                                                fill: stencilBg,
+                                                stroke: stencilStroke || '#000000',
+                                                strokeWidth: 1,
+                                                strokeDasharray: '0'
                                         },
-                                        '.card': {
-                                            fill: stencilBg,
-                                            stroke: 'transparent',
-                                            'stroke-width': 0,
-                                            'stroke-dasharray': '0',
-                                        },
-                                        image: {
-                                            width: 15,
-                                            height: 15,
-                                            x: 16,
-                                            y: 13,
-                                            href: 'src/pages/experiment/services/icons/TransformersIcon.svg'
+                                        label: {
+                                                text: currentObj.name,
+                                                fill: '#08192E',
+                                                fontFamily: 'ibm-plex-sans',
+                                                fontWeight: '600',
+                                                fontSize: 14,
+                                                strokeWidth: 0
                                         }
                                     },
                                     ports: {
-                                        items: [ portsIn, portsIn ]
-                                    },
-                                    size:{
-                                        width:350
+                                        groups: {
+                                            'in': {
+                                                markup: [{
+                                                    tagName: 'circle',
+                                                    selector: 'portBody',
+                                                    attributes: {
+                                                        'r': 10
+                                                    }
+                                                }],
+                                                    attrs: {
+                                                    portBody: {
+                                                        magnet: true,
+                                                            fill: '#61549c',
+                                                            strokeWidth: 0
+                                                    },
+                                                    portLabel: {
+                                                        fontSize: 11,
+                                                            fill: '#61549c',
+                                                            fontWeight: 800
+                                                    }
+                                                },
+                                                position: {
+                                                    name: 'left'
+                                                },
+                                                label: {
+                                                    position: {
+                                                        name: 'left',
+                                                            args: {
+                                                            y: 0
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            'out': {
+                                                markup: [{
+                                                    tagName: 'circle',
+                                                    selector: 'portBody',
+                                                    attributes: {
+                                                        'r': 10
+                                                    }
+                                                }],
+                                                    position: {
+                                                    name: 'right'
+                                                },
+                                                attrs: {
+                                                    portBody: {
+                                                        magnet: true,
+                                                            fill: '#61549c',
+                                                            strokeWidth: 0
+                                                    },
+                                                    portLabel: {
+                                                            fontSize: 11,
+                                                            fill: '#61549c',
+                                                            fontWeight: 800
+                                                    }
+                                                },
+                                                label: {
+                                                    position: {
+                                                        name: 'right',
+                                                            args: {
+                                                            y: 0
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 };
+                                // let stencil = {
+                                //     type: 'basic.Rect',
+                                //     attrs: {
+                                //         root: {
+                                //             dataTooltip: 'Member',
+                                //             dataTooltipPosition: 'left',
+                                //             dataTooltipPositionSelector: '.joint-stencil'
+                                //         },
+                                //         '.rank': {
+                                //             x:'10',
+                                //             y:'16',
+                                //             text: currentObj.name,
+                                //             fill: '#08192E',
+                                //             'font-family': 'Roboto Condensed',
+                                //             'font-size': 12,
+                                //             'font-weight': 'Bold',
+                                //             'text-decoration': 'none',
+                                //         },
+                                //         '.card': {
+                                //             fill: stencilBg,
+                                //             stroke: 'transparent',
+                                //             'stroke-width': 0,
+                                //             'stroke-dasharray': '0',
+                                //         },
+                                //         image: {
+                                //             width: 15,
+                                //             height: 15,
+                                //             x: 16,
+                                //             y: 13,
+                                //             href: 'src/pages/experiment/services/icons/TransformersIcon.svg'
+                                //         }
+                                //     },
+                                //     size:{
+                                //         width:350
+                                //     }
+                                // };
                                 (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencil);
                                 return transformersList;
                             })

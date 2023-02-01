@@ -5,6 +5,8 @@ const transformerMenuConf: any = {
         icon: "TransformersIcon",
         backgroundDark: "#C9C5E9",
         backgroundLight: "#ECEAFD",
+        backgroundLightStroke: "#9792C8",
+        backgroundDarkStroke: "#9792C8",
         borderDark: "#C9C5E9",
         borderLight: "#9792C8"
     },

@@ -84,7 +84,7 @@ export class StencilService {
                             fontSize: 11,
                             strokeWidth: 0
                         }
-                    },
+                    }
                 },
                 {
                     type: 'standard.Ellipse',
