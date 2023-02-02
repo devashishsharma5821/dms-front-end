@@ -1039,7 +1039,7 @@ export class StencilService {
                             'ref-x': null,
                             'ref-y': null,
                             'y-alignment': null,
-                            'xlink:href': '/icons/TransformersIcon.svg'
+                            'xlink:href': '/icons/TransformersIconLight.svg'
                         }
                     }
                 }

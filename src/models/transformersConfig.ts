@@ -2,7 +2,9 @@ const transformerMenuConf: any = {
     'Input/Output': {
         category: 'Input/Output',
         order: 1,
-        icon: "TransformersIcon",
+        iconLight: "TransformersIconLight.svg",
+        iconDark: "TransformersIconDark.svg",
+        iconWhite: "TransformersIconWhite.svg",
         backgroundDark: "#C9C5E9",
         backgroundLight: "#ECEAFD",
         backgroundLightStroke: "#9792C8",
@@ -12,7 +14,9 @@ const transformerMenuConf: any = {
     'Anomaly Detection/Imputation': {
         category: 'Anomaly Detection/Imputation',
         order: 4,
-        icon: "AnomalyDetectionIcon",
+        iconLight: "AnomalyIconLight.svg",
+        iconDark: "AnomalyIconDark.svg",
+        iconWhite: "AnomalyIconWhite.svg",
         backgroundDark: "#83C7FB",
         backgroundLight: "#E3F7FA",
         backgroundLightStroke: "#97C2C9",
@@ -22,7 +26,9 @@ const transformerMenuConf: any = {
     'Promotion Model': {
         category: 'Promotion Model',
         order: 3,
-        icon: "PromotionModelsIcon",
+        iconLight: "PromotionIconLight.svg",
+        iconDark: "PromotionIconDark.svg",
+        iconWhite: "PromotionIconWhite.svg",
         backgroundDark: "#FFC2C8",
         backgroundLight: "#FEEBEE",
         backgroundLightStroke: "#C0999F",
@@ -31,7 +37,9 @@ const transformerMenuConf: any = {
     'Time-Series Models': {
         category: 'Time-Series Models',
         order: 2,
-        icon: "TimeSeriesModelsIcon",
+        iconLight: "TimeSeriesModelsIconLight.svg",
+        iconDark: "TimeSeriesModelsIconDark.svg",
+        iconWhite: "TimeSeriesModelsIconWhite.svg",
         backgroundDark: "#E9E5CB",
         backgroundLight: "#FDFBEA",
         backgroundLightStroke: "#C9C49C",
@@ -41,7 +49,9 @@ const transformerMenuConf: any = {
     'Feature Extraction': {
         category: 'Feature Extraction',
         order: 5,
-        icon: "FeatureExtractionIcon",
+        iconLight: "FeatureExtractionIconLight.svg",
+        iconDark: "FeatureExtractionIconDark.svg",
+        iconWhite: "FeatureExtractionIconWhite.svg",
         backgroundDark: "#F6C99F",
         backgroundLight: "#FBF3E3",
         backgroundLightStroke: "#DAC8A1",
@@ -50,7 +60,9 @@ const transformerMenuConf: any = {
     'Dataframe Manipulation': {
         category: 'Dataframe Manipulation',
         order: 6,
-        icon: "DataFrameManipulationIcon",
+        iconLight: "DataFrameManipulationIconLight.svg",
+        iconDark: "DataFrameManipulationIconDark.svg",
+        iconWhite: "DataFrameManipulationIconWhite.svg",
         backgroundDark: "#80E0C0",
         backgroundLight: "#F1FFF2",
         backgroundLightStroke: "#53AC59",
@@ -59,7 +71,9 @@ const transformerMenuConf: any = {
     'Aggregation/Disaggregation': {
         category: 'Aggregation/Disaggregation',
         order: 7,
-        icon: "AggregationDisaggregationIcon",
+        iconLight: "AggregationDisaggregationIconLight.svg",
+        iconDark: "AggregationDisaggregationIconDark.svg",
+        iconWhite: "AggregationDisaggregationIconWhite.svg",
         backgroundDark: "#B9B8FF",
         backgroundLight: "#ECF5FF",
         backgroundLightStroke: "#5686BD",
@@ -68,7 +82,9 @@ const transformerMenuConf: any = {
     'Artificial Neural Network': {
         category: 'Artificial Neural Network',
         order: 8,
-        icon: "ArtificialNeuralNetworkIcon",
+        iconLight: "ArtificialNeuralNetworkIconLight.svg",
+        iconDark: "ArtificialNeuralNetworkIconDark.svg",
+        iconWhite: "ArtificialNeuralNetworkIconWhite.svg",
         backgroundDark: "#EDEDED",
         backgroundLight: "#EDEDED",
         backgroundLightStroke: "#C1BDBD",
@@ -77,7 +93,9 @@ const transformerMenuConf: any = {
     'Key Performance Indicator': {
         category: 'Key Performance Indicator',
         order: 9,
-        icon: "KeyPerformanceIndicatorIcon",
+        iconLight: "KeyPerformanceIndicatorIconLight.svg",
+        iconDark: "KeyPerformanceIndicatorIconDark.svg",
+        iconWhite: "KeyPerformanceIndicatorIconWhite.svg",
         backgroundDark: "#CEE095",
         backgroundLight: "#F8FFE9",
         backgroundLightStroke: "#BEC8A9",
@@ -86,7 +104,9 @@ const transformerMenuConf: any = {
     'Machine Learning Models': {
         category: 'Machine Learning Models',
         order: 10,
-        icon: "MachineLearningModelsIcon",
+        iconLight: "MachineLearningModelsIconLight.svg",
+        iconDark: "MachineLearningModelsIconDark.svg",
+        iconWhite: "MachineLearningModelsIconWhite.svg",
         backgroundDark: "#F9BFFF",
         backgroundLight: "#FFF6F0",
         backgroundLightStroke: "#A75A2E",
@@ -95,11 +115,14 @@ const transformerMenuConf: any = {
     'Custom Transformers': {
         category: 'Custom Transformers',
         order: 11,
-        icon: "CustomTransformersIcon",
+        iconLight: "CustomTransformersIconLight.svg",
+        iconDark: "CustomTransformersIconDark.svg",
+        iconWhite: "CustomTransformersIconWhite.svg",
         backgroundDark: "#C1E0EB",
         backgroundLight: "#E8F4F4",
         backgroundLightStroke: "#90B9BF",
         backgroundDarkStroke: "#C1E0EB",
     },
 }
+
 export default transformerMenuConf;

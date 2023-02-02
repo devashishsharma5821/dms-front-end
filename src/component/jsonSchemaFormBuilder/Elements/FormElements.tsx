@@ -22,7 +22,7 @@ export function TextField(props: FieldPropsType) {
 
 export function SelectField(props: FieldPropsType) {
     const { name, label, options, uiSchema, uiSchemaOptions, className } = props;
-    console.log('options', options)
+    // console.log('options', options)
     return (
         <div className={className} style={uiSchema}>
             {label && (

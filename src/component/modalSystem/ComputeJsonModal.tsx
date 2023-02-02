@@ -55,7 +55,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
 
     const handleSubmitCompute = (values: CreateComputeSubmitHandlerValues) => {
         let mutation: DocumentNode | null = null;
-        console.log('Values', values);
+        // console.log('Values', values);
         setIsDisabled(true);
         if (props?.isEdit) {
             if (!values.enable_autoscaling) {

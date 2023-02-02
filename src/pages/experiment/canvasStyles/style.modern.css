@@ -3,9 +3,11 @@
 }
 
 .joint-app.joint-theme-modern .app-title {
-    background: #30d0c6;
+    background: #F7FAFC;
+    font-weight: 600;
+    color: #08192E;
+    font-size: 24px;
 }
-
 .joint-app.joint-theme-modern .inspector-container {
     background: #383b61;
 }
