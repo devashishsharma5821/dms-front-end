@@ -209,12 +209,12 @@ const Compute = () => {
     //     checked = !checked;
     // };
     const defaultRowOnChange = (event: any, params: any) => {
-        console.log('event form switch', event.target.checked);
-        console.log('Parmas form switch', params);
+        // console.log('event form switch', event.target.checked);
+        // console.log('Parmas form switch', params);
         alertConfirm.onOpen();
     };
     const confirmAlertActionForDelete = () => {
-        console.log('Confirm Clicked for Delete');
+        // console.log('Confirm Clicked for Delete');
         client
             .mutate<ComputeDelete<DeleteComputeDetail>>({
                 mutation: dmsDeleteCompute(deleteComputeId)

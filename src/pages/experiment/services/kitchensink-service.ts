@@ -145,7 +145,6 @@ class KitchenSinkService {
         stencilService.setShapes(stencil);
 
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
-            console.log('1111')
             this.selection.collection.reset([elementView.model]);
         });
     }
@@ -161,7 +160,6 @@ class KitchenSinkService {
         // Initiate selecting when the user grabs the blank area of the paper while the Shift key is pressed.
         // Otherwise, initiate paper pan.
         this.paper.on('blank:pointerdown', (evt: joint.dia.Event, x: number, y: number) => {
-            console.log('2222')
             if (keyboard.isActive('shift', evt)) {
                 this.selection.startSelecting(evt);
             } else {
@@ -172,7 +170,6 @@ class KitchenSinkService {
         });
 
         this.paper.on('element:pointerdown', (elementView: joint.dia.ElementView, evt: joint.dia.Event) => {
-            console.log('333')
             // Select an element if CTRL/Meta key is pressed while the element is clicked.
             if (keyboard.isActive('ctrl meta', evt)) {
                 this.selection.collection.add(elementView.model);
@@ -181,7 +178,6 @@ class KitchenSinkService {
         });
 
         this.graph.on('remove', (cell: joint.dia.Cell) => {
-            console.log('444')
             // If element is removed from the graph, remove from the selection too.
             if (this.selection.collection.has(cell)) {
                 this.selection.collection.reset(this.selection.collection.models.filter((c: any) => c !== cell));
@@ -190,7 +186,6 @@ class KitchenSinkService {
         });
 
         this.selection.on('selection-box:pointerdown', (elementView: joint.dia.ElementView, evt: joint.dia.Event) => {
-            console.log('555')
             // Unselect an element if the CTRL/Meta key is pressed while a selected element is clicked.
             if (keyboard.isActive('ctrl meta', evt)) {
                 this.selection.collection.remove(elementView.model);
@@ -200,7 +195,6 @@ class KitchenSinkService {
     }
 
     onSelectionChange() {
-        console.log('666')
         const { paper, selection } = this;
         const { collection } = selection;
         paper.removeTools();
@@ -220,7 +214,6 @@ class KitchenSinkService {
     }
 
     selectPrimaryCell(cellView: joint.dia.CellView) {
-        console.log('777')
         const cell = cellView.model;
         if (cell.isElement()) {
             this.selectPrimaryElement(<joint.dia.ElementView>cellView);
@@ -231,7 +224,6 @@ class KitchenSinkService {
     }
 
     selectPrimaryElement(elementView: joint.dia.ElementView) {
-        console.log('888')
         const element = elementView.model;
 
         new joint.ui.FreeTransform({
@@ -245,7 +237,6 @@ class KitchenSinkService {
     }
 
     selectPrimaryLink(linkView: joint.dia.LinkView) {
-        console.log('999')
         const ns = joint.linkTools;
         const toolsView = new joint.dia.ToolsView({
             name: 'link-pointerdown',
@@ -267,7 +258,6 @@ class KitchenSinkService {
     initializeToolsAndInspector() {
 
         this.paper.on('cell:pointerup', (cellView: joint.dia.CellView) => {
-            console.log('a')
             const cell = cellView.model;
             const { collection } = this.selection;
             if (collection.includes(cell)) { return; }
@@ -301,7 +291,6 @@ class KitchenSinkService {
         });
 
         this.graph.on('change', (cell: joint.dia.Cell, opt: any ) => {
-            console.log('b')
             if (!cell.isLink() || !opt.inspector) { return; }
 
             const ns = joint.linkTools;
@@ -447,7 +436,6 @@ class KitchenSinkService {
     // }
 
     renderPlugin(selector: string, plugin: any): void {
-        console.log('Q', selector)
         this.el.querySelector(selector)?.appendChild(plugin.el);
         plugin.render();
     }

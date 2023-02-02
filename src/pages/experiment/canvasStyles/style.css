@@ -11,6 +11,7 @@
 .app-header {
     position: relative;
     width: 100%;
+    background: #F7FAFC;
 }
 
 .app-body {
@@ -27,13 +28,11 @@
 }
 
 .app-title > h1 {
-    color: #fff;
-    font-size: 18px;
-    line-height: 60px;
-    text-align: left;
-    text-transform: uppercase;
-    margin: 0;
-    padding: 0 0 0 30px;
+    background: #F7FAFC;
+    font-weight: 600;
+    color: #08192E;
+    font-size: 24px;
+    padding: 10px 10px;
 }
 
 /*  Paper  */

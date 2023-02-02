@@ -125,7 +125,7 @@ function SocketWrapper(props: any) {
             // sendJsonMessage(message.content);
         }
     }, [message]);
-    console.log('DmsComputeData ===>', DmsComputeData);
+    // console.log('DmsComputeData ===>', DmsComputeData);
 
     useEffect(() => {
         if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
