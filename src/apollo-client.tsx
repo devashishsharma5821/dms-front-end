@@ -6,6 +6,7 @@ declare var CONFIG: any;
 declare global {
     interface Window { CONFIG: any; }
 }
+// eslint-disable-next-line no-restricted-globals
 if (location.href.indexOf('localhost') > 0) {
 	window['CONFIG'] = ENVIRONMENT;
 }
