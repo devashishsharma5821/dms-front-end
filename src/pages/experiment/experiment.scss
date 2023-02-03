@@ -7,3 +7,70 @@
 .available-cell rect {
   stroke-dasharray: 5, 2;
 }
+//.joint-stencil {
+//    position: relative !important;
+//    input.search {
+//        width: 257px;
+//        height: 32px;
+//        border-radius: 4px;
+//        padding: 0 13px;
+//        // margin-left: 18px;
+//    }
+//    .content {
+//        position: relative !important;
+//        width: 257px;
+//        top:20px !important;
+//    }
+//}
+.joint-stencil.joint-theme-modern .search{
+    background: #FFFFFF;
+    border: 1px solid #D8DCDE;
+}
+.joint-stencil.joint-theme-modern .groups-toggle .btn {
+    position: relative !important;
+    left: 10px;
+}
+div.joint-stencil.joint-theme-modern {
+    border: none ;
+    background: transparent;
+}
+div.joint-paper.joint-theme-modern{
+    background: transparent;
+}
+div.joint-stencil.joint-theme-modern .groups-toggle .btn{
+  width: unset;
+  border: none;
+  padding: 15px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #2180C2;
+  top: -15px;
+  left: 5px;
+}
+.joint-stencil.joint-theme-modern .groups-toggle .btn-expand {
+  background-image: none;
+}
+.joint-stencil.joint-theme-modern .groups-toggle .btn-collapse {
+  background-image: none;
+}
+
+div.joint-stencil.joint-theme-modern .groups-toggle .btn:hover{
+    background: transparent;
+}
+.v-line {
+    font-size: 16px !important;
+}
+.v-line-new {
+  border-left: 2px solid #2180C2;
+  height: 10px;
+  margin-left: 14px;
+}
+.collapseButtonReSpace {
+  margin-left: -18px;
+}
+.joint-stencil.joint-theme-modern.searchable.collapsible > .content {
+  top: 85px;
+}
+div.joint-stencil.joint-theme-modern .group, .joint-stencil.joint-theme-modern .group:first-child{
+    border: none;
+}

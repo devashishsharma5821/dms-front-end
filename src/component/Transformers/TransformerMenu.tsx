@@ -232,7 +232,7 @@ const TransformerMenu = (props: any) => {
         setFormatedTransformersData(formatedData);
     };
 
-    var elementObj: any = {};
+    const elementObj: any = {};
 
     const clickElement = (i: any) => {
         elementObj[i].click();
