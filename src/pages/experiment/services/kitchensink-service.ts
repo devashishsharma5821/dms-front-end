@@ -74,11 +74,12 @@ class KitchenSinkService {
 
         const paper = this.paper = new joint.dia.Paper({
             width: '100vw',
-            height: 1000,
+            height: '100vh',
             gridSize: 10,
             drawGrid: true,
             model: graph,
             cellViewNamespace: appShapes,
+            background: {color: 'white'},
             defaultLink: <joint.dia.Link>new appShapes.app.Link(),
             defaultConnectionPoint: appShapes.app.Link.connectionPoint,
             interactive: { linkMove: false },
@@ -127,9 +128,10 @@ class KitchenSinkService {
 
         const paperScroller = this.paperScroller = new joint.ui.PaperScroller({
             paper,
-            autoResizePaper: true,
+            autoResizePaper: false,
             scrollWhileDragging: true,
-            cursor: 'grab'
+            cursor: 'grab',
+            padding: 0
         });
 
         this.renderPlugin('.paper-container', paperScroller);
@@ -308,10 +310,9 @@ class KitchenSinkService {
     initializeNavigator() {
 
         const navigator = this.navigator = new joint.ui.Navigator({
-            width: 240,
-            height: 115,
+            width: 191,
+            height: 125,
             paperScroller: this.paperScroller,
-            zoom: false,
             paperOptions: {
                 async: true,
                 sorting: joint.dia.Paper.sorting.NONE,
