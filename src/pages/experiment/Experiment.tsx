@@ -506,7 +506,7 @@ const ExperimentsPage = () => {
             <div ref={elementRef} className="joint-app joint-theme-modern">
                 <div className="app-header">
                     <div className="app-title">
-                        <h1>Transformer</h1>
+                        <h1>Transformers</h1>
                     </div>
                     <div className="toolbar-container" />
                 </div>
