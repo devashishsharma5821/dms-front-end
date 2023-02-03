@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { getUserConfig } from './query';
-import useAppStore from './store';
 import { AppRouter } from './app-router';
+import { updateI18N, updateAppConfig, updateUserConfig } from './zustandActions/commonActions';
 
 function UserConfiguration() {
     const { GET_USER_CONFIGURATION } = getUserConfig();
     const [isConfigAvailable, setConfigAvailable] = useState(false);
-    const updateI18N = useAppStore((state: any) => state.updateI18N);
-    const updateAppConfig = useAppStore((state: any) => state.updateAppConfig);
-    const updateUserConfig = useAppStore((state: any) => state.updateUserConfig);
 
     let isLoading = true;
     let isError;

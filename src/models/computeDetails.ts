@@ -8,6 +8,8 @@ export class ComputeDetail {
     created_by!: string;
     created_at!: string;
     is_default!: boolean;
+    totalMemory?: number;
+    totalCores?: number;
 }
 
 export interface InstancePoolsType {
@@ -32,7 +34,6 @@ export interface NodeTypesType {
 }
 export interface DbSettingsDetail {
     cluster_policies?: [];
-    // instance_pools: InstancePoolsType[];
     node_types: NodeTypesType[];
 }
 
@@ -117,6 +118,10 @@ export interface DmsComputeData {
         node_type: {
             driver_type_id: string;
             worker_type_id: string;
+            driver_memory_mb: number;
+            worker_memory_mb: number;
+            driver_num_cores: number;
+            worker_num_cores: number;
         };
         spot_instances: boolean;
     };
@@ -130,32 +135,21 @@ export interface GetComputeListResponse {
 }
 
 export interface ExperimentAppStoreState {
-    updateDmsDatabricksCredentialsValidToken: (token: boolean) => void;
-    DmsDatabricksCredentialsValidToken: boolean;
     DmsComputeData: DmsComputeData[];
-    updateDmsComputeData: (computeData: any) => void;
-    connectionEstablished: () => void;
-    submitMessage?: any;
     UserConfig: any;
-    config: any;
-    message: any;
-    disconnected: () => void;
-    receiveMessage: (action: any) => void;
     connectionState: { connected: boolean; subscribed: boolean };
-    hasSubscribed: () => void;
-    createdById: string | null;
-    updateCreatedById: (createdById: string) => void;
-    setComputeState: (value: any) => void;
-    getAndUpdateDmsComputeData: () => void;
+}
+
+export interface SocketWrapperAppStoreState {
+    DmsComputeData: DmsComputeData[];
+    UserConfig: any;
+    connectionState: { connected: boolean; subscribed: boolean };
+    message: any;
 }
 
 export interface ComputeAppStoreState {
     DmsComputeData: DmsComputeData[];
-    updateDmsComputeData: (computeData: any) => void;
-    submitMessage?: any;
-    updateCreatedById: (createdById: string) => void;
     UserConfig: any;
-    createdById: string | null;
 }
 
 export interface CreateComputeSubmitHandlerValues {

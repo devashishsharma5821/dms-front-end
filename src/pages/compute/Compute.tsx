@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
+import { useEffect, useMemo, useRef, useState, useContext } from 'react';
 import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -13,7 +13,6 @@ import client from '../../apollo-client';
 import { dmsDeleteCompute, dmsEditCompute, dmsRunCompute, dmsStopComputeRun, getComputeListData } from '../../query';
 import {
     ComputeDelete,
-    ComputeDetail,
     ComputeDetailListResponse,
     ComputeRun,
     ComputeStop,
@@ -22,7 +21,6 @@ import {
     RunComputeDetail,
     StopComputeDetail,
     ComputeAppStoreState,
-    GetComputeListResponse,
     DmsComputeData,
     agGridClickHandler
 } from '../../models/computeDetails';
@@ -36,6 +34,9 @@ import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
 
 import { BusHelper } from '../../helpers/BusHelper';
 import './compute.scss';
+import { updateDmsComputeData, updateCreatedById, getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
+import { submitMessage } from '../../zustandActions/socketActions';
+import { Action } from '@antuit/web-sockets-gateway-client';
 
 const Compute = () => {
     const opid = v4();
@@ -74,14 +75,7 @@ const Compute = () => {
     window.addEventListener('resize', () => {
         gridRef?.current!?.api?.sizeColumnsToFit();
     });
-    const [DmsComputeData, updateDmsComputeData, submitMessage, updateCreatedById, UserConfig, createdById] = useAppStore((state: ComputeAppStoreState) => [
-        state.DmsComputeData,
-        state.updateDmsComputeData,
-        state.submitMessage,
-        state.updateCreatedById,
-        state.UserConfig,
-        state.createdById
-    ]);
+    const [DmsComputeData, UserConfig] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig]);
 
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
     // const onComputeStarted = () => {
@@ -95,6 +89,7 @@ const Compute = () => {
     const select = (state: { lastAliveMessage: string }) => {
         return state.lastAliveMessage;
     };
+
     const onPlayClickHandler: agGridClickHandler = (data) => {
         updateCreatedById(data?.created_by);
         setLoading(true);
@@ -114,7 +109,7 @@ const Compute = () => {
             })
             .then((res: any) => {
                 setLoading(false);
-                const { GET_COMPUTELIST } = getComputeListData();
+                getAndUpdateDmsComputeData();
                 toast({
                     title: `Compute is starting`,
                     status: 'success',
@@ -122,31 +117,28 @@ const Compute = () => {
                     duration: 5000,
                     position: 'top-right'
                 });
-                client
-                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-                        query: GET_COMPUTELIST
-                    })
-                    .then((response: GetComputeListResponse) => {
-                        let computedata = [...response.data.dmsComputes];
-                        updateDmsComputeData(computedata);
-                        if (data?.id) {
-                            const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
-                                experimentId: 1,
-                                opId: opid,
-                                userId: data?.id,
-                                //TODO Below are added just for fixing errors
-                                project_id: 12,
-                                get_datatables: undefined,
-                                az_blob_get_containers: undefined,
-                                az_blob_browse_container: undefined
-                            });
-                            submitMessage({
-                                content: aliveMessage
-                            });
-                        }
-                        // let unsubscribe = useAppStore.subscribe(onComputeStarted);
-                    })
-                    .catch((err: any) => console.error(err));
+                // if (data?.id) {
+                //     const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
+                //         experimentId: 1,
+                //         opId: opid,
+                //         userId: data?.id,
+                //         //TODO Below are added just for fixing errors
+                //         project_id: 12,
+                //         get_datatables: undefined,
+                //         az_blob_get_containers: undefined,
+                //         az_blob_browse_container: undefined
+                //     });
+                //     submitMessage([
+                //         { content: { action: Action.Subscribe, subject: `dms_pid.out.${data?.id}` } },
+                //         {
+                //             content: aliveMessage
+                //         }
+                //     ]);
+                //     // submitMessage();
+                // }
+                // let unsubscribe = useAppStore.subscribe(onComputeStarted);
+                // })
+                // .catch((err: any) => console.error(err));
             })
             .catch((err: any) => {
                 setLoading(false);
@@ -217,16 +209,11 @@ const Compute = () => {
             </Flex>
         );
     };
-    // const defaultChange = (checked: boolean) => {
-    //     checked = !checked;
-    // };
+
     const defaultRowOnChange = (event: any, params: any) => {
-        // console.log('event form switch', event.target.checked);
-        // console.log('Parmas form switch', params);
         alertConfirm.onOpen();
     };
     const confirmAlertActionForDelete = () => {
-        // console.log('Confirm Clicked for Delete');
         client
             .mutate<ComputeDelete<DeleteComputeDetail>>({
                 mutation: dmsDeleteCompute(deleteComputeId)
@@ -239,19 +226,8 @@ const Compute = () => {
                     duration: 5000,
                     position: 'top-right'
                 });
-                const { GET_COMPUTELIST } = getComputeListData();
-                client
-                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-                        query: GET_COMPUTELIST
-                    })
-                    .then((response) => {
-                        let computedata = [...response.data.dmsComputes];
-                        updateDmsComputeData(computedata);
-                        deleteCompute.onClose();
-                    })
-                    .catch((err) => {
-                        deleteCompute.onClose();
-                    });
+                getAndUpdateDmsComputeData();
+                deleteCompute.onClose();
             })
             .catch((response) => {
                 toast({
@@ -265,13 +241,12 @@ const Compute = () => {
             });
     };
     const confirmAlertActionForStop = () => {
-        console.log('Confirm Clicked for Stop');
         client
             .mutate<ComputeStop<StopComputeDetail>>({
                 mutation: dmsStopComputeRun(stopComputeId)
             })
             .then((response) => {
-                const { GET_COMPUTELIST } = getComputeListData();
+                getAndUpdateDmsComputeData();
                 toast({
                     title: `Compute is stopped`,
                     status: 'success',
@@ -279,31 +254,21 @@ const Compute = () => {
                     duration: 5000,
                     position: 'top-right'
                 });
-                client
-                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-                        query: GET_COMPUTELIST
-                    })
-                    .then((response) => {
-                        let computedata = [...response.data.dmsComputes];
+                if (UserConfig && stopComputeId) {
+                    const shutDownRequest = BusHelper.GetShutdownRequestMessage({
+                        experimentId: parseInt(stopComputeId),
+                        opId: opid,
+                        userId: stopComputeId,
+                        //TODO Below are added just for fixing errors
+                        project_id: 12,
+                        get_datatables: undefined,
+                        az_blob_get_containers: undefined,
+                        az_blob_browse_container: undefined
+                    });
 
-                        updateDmsComputeData(computedata);
-                        if (UserConfig && stopComputeId) {
-                            const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                                experimentId: parseInt(stopComputeId),
-                                opId: opid,
-                                userId: stopComputeId,
-                                //TODO Below are added just for fixing errors
-                                project_id: 12,
-                                get_datatables: undefined,
-                                az_blob_get_containers: undefined,
-                                az_blob_browse_container: undefined
-                            });
-
-                            submitMessage({ content: shutDownRequest });
-                        }
-                        stopComputeRunning.onClose();
-                    })
-                    .catch((err) => console.error(err));
+                    // submitMessage({ content: shutDownRequest });
+                }
+                stopComputeRunning.onClose();
             })
             .catch(() => {
                 toast({
@@ -326,6 +291,7 @@ const Compute = () => {
             })
             .then((response) => {
                 alertConfirm.onClose();
+                getAndUpdateDmsComputeData();
                 toast({
                     title: `Your Default is changed`,
                     status: 'success',
@@ -338,6 +304,7 @@ const Compute = () => {
     const defaultRow = (params: any) => {
         return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
     };
+
     const [rowData, setRowData] = useState<DmsComputeData[]>([]);
     const [columnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Id', field: 'id' },
@@ -346,12 +313,22 @@ const Compute = () => {
         { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },
         { headerName: 'Driver Type', field: 'resources.node_type.driver_type_id' },
         { headerName: 'Workers', field: 'resources.num_workers' },
-        { headerName: 'Total Cores', field: 'resources.num_workers' },
-        { headerName: 'Total Memory', field: 'activeMemory' },
+        { headerName: 'Total Cores', field: 'totalCores' },
+        { headerName: 'Total Memory', field: 'totalMemory' },
         { headerName: 'Status', field: 'status' },
         { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
         { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
     ]);
+
+    const newComputedata = (computedata: any) => {
+        return computedata.map((compute: any) => {
+            return {
+                ...compute,
+                totalMemory: compute.resources.node_type.driver_memory_mb + compute.resources.node_type.worker_memory_mb,
+                totalCores: compute.resources.node_type.driver_num_cores + compute.resources.node_type.worker_num_cores
+            };
+        });
+    };
 
     useEffect(() => {
         if (DmsComputeData === null) {
@@ -362,14 +339,15 @@ const Compute = () => {
                 })
                 .then((response: { data: { dmsComputes: any } }) => {
                     let computedata = [...response.data.dmsComputes];
-                    setRowData(computedata);
-                    console.log('computedata ===>', computedata);
+                    const newComputedataa = newComputedata(computedata);
+                    setRowData(newComputedataa);
                     gridRef?.current!?.api?.sizeColumnsToFit();
                     updateDmsComputeData(response.data.dmsComputes);
                 })
                 .catch((err: any) => console.error(err));
         } else if (DmsComputeData?.length > 0) {
-            setRowData(DmsComputeData);
+            const newComputedataa = newComputedata(DmsComputeData);
+            setRowData(newComputedataa);
             gridRef?.current!?.api?.sizeColumnsToFit();
         } else {
             setRowData([]);
@@ -468,7 +446,6 @@ const Compute = () => {
                     {stopComputeRunning.isOpen && (
                         <AlertConfirmComponent isOpen={stopComputeRunning.isOpen} onClose={stopComputeRunning.onClose} options={alertConfirmForStop} confirm={confirmAlertActionForStop} />
                     )}
-                    {/*<StopComputeRunningModals computeId={stopComputeId} isOpen={stopComputeRunning.isOpen} onClose={stopComputeRunning.onClose} />*/}
                 </Box>
             </Box>
         </>

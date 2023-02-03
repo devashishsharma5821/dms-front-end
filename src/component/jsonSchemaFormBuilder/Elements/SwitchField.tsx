@@ -5,7 +5,6 @@ type Props = ChakraInputProps & FieldHookConfig<'input'>;
 
 const SwitchField = (props: any) => {
     const [field] = useField(props.name);
-    // isChecked={true}
     return <Switch {...field} isChecked={field.value ? true : false} />;
 };
 

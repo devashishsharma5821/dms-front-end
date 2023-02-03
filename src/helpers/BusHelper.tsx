@@ -81,12 +81,7 @@ export class BusHelper {
                 cancel_run: undefined,
                 close: undefined
             },
-            data: {
-                project_id: request.project_id,
-                get_datatables: request.get_datatables,
-                az_blob_get_containers: request.az_blob_get_containers,
-                az_blob_browse_container: request.az_blob_browse_container
-            }
+            data: undefined
         };
         return msg;
     }
@@ -113,12 +108,7 @@ export class BusHelper {
                 cancel_run: undefined,
                 close: undefined
             },
-            data: {
-                project_id: request?.project_id,
-                get_datatables: request?.get_datatables,
-                az_blob_get_containers: request?.az_blob_get_containers,
-                az_blob_browse_container: request?.az_blob_browse_container
-            }
+            data: undefined
         };
         return msg;
     }
@@ -126,19 +116,14 @@ export class BusHelper {
     static GetKeepAliveRequestMessage(request: BaseRequest): Message<Request> {
         let keepAliveRequest: KeepAliveRequest = {};
         let msg = new Message<Request>();
-        msg.action = Action.Subscribe;
+        msg.action = Action.Publish;
         msg.subject = `dms_pid.in.${request.userId}`;
         msg.payload = {
             op_id: request.opId,
             keep_alive: keepAliveRequest,
             shutdown: undefined,
             experiment: undefined,
-            data: {
-                project_id: request.project_id,
-                get_datatables: request.get_datatables,
-                az_blob_get_containers: request.az_blob_get_containers,
-                az_blob_browse_container: request.az_blob_browse_container
-            }
+            data: undefined
         };
         return msg;
     }
@@ -152,12 +137,7 @@ export class BusHelper {
             keep_alive: undefined,
             shutdown: {},
             experiment: undefined,
-            data: {
-                project_id: request.project_id,
-                get_datatables: request.get_datatables,
-                az_blob_get_containers: request.az_blob_get_containers,
-                az_blob_browse_container: request.az_blob_browse_container
-            }
+            data: undefined
         };
         return msg;
     }

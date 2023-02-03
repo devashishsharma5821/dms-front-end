@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData, getTransformersData } from '../../query';
-import { Box, Flex, useColorModeValue, useDisclosure, Spinner, useColorMode } from '@chakra-ui/react';
+import { useColorModeValue, useDisclosure, useColorMode } from '@chakra-ui/react';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
-import Toolbar from '../../component/toolbar/Toolbar';
-import Designer from '../../component/designer/Designer';
-import Details from '../../component/details/Details';
-import Settings from '../../component/settings/Settings';
 import { useApolloClient } from '@apollo/client';
-import { ComputeDetailListResponse, ComputeDetail, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
+import { ComputeDetailListResponse, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { GET_DATABRICKS_CREDS } from '../../query/index';
 import { DataBricksTokenResponse } from '../../models/dataBricksTokenResponse';
 import { DataBricksTokenDetails } from '../../models/types';
 import useAppStore from '../../store';
-import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
-import IsRunningModal from './IsRunningModal';
 import { BusHelper } from '../../helpers/BusHelper';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
@@ -35,27 +29,19 @@ import { TransformerListResponse } from '../../models/transformerListResponse';
 import { TransformerDetail } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
 import { shapes } from '@antuit/rappid-v1';
+import { updateDmsComputeData } from '../../zustandActions/computeActions';
+import { updateDmsDatabricksCredentialsValidToken } from '../../zustandActions/commonActions';
+import { hasSubscribed, submitMessage } from '../../zustandActions/socketActions';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
     let rappid: RappidService;
     const elementRef = React.useRef<HTMLDivElement>(null);
 
-    const [updateDmsDatabricksCredentialsValidToken, DmsComputeData, updateDmsComputeData, submitMessage, UserConfig, connectionState, hasSubscribed] = useAppStore(
-        (state: ExperimentAppStoreState) => [
-            state.updateDmsDatabricksCredentialsValidToken,
-            state.DmsComputeData,
-            state.updateDmsComputeData,
-            state.submitMessage,
-            state.UserConfig,
-            state.connectionState,
-            state.hasSubscribed
-        ]
-    );
+    const [DmsComputeData, UserConfig, connectionState] = useAppStore((state: ExperimentAppStoreState) => [state.DmsComputeData, state.UserConfig, state.connectionState]);
 
     const opid = v4();
     const computeRunningModal = useDisclosure();
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const computeModal = useDisclosure();
     const client = useApolloClient();
     const settingsModal = useDisclosure();
@@ -91,19 +77,19 @@ const ExperimentsPage = () => {
                 computeRunningStatus.map((compute: DmsComputeData) => {
                     if (compute.status && compute.id) {
                         onComputeStart();
-                        submitMessage({
-                            content: BusHelper.GetKeepAliveRequestMessage({
-                                experimentId: parseInt(compute.id),
-                                opId: opid,
-                                // userId: UserConfig.userConfiguration.user.userId,
-                                userId: compute?.id,
-                                //TODO Below are added just for fixing errors
-                                project_id: 12,
-                                get_datatables: undefined,
-                                az_blob_get_containers: undefined,
-                                az_blob_browse_container: undefined
-                            })
-                        });
+                        // submitMessage({
+                        //     content: BusHelper.GetKeepAliveRequestMessage({
+                        //         experimentId: parseInt(compute.id),
+                        //         opId: opid,
+                        //         // userId: UserConfig.userConfiguration.user.userId,
+                        //         userId: compute?.id,
+                        //         //TODO Below are added just for fixing errors
+                        //         project_id: 12,
+                        //         get_datatables: undefined,
+                        //         az_blob_get_containers: undefined,
+                        //         az_blob_browse_container: undefined
+                        //     })
+                        // });
                         unsubscribe = useAppStore.subscribe(onComputeStarted);
                     }
                 });
@@ -309,7 +295,7 @@ const ExperimentsPage = () => {
                 if (response.data.dmsCheckDatabricksCredentials.valid) {
                     if (DmsComputeData?.length === 0) {
                         client
-                            .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                            .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
                                 query: GET_COMPUTELIST
                             })
                             .then((response) => {
@@ -363,21 +349,21 @@ const ExperimentsPage = () => {
             // On the next reconnect, this listener fires and will now attempt to subscribe
             if (connectionState?.connected) {
                 if (!connectionState?.subscribed) {
-                    submitMessage({ content: subscribeMessage });
-                    submitMessage({
-                        content: BusHelper.GetKeepAliveRequestMessage({
-                            // experimentId: parseInt(computeId),
-                            experimentId: parseInt(UserConfig?.userConfigFromStore?.user?.userId),
-                            opId: opid,
-                            // userId: UserConfig.userConfigFromStore.user.userId,
-                            userId: computeId,
-                            //TODO Below are added just for fixing errors
-                            project_id: 12,
-                            get_datatables: undefined,
-                            az_blob_get_containers: undefined,
-                            az_blob_browse_container: undefined
-                        })
-                    });
+                    // submitMessage({ content: subscribeMessage });
+                    // submitMessage({
+                    //     content: BusHelper.GetKeepAliveRequestMessage({
+                    //         // experimentId: parseInt(computeId),
+                    //         experimentId: parseInt(UserConfig?.userConfigFromStore?.user?.userId),
+                    //         opId: opid,
+                    //         // userId: UserConfig.userConfigFromStore.user.userId,
+                    //         userId: computeId,
+                    //         //TODO Below are added just for fixing errors
+                    //         project_id: 12,
+                    //         get_datatables: undefined,
+                    //         az_blob_get_containers: undefined,
+                    //         az_blob_browse_container: undefined
+                    //     })
+                    // });
                     hasSubscribed();
                 }
             } else {
@@ -429,9 +415,9 @@ const ExperimentsPage = () => {
                 az_blob_get_containers: undefined,
                 az_blob_browse_container: undefined
             });
-            submitMessage({
-                content: shutDownRequest
-            });
+            // submitMessage({
+            //     content: shutDownRequest
+            // });
         }
     };
 
@@ -442,7 +428,7 @@ const ExperimentsPage = () => {
     useEffect(() => {
         const { GET_COMPUTELIST } = getComputeListData();
         client
-            .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+            .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
                 query: GET_COMPUTELIST
             })
             .then((response) => {

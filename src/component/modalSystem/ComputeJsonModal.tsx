@@ -10,6 +10,7 @@ import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscali
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
 import { ComputeDetail, ComputeDetailListResponse, createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues } from '../../models/computeDetails';
 import useAppStore from '../../store';
+import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const client = useApolloClient();
@@ -34,19 +35,20 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     useEffect(() => {
         if (isComputeCreated) {
             try {
-                const { GET_COMPUTELIST } = getComputeListData();
+                getAndUpdateDmsComputeData();
+                // const { GET_COMPUTELIST } = getComputeListData();
 
-                client
-                    .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-                        query: GET_COMPUTELIST
-                    })
-                    .then((response) => {
-                        let computedata = [...response.data.dmsComputes];
-                        updateDmsComputeData(computedata);
-                        props.onClose();
-                        setIsComputeCreated(false);
-                    })
-                    .catch((err) => console.log(err));
+                // client
+                //     .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
+                //         query: GET_COMPUTELIST
+                //     })
+                //     .then((response) => {
+                //         let computedata = [...response.data.dmsComputes];
+                //         updateDmsComputeData(computedata);
+                props.onClose();
+                setIsComputeCreated(false);
+                // })
+                // .catch((err) => console.log(err));
             } catch (err) {
                 console.log('Error in Get computes', err);
             }
@@ -85,6 +87,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                     position: 'top-right'
                 });
                 setIsComputeCreated(true);
+                getAndUpdateDmsComputeData();
                 props.onClose();
             })
             .catch((err) => {
