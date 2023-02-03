@@ -5,11 +5,11 @@ export type BaseRequest = {
     userId: string;
     experimentId: number;
     opId: string;
-    project_id: number;
-    get_datatables: DataTablesRequest | undefined;
+    project_id?: number | undefined;
+    get_datatables?: DataTablesRequest | undefined;
     /** Azure Blob Storage */
-    az_blob_get_containers: AzureBlobGetContainersRequest | undefined;
-    az_blob_browse_container: AzureBlobBrowseContainerRequest | undefined;
+    az_blob_get_containers?: AzureBlobGetContainersRequest | undefined;
+    az_blob_browse_container?: AzureBlobBrowseContainerRequest | undefined;
 };
 
 export interface InferRunMessageRequest extends BaseRequest {

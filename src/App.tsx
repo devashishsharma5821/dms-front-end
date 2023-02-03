@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMsal, useAccount, useIsAuthenticated } from '@azure/msal-react';
 import { EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { protectedResources } from './authConfig';
@@ -6,7 +6,7 @@ import { protectedResources } from './authConfig';
 import UserConfiguration from './user-config';
 import { ENVIRONMENT } from './environments';
 
-console.log("dms: ", ENVIRONMENT.VERSION);
+console.log('dms: ', ENVIRONMENT.VERSION);
 const App = () => {
     const { instance, accounts, inProgress } = useMsal();
     const account = useAccount(accounts[0] || {});

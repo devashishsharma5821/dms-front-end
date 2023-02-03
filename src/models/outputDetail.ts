@@ -5,7 +5,6 @@ export class OutputDetail {
     resources_num_workers!: string;
     activeMemory!: any;
     actionsRow!: string;
-
 }
 
 export interface InstancePoolsType {
@@ -30,7 +29,6 @@ export interface NodeTypesType {
 }
 export interface DbSettingsDetail {
     cluster_policies?: [];
-    // instance_pools: InstancePoolsType[];
     node_types: NodeTypesType[];
 }
 
@@ -38,7 +36,6 @@ export class RunOutputDetail {
     job_id!: string;
     job_run_id!: string;
 }
-
 
 export class Resource {
     instance_pool!: any;
@@ -56,7 +53,6 @@ export class nodeType {
 export class OutputDetailListResponse<T> {
     dmsComputes!: T;
 }
-
 
 export class GetDbSettingsType<T> {
     dmsDatabricksSettings!: T;
@@ -81,4 +77,3 @@ export interface DmsOutputData {
     };
     status: string;
 }
-

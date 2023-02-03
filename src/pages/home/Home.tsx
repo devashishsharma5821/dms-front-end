@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { wsconnect } from '../../query';
+import { useState } from 'react';
 import './home.scss';
 import { Button, Wrap, WrapItem, Tooltip, useToast, useColorModeValue } from '@chakra-ui/react';
 import ModalComponent from '../../component/modalSystem/modal';
