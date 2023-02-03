@@ -1,6 +1,14 @@
 import { ApolloClient, InMemoryCache, createHttpLink, DefaultOptions } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { CONFIG } from './environments';
+import { ENVIRONMENT } from './environments';
+
+declare var CONFIG: any;
+declare global {
+    interface Window { CONFIG: any; }
+}
+if (location.href.indexOf('localhost') > 0) {
+	window['CONFIG'] = ENVIRONMENT;
+}
 
 const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
