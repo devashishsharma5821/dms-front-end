@@ -1,12 +1,20 @@
 import { ApolloClient, InMemoryCache, createHttpLink, DefaultOptions } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { CONFIG } from './environments';
+import { ENVIRONMENT } from './environments';
+
+declare var CONFIG: any;
+declare global {
+    interface Window { CONFIG: any; }
+}
+if (location.href.indexOf('localhost') > 0) {
+	window['CONFIG'] = ENVIRONMENT;
+}
 
 const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
     const token = localStorage.getItem('accessToken');
     const espUserToken = localStorage.getItem('espUserToken');
-
+    console.log('headers', headers);
     // return the headers to the context so httpLink can read them
     return {
         headers: {

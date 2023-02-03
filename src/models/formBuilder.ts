@@ -53,6 +53,14 @@ export interface MainFormType {
     isDisabled?: boolean;
 }
 
+export interface options {
+    category: string;
+    memory_mb: number;
+    node_type_id: string;
+    num_cores: number;
+    label?: string;
+}
+
 export interface FormSchemaType {
     type?: string;
     label?: string;

@@ -91,7 +91,6 @@ export const GET_DMS_COMPUTE_STATUS = gql`
         }
     }
 `;
-// return { GET_TRANSFORMERS };
 
 export const setSettingsData = (userName: string, token: string) => {
     return gql`
@@ -111,33 +110,6 @@ export const setSaveAs = (userName: string, token: string) => {
                   ) } 
         `;
 };
-
-// export const dmsCreateCompute = (values: any) => {
-//     return gql`
-//                         mutation {
-//                             dmsCreateCompute(
-//                                 name: "${values.compute_name}",
-//                                 resources:{
-//                                 node_type: {
-//                                     worker_type_id: "${values.worker_type_id}"
-//                                     },
-//                                     num_workers: ${!values.enableAutoScaling ? values.workers : 0} ,
-//                                     spot_instances: ${values.spot_instances},
-//                                     autoscale:
-//                                         ${
-//                                             values.enableAutoScaling
-//                                                 ? `{
-//                                             min_workers: ${values.min_workers},
-//                                             max_workers: ${values.max_workers}}`
-//                                                 : null
-//                                         }
-
-//                                 } ,
-//                                 max_inactivity_min: ${values.terminate_after ? values.max_inactivity_min : 0}
-//                                 )
-//                         }
-//                         `;
-// };
 
 export const dmsCreateComputeOffEnableAutoscaling = (values: dmsCreateComputeOffEnableAutoscalingValues) => {
     return gql`mutation {
@@ -286,7 +258,7 @@ export const dmsEditCompute = (computeId: number, isDefault: boolean) => {
                is_default: ${isDefault}  
                   )
             }`;
-}
+};
 export const dmsStopComputeRun = (cellId: string | undefined) => {
     return gql`mutation {
             dmsCancelComputeRun(  
@@ -309,6 +281,10 @@ export const getComputeListData = () => {
                     node_type {
                         worker_type_id
                         driver_type_id
+                        worker_memory_mb
+                        driver_memory_mb
+                        worker_num_cores
+                        driver_num_cores
                     }
                     autoscale {
                         min_workers

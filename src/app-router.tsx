@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import Header from '../src/component/header/Header';
 import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } from './pages';
 import { Box, Flex } from '@chakra-ui/react';

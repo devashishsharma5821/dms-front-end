@@ -1,107 +1,129 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 import useAppStore from '../store';
-import { ExperimentAppStoreState, DmsComputeData } from '../models/computeDetails';
+import { SocketWrapperAppStoreState, DmsComputeData } from '../models/computeDetails';
 import { Message } from '../models/messages';
 import { defaultConfig } from '../utils/config';
 import { BusHelper } from '../helpers/BusHelper';
 import { v4 } from 'uuid';
+import { setComputeState, updateDmsComputeData } from '../zustandActions/computeActions';
+import { connectionEstablished, disconnected, receiveMessage, submitMessage } from '../zustandActions/socketActions';
+import { Action } from '@antuit/web-sockets-gateway-client';
+import { CLOSING } from 'ws';
+import { StringUtils } from '@azure/msal-common';
 
 function SocketWrapper(props: any) {
     const opid = v4();
     const { wsHost } = defaultConfig;
-    const [pidState, setPIDState] = useState<string>('');
     let wsUrl = `${wsHost}?token=${localStorage.accessToken}&espToken=${localStorage.espUserToken}`;
-    const [connectionEstablished, disconnected, receiveMessage, createdById, message, connectionState, DmsComputeData, submitMessage, UserConfig, setComputeState, getAndUpdateDmsComputeData] =
-        useAppStore((state: ExperimentAppStoreState) => [
-            state.connectionEstablished,
-            state.disconnected,
-            state.receiveMessage,
-            state.createdById,
-            state.message,
-            state.connectionState,
-            state.DmsComputeData,
-            state.submitMessage,
-            state.UserConfig,
-            state.setComputeState,
-            state.getAndUpdateDmsComputeData
-        ]);
-    const { sendMessage, sendJsonMessage, lastMessage, readyState, getWebSocket } = useWebSocket(wsUrl, {
+    const [message, connectionState, DmsComputeData, UserConfig] = useAppStore((state: SocketWrapperAppStoreState) => [state.message, state.connectionState, state.DmsComputeData, state.UserConfig]);
+    const { sendJsonMessage, lastMessage } = useWebSocket(wsUrl, {
         onOpen: () => {
-            // if (createdById) {
+            console.log('Socket connection Establishedd');
             connectionEstablished();
-            getAndUpdateDmsComputeData();
-
-            console.log('connection Establishedd');
-            sendJsonMessage({ action: 'subscribe', subject: `dms_pid.out.161` });
-            // }
         },
         onClose: () => {
-            console.log('inside onClose');
+            console.log('Socket connect closed');
             disconnected();
         },
         onError: () => {
-            console.log('inside onError');
+            console.log('Soccet connection error');
             disconnected();
         },
         onMessage: (ev: any) => {
-            console.log('Receive message ev', JSON.parse(ev.data));
+            console.log('Socket Receive message', JSON.parse(ev.data));
             const message = JSON.parse(ev.data);
-            if (message?.payload) {
-                //TODO:- Update DMS COMPUTE LIST
-                getAndUpdateDmsComputeData();
+            console.log('message in socket', message);
+
+            if (message?.payload?.action === 'ALIVE') {
+                const msgComputeId = message?.subject?.split('.')[2];
+                let updateFlag = false;
+                console.log('msgComputeId', parseInt(msgComputeId));
+                const updatedComputeData = DmsComputeData?.map((computeData: DmsComputeData) => {
+                    if (computeData.id === msgComputeId) {
+                        if (computeData.status !== message?.payload?.status) {
+                            computeData.status = message?.payload?.status;
+                            updateFlag = true;
+                            pidMeassageResponseHandler(JSON.parse(ev.data));
+                        }
+                    }
+                    return computeData;
+                });
+                if (updateFlag) {
+                    updateDmsComputeData(updatedComputeData);
+                }
             }
-            pidMeassageResponseHandler(JSON.parse(ev.data));
             receiveMessage(JSON.parse(ev.data));
         }
     });
 
-    let unsubscribe: any = null;
-    console.log('lastMessage ==>', lastMessage);
+    useEffect(() => {
+        if (connectionState.connected && message.length > 0) {
+            disperseMessage(message);
+            // if(message.content?.)
+            // checkAlive(message.content);
+        }
+    }, [message]);
 
-    const checkComputeStatus = (dmsComputes: DmsComputeData[]) => {
-        const computeRunningStatus: DmsComputeData[] = dmsComputes.filter((compute: DmsComputeData) => compute.status === 'RUNNING');
+    useEffect(() => {
+        if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
+    }, [DmsComputeData]);
+    // let unsubscribe: any = null;
+
+    interface msg {
+        content: {
+            subject: string;
+            action?: string;
+            payload?: any;
+        };
+    }
+
+    const disperseMessage = (messages: Array<msg>) => {
+        messages.forEach((msg: msg) => {
+            if (Object.keys(msg)?.length > 0) {
+                console.log('In message: ', msg);
+                if (msg?.content?.action === Action.Publish) {
+                    checkAlive(msg);
+                } else {
+                    sendJsonMessage(msg.content);
+                }
+            }
+        });
+    };
+
+    const checkComputeStatus = async (dmsComputes: DmsComputeData[]) => {
+        const computeRunningStatus: DmsComputeData[] = dmsComputes.filter((compute: DmsComputeData) => compute.status === 'RUNNING' || compute.status === 'STARTING');
         if (computeRunningStatus.length !== 0) {
-            computeRunningStatus.map((compute: DmsComputeData) => {
+            const messageQue: Array<msg> = [];
+            await computeRunningStatus.forEach((compute: DmsComputeData) => {
                 if (compute?.status && compute?.id) {
                     const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
                         experimentId: 1,
                         opId: opid,
-                        // userId: compute?.id,
-                        userId: compute?.created_by,
-                        //TODO Below are added just for fixing errors
-                        project_id: 12,
-                        get_datatables: undefined,
-                        az_blob_get_containers: undefined,
-                        az_blob_browse_container: undefined
+                        userId: compute?.id
                     });
-                    submitMessage({
-                        content: aliveMessage
-                    });
+                    messageQue.push({ content: { action: Action.Subscribe, subject: `dms_pid.out.${compute?.id}` } });
+                    messageQue.push({ content: aliveMessage });
                 }
             });
+            console.log('messageQue', messageQue);
+            submitMessage(messageQue);
         }
     };
 
     // TODO: ResponseCheckInterval Type
 
     let responseCheckInterval: any = {}; //variable for the intervalID
-    let counter = 0;
-    function checkAlive(msg: Message) {
+    function checkAlive(msg: msg) {
+        console.log('inside checkAlive');
         sendJsonMessage(msg); //send an "isAlive" message to the PID
-        responseCheckInterval[msg.payload?.op_id] = setInterval(() => {
+        responseCheckInterval[msg?.content?.payload?.op_id] = setInterval(() => {
             //kickoff a new timer
-            setPIDState('unknown'); //interval reached and uncanceled means we have not received a response
-            // counter++;
-            setComputeState('unknown');
+            setComputeState('unknown'); //interval reached and uncanceled means we have not received a response
             setTimeout(() => {
-                //wait and retry
-                // if (counter === 1) {
-                //     pidMeassageResponseHandler(msg);
-                // }
                 checkAlive(msg);
             }, 15000);
-        }, 30000);
+        }, 50000);
     }
 
     function pidMeassageResponseHandler(message: Message) {
@@ -111,25 +133,10 @@ function SocketWrapper(props: any) {
         console.log('lets check interval clear', responseCheckInterval);
         delete responseCheckInterval[message.payload.op_id];
         console.log('responseCheckInterval', responseCheckInterval);
-        setPIDState('alive'); //set the process state as "alive"
-        setComputeState('alive');
-        checkAlive(message); //restart a new checkAlive sequence
+        setComputeState('alive'); //set the process state as "alive"
+
+        // checkAlive(message); //restart a new checkAlive sequence
     }
-
-    useEffect(() => {
-        if (connectionState.connected && Object.keys(message).length > 0) {
-            // if(message.content?.)
-            console.log('message', message.content);
-            checkAlive(message.content);
-            console.log('running useeffect', message);
-            // sendJsonMessage(message.content);
-        }
-    }, [message]);
-    // console.log('DmsComputeData ===>', DmsComputeData);
-
-    useEffect(() => {
-        if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
-    }, [DmsComputeData]);
 
     return <>{props.children}</>;
 }
