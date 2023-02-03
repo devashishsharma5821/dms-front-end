@@ -65,6 +65,8 @@ const ExperimentsPage = () => {
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
     const [clearTimeouts, setClearTimeouts] = useState<{ clear: boolean }>({ clear: false });
     const [computeStats, setComputeStats] = useState<string | undefined>();
+    const [transformedNewDataForStencil, setTransformedNewDataForStencil] = useState<any>({});
+    const [transformersGroup, setTransformersGroup] = useState<any>({});
     const { colorMode } = useColorMode();
     let dmsComputeRunningStatusIsDefaultOne;
 
@@ -110,7 +112,11 @@ const ExperimentsPage = () => {
     };
 
     const intializeAndStartRapid = (stencil: any, group: any) => {
+        console.log('Rapid1', stencil);
+        console.log('Rapid2', group);
+        console.log('Rapid', rappid);
         if (!rappid) {
+            console.log('Rapid 121 Undefined')
             rappid = new RappidService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
             rappid.startRappid(stencil, group);
             // Use below to load a sample Ready to go JSON
@@ -487,10 +493,8 @@ const ExperimentsPage = () => {
                         return transformersList;
                     })
                 }
-                // console.log('Trans', transformerData);
-                // console.log('Trans 2', transformedNewDataForStencil);
-                // console.log('Trans 3', transformersGroup);
-                intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
+                setTransformersGroup(transformersGroup);
+                setTransformedNewDataForStencil(transformedNewDataForStencil);
             })
             .catch((err) => console.error(err));
 
@@ -712,12 +716,16 @@ const ExperimentsPage = () => {
         console.log('LeftMenOpen', leftMenuOpen)
         if(leftMenuOpen) {
             transformerMenuDrawer.onOpen();
+            setTimeout(() => {
+                intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
+            }, 3000)
+
         } else transformerMenuDrawer.onClose();
 
     }, [leftMenuOpen]);
     return (
         <>
-            <Box width={'100%'}>
+            <Box ref={elementRef} width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
                     <Toolbar computeData={DmsComputeData} is_default={dmsComputeRunningStatusIsDefaultOne} />
                 </Box>
@@ -740,40 +748,43 @@ const ExperimentsPage = () => {
                                 onClick={toggleLeftMenu}
                             />
                         </Box>
-                        <Box position="relative" width="104px" transform="rotate(270deg)" left={-16} mt={30} textAlign="right">
+                        <Box  position="relative" width="104px" transform="rotate(270deg)" left={-16} mt={30} textAlign="right">
                             <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
                                 Transformers
                             </Box>
                         </Box>
-                        <Drawer  isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
-                            <DrawerOverlay bg="transparent" />
-                            <DrawerContent bg={themeBg} mt="44" ml="54" pl="18" w="292px" maxWidth="292px">
-                                <DrawerCloseButton
-                                    bg={panelCloseBtnBg}
-                                    _hover={{ background: panelCloseBtnBg }}
-                                    border="px"
-                                    mt="17"
-                                    mr={2.5}
-                                    w="24px"
-                                    h="24px"
-                                    borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
-                                    color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}
+                        <Box>
+                            <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
+                                <DrawerOverlay bg="transparent" />
+                                <DrawerContent bg={themeBg} mt="44" ml="54" pl="18" w="292px" maxWidth="292px">
+                                    <DrawerCloseButton
+                                        bg={panelCloseBtnBg}
+                                        _hover={{ background: panelCloseBtnBg }}
+                                        border="px"
+                                        mt="17"
+                                        mr={2.5}
+                                        w="24px"
+                                        h="24px"
+                                        borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
+                                        color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}
 
-                                >
-                                    <Box onClick={toggleLeftMenu}><DoubleAngleLeftIcon></DoubleAngleLeftIcon></Box>
+                                    >
+                                        <Box onClick={toggleLeftMenu}><DoubleAngleLeftIcon></DoubleAngleLeftIcon></Box>
 
-                                </DrawerCloseButton>
-                                <DrawerHeader mt="17" p="0">
-                                    Transformers
-                                </DrawerHeader>
+                                    </DrawerCloseButton>
+                                    <DrawerHeader mt="17" p="0">
+                                        Transformers
+                                    </DrawerHeader>
 
-                                <DrawerBody pl='0' pt='14' pr="17">
-                                    <div className="stencil-container"/>
-                                </DrawerBody>
-                            </DrawerContent>
-                        </Drawer>
+                                    <DrawerBody pl='0' pt='14' pr="17">
+                                        <div id="stencil-container" className="stencil-container" />
+                                    </DrawerBody>
+                                </DrawerContent>
+                            </Drawer>
+                        </Box>
+
                     </Box>
-                    <div ref={elementRef} className="joint-app joint-theme-modern">
+                    <div className="joint-app joint-theme-modern">
                         <div className="app-header">
                             <div className="app-title">
                                 <h1>Transformers</h1>
@@ -781,7 +792,7 @@ const ExperimentsPage = () => {
                             <div className="toolbar-container" />
                         </div>
                         <div className="app-body">
-                            <div className="stencil-container" />
+                            {/*<div id="stencil-container" className="stencil-container" />*/}
                             <div className="paper-container" />
                             <div className="inspector-container" />
                             <div className="navigator-container" />

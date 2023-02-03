@@ -10,7 +10,7 @@ export class StencilService {
         this.stencil = new ui.Stencil({
             paper: paperScroller,
             snaplines: snaplines,
-            label: 'Transformers',
+            label: '',
             width: 240,
             groups: group,
             dropAnimation: true,

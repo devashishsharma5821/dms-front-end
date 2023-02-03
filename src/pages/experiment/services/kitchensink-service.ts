@@ -50,10 +50,9 @@ class KitchenSinkService {
     }
 
     startRappid(stencil: any, group: any) {
-
+        console.log('I am in start Rappid Service')
         // Set the Theme of the Joint JS based on the CSS included in the canvasStyles
         joint.setTheme('modern');
-
         this.initializePaper();
         this.initializeStencil(stencil, group);
         this.initializeSelection();
@@ -139,11 +138,10 @@ class KitchenSinkService {
     }
 
     initializeStencil(stencil: any, group: any) {
-
         const { stencilService, paperScroller, snaplines } = this;
         stencilService.create(paperScroller, snaplines, group);
 
-        this.renderPlugin('.stencil-container', stencilService.stencil);
+        this.renderPlugin('stencil-container', stencilService.stencil);
         stencilService.setShapes(stencil);
 
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
@@ -436,9 +434,31 @@ class KitchenSinkService {
     //     this.paperScroller.centerContent({ useModelGeometry: true });
     // }
 
+    // The below Render Plugin of the class, behaves little differently for Stencil
+    // You need to make sure, the Chakra components you use document.getElementsByClassName to find the dom association
+    // Because Chakra components are Javascript by design and not HTML ELEMENTS.
     renderPlugin(selector: string, plugin: any): void {
-        this.el.querySelector(selector)?.appendChild(plugin.el);
-        plugin.render();
+        if(selector === 'stencil-container') {
+            document.getElementsByClassName(selector)[0].appendChild(plugin.el);
+            plugin.render();
+                const stencilElement = document.getElementsByClassName(selector)[0];
+                const toggleElement = stencilElement?.getElementsByClassName('groups-toggle')[0];
+                toggleElement?.parentNode?.removeChild(toggleElement);
+                const searchElement = stencilElement?.getElementsByClassName("search-wrap")[0];
+                const toggleElement1 = toggleElement || "";
+                searchElement?.after(toggleElement1);
+                const groupLabel = stencilElement?.getElementsByClassName("group-label")[0];
+                groupLabel?.parentNode?.removeChild(groupLabel);
+                const expandBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn btn-expand')[0] as HTMLButtonElement;
+                expandBtn.innerHTML = (`<div>Expand All<span class='v-line-new'></span></div>`);
+                const collapseBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn btn-collapse')[0] as HTMLButtonElement;
+                collapseBtn.innerHTML = (`<div class="collapseButtonReSpace">Collapse All</div>`);
+
+        } else {
+            this.el.querySelector(selector)?.appendChild(plugin.el);
+            plugin.render();
+        }
+
     }
 }
 
