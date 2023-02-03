@@ -6,6 +6,7 @@ import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
 import ViewData from '../modalSystem/ViewData';
 import NotebookModal from '../modalSystem/NotebookModal';
+import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
 
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -14,7 +15,7 @@ const Header = (props: any) => {
     const settingsModal = useDisclosure();
     const ViewDataModal = useDisclosure();
     const notebookModal = useDisclosure();
-
+    const pipelineModal = useDisclosure();
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'16px'} mt={'7px'} mb={'7px'}>
@@ -83,6 +84,8 @@ const Header = (props: any) => {
                         <ViewData isOpen={ViewDataModal.isOpen} onClose={ViewDataModal.onClose}></ViewData>
                         <MenuItem onClick={notebookModal.onOpen}>Notebook</MenuItem>
                         <NotebookModal isOpen={notebookModal.isOpen} onClose={notebookModal.onClose}></NotebookModal>
+                        <MenuItem onClick={pipelineModal.onOpen}>Pipeline</MenuItem>
+                        <DeployPipelineModal isOpen={pipelineModal.isOpen} onClose={pipelineModal.onClose}></DeployPipelineModal>
                     </MenuList>
                 </Menu>
                 <Box ml={'12'} mr={'23'}>
