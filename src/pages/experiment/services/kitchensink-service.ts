@@ -56,7 +56,7 @@ class KitchenSinkService {
         this.initializePaper();
         this.initializeStencil(stencil, group);
         this.initializeSelection();
-        this.initializeToolsAndInspector();
+        // this.initializeToolsAndInspector();
         this.initializeNavigator();
         this.initializeToolbar();
         this.initializeKeyboardShortcuts();

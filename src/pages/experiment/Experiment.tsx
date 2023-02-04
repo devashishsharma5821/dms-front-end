@@ -794,7 +794,7 @@ const ExperimentsPage = () => {
                         <div className="app-body">
                             {/*<div id="stencil-container" className="stencil-container" />*/}
                             <div className="paper-container" />
-                            <div className="inspector-container" />
+                            {/*<div className="inspector-container" />*/}
                             <div className="navigator-container" />
                         </div>
                     </Box>

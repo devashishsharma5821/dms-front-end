@@ -73,8 +73,8 @@
 /*  Navigator  */
 .navigator-container {
     position: absolute;
-    left: 340px;
-    bottom: 75px;
+    left: 275px;
+    bottom: 120px;
     width: 240px;
     height: 120px;
 }
