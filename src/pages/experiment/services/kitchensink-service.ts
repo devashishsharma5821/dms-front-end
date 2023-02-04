@@ -128,7 +128,7 @@ class KitchenSinkService {
         const paperScroller = this.paperScroller = new joint.ui.PaperScroller({
             paper,
             autoResizePaper: false,
-            scrollWhileDragging: true,
+            scrollWhileDragging: false,
             cursor: 'grab',
             padding: 0
         });
@@ -311,6 +311,7 @@ class KitchenSinkService {
             width: 191,
             height: 125,
             paperScroller: this.paperScroller,
+            zoom: false,
             paperOptions: {
                 async: true,
                 sorting: joint.dia.Paper.sorting.NONE,

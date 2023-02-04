@@ -718,7 +718,7 @@ const ExperimentsPage = () => {
             transformerMenuDrawer.onOpen();
             setTimeout(() => {
                 intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
-            }, 3000)
+            }, 10)
 
         } else transformerMenuDrawer.onClose();
 
@@ -756,7 +756,7 @@ const ExperimentsPage = () => {
                         <Box>
                             <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
                                 <DrawerOverlay bg="transparent" />
-                                <DrawerContent bg={themeBg} mt="44" ml="54" pl="18" w="292px" maxWidth="292px">
+                                <DrawerContent bg={themeBg} mt="44" ml="54"  w="292px" maxWidth="292px">
                                     <DrawerCloseButton
                                         bg={panelCloseBtnBg}
                                         _hover={{ background: panelCloseBtnBg }}
@@ -784,7 +784,7 @@ const ExperimentsPage = () => {
                         </Box>
 
                     </Box>
-                    <div className="joint-app joint-theme-modern">
+                    <Box className="joint-app joint-theme-modern">
                         <div className="app-header">
                             <div className="app-title">
                                 <h1>Transformers</h1>
@@ -797,7 +797,7 @@ const ExperimentsPage = () => {
                             <div className="inspector-container" />
                             <div className="navigator-container" />
                         </div>
-                    </div>
+                    </Box>
                     <Box>
                         {/*<a>{translationToUse[config['title']]}</a>*/}
                         {/*<br></br>*/}
