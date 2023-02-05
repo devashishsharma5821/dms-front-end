@@ -185,7 +185,7 @@ const ExperimentsPage = () => {
                                     fontSize: 14,
                                     strokeWidth: 1,
                                     x: -30,
-                                    y: 8,
+                                    y: 6,
                                 },
                                 image: {
                                     width: 40,
@@ -763,7 +763,7 @@ const ExperimentsPage = () => {
                         <Box>
                             <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
                                 <DrawerOverlay bg="transparent" />
-                                <DrawerContent bg={themeBg} mt="44" ml="54"  w="292px" maxWidth="292px">
+                                <DrawerContent bg={themeBg} mt="44" ml="54"  w="350px" maxWidth="292px">
                                     <DrawerCloseButton
                                         bg={panelCloseBtnBg}
                                         _hover={{ background: panelCloseBtnBg }}
