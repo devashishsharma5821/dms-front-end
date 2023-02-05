@@ -44,6 +44,9 @@ import { updateDmsDatabricksCredentialsValidToken } from '../../zustandActions/c
 import { hasSubscribed, submitMessage } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
+import ZoomInIcon from '../../assets/icons/ZoomInIcon';
+import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
+import FitToContent from '../../assets/icons/FitToContent';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
@@ -67,7 +70,10 @@ const ExperimentsPage = () => {
     const [computeStats, setComputeStats] = useState<string | undefined>();
     const [transformedNewDataForStencil, setTransformedNewDataForStencil] = useState<any>({});
     const [transformersGroup, setTransformersGroup] = useState<any>({});
+    const [dotSpace, setDotSpace] = React.useState<any>(20);
+    const [dotSize, setDotSize] = React.useState<any>(1);
     const { colorMode } = useColorMode();
+    const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
     let dmsComputeRunningStatusIsDefaultOne;
 
     let unsubscribe: any = null;
@@ -112,12 +118,12 @@ const ExperimentsPage = () => {
     };
 
     const intializeAndStartRapid = (stencil: any, group: any) => {
-        console.log('Rapid1', stencil);
-        console.log('Rapid2', group);
-        console.log('Rapid', rappid);
         if (!rappid) {
-            console.log('Rapid 121 Undefined')
             rappid = new RappidService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+            setTimeout(() => {
+                setPaperScrollerState(rappid.getPaperScroller());
+            }, 500);
+
             rappid.startRappid(stencil, group);
             // Use below to load a sample Ready to go JSON
             // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
@@ -723,6 +729,23 @@ const ExperimentsPage = () => {
         } else transformerMenuDrawer.onClose();
 
     }, [leftMenuOpen]);
+
+    const zoomIn = () => {
+        paperScrollerState.zoom(0.2, { max: 4 });
+        if (dotSpace < 80) setDotSpace(dotSpace + 4);
+        if (dotSize < 4) setDotSize(dotSize + 0.2);
+    };
+    const zoomOut = () => {
+        paperScrollerState.zoom(-0.2, { min: 0.2 });
+        if (dotSpace > 4) setDotSpace(dotSpace - 4);
+        if (dotSize > 0.4) setDotSize(dotSize - 0.2);
+    };
+
+    const fitToContent = () => {
+        const opt = {padding:150, scaleGrid:0.2}
+        paperScrollerState.zoomToFit(opt);
+        paperScrollerState.zoomToRect();
+    };
     return (
         <>
             <Box ref={elementRef} width={'100%'}>
@@ -796,6 +819,13 @@ const ExperimentsPage = () => {
                             <div className="paper-container" />
                             {/*<div className="inspector-container" />*/}
                             <div className="navigator-container" />
+                            <Box position="absolute" zIndex={10} bottom="104px" right="10px" display="flex" flexDirection="column">
+                                {/* <Button onClick={zoomIn} mr="5px" backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom In</Button>
+                <Button onClick={zoomOut} backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom Out</Button> */}
+                                <IconButton aria-label="Fit" variant="outline" icon={<FitToContent />} onClick={fitToContent} height={57} width="var(--chakra-space-56)" marginBottom={16} />
+                                <IconButton aria-label="Zoom In" variant="outline" icon={<ZoomInIcon />} onClick={zoomIn} height={57} width="var(--chakra-space-56)" borderBottomRadius="none" />
+                                <IconButton aria-label="Zoom Out" variant="outline" icon={<ZoomOutIcon />} onClick={zoomOut} height={57} width="var(--chakra-space-56)" borderTopRadius="none" />
+                            </Box>
                         </div>
                     </Box>
                     <Box>

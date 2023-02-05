@@ -62,6 +62,9 @@ class KitchenSinkService {
         this.initializeKeyboardShortcuts();
         this.initializeTooltips();
     }
+    getPaperScroller() {
+        return this.paperScroller;
+    }
 
     initializePaper() {
 
@@ -128,11 +131,10 @@ class KitchenSinkService {
         const paperScroller = this.paperScroller = new joint.ui.PaperScroller({
             paper,
             autoResizePaper: false,
-            scrollWhileDragging: false,
+            scrollWhileDragging: true,
             cursor: 'grab',
             padding: 0
         });
-
         this.renderPlugin('.paper-container', paperScroller);
         paperScroller.render().center();
     }
