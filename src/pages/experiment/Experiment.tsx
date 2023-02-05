@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData, getTransformersData } from '../../query';
+import {startCase} from 'lodash';
 import {
     useColorModeValue,
     useDisclosure,
@@ -159,6 +160,7 @@ const ExperimentsPage = () => {
                         //             :   port.type === 'MODEL'
                         //                 ?   '<polygon cursor="pointer" class="port-body" points="0,-7, 7,7, -7,7" stroke="tranparent" />'
                         //                 :   '<rect cursor="pointer" class="port-dummy" x="-7" y="-7" width="10" height="10" />',
+                        currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop())
                         const stencilMarkup = new shapes.standard.EmbeddedImage({
                             size: { width: 257, height: 52 },
                             attrs: {
