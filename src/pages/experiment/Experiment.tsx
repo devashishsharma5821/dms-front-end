@@ -47,6 +47,7 @@ import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
 import ZoomInIcon from '../../assets/icons/ZoomInIcon';
 import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
 import FitToContent from '../../assets/icons/FitToContent';
+import ZoomComponent from '../../component/zoomer/Zoomer';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
@@ -70,8 +71,6 @@ const ExperimentsPage = () => {
     const [computeStats, setComputeStats] = useState<string | undefined>();
     const [transformedNewDataForStencil, setTransformedNewDataForStencil] = useState<any>({});
     const [transformersGroup, setTransformersGroup] = useState<any>({});
-    const [dotSpace, setDotSpace] = React.useState<any>(20);
-    const [dotSize, setDotSize] = React.useState<any>(1);
     const { colorMode } = useColorMode();
     const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
     let dmsComputeRunningStatusIsDefaultOne;
@@ -729,23 +728,6 @@ const ExperimentsPage = () => {
         } else transformerMenuDrawer.onClose();
 
     }, [leftMenuOpen]);
-
-    const zoomIn = () => {
-        paperScrollerState.zoom(0.2, { max: 4 });
-        if (dotSpace < 80) setDotSpace(dotSpace + 4);
-        if (dotSize < 4) setDotSize(dotSize + 0.2);
-    };
-    const zoomOut = () => {
-        paperScrollerState.zoom(-0.2, { min: 0.2 });
-        if (dotSpace > 4) setDotSpace(dotSpace - 4);
-        if (dotSize > 0.4) setDotSize(dotSize - 0.2);
-    };
-
-    const fitToContent = () => {
-        const opt = {padding:150, scaleGrid:0.2}
-        paperScrollerState.zoomToFit(opt);
-        paperScrollerState.zoomToRect();
-    };
     return (
         <>
             <Box ref={elementRef} width={'100%'}>
@@ -795,7 +777,7 @@ const ExperimentsPage = () => {
                                         <Box onClick={toggleLeftMenu}><DoubleAngleLeftIcon></DoubleAngleLeftIcon></Box>
 
                                     </DrawerCloseButton>
-                                    <DrawerHeader mt="17" p="0">
+                                    <DrawerHeader mt="17" p="0" ml="15px">
                                         Transformers
                                     </DrawerHeader>
 
@@ -808,24 +790,18 @@ const ExperimentsPage = () => {
 
                     </Box>
                     <Box className="joint-app joint-theme-modern">
-                        <div className="app-header">
-                            <div className="app-title">
-                                <h1>Transformers</h1>
-                            </div>
-                            <div className="toolbar-container" />
-                        </div>
+                        {/*<div className="app-header">*/}
+                        {/*    <div className="app-title">*/}
+                        {/*        <h1>Transformers</h1>*/}
+                        {/*    </div>*/}
+                        {/*    <div className="toolbar-container" />*/}
+                        {/*</div>*/}
                         <div className="app-body">
                             {/*<div id="stencil-container" className="stencil-container" />*/}
-                            <div className="paper-container" />
+                            <Box className="paper-container" />
                             {/*<div className="inspector-container" />*/}
-                            <div className="navigator-container" />
-                            <Box position="absolute" zIndex={10} bottom="104px" right="10px" display="flex" flexDirection="column">
-                                {/* <Button onClick={zoomIn} mr="5px" backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom In</Button>
-                <Button onClick={zoomOut} backgroundColor="#808080" _hover={{bg:"#929090"}}>Zoom Out</Button> */}
-                                <IconButton aria-label="Fit" variant="outline" icon={<FitToContent />} onClick={fitToContent} height={57} width="var(--chakra-space-56)" marginBottom={16} />
-                                <IconButton aria-label="Zoom In" variant="outline" icon={<ZoomInIcon />} onClick={zoomIn} height={57} width="var(--chakra-space-56)" borderBottomRadius="none" />
-                                <IconButton aria-label="Zoom Out" variant="outline" icon={<ZoomOutIcon />} onClick={zoomOut} height={57} width="var(--chakra-space-56)" borderTopRadius="none" />
-                            </Box>
+                            <Box className="navigator-container" />
+                            <ZoomComponent paperScroll={paperScrollerState}></ZoomComponent>
                         </div>
                     </Box>
                     <Box>
