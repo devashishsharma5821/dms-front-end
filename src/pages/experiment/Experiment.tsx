@@ -151,15 +151,6 @@ const ExperimentsPage = () => {
                         let icon = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].iconDark:transformerMenuConf[currentObj['category']].iconLight;
                         if(!transformersGroup[currentObj['category']])
                             transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
-                        // port.type === 'DATAFRAME'
-                        //     ?   '<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" stroke="transparent" />'
-                        //     :   port.type === 'DATASET'
-                        //         ?   '<circle cursor="pointer" class="port-body" r="6" />'
-                        //         :   port.type === 'METADATA'
-                        //             ?   '<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" stroke="transparent" />'
-                        //             :   port.type === 'MODEL'
-                        //                 ?   '<polygon cursor="pointer" class="port-body" points="0,-7, 7,7, -7,7" stroke="tranparent" />'
-                        //                 :   '<rect cursor="pointer" class="port-dummy" x="-7" y="-7" width="10" height="10" />',
                         currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop())
                         const stencilMarkup = new shapes.standard.EmbeddedImage({
                             size: { width: 257, height: 52 },
