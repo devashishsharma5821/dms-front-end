@@ -5,7 +5,6 @@
     box-sizing: border-box;
     overflow:hidden;
     margin: 0;
-    padding-left: 50px;
 }
 
 .app-header {
@@ -42,8 +41,6 @@
     height: 100%;
     overflow: hidden;
     box-sizing: border-box;
-    left: 292px;
-    right: 240px;
 }
 
 /*  Inspector  */
@@ -76,8 +73,8 @@
 /*  Navigator  */
 .navigator-container {
     position: absolute;
-    left: 340px;
-    bottom: 75px;
+    left: 275px;
+    bottom: 50px;
     width: 240px;
     height: 120px;
 }

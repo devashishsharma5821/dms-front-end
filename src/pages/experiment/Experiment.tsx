@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData, getTransformersData } from '../../query';
+import {startCase} from 'lodash';
 import {
     useColorModeValue,
     useDisclosure,
@@ -44,6 +45,10 @@ import { updateDmsDatabricksCredentialsValidToken } from '../../zustandActions/c
 import { hasSubscribed, submitMessage } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
+import ZoomInIcon from '../../assets/icons/ZoomInIcon';
+import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
+import FitToContent from '../../assets/icons/FitToContent';
+import ZoomComponent from '../../component/zoomer/Zoomer';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
@@ -68,6 +73,7 @@ const ExperimentsPage = () => {
     const [transformedNewDataForStencil, setTransformedNewDataForStencil] = useState<any>({});
     const [transformersGroup, setTransformersGroup] = useState<any>({});
     const { colorMode } = useColorMode();
+    const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
     let dmsComputeRunningStatusIsDefaultOne;
 
     let unsubscribe: any = null;
@@ -112,12 +118,12 @@ const ExperimentsPage = () => {
     };
 
     const intializeAndStartRapid = (stencil: any, group: any) => {
-        console.log('Rapid1', stencil);
-        console.log('Rapid2', group);
-        console.log('Rapid', rappid);
         if (!rappid) {
-            console.log('Rapid 121 Undefined')
             rappid = new RappidService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+            setTimeout(() => {
+                setPaperScrollerState(rappid.getPaperScroller());
+            }, 500);
+
             rappid.startRappid(stencil, group);
             // Use below to load a sample Ready to go JSON
             // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
@@ -145,15 +151,7 @@ const ExperimentsPage = () => {
                         let icon = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].iconDark:transformerMenuConf[currentObj['category']].iconLight;
                         if(!transformersGroup[currentObj['category']])
                             transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
-                        // port.type === 'DATAFRAME'
-                        //     ?   '<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" stroke="transparent" />'
-                        //     :   port.type === 'DATASET'
-                        //         ?   '<circle cursor="pointer" class="port-body" r="6" />'
-                        //         :   port.type === 'METADATA'
-                        //             ?   '<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" stroke="transparent" />'
-                        //             :   port.type === 'MODEL'
-                        //                 ?   '<polygon cursor="pointer" class="port-body" points="0,-7, 7,7, -7,7" stroke="tranparent" />'
-                        //                 :   '<rect cursor="pointer" class="port-dummy" x="-7" y="-7" width="10" height="10" />',
+                        currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop())
                         const stencilMarkup = new shapes.standard.EmbeddedImage({
                             size: { width: 257, height: 52 },
                             attrs: {
@@ -178,7 +176,7 @@ const ExperimentsPage = () => {
                                     fontSize: 14,
                                     strokeWidth: 1,
                                     x: -30,
-                                    y: 8,
+                                    y: 6,
                                 },
                                 image: {
                                     width: 40,
@@ -718,7 +716,7 @@ const ExperimentsPage = () => {
             transformerMenuDrawer.onOpen();
             setTimeout(() => {
                 intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
-            }, 3000)
+            }, 10)
 
         } else transformerMenuDrawer.onClose();
 
@@ -756,7 +754,7 @@ const ExperimentsPage = () => {
                         <Box>
                             <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
                                 <DrawerOverlay bg="transparent" />
-                                <DrawerContent bg={themeBg} mt="44" ml="54" pl="18" w="292px" maxWidth="292px">
+                                <DrawerContent bg={themeBg} mt="44" ml="54"  w="350px" maxWidth="292px">
                                     <DrawerCloseButton
                                         bg={panelCloseBtnBg}
                                         _hover={{ background: panelCloseBtnBg }}
@@ -772,7 +770,7 @@ const ExperimentsPage = () => {
                                         <Box onClick={toggleLeftMenu}><DoubleAngleLeftIcon></DoubleAngleLeftIcon></Box>
 
                                     </DrawerCloseButton>
-                                    <DrawerHeader mt="17" p="0">
+                                    <DrawerHeader mt="17" p="0" ml="15px">
                                         Transformers
                                     </DrawerHeader>
 
@@ -784,20 +782,21 @@ const ExperimentsPage = () => {
                         </Box>
 
                     </Box>
-                    <div className="joint-app joint-theme-modern">
-                        <div className="app-header">
-                            <div className="app-title">
-                                <h1>Transformers</h1>
-                            </div>
-                            <div className="toolbar-container" />
-                        </div>
+                    <Box className="joint-app joint-theme-modern">
+                        {/*<div className="app-header">*/}
+                        {/*    <div className="app-title">*/}
+                        {/*        <h1>Transformers</h1>*/}
+                        {/*    </div>*/}
+                        {/*    <div className="toolbar-container" />*/}
+                        {/*</div>*/}
                         <div className="app-body">
                             {/*<div id="stencil-container" className="stencil-container" />*/}
-                            <div className="paper-container" />
-                            <div className="inspector-container" />
-                            <div className="navigator-container" />
+                            <Box className="paper-container" />
+                            {/*<div className="inspector-container" />*/}
+                            <Box className="navigator-container" />
+                            <ZoomComponent paperScroll={paperScrollerState}></ZoomComponent>
                         </div>
-                    </div>
+                    </Box>
                     <Box>
                         {/*<a>{translationToUse[config['title']]}</a>*/}
                         {/*<br></br>*/}

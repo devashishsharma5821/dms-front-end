@@ -56,11 +56,14 @@ class KitchenSinkService {
         this.initializePaper();
         this.initializeStencil(stencil, group);
         this.initializeSelection();
-        this.initializeToolsAndInspector();
+        // this.initializeToolsAndInspector();
         this.initializeNavigator();
         this.initializeToolbar();
         this.initializeKeyboardShortcuts();
         this.initializeTooltips();
+    }
+    getPaperScroller() {
+        return this.paperScroller;
     }
 
     initializePaper() {
@@ -132,7 +135,6 @@ class KitchenSinkService {
             cursor: 'grab',
             padding: 0
         });
-
         this.renderPlugin('.paper-container', paperScroller);
         paperScroller.render().center();
     }
@@ -311,6 +313,7 @@ class KitchenSinkService {
             width: 191,
             height: 125,
             paperScroller: this.paperScroller,
+            zoom: false,
             paperOptions: {
                 async: true,
                 sorting: joint.dia.Paper.sorting.NONE,

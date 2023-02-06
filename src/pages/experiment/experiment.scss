@@ -57,9 +57,9 @@ div.joint-stencil.joint-theme-modern .groups-toggle .btn{
 div.joint-stencil.joint-theme-modern .groups-toggle .btn:hover{
     background: transparent;
 }
-.v-line {
-    font-size: 16px !important;
-}
+//.v-line {
+//    font-size: 16px !important;
+//}
 .v-line-new {
   border-left: 2px solid #2180C2;
   height: 10px;
@@ -73,4 +73,8 @@ div.joint-stencil.joint-theme-modern .groups-toggle .btn:hover{
 }
 div.joint-stencil.joint-theme-modern .group, .joint-stencil.joint-theme-modern .group:first-child{
     border: none;
+}
+div.joint-paper.joint-theme-modern {
+  background: transparent;
+  margin-left: 8px;
 }
