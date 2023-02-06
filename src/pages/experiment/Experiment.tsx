@@ -13,7 +13,12 @@ import {
 } from '@chakra-ui/react';
 import TransformerMenu from '../../component/Transformers/TransformerMenu';
 import { useApolloClient } from '@apollo/client';
-import { ComputeDetailListResponse, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
+import {
+    ComputeDetailListResponse,
+    ExperimentAppStoreState,
+    DmsComputeData,
+    ComputeAppStoreState
+} from '../../models/computeDetails';
 import { GET_DATABRICKS_CREDS } from '../../query/index';
 import { DataBricksTokenResponse } from '../../models/dataBricksTokenResponse';
 import { DataBricksTokenDetails } from '../../models/types';
@@ -45,10 +50,9 @@ import { updateDmsDatabricksCredentialsValidToken } from '../../zustandActions/c
 import { hasSubscribed, submitMessage } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
-import ZoomInIcon from '../../assets/icons/ZoomInIcon';
-import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
-import FitToContent from '../../assets/icons/FitToContent';
 import ZoomComponent from '../../component/zoomer/Zoomer';
+import { TransformersAppStoreState } from '../../models/transformer';
+import { getAndUpdateTransformersData } from '../../zustandActions/transformersActions';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
@@ -74,6 +78,7 @@ const ExperimentsPage = () => {
     const [transformersGroup, setTransformersGroup] = useState<any>({});
     const { colorMode } = useColorMode();
     const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
+    const [TransformersData] = useAppStore((state: TransformersAppStoreState) => [state.TransformersData]);
     let dmsComputeRunningStatusIsDefaultOne;
 
     let unsubscribe: any = null;
@@ -132,372 +137,366 @@ const ExperimentsPage = () => {
     useEffect(() => {
         if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
     }, [DmsComputeData]);
-
     useEffect(() => {
-        const { GET_TRANSFORMERS } = getTransformersData();
-        client
-            .query<TransformerListResponse<Array<TransformerDetail>>>({
-                query: GET_TRANSFORMERS
-            })
-            .then((response) => {
-                let transformerData = [...response.data.dmsTransformers];
-                let transformersGroup:any  ={};
-                let transformedNewDataForStencil: any;
-                if(transformerData && transformerData.length > 0) {
-                    transformedNewDataForStencil = transformerData.reduce((transformersList: any=[], currentObj: any) => {
-                        //const { colorMode } = useColorMode();
-                        let stencilBg = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].backgroundDark:transformerMenuConf[currentObj['category']].backgroundLight;
-                        let stencilStroke = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].backgroundDarkStroke:transformerMenuConf[currentObj['category']].backgroundLightStroke;
-                        let icon = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].iconDark:transformerMenuConf[currentObj['category']].iconLight;
-                        if(!transformersGroup[currentObj['category']])
-                            transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
-                        currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop())
-                        const stencilMarkup = new shapes.standard.EmbeddedImage({
-                            size: { width: 257, height: 52 },
-                            attrs: {
-                                root: {
-                                    dataTooltip: currentObj.name,
-                                    dataTooltipPosition: 'left',
-                                    dataTooltipPositionSelector: '.joint-stencil'
-                                },
-                                body: {
-                                    rx: 2,
-                                    ry: 2,
-                                    fill: stencilBg,
-                                    stroke: stencilStroke || '#000000',
-                                    strokeWidth: 1,
-                                    strokeDasharray: '0'
-                                },
-                                label: {
-                                    text: currentObj.name,
-                                    fill: '#08192E',
-                                    fontFamily: 'ibm-plex-sans',
-                                    fontWeight: '600',
-                                    fontSize: 14,
-                                    strokeWidth: 1,
-                                    x: -30,
-                                    y: 6,
-                                },
-                                image: {
-                                    width: 40,
-                                    height: 40,
-                                    x: 0,
-                                    y: 10,
-                                    'href': `/assets/transformersIcons/${icon}`
-                                }
+        if(TransformersData === null) {
+            getAndUpdateTransformersData();
+        } else {
+            console.log('TransformersData', TransformersData)
+            let transformerData = TransformersData;
+            let transformersGroup:any  ={};
+            let transformedNewDataForStencil: any;
+            if(transformerData && transformerData.length > 0) {
+                transformedNewDataForStencil = transformerData.reduce((transformersList: any=[], currentObj: any) => {
+                    //const { colorMode } = useColorMode();
+                    let stencilBg = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].backgroundDark:transformerMenuConf[currentObj['category']].backgroundLight;
+                    let stencilStroke = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].backgroundDarkStroke:transformerMenuConf[currentObj['category']].backgroundLightStroke;
+                    let icon = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].iconDark:transformerMenuConf[currentObj['category']].iconLight;
+                    if(!transformersGroup[currentObj['category']])
+                        transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
+                    currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop())
+                    const stencilMarkup = new shapes.standard.EmbeddedImage({
+                        size: { width: 257, height: 52 },
+                        attrs: {
+                            root: {
+                                dataTooltip: currentObj.name,
+                                dataTooltipPosition: 'left',
+                                dataTooltipPositionSelector: '.joint-stencil'
                             },
-                            ports: {
-                                groups: {
-                                    'in': {
-                                        markup: [{
-                                            tagName: 'circle',
-                                            selector: 'portBody',
-                                            attributes: {
-                                                'r': 5
-                                            }
-                                        }],
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
+                            body: {
+                                rx: 2,
+                                ry: 2,
+                                fill: stencilBg,
+                                stroke: stencilStroke || '#000000',
+                                strokeWidth: 1,
+                                strokeDasharray: '0'
+                            },
+                            label: {
+                                text: currentObj.name,
+                                fill: '#08192E',
+                                fontFamily: 'ibm-plex-sans',
+                                fontWeight: '600',
+                                fontSize: 14,
+                                strokeWidth: 1,
+                                x: -30,
+                                y: 6,
+                            },
+                            image: {
+                                width: 40,
+                                height: 40,
+                                x: 0,
+                                y: 10,
+                                'href': `/assets/transformersIcons/${icon}`
+                            }
+                        },
+                        ports: {
+                            groups: {
+                                'in': {
+                                    markup: [{
+                                        tagName: 'circle',
+                                        selector: 'portBody',
+                                        attributes: {
+                                            'r': 5
+                                        }
+                                    }],
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
                                         },
-                                        position: {
-                                            name: 'left'
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'left',
-                                                args: {
-                                                    y: 0
-                                                }
-                                            }
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
                                         }
                                     },
-                                    'inPoly2': {
-                                        markup: `<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" fill='#FFFFFF' stroke="${stencilStroke}" />`,
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
-                                        },
+                                    position: {
+                                        name: 'left'
+                                    },
+                                    label: {
                                         position: {
-                                            name: 'left'
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'left',
-                                                args: {
-                                                    y: 0
-                                                }
+                                            name: 'left',
+                                            args: {
+                                                y: 0
                                             }
                                         }
-                                    },
-                                    'inPoly': {
-                                        markup: `<polygon cursor="pointer" className="port-body" cy='20' points="0,-7, 7,7, -7,7" fill="#FFFFFF" stroke="${stencilStroke}" />`,
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
+                                    }
+                                },
+                                'inPoly2': {
+                                    markup: `<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" fill='#FFFFFF' stroke="${stencilStroke}" />`,
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
                                         },
-                                        position: {
-                                            name: 'left'
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'left',
-                                                args: {
-                                                    y: 0
-                                                }
-                                            }
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
                                         }
                                     },
-                                    'inRect': {
-                                        markup: `<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" fill="#FFFFFF" stroke="${stencilStroke}" />`,
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
-                                        },
+                                    position: {
+                                        name: 'left'
+                                    },
+                                    label: {
                                         position: {
-                                            name: 'left'
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'left',
-                                                args: {
-                                                    y: 0
-                                                }
+                                            name: 'left',
+                                            args: {
+                                                y: 0
                                             }
                                         }
-                                    },
-                                    'out': {
-                                        markup: [{
-                                            tagName: 'circle',
-                                            selector: 'portBody',
-                                            attributes: {
-                                                'r': 5
-                                            }
-                                        }],
-                                        position: {
-                                            name: 'right'
+                                    }
+                                },
+                                'inPoly': {
+                                    markup: `<polygon cursor="pointer" className="port-body" cy='20' points="0,-7, 7,7, -7,7" fill="#FFFFFF" stroke="${stencilStroke}" />`,
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
                                         },
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'right',
-                                                args: {
-                                                    y: 0
-                                                }
-                                            }
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
                                         }
                                     },
-                                    'outRect': {
-                                        markup: `<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" fill="#FFFFFF" stroke="${stencilStroke}" />`,
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
-                                        },
+                                    position: {
+                                        name: 'left'
+                                    },
+                                    label: {
                                         position: {
-                                            name: 'right'
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'right',
-                                                args: {
-                                                    y: 0
-                                                }
+                                            name: 'left',
+                                            args: {
+                                                y: 0
                                             }
                                         }
-                                    },
-                                    'outPoly2': {
-                                        markup: `<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" fill='#FFFFFF' stroke="${stencilStroke}" />`,
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
+                                    }
+                                },
+                                'inRect': {
+                                    markup: `<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" fill="#FFFFFF" stroke="${stencilStroke}" />`,
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
                                         },
-                                        position: {
-                                            name: 'right'
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'right',
-                                                args: {
-                                                    y: 0
-                                                }
-                                            }
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
                                         }
                                     },
-                                    'outPoly': {
-                                        markup: `<polygon cursor="pointer" className="port-body" cy='20' points="0,-7, 7,7, -7,7" fill="#FFFFFF" stroke="${stencilStroke}" />`,
-                                        attrs: {
-                                            portBody: {
-                                                magnet: true,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                strokeWidth: 1
-                                            },
-                                            portLabel: {
-                                                fontSize: 11,
-                                                fill: '#FFFFFF',
-                                                stroke: stencilStroke || '#000000',
-                                                fontWeight: 800
-                                            }
-                                        },
+                                    position: {
+                                        name: 'left'
+                                    },
+                                    label: {
                                         position: {
-                                            name: 'right'
-                                        },
-                                        label: {
-                                            position: {
-                                                name: 'right',
-                                                args: {
-                                                    y: 0
-                                                }
+                                            name: 'left',
+                                            args: {
+                                                y: 0
                                             }
                                         }
+                                    }
+                                },
+                                'out': {
+                                    markup: [{
+                                        tagName: 'circle',
+                                        selector: 'portBody',
+                                        attributes: {
+                                            'r': 5
+                                        }
+                                    }],
+                                    position: {
+                                        name: 'right'
                                     },
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
+                                        },
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
+                                        }
+                                    },
+                                    label: {
+                                        position: {
+                                            name: 'right',
+                                            args: {
+                                                y: 0
+                                            }
+                                        }
+                                    }
+                                },
+                                'outRect': {
+                                    markup: `<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" fill="#FFFFFF" stroke="${stencilStroke}" />`,
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
+                                        },
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
+                                        }
+                                    },
+                                    position: {
+                                        name: 'right'
+                                    },
+                                    label: {
+                                        position: {
+                                            name: 'right',
+                                            args: {
+                                                y: 0
+                                            }
+                                        }
+                                    }
+                                },
+                                'outPoly2': {
+                                    markup: `<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" fill='#FFFFFF' stroke="${stencilStroke}" />`,
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
+                                        },
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
+                                        }
+                                    },
+                                    position: {
+                                        name: 'right'
+                                    },
+                                    label: {
+                                        position: {
+                                            name: 'right',
+                                            args: {
+                                                y: 0
+                                            }
+                                        }
+                                    }
+                                },
+                                'outPoly': {
+                                    markup: `<polygon cursor="pointer" className="port-body" cy='20' points="0,-7, 7,7, -7,7" fill="#FFFFFF" stroke="${stencilStroke}" />`,
+                                    attrs: {
+                                        portBody: {
+                                            magnet: true,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            strokeWidth: 1
+                                        },
+                                        portLabel: {
+                                            fontSize: 11,
+                                            fill: '#FFFFFF',
+                                            stroke: stencilStroke || '#000000',
+                                            fontWeight: 800
+                                        }
+                                    },
+                                    position: {
+                                        name: 'right'
+                                    },
+                                    label: {
+                                        position: {
+                                            name: 'right',
+                                            args: {
+                                                y: 0
+                                            }
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    });
+                    let inputPorts = [];
+                    let outputPorts = [];
+                    if(currentObj.inputs.length > 0) {
+                        inputPorts = currentObj.inputs.map((input: any) => {
+                            let typeOfPort = 'in';
+                            if(input.type === 'DATAFRAME') {
+                                typeOfPort = "inRect";
+                            } else if(input.type === 'DATASET') {
+                                typeOfPort = "in";
+                            } else if(input.type === 'MODEL') {
+                                typeOfPort = "inPoly";
+                            } else if(input.type === 'METADATA') {
+                                typeOfPort = "inPoly2";
+                            } else {
+                                typeOfPort = "in";
+                            }
+                            return {
+                                group: typeOfPort,
+                                id: input.id,
+                                isRequired: input.isRequired || null,
+                                isExported: input.isExported || null,
+                                type: input.type || null,
+                                attrs: {
+                                    label: {
+                                        text:  input.name
+                                    }
                                 }
                             }
                         });
-                        let inputPorts = [];
-                        let outputPorts = [];
-                        if(currentObj.inputs.length > 0) {
-                            inputPorts = currentObj.inputs.map((input: any) => {
-                                let typeOfPort = 'in';
-                                if(input.type === 'DATAFRAME') {
-                                    typeOfPort = "inRect";
-                                } else if(input.type === 'DATASET') {
-                                    typeOfPort = "in";
-                                } else if(input.type === 'MODEL') {
-                                    typeOfPort = "inPoly";
-                                } else if(input.type === 'METADATA') {
-                                    typeOfPort = "inPoly2";
-                                } else {
-                                    typeOfPort = "in";
-                                }
-                                return {
-                                    group: typeOfPort,
-                                    id: input.id,
-                                    isRequired: input.isRequired || null,
-                                    isExported: input.isExported || null,
-                                    type: input.type || null,
-                                    attrs: {
-                                        label: {
-                                            text:  input.name
-                                        }
+                    };
+                    if(currentObj.outputs.length > 0) {
+                        outputPorts = currentObj.outputs.map((output: any) => {
+                            let typeOfPort = 'out';
+                            if(output.type === 'DATAFRAME') {
+                                typeOfPort = "outRect";
+                            } else if(output.type === 'DATASET') {
+                                typeOfPort = "out";
+                            } else if(output.type === 'MODEL') {
+                                typeOfPort = "outPoly";
+                            } else if(output.type === 'METADATA') {
+                                typeOfPort = "outPoly2";
+                            } else {
+                                typeOfPort = "out";
+                            }
+                            return {
+                                group: typeOfPort,
+                                id: output.id,
+                                isRequired: output.isRequired || null,
+                                isExported: output.isExported || null,
+                                type: output.type || null,
+                                attrs: {
+                                    label: {
+                                        text:  output.name
                                     }
                                 }
-                            });
-                        };
-                        if(currentObj.outputs.length > 0) {
-                            outputPorts = currentObj.outputs.map((output: any) => {
-                                let typeOfPort = 'out';
-                                if(output.type === 'DATAFRAME') {
-                                    typeOfPort = "outRect";
-                                } else if(output.type === 'DATASET') {
-                                    typeOfPort = "out";
-                                } else if(output.type === 'MODEL') {
-                                    typeOfPort = "outPoly";
-                                } else if(output.type === 'METADATA') {
-                                    typeOfPort = "outPoly2";
-                                } else {
-                                    typeOfPort = "out";
-                                }
-                                return {
-                                    group: typeOfPort,
-                                    id: output.id,
-                                    isRequired: output.isRequired || null,
-                                    isExported: output.isExported || null,
-                                    type: output.type || null,
-                                    attrs: {
-                                        label: {
-                                            text:  output.name
-                                        }
-                                    }
-                                }
-                            });
-                        };
-                        const combinedGroupPorts = [...inputPorts, ...outputPorts];
-                        stencilMarkup.addPorts(combinedGroupPorts);
-                        (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
-                        return transformersList;
-                    })
-                }
-                setTransformersGroup(transformersGroup);
-                setTransformedNewDataForStencil(transformedNewDataForStencil);
-            })
-            .catch((err) => console.error(err));
-
-    }, []);
-
+                            }
+                        });
+                    };
+                    const combinedGroupPorts = [...inputPorts, ...outputPorts];
+                    stencilMarkup.addPorts(combinedGroupPorts);
+                    (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
+                    return transformersList;
+                })
+            }
+            setTransformersGroup(transformersGroup);
+            setTransformedNewDataForStencil(transformedNewDataForStencil);
+        }
+        }, [TransformersData]);
     useEffect(() => {
         client
             .query<DataBricksTokenResponse<DataBricksTokenDetails>>({

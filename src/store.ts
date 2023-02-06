@@ -10,6 +10,7 @@ const useAppStore = create<AppState>((set) => ({
     config: {},
     DmsDatabricksCredentialsValidToken: false,
     DmsComputeData: null,
+    TransformersData: null,
     UserConfig: [],
     lastAliveMessage: null,
     inferStartedMessaage: null,
