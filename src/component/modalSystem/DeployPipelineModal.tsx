@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Formik, Field } from 'formik';
 import {
     Button,
@@ -26,8 +26,10 @@ import {
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIcon from '../../assets/icons/OrIcon';
-import ComputeModal from '../sideBarMenu/ComputeModal';
-
+import ComputeJsonModal from './ComputeJsonModal';
+import useAppStore from '../../store';
+import { ComputeAppStoreState, DmsComputeData } from '../../models/computeDetails';
+import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 const DeployPipelineModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -36,10 +38,54 @@ const DeployPipelineModal = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const CreateModal = useDisclosure();
+    const [DmsComputeData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData]);
     interface databricksSettings {
         pipeline: string;
         existingCompute: string;
     }
+    const newComputedata = (computedata: any) => {
+        return (
+            `${computedata.name} - ` +
+            `${Math.floor((computedata.resources.node_type.driver_memory_mb + computedata.resources.node_type.worker_memory_mb) / 1024)} GB | ${
+                computedata.resources.node_type.worker_num_cores + computedata.resources.node_type.driver_num_cores
+            } Cores`
+        );
+    };
+
+    // Create a UseEffect with computedata
+    // If you have DmsComputeData, meaning DmsComputeData.length > 0
+    // Then you just DmsComputeData, and bind it to your options.
+    // IF DmsComputeData is null or undefined, that means you dont have any compute data in the state.
+    // In that case you have to call your query getAndUpdateDmsComputeData();
+    // Once you call query, and new data is avaiable, your react hook DmsComputeData will fire again.
+    // Once that fires, repeat steps  // If you have DmsComputeData, meaning DmsComputeData.length > 0. Then you just just DmsComputeData, and bind it to your options.
+    // useEffect(() => {
+    //     if (DmsComputeData) {
+    //         getAndUpdateDmsComputeData();
+    //
+    // }, [DmsComputeData]);
+
+    // if (DmsComputeData === null || DmsComputeData === undefined) {
+    //     const { GET_COMPUTELIST } = getAndUpdateDmsComputeData();
+    //     client
+    //         .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
+    //             query: GET_COMPUTELIST
+    //         })
+    //         .then((response: { data: { dmsComputes: any } }) => {
+    //             let computedata = [...response.data.dmsComputes];
+    //             const newComputedataa = newComputedata(computedata);
+    //             setRowData(newComputedataa);
+    //             gridRef?.current!?.api?.sizeColumnsToFit();
+    //             getAndUpdateDmsComputeData(response.data.dmsComputes);
+    //         })
+    //         .catch((err: any) => console.error(err));
+    // } else
+    useEffect(() => {
+        console.log('I am here');
+        if (DmsComputeData === null || DmsComputeData === undefined) {
+            getAndUpdateDmsComputeData();
+        }
+    }, [DmsComputeData]);
 
     return (
         <Flex width={'653px'}>
@@ -116,8 +162,13 @@ const DeployPipelineModal = (props: any) => {
                                                                 return error;
                                                             }}
                                                         >
-                                                            <option>My-Compute 1</option>
-                                                            <option>My-Compute 2</option>
+                                                            {DmsComputeData.map((computeData) => (
+                                                                <>
+                                                                    <option>
+                                                                        <>{newComputedata(computeData)}</>{' '}
+                                                                    </option>
+                                                                </>
+                                                            ))}
                                                         </Select>
                                                     </Box>
                                                 </FormControl>
@@ -142,7 +193,7 @@ const DeployPipelineModal = (props: any) => {
                                                     >
                                                         Create Compute
                                                     </Button>
-                                                    <ComputeModal isOpen={CreateModal.isOpen} onClose={CreateModal.onClose}></ComputeModal>
+                                                    <ComputeJsonModal isOpen={CreateModal.isOpen} onClose={CreateModal.onClose}></ComputeJsonModal>
                                                 </Box>
                                             </Center>
                                         </Flex>
