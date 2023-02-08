@@ -11,7 +11,7 @@ import {
     RunStageErrorEvent,
     RunStageDataEvent,
     ShutdownEvent
-} from '@antuit/pipeline-interactive-driver-client-ts';
+} from '@antuit-zebra/pipeline-interactive-driver-client-ts';
 
 export interface AppState {
     i18n: any;

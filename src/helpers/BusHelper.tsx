@@ -1,4 +1,4 @@
-import { Request, InferOutputRequest, GetStageDataRequest, GetRunStatusRequest, KeepAliveRequest } from '@antuit/pipeline-interactive-driver-client-ts';
+import { Request, InferOutputRequest, GetStageDataRequest, GetRunStatusRequest, KeepAliveRequest } from '@antuit-zebra/pipeline-interactive-driver-client-ts';
 import { Message, Action } from '@antuit/web-sockets-gateway-client';
 import { dia } from '@antuit/rappid-v1';
 import { BaseRequest, GetStageDataMessageRequest, InferRunMessageRequest, InferRunStage } from '../models/messages';
