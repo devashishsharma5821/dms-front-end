@@ -1,6 +1,6 @@
 import { Dictionary } from './schema';
-import { DataTablesRequest, AzureBlobGetContainersRequest, AzureBlobBrowseContainerRequest } from '@antuit/pipeline-interactive-driver-client-ts';
-import { PipelineExperimentCore_Input } from '@antuit/pipeline-interactive-driver-client-ts/dms_commons/protobuf/common';
+import { DataTablesRequest, AzureBlobGetContainersRequest, AzureBlobBrowseContainerRequest } from '@antuit-zebra/pipeline-interactive-driver-client-ts';
+import { PipelineExperimentCore_Input } from '@antuit-zebra/pipeline-interactive-driver-client-ts/dms_commons/protobuf/common';
 export type BaseRequest = {
     userId: string;
     experimentId: number;
