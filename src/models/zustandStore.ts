@@ -11,7 +11,7 @@ import {
     RunStageErrorEvent,
     RunStageDataEvent,
     ShutdownEvent
-} from '@antuit/pipeline-interactive-driver-client-ts';
+} from '@antuit-zebra/pipeline-interactive-driver-client-ts';
 import { TransformerInfo } from './transformer';
 
 export interface AppState {

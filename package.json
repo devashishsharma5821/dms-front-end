@@ -2,8 +2,9 @@
     "name": "dms",
     "version": "3.0.0",
     "private": true,
+    "homepage": "/v3-dms",
     "dependencies": {
-        "@antuit/pipeline-interactive-driver-client-ts": "^1.4.4",
+        "@antuit-zebra/pipeline-interactive-driver-client-ts": "^1.4.4",
         "@antuit/rappid-v1": "^3.5.0",
         "@antuit/web-sockets-gateway-client": "^1.1.0",
         "@apollo/client": "^3.6.9",

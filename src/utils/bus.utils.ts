@@ -1,4 +1,4 @@
-import { KeepAliveRequest } from '@antuit/pipeline-interactive-driver-client-ts';
+import { KeepAliveRequest } from '@antuit-zebra/pipeline-interactive-driver-client-ts';
 import { Message } from '@antuit/web-sockets-gateway-client';
 import { dia } from '@antuit/rappid-v1';
 import { BaseRequest } from '../models/messages';

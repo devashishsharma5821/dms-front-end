@@ -9,7 +9,7 @@ export const CONFIG = {
                 clientId: 'd0e5e988-bb24-4b34-9dff-3cd0eafa6ee1',
                 authority: 'https://antuitbtoc.b2clogin.com/antuitbtoc.onmicrosoft.com/b2c_1a_custom_esp-dev-internal',
                 knownAuthorities: ['antuitbtoc.b2clogin.com'],
-                redirectUri: 'https://b2c.espdev.antuits.com/dms/',
+                redirectUri: 'https://b2c.espdev.antuits.com/v3-dms/',
                 postLogoutRedirectUri: 'https://b2c.espdev.antuits.com/home/logout',
             },
             cache: {
