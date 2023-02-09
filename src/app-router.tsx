@@ -11,7 +11,7 @@ import SocketWrapper from './component/SocketWrapper';
 export const AppRouter = (props: any) => {
     const user = props.user as User;
     return (
-        <Router>
+        <Router basename="/v3-dms">
             <Suspense fallback={<div>Loading...</div>}>
                 <Header firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
                 <Flex overflowY={'hidden'} flexDirection="column">
