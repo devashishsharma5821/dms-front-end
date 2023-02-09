@@ -30,6 +30,7 @@ import ComputeJsonModal from './ComputeJsonModal';
 import useAppStore from '../../store';
 import { ComputeAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
+
 const DeployPipelineModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -38,7 +39,9 @@ const DeployPipelineModal = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const CreateModal = useDisclosure();
+    const [commentChecked, setCommentChecked] = React.useState(false);
     const [DmsComputeData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData]);
+    const commentModal = useDisclosure();
     interface databricksSettings {
         pipeline: string;
         existingCompute: string;
@@ -225,7 +228,7 @@ const DeployPipelineModal = (props: any) => {
                                         <Flex>
                                             <Center>
                                                 <FormControl display="flex" alignItems="center" mt={'35px'}>
-                                                    <Switch id="email-alerts" />
+                                                    <Switch />
                                                     <FormLabel htmlFor="email-alerts" mb="0" ml={'12px'} fontWeight={700}>
                                                         Schedual
                                                     </FormLabel>
