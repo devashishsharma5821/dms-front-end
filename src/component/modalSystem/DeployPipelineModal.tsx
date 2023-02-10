@@ -30,7 +30,6 @@ import ComputeJsonModal from './ComputeJsonModal';
 import useAppStore from '../../store';
 import { ComputeAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
-import { Show, Hide } from '@chakra-ui/react';
 
 const DeployPipelineModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
@@ -41,8 +40,6 @@ const DeployPipelineModal = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const CreateModal = useDisclosure();
-    const [commentChecked, setCommentChecked] = React.useState(false);
-
     const [DmsComputeData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData]);
     interface databricksSettings {
         pipeline: string;
