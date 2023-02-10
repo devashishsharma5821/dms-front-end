@@ -99,9 +99,12 @@ const Toolbar = (props: any) => {
                         )}
                         {sections.type === 'pipelineButton' && (
                             <>
-                                <Button onClick={deployPipelineModal.onOpen} bg={'default.displayOffButton'} width={'150px'} height={'36px'} pl={'10'} pr={'10'} ml={'14'}>
+                                <Button onClick={deployPipelineModal.onOpen} bg={'default.displayOffButton'} width={'150px'} height={'36px'} pl={'10'} pr={'10'} ml={'14'} borderRadius={4}>
                                     {' '}
                                     <Box mr={'8'}>{sections.component}</Box>
+                                    <Box mr={'8'} color={'#AEB1B8'} mt={'4px'}>
+                                        {sections.name}
+                                    </Box>
                                 </Button>
                                 <DeployPipelineModal isOpen={deployPipelineModal.isOpen} onClose={deployPipelineModal.onClose} />
                             </>

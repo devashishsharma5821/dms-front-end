@@ -30,18 +30,20 @@ import ComputeJsonModal from './ComputeJsonModal';
 import useAppStore from '../../store';
 import { ComputeAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
+import { Show, Hide } from '@chakra-ui/react';
 
 const DeployPipelineModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
+    const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const CreateModal = useDisclosure();
     const [commentChecked, setCommentChecked] = React.useState(false);
+
     const [DmsComputeData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData]);
-    const commentModal = useDisclosure();
     interface databricksSettings {
         pipeline: string;
         existingCompute: string;
@@ -54,35 +56,6 @@ const DeployPipelineModal = (props: any) => {
             } Cores`
         );
     };
-
-    // Create a UseEffect with computedata
-    // If you have DmsComputeData, meaning DmsComputeData.length > 0
-    // Then you just DmsComputeData, and bind it to your options.
-    // IF DmsComputeData is null or undefined, that means you dont have any compute data in the state.
-    // In that case you have to call your query getAndUpdateDmsComputeData();
-    // Once you call query, and new data is avaiable, your react hook DmsComputeData will fire again.
-    // Once that fires, repeat steps  // If you have DmsComputeData, meaning DmsComputeData.length > 0. Then you just just DmsComputeData, and bind it to your options.
-    // useEffect(() => {
-    //     if (DmsComputeData) {
-    //         getAndUpdateDmsComputeData();
-    //
-    // }, [DmsComputeData]);
-
-    // if (DmsComputeData === null || DmsComputeData === undefined) {
-    //     const { GET_COMPUTELIST } = getAndUpdateDmsComputeData();
-    //     client
-    //         .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
-    //             query: GET_COMPUTELIST
-    //         })
-    //         .then((response: { data: { dmsComputes: any } }) => {
-    //             let computedata = [...response.data.dmsComputes];
-    //             const newComputedataa = newComputedata(computedata);
-    //             setRowData(newComputedataa);
-    //             gridRef?.current!?.api?.sizeColumnsToFit();
-    //             getAndUpdateDmsComputeData(response.data.dmsComputes);
-    //         })
-    //         .catch((err: any) => console.error(err));
-    // } else
     useEffect(() => {
         console.log('I am here');
         if (DmsComputeData === null || DmsComputeData === undefined) {
@@ -139,7 +112,7 @@ const DeployPipelineModal = (props: any) => {
                                             </Box>
                                         </FormControl>
                                         <Flex>
-                                            <Center width={'612px'} bg={'#F7FAFC'} height={'92px'} mt={'10px'} mb={'40px'}>
+                                            <Center width={'612px'} bg={boxColor} height={'92px'} mt={'10px'} mb={'40px'}>
                                                 <FormControl isInvalid={!!errors.existingCompute && touched.existingCompute} isRequired>
                                                     <Box>
                                                         <FormLabel htmlFor="existingCompute" fontWeight={600} color={textColorTitle} mt={14} ml={14}>
