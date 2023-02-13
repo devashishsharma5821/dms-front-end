@@ -6,17 +6,15 @@ import { COMPUTE_MODAL_PROPS } from '../../models/types';
 import '../../styles/FormBuilderClasses.scss';
 import FormBuilder from '../jsonSchemaFormBuilder/FormBuilder';
 import formSchema from '../jsonSchemaFormBuilder/computeFormSchema.json';
-import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscaling, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling, getComputeListData } from '../../query';
+import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscaling, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling } from '../../query';
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
-import { ComputeDetail, ComputeDetailListResponse, createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues } from '../../models/computeDetails';
-import useAppStore from '../../store';
+import { createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues } from '../../models/computeDetails';
 import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const client = useApolloClient();
     const toast = useToast();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
-    const [updateDmsComputeData] = useAppStore((state: any) => [state.updateDmsComputeData]);
     const [isComputeCreated, setIsComputeCreated] = useState<boolean>(false);
     useEffect(() => {
         client
@@ -36,19 +34,8 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
         if (isComputeCreated) {
             try {
                 getAndUpdateDmsComputeData();
-                // const { GET_COMPUTELIST } = getComputeListData();
-
-                // client
-                //     .query<ComputeDetailListResponse<Array<ComputeDetail>>>({
-                //         query: GET_COMPUTELIST
-                //     })
-                //     .then((response) => {
-                //         let computedata = [...response.data.dmsComputes];
-                //         updateDmsComputeData(computedata);
                 props.onClose();
                 setIsComputeCreated(false);
-                // })
-                // .catch((err) => console.log(err));
             } catch (err) {
                 console.log('Error in Get computes', err);
             }
@@ -57,7 +44,6 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
 
     const handleSubmitCompute = (values: CreateComputeSubmitHandlerValues) => {
         let mutation: DocumentNode | null = null;
-        // console.log('Values', values);
         setIsDisabled(true);
         if (props?.isEdit) {
             if (!values.enable_autoscaling) {

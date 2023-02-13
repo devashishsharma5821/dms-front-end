@@ -32,12 +32,9 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
         onMessage: (ev: MessageEvent) => {
             console.log('Socket Receive message', JSON.parse(ev.data));
             const message = JSON.parse(ev.data);
-            console.log('message in socket', message);
-
             if (message?.payload?.action === 'ALIVE') {
                 const msgComputeId = message?.subject?.split('.')[2];
                 let updateFlag = false;
-                console.log('msgComputeId', parseInt(msgComputeId));
                 const updatedComputeData = DmsComputeData?.map((computeData: DmsComputeData) => {
                     if (computeData.id === msgComputeId) {
                         if (computeData.status !== message?.payload?.status) {
@@ -72,7 +69,6 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
     const disperseMessage = (messages: Array<disperseMessage>) => {
         messages.forEach((msg: disperseMessage) => {
             if (Object.keys(msg)?.length > 0) {
-                console.log('In message: ', msg);
                 if (msg?.content?.action === Action.Publish) {
                     checkAlive(msg);
                 } else {
@@ -97,14 +93,12 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
                     messageQue.push({ content: aliveMessage });
                 }
             });
-            console.log('messageQue', messageQue);
             submitMessage(messageQue);
         }
     };
 
     let responseCheckInterval: responseCheckIntervalObj = {}; //variable for the intervalID
     function checkAlive(msg: disperseMessage) {
-        console.log('inside checkAlive');
         sendJsonMessage(msg); //send an "isAlive" message to the PID
         responseCheckInterval[msg?.content?.payload?.op_id] = setInterval(() => {
             //kickoff a new timer
@@ -117,11 +111,8 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
 
     function pidMeassageResponseHandler(message: Message) {
         //we received an "I am Alive" message from the PID
-        console.log('inside pidMessageResponseHandler');
         clearInterval(responseCheckInterval[message.payload.op_id]); // cancel the  active responseCheckInterval
-        console.log('lets check interval clear', responseCheckInterval);
         delete responseCheckInterval[message.payload.op_id];
-        console.log('responseCheckInterval', responseCheckInterval);
         setComputeState('alive'); //set the process state as "alive"
 
         // checkAlive(message); //restart a new checkAlive sequence

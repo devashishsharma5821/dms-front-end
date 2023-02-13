@@ -619,10 +619,8 @@ const ExperimentsPage = () => {
     const onComputeStop = () => {
         if (UserConfig && computeId) {
             const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                // experimentId: parseInt(computeId),
                 experimentId: parseInt(UserConfig.userConfiguration.user.userId),
                 opId: opid,
-                // userId: UserConfig.userConfiguration.user.userId,
                 userId: computeId,
                 //TODO Below are added just for fixing errors
                 project_id: 12,
