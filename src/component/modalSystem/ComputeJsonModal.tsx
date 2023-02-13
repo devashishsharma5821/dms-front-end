@@ -105,7 +105,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     return (
         <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
-            <ModalContent width={630} maxWidth={630} color="#171717">
+            <ModalContent maxWidth={750} color="#171717">
                 <ModalHeader height="var(--chakra-space-60)" fontSize={16} borderBottom="1px solid #EAEAEA" fontWeight="700" flex={'none'} padding={20}>
                     {props?.isEdit ? 'Edit Compute' : 'Create Compute'}
                 </ModalHeader>

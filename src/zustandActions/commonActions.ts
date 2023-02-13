@@ -6,7 +6,7 @@ import {
     updateUserConfig as updateUserConfigType
 } from '../models/zustandStore';
 
-export const updateI18N: updateI18NType = (translation = {}) => useAppStore.setState((state: { i18n: {} }) => ({ i18n: translation }));
-export const updateAppConfig: updateAppConfigType = (config = {}) => useAppStore.setState((state: { config: {} }) => ({ config: config }));
-export const updateDmsDatabricksCredentialsValidToken: updateDmsDatabricksCredentialsValidTokenType = (token: any) => useAppStore.setState(() => ({ DmsDatabricksCredentialsValidToken: token }));
+export const updateI18N: updateI18NType = (translation = {}) => useAppStore.setState(() => ({ i18n: translation }));
+export const updateAppConfig: updateAppConfigType = (config = {}) => useAppStore.setState(() => ({ config: config }));
+export const updateDmsDatabricksCredentialsValidToken: updateDmsDatabricksCredentialsValidTokenType = (token: boolean) => useAppStore.setState(() => ({ DmsDatabricksCredentialsValidToken: token }));
 export const updateUserConfig: updateUserConfigType = (UserConfig: any) => useAppStore.setState(() => ({ UserConfig: UserConfig }));

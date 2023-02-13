@@ -1,23 +1,22 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 import useAppStore from '../store';
 import { SocketWrapperAppStoreState, DmsComputeData } from '../models/computeDetails';
-import { Message } from '../models/messages';
+import { Message, disperseMessage } from '../models/messages';
 import { defaultConfig } from '../utils/config';
 import { BusHelper } from '../helpers/BusHelper';
 import { v4 } from 'uuid';
 import { setComputeState, updateDmsComputeData } from '../zustandActions/computeActions';
 import { connectionEstablished, disconnected, receiveMessage, submitMessage } from '../zustandActions/socketActions';
 import { Action } from '@antuit/web-sockets-gateway-client';
-import { CLOSING } from 'ws';
-import { StringUtils } from '@azure/msal-common';
+import { responseCheckIntervalObj } from '../models/socketWrapper';
 
-function SocketWrapper(props: any) {
+const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
     const opid = v4();
     const { wsHost } = defaultConfig;
     let wsUrl = `${wsHost}?token=${localStorage.accessToken}&espToken=${localStorage.espUserToken}`;
     const [message, connectionState, DmsComputeData, UserConfig] = useAppStore((state: SocketWrapperAppStoreState) => [state.message, state.connectionState, state.DmsComputeData, state.UserConfig]);
-    const { sendJsonMessage, lastMessage } = useWebSocket(wsUrl, {
+    const { sendJsonMessage } = useWebSocket(wsUrl, {
         onOpen: () => {
             console.log('Socket connection Establishedd');
             connectionEstablished();
@@ -30,7 +29,7 @@ function SocketWrapper(props: any) {
             console.log('Soccet connection error');
             disconnected();
         },
-        onMessage: (ev: any) => {
+        onMessage: (ev: MessageEvent) => {
             console.log('Socket Receive message', JSON.parse(ev.data));
             const message = JSON.parse(ev.data);
             console.log('message in socket', message);
@@ -70,16 +69,8 @@ function SocketWrapper(props: any) {
     }, [DmsComputeData]);
     // let unsubscribe: any = null;
 
-    interface msg {
-        content: {
-            subject: string;
-            action?: string;
-            payload?: any;
-        };
-    }
-
-    const disperseMessage = (messages: Array<msg>) => {
-        messages.forEach((msg: msg) => {
+    const disperseMessage = (messages: Array<disperseMessage>) => {
+        messages.forEach((msg: disperseMessage) => {
             if (Object.keys(msg)?.length > 0) {
                 console.log('In message: ', msg);
                 if (msg?.content?.action === Action.Publish) {
@@ -94,7 +85,7 @@ function SocketWrapper(props: any) {
     const checkComputeStatus = async (dmsComputes: DmsComputeData[]) => {
         const computeRunningStatus: DmsComputeData[] = dmsComputes.filter((compute: DmsComputeData) => compute.status === 'RUNNING' || compute.status === 'STARTING');
         if (computeRunningStatus.length !== 0) {
-            const messageQue: Array<msg> = [];
+            const messageQue: Array<disperseMessage> = [];
             await computeRunningStatus.forEach((compute: DmsComputeData) => {
                 if (compute?.status && compute?.id) {
                     const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
@@ -111,10 +102,8 @@ function SocketWrapper(props: any) {
         }
     };
 
-    // TODO: ResponseCheckInterval Type
-
-    let responseCheckInterval: any = {}; //variable for the intervalID
-    function checkAlive(msg: msg) {
+    let responseCheckInterval: responseCheckIntervalObj = {}; //variable for the intervalID
+    function checkAlive(msg: disperseMessage) {
         console.log('inside checkAlive');
         sendJsonMessage(msg); //send an "isAlive" message to the PID
         responseCheckInterval[msg?.content?.payload?.op_id] = setInterval(() => {
@@ -139,6 +128,6 @@ function SocketWrapper(props: any) {
     }
 
     return <>{props.children}</>;
-}
+};
 
 export default SocketWrapper;

@@ -1,13 +1,13 @@
 import client from '../apollo-client';
 import { ComputeDetail, ComputeDetailListResponse, ComputeRun, RunComputeDetail } from '../models/computeDetails';
 import { getComputeListData, dmsRunCompute } from '../query';
-import gql from 'graphql-tag';
 import useAppStore from '../store';
 import {
     getAndUpdateDmsComputeData as getAndUpdateDmsComputesDataType,
     setComputeState as setComputeStateType,
     updateCreatedById as updateCreatedByIdType,
-    updateDmsComputeData as updateDmsComputeDataType
+    updateDmsComputeData as updateDmsComputeDataType,
+    dmsRunCompute as dmsRunComputesType
 } from '../models/zustandStore';
 
 export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async () => {
@@ -18,16 +18,7 @@ export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async
 
     useAppStore.setState(() => ({ DmsComputeData: response.data.dmsComputes }));
 };
-export const DmsRunCompute: any = async (id: string) => {
-    const mutation = gql` 
-        mutation {
-            dmsRunCompute(  
-               id: "${id}"  
-                  ) {
-                    job_id,
-                    job_run_id
-                  }
-            }`;
+export const DmsRunCompute: dmsRunComputesType = async (id: string) => {
     const response = await client.mutate<ComputeRun<RunComputeDetail>>({ mutation: dmsRunCompute(id) });
 };
 export const updateDmsComputeData: updateDmsComputeDataType = (ComputeData) => useAppStore.setState(() => ({ DmsComputeData: ComputeData }));

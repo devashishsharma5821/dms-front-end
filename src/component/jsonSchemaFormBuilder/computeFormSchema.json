@@ -17,7 +17,7 @@
         "required": true,
         "errormessage": "Select Worker Type Id",
         "child": "child",
-        "options": [{ "category": "random", "memory_mb": 23, "node_type_id": "44", "num_cores": 33 }],
+        "options": [{ "node_type_id": "Standard_DS3_v123", "memory_mb": 57344, "num_cores": 33 }],
         "uiSchema": {
             "grid-column": "auto / span 4"
         }
@@ -29,7 +29,7 @@
         "required": true,
         "errormessage": "Select Driver Type Id",
         "child": "child",
-        "options": [{ "category": "random", "memory_mb": 23, "node_type_id": "44", "num_cores": 33 }],
+        "options": [{ "node_type_id": "Standard_DS3_v113", "memory_mb": 28672, "num_cores": 13 }],
         "uiSchema": {
             "grid-column": "auto / span 4"
         }

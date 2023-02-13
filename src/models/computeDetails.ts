@@ -126,6 +126,12 @@ export interface DmsComputeData {
         spot_instances: boolean;
     };
     status: string;
+    totalMemory?: number;
+    totalCores?: number;
+}
+
+export interface getComputeListQueryData {
+    data: { dmsComputes: DmsComputeData[] };
 }
 
 export interface GetComputeListResponse {
