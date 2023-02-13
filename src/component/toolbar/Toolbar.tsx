@@ -17,7 +17,11 @@ import {
     PopoverFooter,
     ButtonGroup,
     Link,
-    useColorModeValue
+    useColorModeValue,
+    MenuList,
+    MenuItem,
+    MenuButton,
+    Menu
 } from '@chakra-ui/react';
 import RunArrow from '../../assets/icons/RunArrow';
 import toolbarDataIcons from '../../models/toolbarData';
@@ -29,6 +33,7 @@ import Variables from '../modalSystem/Variables';
 import SaveAs from '../modalSystem/SaveAs';
 import Output from '../modalSystem/Output';
 import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
+import { LineageIcon } from '../../assets/icons';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -67,7 +72,16 @@ const Toolbar = (props: any) => {
                         )}
                         {sections.type === 'moreIcon' && (
                             <>
-                                <Box>{sections.component}</Box>
+                                <Menu>
+                                    <MenuButton>{sections.component}</MenuButton>
+                                    <MenuList borderRadius={'0'} width={'194px'} height={'44px'} color={textColor} ml={'-16'}>
+                                        <MenuItem mt={'5px'}>
+                                            <LineageIcon />
+                                            <Text ml={'12'}>Lineage</Text>
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
+
                                 <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
                             </>
                         )}
