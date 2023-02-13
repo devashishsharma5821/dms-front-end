@@ -41,6 +41,7 @@ const DeployPipelineModal = (props: any) => {
     const [loading, setLoading] = useState(false);
     const CreateModal = useDisclosure();
     const [DmsComputeData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData]);
+    const [isDisabled, setIsDisabled] = useState<boolean>(true);
     interface databricksSettings {
         pipeline: string;
         existingCompute: string;
@@ -198,9 +199,18 @@ const DeployPipelineModal = (props: any) => {
                                         <Flex>
                                             <Center>
                                                 <FormControl display="flex" alignItems="center" mt={'35px'}>
-                                                    <Switch />
+                                                    <Switch
+                                                        //switch here disabled by default and all the select are desable,when it gets enable all the three select will be available after
+                                                        onChange={(event) => {
+                                                            if (!event.target.checked) {
+                                                                setIsDisabled(true);
+                                                            } else {
+                                                                setIsDisabled(false);
+                                                            }
+                                                        }}
+                                                    />
                                                     <FormLabel htmlFor="email-alerts" mb="0" ml={'12px'} fontWeight={700}>
-                                                        Schedual
+                                                        Schedule
                                                     </FormLabel>
                                                 </FormControl>
                                             </Center>
@@ -213,6 +223,7 @@ const DeployPipelineModal = (props: any) => {
                                                             Every
                                                         </FormLabel>
                                                         <Select
+                                                            isDisabled={isDisabled}
                                                             icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}
                                                             borderRadius={3}
                                                             width={'91px'}
@@ -243,6 +254,7 @@ const DeployPipelineModal = (props: any) => {
                                                             Start Time
                                                         </FormLabel>
                                                         <Select
+                                                            isDisabled={isDisabled}
                                                             icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}
                                                             borderRadius={3}
                                                             width={'134px'}
@@ -274,6 +286,7 @@ const DeployPipelineModal = (props: any) => {
                                                             Time Zone
                                                         </FormLabel>
                                                         <Select
+                                                            isDisabled={isDisabled}
                                                             icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}
                                                             borderRadius={3}
                                                             width={'355px'}
