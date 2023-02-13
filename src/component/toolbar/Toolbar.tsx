@@ -28,6 +28,7 @@ import Properties from '../modalSystem/Properties';
 import Variables from '../modalSystem/Variables';
 import SaveAs from '../modalSystem/SaveAs';
 import Output from '../modalSystem/Output';
+import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -37,21 +38,22 @@ const Toolbar = (props: any) => {
     const VariablesModal = useDisclosure();
     const OutputModal = useDisclosure();
     const commentModal = useDisclosure();
-    const triggerActions = (type: string)=>{
-        if(type === 'Properties') {
+    const deployPipelineModal = useDisclosure();
+    const triggerActions = (type: string) => {
+        if (type === 'Properties') {
             propertiesModal.onOpen();
         } else if (type === 'SaveAs') {
             saveAsModal.onOpen();
         } else if (type === 'Variables') {
             VariablesModal.onOpen();
-        }else if(type === 'Output') {
+        } else if (type === 'Output') {
             OutputModal.onOpen();
         }
     };
     const commentModalClosed = () => {
         commentModal.onClose();
         setCommentChecked(false);
-    }
+    };
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
@@ -72,7 +74,16 @@ const Toolbar = (props: any) => {
                         {sections.type === 'switch' && (
                             <>
                                 <Stack align="center" direction="row">
-                                    <Switch isChecked={commentChecked} onChange={(event) => {if(event.target.checked) { setCommentChecked(true); commentModal.onOpen()}}} size="sm" />
+                                    <Switch
+                                        isChecked={commentChecked}
+                                        onChange={(event) => {
+                                            if (event.target.checked) {
+                                                setCommentChecked(true);
+                                                commentModal.onOpen();
+                                            }
+                                        }}
+                                        size="sm"
+                                    />
                                 </Stack>
                                 <Box ml={'6'}>{sections.name}</Box>
                             </>
@@ -80,7 +91,7 @@ const Toolbar = (props: any) => {
                         {sections.type === 'button' && (
                             <>
                                 <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
-                                <Button disabled={sections.disabled} variant="solid" bg={'light.button'} width={'80px'} height={'36px'} pl={'10'} pr={'10'}>
+                                <Button disabled={sections.disabled} variant="solid" bg={'default.toolbarButton'} width={'80px'} height={'36px'} pl={'10'} pr={'10'} borderRadius={4}>
                                     <RunArrow />
                                     <Text ml={'3'}>Run</Text>
                                 </Button>
@@ -88,10 +99,14 @@ const Toolbar = (props: any) => {
                         )}
                         {sections.type === 'pipelineButton' && (
                             <>
-                                <Button variant="solid" bg={'default.displayOffButton'} width={'150px'} height={'36px'} pl={'10'} pr={'10'} ml={'14'}>
+                                <Button onClick={deployPipelineModal.onOpen} bg={'default.displayOffButton'} width={'150px'} height={'36px'} pl={'10'} pr={'10'} ml={'14'} borderRadius={4}>
                                     {' '}
-                                    <Box>{sections.component}</Box>
+                                    <Box mr={'8'}>{sections.component}</Box>
+                                    <Box mr={'8'} color={'#AEB1B8'} mt={'4px'}>
+                                        {sections.name}
+                                    </Box>
                                 </Button>
+                                <DeployPipelineModal isOpen={deployPipelineModal.isOpen} onClose={deployPipelineModal.onClose} />
                             </>
                         )}
                     </>
@@ -189,7 +204,7 @@ const Toolbar = (props: any) => {
             {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
             {VariablesModal.isOpen && <Variables isOpen={VariablesModal.isOpen} onClose={VariablesModal.onClose} />}
-            {OutputModal.isOpen && <Output isOpen={OutputModal.isOpen} onClose={OutputModal.onClose}/>}
+            {OutputModal.isOpen && <Output isOpen={OutputModal.isOpen} onClose={OutputModal.onClose} />}
         </Flex>
     );
 };

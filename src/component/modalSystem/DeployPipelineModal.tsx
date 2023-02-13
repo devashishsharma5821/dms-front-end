@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Formik, Field } from 'formik';
 import {
     Button,
@@ -26,20 +26,39 @@ import {
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIcon from '../../assets/icons/OrIcon';
-import ComputeModal from '../sideBarMenu/ComputeModal';
+import ComputeJsonModal from './ComputeJsonModal';
+import useAppStore from '../../store';
+import { ComputeAppStoreState, DmsComputeData } from '../../models/computeDetails';
+import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 
 const DeployPipelineModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
+    const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const CreateModal = useDisclosure();
+    const [DmsComputeData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData]);
     interface databricksSettings {
         pipeline: string;
         existingCompute: string;
     }
+    const newComputedata = (computedata: any) => {
+        return (
+            `${computedata.name} - ` +
+            `${Math.floor((computedata.resources.node_type.driver_memory_mb + computedata.resources.node_type.worker_memory_mb) / 1024)} GB | ${
+                computedata.resources.node_type.worker_num_cores + computedata.resources.node_type.driver_num_cores
+            } Cores`
+        );
+    };
+    useEffect(() => {
+        console.log('I am here');
+        if (DmsComputeData === null || DmsComputeData === undefined) {
+            getAndUpdateDmsComputeData();
+        }
+    }, [DmsComputeData]);
 
     return (
         <Flex width={'653px'}>
@@ -90,7 +109,7 @@ const DeployPipelineModal = (props: any) => {
                                             </Box>
                                         </FormControl>
                                         <Flex>
-                                            <Center width={'612px'} bg={'#F7FAFC'} height={'92px'} mt={'10px'} mb={'40px'}>
+                                            <Center width={'612px'} bg={boxColor} height={'92px'} mt={'10px'} mb={'40px'}>
                                                 <FormControl isInvalid={!!errors.existingCompute && touched.existingCompute} isRequired>
                                                     <Box>
                                                         <FormLabel htmlFor="existingCompute" fontWeight={600} color={textColorTitle} mt={14} ml={14}>
@@ -116,8 +135,13 @@ const DeployPipelineModal = (props: any) => {
                                                                 return error;
                                                             }}
                                                         >
-                                                            <option>My-Compute 1</option>
-                                                            <option>My-Compute 2</option>
+                                                            {DmsComputeData.map((computeData) => (
+                                                                <>
+                                                                    <option>
+                                                                        <>{newComputedata(computeData)}</>{' '}
+                                                                    </option>
+                                                                </>
+                                                            ))}
                                                         </Select>
                                                     </Box>
                                                 </FormControl>
@@ -142,7 +166,7 @@ const DeployPipelineModal = (props: any) => {
                                                     >
                                                         Create Compute
                                                     </Button>
-                                                    <ComputeModal isOpen={CreateModal.isOpen} onClose={CreateModal.onClose}></ComputeModal>
+                                                    <ComputeJsonModal isOpen={CreateModal.isOpen} onClose={CreateModal.onClose}></ComputeJsonModal>
                                                 </Box>
                                             </Center>
                                         </Flex>
@@ -174,7 +198,7 @@ const DeployPipelineModal = (props: any) => {
                                         <Flex>
                                             <Center>
                                                 <FormControl display="flex" alignItems="center" mt={'35px'}>
-                                                    <Switch id="email-alerts" />
+                                                    <Switch />
                                                     <FormLabel htmlFor="email-alerts" mb="0" ml={'12px'} fontWeight={700}>
                                                         Schedual
                                                     </FormLabel>

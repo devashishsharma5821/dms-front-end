@@ -8,11 +8,11 @@ import MoreIconToolbar from '../assets/icons/MoreIconToolbar';
 import DeployedIcon from '../assets/icons/DeployedIcon';
 import DeployPipelineButton from '../assets/icons/DeployPipelineButton';
 const toolbarDataIcons = {
-    section1:  [
+    section1: [
         {
             component: <Settings />,
             name: 'Properties',
-            type: 'icon',
+            type: 'icon'
         },
         {
             component: <Output />,
@@ -41,9 +41,9 @@ const toolbarDataIcons = {
             type: 'button',
             disabled: false
         },
-        { component: <DeployPipelineButton />, name: 'Deploy Pipeline', type: 'pipelineButton', disabled: true }
+        { component: <DeployPipelineButton color="#2180C2" />, name: 'Deploy Pipeline', type: 'pipelineButton' }
     ],
-    section2:  [
+    section2: [
         { component: <DeployedIcon />, name: 'my-compute1', type: 'deployedIcon' },
         {
             gb: '8 GB',
@@ -52,6 +52,6 @@ const toolbarDataIcons = {
         },
         { component: <DownArrowToolbar />, name: 'downArrow', type: 'downArrow' }
     ]
-}
+};
 
 export default toolbarDataIcons;
