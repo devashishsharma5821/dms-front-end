@@ -32,9 +32,15 @@ export function SelectField(props: FieldPropsType) {
             )}
             <InputField as="select" {...props}>
                 <option value="">Choose...</option>
-                {options.map((optn: options, index: string) => (
-                    <option key={index} value={optn.node_type_id} label={optn.label || optn.node_type_id} />
-                ))}
+                {options.map((optn: options, index: string) => {
+                    return (
+                        <option
+                            key={index}
+                            value={optn.node_type_id}
+                            label={optn.label || `${optn.node_type_id} \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 ${optn.memory_mb / 1024} GB Memory, ${optn.num_cores} Cores`}
+                        />
+                    );
+                })}
             </InputField>
             <ErrorMessage name={name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
         </div>

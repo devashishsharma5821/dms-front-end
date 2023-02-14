@@ -4,7 +4,6 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-import gql from 'graphql-tag';
 import { v4 } from 'uuid';
 
 import { PlayIcon, ReStartIcon, EditIcon, DeleteIcon, StopCompute } from '../../assets/icons';
@@ -22,7 +21,8 @@ import {
     StopComputeDetail,
     ComputeAppStoreState,
     DmsComputeData,
-    agGridClickHandler
+    agGridClickHandler,
+    getComputeListQueryData
 } from '../../models/computeDetails';
 import { ComputeContext } from '../../context/computeContext';
 import useAppStore from '../../store';
@@ -37,6 +37,8 @@ import './compute.scss';
 import { updateDmsComputeData, updateCreatedById, getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 import { submitMessage } from '../../zustandActions/socketActions';
 import { Action } from '@antuit/web-sockets-gateway-client';
+import { newComputeData } from './generateNewComputeData';
+import { disperseMessage } from '../../models/messages';
 
 const Compute = () => {
     const opid = v4();
@@ -44,8 +46,10 @@ const Compute = () => {
     const textColorIcon = useColorModeValue('#666C80', 'white');
     const createModal = useDisclosure();
     const stopComputeRunning = useDisclosure();
+    const refreshCompute = useDisclosure();
     const [loading, setLoading] = useState<boolean>(false);
     const [cellId, setCellId] = useState<string>();
+    const [rowCount, setRowCount] = useState<number | undefined>(0);
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
     const gridRef = useRef<AgGridReact<DmsComputeData>>(null);
     const deleteCompute = useDisclosure();
@@ -68,8 +72,15 @@ const Compute = () => {
         cancelButtonTitle: 'Cancel',
         confirmButtonTitle: 'Confirm'
     };
+    const alertConfirmForRefresh = {
+        title: 'Refresh Compute',
+        description: 'Are you sure you want to Refresh the Compute?',
+        cancelButtonTitle: 'Cancel',
+        confirmButtonTitle: 'Confirm'
+    };
     const [deleteComputeId, setDeleteComputeId] = useState<string | undefined>();
     const [stopComputeId, setStopComputeId] = useState<string | undefined>();
+    const [stopRefreshId, setRefreshComputeId] = useState<string>('');
     const toast = useToast();
     const context = useContext(ComputeContext);
     window.addEventListener('resize', () => {
@@ -93,21 +104,12 @@ const Compute = () => {
     const onPlayClickHandler: agGridClickHandler = (data) => {
         updateCreatedById(data?.created_by);
         setLoading(true);
-        const mutation = gql` 
-        mutation {
-            dmsRunCompute(  
-               id: "${data?.id}"  
-                  ) {
-                    job_id,
-                    job_run_id
-                  }
-            }`;
 
         client
             .mutate<ComputeRun<RunComputeDetail>>({
                 mutation: dmsRunCompute(data?.id)
             })
-            .then((res: any) => {
+            .then(() => {
                 setLoading(false);
                 getAndUpdateDmsComputeData();
                 toast({
@@ -141,10 +143,49 @@ const Compute = () => {
                 // .catch((err: any) => console.error(err));
             })
             .catch((err: any) => {
+                console.log('error ===>', err);
                 setLoading(false);
                 toast({
                     title: `${err}`,
                     status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+            });
+    };
+
+    const confirmAlertActionForStop = () => {
+        client
+            .mutate<ComputeStop<StopComputeDetail>>({
+                mutation: dmsStopComputeRun(stopComputeId)
+            })
+            .then(() => {
+                stopComputeRunning.onClose();
+                toast({
+                    title: `Compute will be stopped after 10 seconds`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                setTimeout(() => {
+                    getAndUpdateDmsComputeData();
+                    if (UserConfig && stopComputeId) {
+                        const shutDownRequest = BusHelper.GetShutdownRequestMessage({
+                            experimentId: parseInt(stopComputeId),
+                            opId: opid,
+                            userId: stopComputeId
+                        });
+
+                        submitMessage([{ content: { action: Action.Unsubscribe, subject: `dms_pid.out.${stopComputeId}` } }, { content: shutDownRequest }]);
+                    }
+                }, 10000);
+            })
+            .catch(() => {
+                toast({
+                    title: `Compute is not stopped`,
+                    status: 'error',
                     isClosable: true,
                     duration: 5000,
                     position: 'top-right'
@@ -160,6 +201,11 @@ const Compute = () => {
     const onStopClickHandler: agGridClickHandler = (data) => {
         setStopComputeId(data?.id);
         stopComputeRunning.onOpen();
+    };
+
+    const onRefreshClickHandler: agGridClickHandler = (data) => {
+        setRefreshComputeId(data?.id);
+        refreshCompute.onOpen();
     };
 
     const onEditClickHandler: agGridClickHandler = (data) => {
@@ -184,20 +230,18 @@ const Compute = () => {
     const actionsRow = (params: any) => {
         return (
             <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
-                {params?.data?.status === 'STOPPED' ? (
-                    loading ? (
-                        <Spinner />
-                    ) : (
-                        <div className="icons" onClick={() => onPlayClickHandler(params.data)}>
-                            <PlayIcon />
-                        </div>
-                    )
+                {loading ? (
+                    <Spinner />
+                ) : params?.data?.status === 'STOPPED' ? (
+                    <div className="icons" onClick={() => onPlayClickHandler(params.data)}>
+                        <PlayIcon />
+                    </div>
                 ) : (
                     <div className="icons" onClick={() => onStopClickHandler(params.data)}>
                         <StopCompute />
                     </div>
                 )}
-                <div className="icons">
+                <div className="icons" onClick={() => onRefreshClickHandler(params.data)}>
                     <ReStartIcon />
                 </div>
                 <div className="icons" onClick={() => onEditClickHandler(params.data)}>
@@ -210,7 +254,7 @@ const Compute = () => {
         );
     };
 
-    const defaultRowOnChange = (event: any, params: any) => {
+    const defaultRowOnChange = () => {
         alertConfirm.onOpen();
     };
     const confirmAlertActionForDelete = () => {
@@ -218,7 +262,7 @@ const Compute = () => {
             .mutate<ComputeDelete<DeleteComputeDetail>>({
                 mutation: dmsDeleteCompute(deleteComputeId)
             })
-            .then((response) => {
+            .then(() => {
                 toast({
                     title: `Compute is deleted successfully`,
                     status: 'success',
@@ -229,7 +273,7 @@ const Compute = () => {
                 getAndUpdateDmsComputeData();
                 deleteCompute.onClose();
             })
-            .catch((response) => {
+            .catch(() => {
                 toast({
                     title: `A running compute can't be deleted`,
                     status: 'error',
@@ -240,48 +284,21 @@ const Compute = () => {
                 deleteCompute.onClose();
             });
     };
-    const confirmAlertActionForStop = () => {
-        client
-            .mutate<ComputeStop<StopComputeDetail>>({
-                mutation: dmsStopComputeRun(stopComputeId)
-            })
-            .then((response) => {
-                getAndUpdateDmsComputeData();
-                toast({
-                    title: `Compute is stopped`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-                if (UserConfig && stopComputeId) {
-                    const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                        experimentId: parseInt(stopComputeId),
-                        opId: opid,
-                        userId: stopComputeId,
-                        //TODO Below are added just for fixing errors
-                        project_id: 12,
-                        get_datatables: undefined,
-                        az_blob_get_containers: undefined,
-                        az_blob_browse_container: undefined
-                    });
 
-                    // submitMessage({ content: shutDownRequest });
-                }
-                stopComputeRunning.onClose();
-            })
-            .catch(() => {
-                toast({
-                    title: `Compute is not stopped`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-            });
+    const confirmAlertActionForRefresh = () => {
+        const messageQue: Array<disperseMessage> = [];
+        const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
+            experimentId: 1,
+            opId: opid,
+            userId: stopRefreshId
+        });
+        messageQue.push({ content: { action: Action.Subscribe, subject: `dms_pid.out.${stopRefreshId}` } });
+        messageQue.push({ content: aliveMessage });
+        submitMessage(messageQue);
+        refreshCompute.onClose();
     };
+
     const confirmAlertAction = () => {
-        console.log('Confirm Clicked');
         // dmsEditCompute
         // Api Call here, same as edit API, but make the default true or false based on trigger
         // Remove the hardcoding
@@ -289,7 +306,7 @@ const Compute = () => {
             .mutate<EditCompute<any>>({
                 mutation: dmsEditCompute(161, true)
             })
-            .then((response) => {
+            .then(() => {
                 alertConfirm.onClose();
                 getAndUpdateDmsComputeData();
                 toast({
@@ -302,6 +319,7 @@ const Compute = () => {
             });
     };
     const defaultRow = (params: any) => {
+        getAndUpdateDmsComputeData();
         return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
     };
 
@@ -320,16 +338,6 @@ const Compute = () => {
         { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
     ]);
 
-    const newComputedata = (computedata: any) => {
-        return computedata.map((compute: any) => {
-            return {
-                ...compute,
-                totalMemory: compute.resources.node_type.driver_memory_mb + compute.resources.node_type.worker_memory_mb,
-                totalCores: compute.resources.node_type.driver_num_cores + compute.resources.node_type.worker_num_cores
-            };
-        });
-    };
-
     useEffect(() => {
         if (DmsComputeData === null) {
             const { GET_COMPUTELIST } = getComputeListData();
@@ -337,17 +345,19 @@ const Compute = () => {
                 .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
                     query: GET_COMPUTELIST
                 })
-                .then((response: { data: { dmsComputes: any } }) => {
+                .then((response: getComputeListQueryData) => {
                     let computedata = [...response.data.dmsComputes];
-                    const newComputedataa = newComputedata(computedata);
+                    const newComputedataa = newComputeData(computedata);
                     setRowData(newComputedataa);
+                    setRowCount(newComputedataa.length);
                     gridRef?.current!?.api?.sizeColumnsToFit();
                     updateDmsComputeData(response.data.dmsComputes);
                 })
                 .catch((err: any) => console.error(err));
         } else if (DmsComputeData?.length > 0) {
-            const newComputedataa = newComputedata(DmsComputeData);
+            const newComputedataa = newComputeData(DmsComputeData);
             setRowData(newComputedataa);
+            setRowCount(newComputedataa.length);
             gridRef?.current!?.api?.sizeColumnsToFit();
         } else {
             setRowData([]);
@@ -382,6 +392,7 @@ const Compute = () => {
 
     const onSearchChange = (searchValue: string) => {
         gridRef.current!.api.setQuickFilter(searchValue);
+        setRowCount(gridRef.current!.api.getModel().getRowCount());
     };
 
     return (
@@ -403,7 +414,7 @@ const Compute = () => {
                                 <Text>Compute Details</Text>
                             </Box>
                             <Box color={'default.containerAgGridRecords'}>
-                                <Text ml={'14'}>4 Records</Text>
+                                <Text ml={'14'}>{rowCount} Records</Text>
                             </Box>
 
                             <Center flex="3" mr={5} justifyContent={'flex-end'} ml={'17'}>
@@ -429,6 +440,8 @@ const Compute = () => {
                                 <AgGridReact<DmsComputeData>
                                     ref={gridRef}
                                     rowData={rowData}
+                                    pagination={true}
+                                    paginationPageSize={10}
                                     columnDefs={columnDefs}
                                     onCellClicked={onCellClicked}
                                     onRowClicked={(e) => console.log('row clicked', e.rowIndex)}
@@ -445,6 +458,9 @@ const Compute = () => {
                     )}
                     {stopComputeRunning.isOpen && (
                         <AlertConfirmComponent isOpen={stopComputeRunning.isOpen} onClose={stopComputeRunning.onClose} options={alertConfirmForStop} confirm={confirmAlertActionForStop} />
+                    )}
+                    {refreshCompute.isOpen && (
+                        <AlertConfirmComponent isOpen={refreshCompute.isOpen} onClose={refreshCompute.onClose} options={alertConfirmForRefresh} confirm={confirmAlertActionForRefresh} />
                     )}
                 </Box>
             </Box>
