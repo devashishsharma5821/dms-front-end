@@ -38,6 +38,7 @@ import { updateDmsComputeData, updateCreatedById, getAndUpdateDmsComputeData } f
 import { submitMessage } from '../../zustandActions/socketActions';
 import { Action } from '@antuit/web-sockets-gateway-client';
 import { newComputeData } from './generateNewComputeData';
+import { disperseMessage } from '../../models/messages';
 
 const Compute = () => {
     const opid = v4();
@@ -45,6 +46,7 @@ const Compute = () => {
     const textColorIcon = useColorModeValue('#666C80', 'white');
     const createModal = useDisclosure();
     const stopComputeRunning = useDisclosure();
+    const refreshCompute = useDisclosure();
     const [loading, setLoading] = useState<boolean>(false);
     const [cellId, setCellId] = useState<string>();
     const [rowCount, setRowCount] = useState<number | undefined>(0);
@@ -70,8 +72,15 @@ const Compute = () => {
         cancelButtonTitle: 'Cancel',
         confirmButtonTitle: 'Confirm'
     };
+    const alertConfirmForRefresh = {
+        title: 'Refresh Compute',
+        description: 'Are you sure you want to Refresh the Compute?',
+        cancelButtonTitle: 'Cancel',
+        confirmButtonTitle: 'Confirm'
+    };
     const [deleteComputeId, setDeleteComputeId] = useState<string | undefined>();
     const [stopComputeId, setStopComputeId] = useState<string | undefined>();
+    const [stopRefreshId, setRefreshComputeId] = useState<string>('');
     const toast = useToast();
     const context = useContext(ComputeContext);
     window.addEventListener('resize', () => {
@@ -146,6 +155,44 @@ const Compute = () => {
             });
     };
 
+    const confirmAlertActionForStop = () => {
+        client
+            .mutate<ComputeStop<StopComputeDetail>>({
+                mutation: dmsStopComputeRun(stopComputeId)
+            })
+            .then(() => {
+                stopComputeRunning.onClose();
+                toast({
+                    title: `Compute will be stopped after 10 seconds`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                setTimeout(() => {
+                    getAndUpdateDmsComputeData();
+                    if (UserConfig && stopComputeId) {
+                        const shutDownRequest = BusHelper.GetShutdownRequestMessage({
+                            experimentId: parseInt(stopComputeId),
+                            opId: opid,
+                            userId: stopComputeId
+                        });
+
+                        submitMessage([{ content: { action: Action.Unsubscribe, subject: `dms_pid.out.${stopComputeId}` } }, { content: shutDownRequest }]);
+                    }
+                }, 10000);
+            })
+            .catch(() => {
+                toast({
+                    title: `Compute is not stopped`,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+            });
+    };
+
     const onDeleteClickHandler: agGridClickHandler = (data) => {
         setDeleteComputeId(data?.id);
         deleteCompute.onOpen();
@@ -154,6 +201,11 @@ const Compute = () => {
     const onStopClickHandler: agGridClickHandler = (data) => {
         setStopComputeId(data?.id);
         stopComputeRunning.onOpen();
+    };
+
+    const onRefreshClickHandler: agGridClickHandler = (data) => {
+        setRefreshComputeId(data?.id);
+        refreshCompute.onOpen();
     };
 
     const onEditClickHandler: agGridClickHandler = (data) => {
@@ -189,7 +241,7 @@ const Compute = () => {
                         <StopCompute />
                     </div>
                 )}
-                <div className="icons">
+                <div className="icons" onClick={() => onRefreshClickHandler(params.data)}>
                     <ReStartIcon />
                 </div>
                 <div className="icons" onClick={() => onEditClickHandler(params.data)}>
@@ -232,41 +284,20 @@ const Compute = () => {
                 deleteCompute.onClose();
             });
     };
-    const confirmAlertActionForStop = () => {
-        client
-            .mutate<ComputeStop<StopComputeDetail>>({
-                mutation: dmsStopComputeRun(stopComputeId)
-            })
-            .then(() => {
-                getAndUpdateDmsComputeData();
-                toast({
-                    title: `Compute is stopped`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-                if (UserConfig && stopComputeId) {
-                    const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                        experimentId: parseInt(stopComputeId),
-                        opId: opid,
-                        userId: stopComputeId
-                    });
 
-                    submitMessage([{ content: { action: Action.Unsubscribe, subject: `dms_pid.out.${stopComputeId}` } }, { content: shutDownRequest }]);
-                }
-                stopComputeRunning.onClose();
-            })
-            .catch(() => {
-                toast({
-                    title: `Compute is not stopped`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-            });
+    const confirmAlertActionForRefresh = () => {
+        const messageQue: Array<disperseMessage> = [];
+        const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
+            experimentId: 1,
+            opId: opid,
+            userId: stopRefreshId
+        });
+        messageQue.push({ content: { action: Action.Subscribe, subject: `dms_pid.out.${stopRefreshId}` } });
+        messageQue.push({ content: aliveMessage });
+        submitMessage(messageQue);
+        refreshCompute.onClose();
     };
+
     const confirmAlertAction = () => {
         // dmsEditCompute
         // Api Call here, same as edit API, but make the default true or false based on trigger
@@ -427,6 +458,9 @@ const Compute = () => {
                     )}
                     {stopComputeRunning.isOpen && (
                         <AlertConfirmComponent isOpen={stopComputeRunning.isOpen} onClose={stopComputeRunning.onClose} options={alertConfirmForStop} confirm={confirmAlertActionForStop} />
+                    )}
+                    {refreshCompute.isOpen && (
+                        <AlertConfirmComponent isOpen={refreshCompute.isOpen} onClose={refreshCompute.onClose} options={alertConfirmForRefresh} confirm={confirmAlertActionForRefresh} />
                     )}
                 </Box>
             </Box>

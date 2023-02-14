@@ -15,7 +15,6 @@ export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async
     const response = await client.query<ComputeDetailListResponse<Array<ComputeDetail>>>({
         query: GET_COMPUTELIST
     });
-
     useAppStore.setState(() => ({ DmsComputeData: response.data.dmsComputes }));
 };
 export const DmsRunCompute: dmsRunComputesType = async (id: string) => {

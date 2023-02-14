@@ -31,7 +31,6 @@ import Output from '../modalSystem/Output';
 import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 import DownArrowToolbar from '../../assets/icons/DownArrowToolbar';
 import { toolbarPropsType } from '../../models/toolbar';
-import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
 
 const Toolbar = (props: toolbarPropsType) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -49,7 +48,6 @@ const Toolbar = (props: toolbarPropsType) => {
             saveAsModal.onOpen();
         } else if (type === 'Variables') {
             VariablesModal.onOpen();
-        } else if (type === 'Output') {
         } else if (type === 'Output') {
             OutputModal.onOpen();
         }
@@ -88,16 +86,6 @@ const Toolbar = (props: toolbarPropsType) => {
                                         }}
                                         size="sm"
                                     />
-                                    <Switch
-                                        isChecked={commentChecked}
-                                        onChange={(event) => {
-                                            if (event.target.checked) {
-                                                setCommentChecked(true);
-                                                commentModal.onOpen();
-                                            }
-                                        }}
-                                        size="sm"
-                                    />
                                 </Stack>
                                 <Box ml={'6'}>{sections.name}</Box>
                             </>
@@ -105,7 +93,7 @@ const Toolbar = (props: toolbarPropsType) => {
                         {sections.type === 'button' && (
                             <>
                                 <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
-                                <Button disabled={sections.disabled} variant="solid" bg={'default.toolbarButton'} width={'80px'} height={'36px'} pl={'10'} pr={'10'} borderRadius={4}>
+                                <Button disabled={sections.disabled} variant="solid" bg={'light.button'} width={'80px'} height={'36px'} pl={'10'} pr={'10'}>
                                     <RunArrow />
                                     <Text ml={'3'}>Run</Text>
                                 </Button>
@@ -113,14 +101,10 @@ const Toolbar = (props: toolbarPropsType) => {
                         )}
                         {sections.type === 'pipelineButton' && (
                             <>
-                                <Button onClick={deployPipelineModal.onOpen} bg={'default.displayOffButton'} width={'150px'} height={'36px'} pl={'10'} pr={'10'} ml={'14'} borderRadius={4}>
+                                <Button variant="solid" bg={'default.displayOffButton'} width={'150px'} height={'36px'} pl={'10'} pr={'10'} ml={'14'}>
                                     {' '}
-                                    <Box mr={'8'}>{sections.component}</Box>
-                                    <Box mr={'8'} color={'#AEB1B8'} mt={'4px'}>
-                                        {sections.name}
-                                    </Box>
+                                    <Box>{sections.component}</Box>
                                 </Button>
-                                <DeployPipelineModal isOpen={deployPipelineModal.isOpen} onClose={deployPipelineModal.onClose} />
                             </>
                         )}
                     </>

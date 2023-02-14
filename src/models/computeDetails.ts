@@ -34,7 +34,7 @@ export interface NodeTypesType {
 }
 export interface DbSettingsDetail {
     cluster_policies?: [];
-    node_types: NodeTypesType[];
+    node_types: any;
 }
 
 export class RunComputeDetail {
