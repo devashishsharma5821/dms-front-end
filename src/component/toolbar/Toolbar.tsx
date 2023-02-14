@@ -34,6 +34,7 @@ import SaveAs from '../modalSystem/SaveAs';
 import Output from '../modalSystem/Output';
 import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
 import { LineageIcon } from '../../assets/icons';
+import LineageModal from '../modalSystem/LineageModal';
 
 const Toolbar = (props: any) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -44,6 +45,7 @@ const Toolbar = (props: any) => {
     const OutputModal = useDisclosure();
     const commentModal = useDisclosure();
     const deployPipelineModal = useDisclosure();
+    const LineageToolbarModal = useDisclosure();
     const triggerActions = (type: string) => {
         if (type === 'Properties') {
             propertiesModal.onOpen();
@@ -75,10 +77,11 @@ const Toolbar = (props: any) => {
                                 <Menu>
                                     <MenuButton>{sections.component}</MenuButton>
                                     <MenuList borderRadius={'0'} width={'194px'} height={'44px'} color={textColor} ml={'-16'}>
-                                        <MenuItem mt={'5px'}>
+                                        <MenuItem mt={'5px'} onClick={LineageToolbarModal.onOpen}>
                                             <LineageIcon />
                                             <Text ml={'12'}>Lineage</Text>
                                         </MenuItem>
+                                        <LineageModal isOpen={LineageToolbarModal.isOpen} onClose={LineageToolbarModal.onClose} />
                                     </MenuList>
                                 </Menu>
 
