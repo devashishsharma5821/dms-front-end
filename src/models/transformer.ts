@@ -37,3 +37,6 @@ export type TransformerInfo = Omit<Transformer, 'stageId' | 'portErrors' | 'form
     inPorts: Port[];
     outPorts: Port[];
 };
+export interface TransformersAppStoreState {
+    TransformersData: TransformerInfo[];
+}

@@ -130,6 +130,14 @@ const ExperimentsPage = () => {
         }
     }, [DmsComputeData]);
 
+    const returnCurrentTransformersIcon = (icon: string) => {
+        const location = window.location.host;
+        if(location === 'localhost:4200') {
+            return `/v3-dms/assets/icon/transformersIcons/${icon}`;
+        } else {
+            return `/assets/icon/transformersIcons/${icon}`;
+        }
+    }
     useEffect(() => {
         const { GET_TRANSFORMERS } = getTransformersData();
         client
@@ -180,7 +188,7 @@ const ExperimentsPage = () => {
                                     height: 40,
                                     x: 0,
                                     y: 10,
-                                    href: `/assets/transformersIcons/${icon}`
+                                    href: returnCurrentTransformersIcon(icon)
                                 }
                             },
                             ports: {
