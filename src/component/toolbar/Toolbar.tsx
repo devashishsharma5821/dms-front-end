@@ -28,8 +28,11 @@ import Properties from '../modalSystem/Properties';
 import Variables from '../modalSystem/Variables';
 import SaveAs from '../modalSystem/SaveAs';
 import Output from '../modalSystem/Output';
+import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
+import DownArrowToolbar from '../../assets/icons/DownArrowToolbar';
+import { toolbarPropsType } from '../../models/toolbar';
 
-const Toolbar = (props: any) => {
+const Toolbar = (props: toolbarPropsType) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
     const [commentChecked, setCommentChecked] = React.useState(false);
     const propertiesModal = useDisclosure();
@@ -37,21 +40,22 @@ const Toolbar = (props: any) => {
     const VariablesModal = useDisclosure();
     const OutputModal = useDisclosure();
     const commentModal = useDisclosure();
-    const triggerActions = (type: string)=>{
-        if(type === 'Properties') {
+    const createModal = useDisclosure();
+    const triggerActions = (type: string) => {
+        if (type === 'Properties') {
             propertiesModal.onOpen();
         } else if (type === 'SaveAs') {
             saveAsModal.onOpen();
         } else if (type === 'Variables') {
             VariablesModal.onOpen();
-        }else if(type === 'Output') {
+        } else if (type === 'Output') {
             OutputModal.onOpen();
         }
     };
     const commentModalClosed = () => {
         commentModal.onClose();
         setCommentChecked(false);
-    }
+    };
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
@@ -72,7 +76,16 @@ const Toolbar = (props: any) => {
                         {sections.type === 'switch' && (
                             <>
                                 <Stack align="center" direction="row">
-                                    <Switch isChecked={commentChecked} onChange={(event) => {if(event.target.checked) { setCommentChecked(true); commentModal.onOpen()}}} size="sm" />
+                                    <Switch
+                                        isChecked={commentChecked}
+                                        onChange={(event) => {
+                                            if (event.target.checked) {
+                                                setCommentChecked(true);
+                                                commentModal.onOpen();
+                                            }
+                                        }}
+                                        size="sm"
+                                    />
                                 </Stack>
                                 <Box ml={'6'}>{sections.name}</Box>
                             </>
@@ -99,82 +112,84 @@ const Toolbar = (props: any) => {
             })}
             <Spacer />
             <Flex height={'56px'} gap="2">
-                {props?.computeData?.length !== 0 &&
-                    toolbarDataIcons.section2.map((sections, sectionIndex) => {
-                        return (
-                            <>
-                                <Center>
-                                    {sections.type === 'deployedIcon' && (
+                <>
+                    <Center>
+                        {props?.computeData?.length !== 0 &&
+                            props?.computeData?.map((compute: any) => {
+                                return (
+                                    compute.is_default === true && (
                                         <>
                                             <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
                                             <Center mr={'10px'}>
-                                                <Box mr={'8'}>{sections.component}</Box>
-                                                <Box>{sections.name}</Box>
+                                                {compute.status === 'RUNNING' ? (
+                                                    <div style={{ marginRight: 10 }}>
+                                                        <DeployedIcon />
+                                                    </div>
+                                                ) : (
+                                                    <div style={{ marginRight: 10 }}>
+                                                        <DeployedNotRunningIcon />
+                                                    </div>
+                                                )}
+                                                <Box>{compute.name}</Box>
                                             </Center>
-                                        </>
-                                    )}
-                                    {sections.type === 'serverInfo' && (
-                                        <>
                                             <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
-                                                <Text>{sections.gb}</Text>
+                                                <Text>{compute.totalMemory / 1024} GB</Text>
                                                 <Divider orientation="vertical" mr={'8'} height={'16px'} />
-                                                <Text>{sections.core}</Text>
+                                                <Text> | {compute.totalCores} Cores</Text>
                                             </Center>
                                         </>
-                                    )}
-                                    {sections.type === 'downArrow' && (
-                                        <>
-                                            <Popover placement="bottom" isLazy={true} closeOnEsc={true} size={'sm'} variant="responsive">
-                                                <PopoverTrigger>
-                                                    <Button disabled={props?.computeData?.length === 0}>
-                                                        <Box pl={'2'}>{sections.component}</Box>
-                                                    </Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent>
-                                                    <PopoverBody mt={'5px'}>
-                                                        {props?.computeData?.length !== 0 &&
-                                                            props?.computeData?.map((compute: any) => {
-                                                                return (
-                                                                    <Flex pb={'10px'} justifyContent={'space-between'}>
-                                                                        <Center>
-                                                                            {compute?.default ? (
-                                                                                <Box mr={'8'}>
-                                                                                    {' '}
-                                                                                    <DeployedIcon />
-                                                                                </Box>
-                                                                            ) : (
-                                                                                <Box mr={'8'}>
-                                                                                    <DeployedNotRunningIcon />
-                                                                                </Box>
-                                                                            )}
-                                                                            <Box fontWeight={'600'} fontSize={'16px'} color={textColor}>
-                                                                                {compute?.name}
-                                                                            </Box>
-                                                                        </Center>
-                                                                        <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
-                                                                            <Text>{compute?.memory}</Text>
-                                                                            <Divider orientation="vertical" mr={'8'} height={'16px'} />
-                                                                            <Text>{compute?.cpu}</Text>
-                                                                        </Center>
-                                                                    </Flex>
-                                                                );
-                                                            })}
-                                                    </PopoverBody>
-                                                    <PopoverFooter border="0" display="flex" alignItems="center" justifyContent="center" pb={4}>
-                                                        <ButtonGroup size="sm">
-                                                            <Link color="teal.500" href="#">
-                                                                Create Compute
-                                                            </Link>
-                                                        </ButtonGroup>
-                                                    </PopoverFooter>
-                                                </PopoverContent>
-                                            </Popover>
-                                        </>
-                                    )}
-                                </Center>
-                            </>
-                        );
-                    })}
+                                    )
+                                );
+                            })}
+                        {props?.computeData?.length !== 0 && (
+                            <Popover placement="bottom" isLazy={true} closeOnEsc={true} size={'sm'} variant="responsive">
+                                <PopoverTrigger>
+                                    <Button disabled={props?.computeData?.length === 0} mx="12px">
+                                        <DownArrowToolbar />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                    <PopoverBody mt={'5px'}>
+                                        {props?.computeData?.length !== 0 &&
+                                            props?.computeData?.map((compute: any) => {
+                                                return (
+                                                    <Flex pb={'10px'} justifyContent={'space-between'}>
+                                                        <Center>
+                                                            {compute?.status === 'RUNNING' ? (
+                                                                <Box mr={'8'}>
+                                                                    {' '}
+                                                                    <DeployedIcon />
+                                                                </Box>
+                                                            ) : (
+                                                                <Box mr={'8'}>
+                                                                    <DeployedNotRunningIcon />
+                                                                </Box>
+                                                            )}
+                                                            <Box fontWeight={'600'} fontSize={'16px'} color={textColor}>
+                                                                {compute?.name}
+                                                            </Box>
+                                                        </Center>
+                                                        <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
+                                                            <Text>{compute?.totalMemory / 1024} GB</Text>
+                                                            <Divider orientation="vertical" mr={'8'} height={'16px'} />
+                                                            <Text> | {compute?.totalCores} Cores</Text>
+                                                        </Center>
+                                                    </Flex>
+                                                );
+                                            })}
+                                    </PopoverBody>
+                                    <PopoverFooter border="0" display="flex" alignItems="center" justifyContent="center" pb={4}>
+                                        <ButtonGroup size="sm" onClick={createModal.onOpen}>
+                                            <Link color="teal.500" href="#">
+                                                Create Compute
+                                            </Link>
+                                        </ButtonGroup>
+                                    </PopoverFooter>
+                                </PopoverContent>
+                            </Popover>
+                        )}
+                    </Center>
+                </>
                 {props?.computeData?.length === 0 && (
                     <Center mr={'40px'}>
                         <ButtonGroup size="sm">
@@ -189,7 +204,8 @@ const Toolbar = (props: any) => {
             {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
             {VariablesModal.isOpen && <Variables isOpen={VariablesModal.isOpen} onClose={VariablesModal.onClose} />}
-            {OutputModal.isOpen && <Output isOpen={OutputModal.isOpen} onClose={OutputModal.onClose}/>}
+            {OutputModal.isOpen && <Output isOpen={OutputModal.isOpen} onClose={OutputModal.onClose} />}
+            {createModal.isOpen && <ComputeJsonModal isOpen={createModal.isOpen} onClose={createModal.onClose} />}
         </Flex>
     );
 };

@@ -55,3 +55,4 @@ export type setComputeState = (value: string) => void;
 export type getAndUpdateDmsComputeData = () => void;
 export type getAndUpdateTransformersData = () => void;
 export type submitMessage = (content: any) => void;
+export type dmsRunCompute = (id: string) => void;

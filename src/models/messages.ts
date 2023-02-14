@@ -45,3 +45,11 @@ export interface Message {
     };
     subject: string;
 }
+
+export interface disperseMessage {
+    content: {
+        subject: string;
+        action?: string;
+        payload?: any;
+    };
+}

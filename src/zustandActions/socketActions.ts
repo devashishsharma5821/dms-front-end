@@ -6,12 +6,12 @@ import {
     resetMessages as resetMessagesType,
     hasSubscribed as hasSubscribedType,
     disconnected as disconnectedType,
-    startConnecting as startConnectingType
+    startConnecting as startConnectingType,
+    AppState
 } from '.././models/zustandStore';
 export const submitMessage: submitMessageType = (content) => useAppStore.setState(() => ({ message: content }));
 export const connectionEstablished: connectionEstablishedType = () =>
     useAppStore.setState(() => {
-        console.log('connection established');
         return { connectionState: { connected: true, subscribed: false } };
     });
 export const receiveMessage: receiveMessageType = (action) =>

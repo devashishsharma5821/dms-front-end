@@ -34,7 +34,7 @@ export interface NodeTypesType {
 }
 export interface DbSettingsDetail {
     cluster_policies?: [];
-    node_types: NodeTypesType[];
+    node_types: any;
 }
 
 export class RunComputeDetail {
@@ -126,6 +126,12 @@ export interface DmsComputeData {
         spot_instances: boolean;
     };
     status: string;
+    totalMemory?: number;
+    totalCores?: number;
+}
+
+export interface getComputeListQueryData {
+    data: { dmsComputes: DmsComputeData[] };
 }
 
 export interface GetComputeListResponse {
