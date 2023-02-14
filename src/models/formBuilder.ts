@@ -27,6 +27,7 @@ export class InputFieldType<T> {
 }
 
 export interface FormSchemaType {
+    driver_type_id: any;
     type?: string;
     label?: string;
     required?: boolean;

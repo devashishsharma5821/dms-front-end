@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData, getTransformersData } from '../../query';
-import {startCase} from 'lodash';
-import {
-    useColorModeValue,
-    useDisclosure,
-    useColorMode,
-    Box,
-    IconButton,
-    Flex,
-    Drawer,
-    DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody
-} from '@chakra-ui/react';
-import TransformerMenu from '../../component/Transformers/TransformerMenu';
+import { startCase } from 'lodash';
+import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from '@chakra-ui/react';
 import { useApolloClient } from '@apollo/client';
 import { ComputeDetailListResponse, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { GET_DATABRICKS_CREDS } from '../../query/index';
@@ -49,6 +39,7 @@ import ZoomInIcon from '../../assets/icons/ZoomInIcon';
 import ZoomOutIcon from '../../assets/icons/ZoomOutIcon';
 import FitToContent from '../../assets/icons/FitToContent';
 import ZoomComponent from '../../component/zoomer/Zoomer';
+import { newComputeData } from '../compute/generateNewComputeData';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
@@ -74,6 +65,8 @@ const ExperimentsPage = () => {
     const [transformersGroup, setTransformersGroup] = useState<any>({});
     const { colorMode } = useColorMode();
     const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
+    const [newComputedata, setNewComputedata] = useState<DmsComputeData[]>([]);
+
     let dmsComputeRunningStatusIsDefaultOne;
 
     let unsubscribe: any = null;
@@ -130,7 +123,11 @@ const ExperimentsPage = () => {
         }
     };
     useEffect(() => {
-        if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
+        if (DmsComputeData !== null) {
+            checkComputeStatus(DmsComputeData);
+            const newGeneratedComputeData = newComputeData(DmsComputeData);
+            setNewComputedata(newGeneratedComputeData);
+        }
     }, [DmsComputeData]);
 
     useEffect(() => {
@@ -141,17 +138,17 @@ const ExperimentsPage = () => {
             })
             .then((response) => {
                 let transformerData = [...response.data.dmsTransformers];
-                let transformersGroup:any  ={};
+                let transformersGroup: any = {};
                 let transformedNewDataForStencil: any;
-                if(transformerData && transformerData.length > 0) {
-                    transformedNewDataForStencil = transformerData.reduce((transformersList: any=[], currentObj: any) => {
+                if (transformerData && transformerData.length > 0) {
+                    transformedNewDataForStencil = transformerData.reduce((transformersList: any = [], currentObj: any) => {
                         //const { colorMode } = useColorMode();
-                        let stencilBg = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].backgroundDark:transformerMenuConf[currentObj['category']].backgroundLight;
-                        let stencilStroke = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].backgroundDarkStroke:transformerMenuConf[currentObj['category']].backgroundLightStroke;
-                        let icon = (colorMode === 'dark')?transformerMenuConf[currentObj['category']].iconDark:transformerMenuConf[currentObj['category']].iconLight;
-                        if(!transformersGroup[currentObj['category']])
-                            transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
-                        currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop())
+                        let stencilBg = colorMode === 'dark' ? transformerMenuConf[currentObj['category']].backgroundDark : transformerMenuConf[currentObj['category']].backgroundLight;
+                        let stencilStroke = colorMode === 'dark' ? transformerMenuConf[currentObj['category']].backgroundDarkStroke : transformerMenuConf[currentObj['category']].backgroundLightStroke;
+                        let icon = colorMode === 'dark' ? transformerMenuConf[currentObj['category']].iconDark : transformerMenuConf[currentObj['category']].iconLight;
+                        if (!transformersGroup[currentObj['category']])
+                            transformersGroup[currentObj['category']] = { index: transformerMenuConf[currentObj['category']].order, label: transformerMenuConf[currentObj['category']].category };
+                        currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop());
                         const stencilMarkup = new shapes.standard.EmbeddedImage({
                             size: { width: 257, height: 52 },
                             attrs: {
@@ -176,26 +173,28 @@ const ExperimentsPage = () => {
                                     fontSize: 14,
                                     strokeWidth: 1,
                                     x: -30,
-                                    y: 6,
+                                    y: 6
                                 },
                                 image: {
                                     width: 40,
                                     height: 40,
                                     x: 0,
                                     y: 10,
-                                    'href': `/assets/transformersIcons/${icon}`
+                                    href: `/assets/transformersIcons/${icon}`
                                 }
                             },
                             ports: {
                                 groups: {
-                                    'in': {
-                                        markup: [{
-                                            tagName: 'circle',
-                                            selector: 'portBody',
-                                            attributes: {
-                                                'r': 5
+                                    in: {
+                                        markup: [
+                                            {
+                                                tagName: 'circle',
+                                                selector: 'portBody',
+                                                attributes: {
+                                                    r: 5
+                                                }
                                             }
-                                        }],
+                                        ],
                                         attrs: {
                                             portBody: {
                                                 magnet: true,
@@ -222,7 +221,7 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     },
-                                    'inPoly2': {
+                                    inPoly2: {
                                         markup: `<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" fill='#FFFFFF' stroke="${stencilStroke}" />`,
                                         attrs: {
                                             portBody: {
@@ -250,7 +249,7 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     },
-                                    'inPoly': {
+                                    inPoly: {
                                         markup: `<polygon cursor="pointer" className="port-body" cy='20' points="0,-7, 7,7, -7,7" fill="#FFFFFF" stroke="${stencilStroke}" />`,
                                         attrs: {
                                             portBody: {
@@ -278,7 +277,7 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     },
-                                    'inRect': {
+                                    inRect: {
                                         markup: `<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" fill="#FFFFFF" stroke="${stencilStroke}" />`,
                                         attrs: {
                                             portBody: {
@@ -306,14 +305,16 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     },
-                                    'out': {
-                                        markup: [{
-                                            tagName: 'circle',
-                                            selector: 'portBody',
-                                            attributes: {
-                                                'r': 5
+                                    out: {
+                                        markup: [
+                                            {
+                                                tagName: 'circle',
+                                                selector: 'portBody',
+                                                attributes: {
+                                                    r: 5
+                                                }
                                             }
-                                        }],
+                                        ],
                                         position: {
                                             name: 'right'
                                         },
@@ -340,7 +341,7 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     },
-                                    'outRect': {
+                                    outRect: {
                                         markup: `<rect cursor="pointer" class="port-body" x="-7" y="-7" width="10" height="10" fill="#FFFFFF" stroke="${stencilStroke}" />`,
                                         attrs: {
                                             portBody: {
@@ -368,7 +369,7 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     },
-                                    'outPoly2': {
+                                    outPoly2: {
                                         markup: `<polygon cursor="pointer" class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" fill='#FFFFFF' stroke="${stencilStroke}" />`,
                                         attrs: {
                                             portBody: {
@@ -396,7 +397,7 @@ const ExperimentsPage = () => {
                                             }
                                         }
                                     },
-                                    'outPoly': {
+                                    outPoly: {
                                         markup: `<polygon cursor="pointer" className="port-body" cy='20' points="0,-7, 7,7, -7,7" fill="#FFFFFF" stroke="${stencilStroke}" />`,
                                         attrs: {
                                             portBody: {
@@ -423,25 +424,25 @@ const ExperimentsPage = () => {
                                                 }
                                             }
                                         }
-                                    },
+                                    }
                                 }
                             }
                         });
                         let inputPorts = [];
                         let outputPorts = [];
-                        if(currentObj.inputs.length > 0) {
+                        if (currentObj.inputs.length > 0) {
                             inputPorts = currentObj.inputs.map((input: any) => {
                                 let typeOfPort = 'in';
-                                if(input.type === 'DATAFRAME') {
-                                    typeOfPort = "inRect";
-                                } else if(input.type === 'DATASET') {
-                                    typeOfPort = "in";
-                                } else if(input.type === 'MODEL') {
-                                    typeOfPort = "inPoly";
-                                } else if(input.type === 'METADATA') {
-                                    typeOfPort = "inPoly2";
+                                if (input.type === 'DATAFRAME') {
+                                    typeOfPort = 'inRect';
+                                } else if (input.type === 'DATASET') {
+                                    typeOfPort = 'in';
+                                } else if (input.type === 'MODEL') {
+                                    typeOfPort = 'inPoly';
+                                } else if (input.type === 'METADATA') {
+                                    typeOfPort = 'inPoly2';
                                 } else {
-                                    typeOfPort = "in";
+                                    typeOfPort = 'in';
                                 }
                                 return {
                                     group: typeOfPort,
@@ -451,25 +452,25 @@ const ExperimentsPage = () => {
                                     type: input.type || null,
                                     attrs: {
                                         label: {
-                                            text:  input.name
+                                            text: input.name
                                         }
                                     }
-                                }
+                                };
                             });
-                        };
-                        if(currentObj.outputs.length > 0) {
+                        }
+                        if (currentObj.outputs.length > 0) {
                             outputPorts = currentObj.outputs.map((output: any) => {
                                 let typeOfPort = 'out';
-                                if(output.type === 'DATAFRAME') {
-                                    typeOfPort = "outRect";
-                                } else if(output.type === 'DATASET') {
-                                    typeOfPort = "out";
-                                } else if(output.type === 'MODEL') {
-                                    typeOfPort = "outPoly";
-                                } else if(output.type === 'METADATA') {
-                                    typeOfPort = "outPoly2";
+                                if (output.type === 'DATAFRAME') {
+                                    typeOfPort = 'outRect';
+                                } else if (output.type === 'DATASET') {
+                                    typeOfPort = 'out';
+                                } else if (output.type === 'MODEL') {
+                                    typeOfPort = 'outPoly';
+                                } else if (output.type === 'METADATA') {
+                                    typeOfPort = 'outPoly2';
                                 } else {
-                                    typeOfPort = "out";
+                                    typeOfPort = 'out';
                                 }
                                 return {
                                     group: typeOfPort,
@@ -479,23 +480,22 @@ const ExperimentsPage = () => {
                                     type: output.type || null,
                                     attrs: {
                                         label: {
-                                            text:  output.name
+                                            text: output.name
                                         }
                                     }
-                                }
+                                };
                             });
-                        };
+                        }
                         const combinedGroupPorts = [...inputPorts, ...outputPorts];
                         stencilMarkup.addPorts(combinedGroupPorts);
                         (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
                         return transformersList;
-                    })
+                    });
                 }
                 setTransformersGroup(transformersGroup);
                 setTransformedNewDataForStencil(transformedNewDataForStencil);
             })
             .catch((err) => console.error(err));
-
     }, []);
 
     useEffect(() => {
@@ -520,8 +520,8 @@ const ExperimentsPage = () => {
                         if (DmsComputeData?.length === 0) {
                             computeModal.onOpen();
                         } else {
-                            const dmsComputeRunningStatus = DmsComputeData.filter((compute: DmsComputeData) => compute.status === 'RUNNING');
-                            if (!(dmsComputeRunningStatus.length === 0)) {
+                            const dmsComputeRunningStatus = DmsComputeData?.filter((compute: DmsComputeData) => compute.status === 'RUNNING');
+                            if (!(dmsComputeRunningStatus?.length === 0)) {
                                 computeRunningModal.onOpen();
                             } else {
                                 const dmsComputeRunningStatusIsDefault = dmsComputeRunningStatus.filter((compute: DmsComputeData) => compute?.is_default === true);
@@ -619,10 +619,8 @@ const ExperimentsPage = () => {
     const onComputeStop = () => {
         if (UserConfig && computeId) {
             const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                // experimentId: parseInt(computeId),
                 experimentId: parseInt(UserConfig.userConfiguration.user.userId),
                 opId: opid,
-                // userId: UserConfig.userConfiguration.user.userId,
                 userId: computeId,
                 //TODO Below are added just for fixing errors
                 project_id: 12,
@@ -659,11 +657,11 @@ const ExperimentsPage = () => {
     const btnRef: any = React.useRef();
     const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
 
-    useEffect(() => {
-        // wsconnect(setMessage);
-        // console.log('Message From Websockets', message);
-        // eslint-disable-next-line
-    }, []);
+    // useEffect(() => {
+    // wsconnect(setMessage);
+    // console.log('Message From Websockets', message);
+    // eslint-disable-next-line
+    // }, []);
 
     // const changeTranslation = () => {
     //
@@ -707,28 +705,26 @@ const ExperimentsPage = () => {
     const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     const toggleLeftMenu = () => {
-        console.log('1',leftMenuOpen )
+        console.log('1', leftMenuOpen);
         setLeftMenuOpen(!leftMenuOpen);
     };
     useEffect(() => {
-        console.log('LeftMenOpen', leftMenuOpen)
-        if(leftMenuOpen) {
+        console.log('LeftMenOpen', leftMenuOpen);
+        if (leftMenuOpen) {
             transformerMenuDrawer.onOpen();
             setTimeout(() => {
                 intializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
-            }, 10)
-
+            }, 10);
         } else transformerMenuDrawer.onClose();
-
     }, [leftMenuOpen]);
     return (
         <>
             <Box ref={elementRef} width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar computeData={DmsComputeData} is_default={dmsComputeRunningStatusIsDefaultOne} />
+                    <Toolbar computeData={newComputedata} is_default={dmsComputeRunningStatusIsDefaultOne} />
                 </Box>
                 <Flex>
-                    <Box w="var(--chakra-space-60)" h='calc(90vh)' bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
+                    <Box w="var(--chakra-space-60)" h="calc(90vh)" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
                         <Box textAlign="right" ml="26">
                             <IconButton
                                 aria-label="expand"
@@ -746,7 +742,7 @@ const ExperimentsPage = () => {
                                 onClick={toggleLeftMenu}
                             />
                         </Box>
-                        <Box  position="relative" width="104px" transform="rotate(270deg)" left={-16} mt={30} textAlign="right">
+                        <Box position="relative" width="104px" transform="rotate(270deg)" left={-16} mt={30} textAlign="right">
                             <Box color={useColorModeValue('light.VeryDarkBlue', 'dark.Gray')} fontWeight="600">
                                 Transformers
                             </Box>
@@ -754,7 +750,7 @@ const ExperimentsPage = () => {
                         <Box>
                             <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
                                 <DrawerOverlay bg="transparent" />
-                                <DrawerContent bg={themeBg} mt="44" ml="54"  w="350px" maxWidth="292px">
+                                <DrawerContent bg={themeBg} mt="44" ml="54" w="350px" maxWidth="292px">
                                     <DrawerCloseButton
                                         bg={panelCloseBtnBg}
                                         _hover={{ background: panelCloseBtnBg }}
@@ -765,22 +761,21 @@ const ExperimentsPage = () => {
                                         h="24px"
                                         borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
                                         color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}
-
                                     >
-                                        <Box onClick={toggleLeftMenu}><DoubleAngleLeftIcon></DoubleAngleLeftIcon></Box>
-
+                                        <Box onClick={toggleLeftMenu}>
+                                            <DoubleAngleLeftIcon></DoubleAngleLeftIcon>
+                                        </Box>
                                     </DrawerCloseButton>
                                     <DrawerHeader mt="17" p="0" ml="15px">
                                         Transformers
                                     </DrawerHeader>
 
-                                    <DrawerBody pl='0' pt='14' pr="17">
+                                    <DrawerBody pl="0" pt="14" pr="17">
                                         <div id="stencil-container" className="stencil-container" />
                                     </DrawerBody>
                                 </DrawerContent>
                             </Drawer>
                         </Box>
-
                     </Box>
                     <Box className="joint-app joint-theme-modern">
                         {/*<div className="app-header">*/}

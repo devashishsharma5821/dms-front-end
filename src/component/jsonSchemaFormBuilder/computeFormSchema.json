@@ -17,7 +17,7 @@
         "required": true,
         "errormessage": "Select Worker Type Id",
         "child": "child",
-        "options": [{ "category": "random", "memory_mb": 23, "node_type_id": "44", "num_cores": 33 }],
+        "options": [],
         "uiSchema": {
             "grid-column": "auto / span 4"
         }
@@ -29,7 +29,7 @@
         "required": true,
         "errormessage": "Select Driver Type Id",
         "child": "child",
-        "options": [{ "category": "random", "memory_mb": 23, "node_type_id": "44", "num_cores": 33 }],
+        "options": [],
         "uiSchema": {
             "grid-column": "auto / span 4"
         }
