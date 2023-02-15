@@ -17,11 +17,7 @@ import {
     PopoverFooter,
     ButtonGroup,
     Link,
-    useColorModeValue,
-    MenuList,
-    MenuItem,
-    MenuButton,
-    Menu
+    useColorModeValue
 } from '@chakra-ui/react';
 import RunArrow from '../../assets/icons/RunArrow';
 import toolbarDataIcons from '../../models/toolbarData';
@@ -32,9 +28,9 @@ import Properties from '../modalSystem/Properties';
 import Variables from '../modalSystem/Variables';
 import SaveAs from '../modalSystem/SaveAs';
 import Output from '../modalSystem/Output';
-import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
-import { LineageIcon } from '../../assets/icons';
-import LineageModal from '../modalSystem/LineageModal';
+import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
+import DownArrowToolbar from '../../assets/icons/DownArrowToolbar';
+import { toolbarPropsType } from '../../models/toolbar';
 
 const Toolbar = (props: toolbarPropsType) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -44,8 +40,7 @@ const Toolbar = (props: toolbarPropsType) => {
     const VariablesModal = useDisclosure();
     const OutputModal = useDisclosure();
     const commentModal = useDisclosure();
-    const deployPipelineModal = useDisclosure();
-    const LineageToolbarModal = useDisclosure();
+    const createModal = useDisclosure();
     const triggerActions = (type: string) => {
         if (type === 'Properties') {
             propertiesModal.onOpen();
@@ -74,17 +69,7 @@ const Toolbar = (props: toolbarPropsType) => {
                         )}
                         {sections.type === 'moreIcon' && (
                             <>
-                                <Menu>
-                                    <MenuButton>{sections.component}</MenuButton>
-                                    <MenuList borderRadius={'0'} width={'194px'} height={'44px'} color={textColor} ml={'-16'}>
-                                        <MenuItem mt={'5px'} onClick={LineageToolbarModal.onOpen}>
-                                            <LineageIcon />
-                                            <Text ml={'12'}>Lineage</Text>
-                                        </MenuItem>
-                                        <LineageModal isOpen={LineageToolbarModal.isOpen} onClose={LineageToolbarModal.onClose} />
-                                    </MenuList>
-                                </Menu>
-
+                                <Box>{sections.component}</Box>
                                 <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
                             </>
                         )}
