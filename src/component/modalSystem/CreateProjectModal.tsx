@@ -37,6 +37,7 @@ const CreateProjectModal = (props: any) => {
     interface CreateProjectModal {
         createProject: string;
         description: string;
+        tags: string[];
     }
 
     return (
@@ -75,7 +76,8 @@ const CreateProjectModal = (props: any) => {
                             {
                                 validateOnMount: true,
                                 createProject: '',
-                                description: ''
+                                description: '',
+                                tags: []
                             } as CreateProjectModal
                         }
                         validateOnBlur={true}
