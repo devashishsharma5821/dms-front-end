@@ -38,3 +38,5 @@ export { DeleteIcon } from './DeleteIcon';
 export { EditIcon } from './EditIcon';
 export { AttachmentIcon } from './AttachmentIcon';
 export { DownloadIcon } from './DownloadIcon';
+export { LineageIcon } from './LineageIcon';
+export { SamplePic } from './SamplePic';
