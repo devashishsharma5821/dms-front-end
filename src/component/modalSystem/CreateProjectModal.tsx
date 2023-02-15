@@ -34,7 +34,7 @@ const CreateProjectModal = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const addShareMemberModal = useDisclosure();
-    interface databricksSettings {
+    interface CreateProjectModal {
         createProject: string;
         description: string;
     }
@@ -62,7 +62,7 @@ const CreateProjectModal = (props: any) => {
                                                 b1af12
                                             </Text>
                                             <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
-                                                <CopyIcon color={'#666C80'} />
+                                                <CopyIcon color={'default.darkGrayCreate'} />
                                             </Box>
                                         </Center>
                                     </Flex>
@@ -76,7 +76,7 @@ const CreateProjectModal = (props: any) => {
                                 validateOnMount: true,
                                 createProject: '',
                                 description: ''
-                            } as databricksSettings
+                            } as CreateProjectModal
                         }
                         validateOnBlur={true}
                         validateOnChange={true}
@@ -94,7 +94,7 @@ const CreateProjectModal = (props: any) => {
                                         <Field
                                             borderRadius={3}
                                             border={'1px'}
-                                            borderColor={'#D8DCDE'}
+                                            borderColor={'light.lighterGrayishBlue'}
                                             as={Input}
                                             id="createProject"
                                             name="createProject"
@@ -122,20 +122,20 @@ const CreateProjectModal = (props: any) => {
                                                     Tags:
                                                 </Text>
                                                 <Center>
-                                                    <Box ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
+                                                    <Box ml={14} mt={16} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
                                                         <Flex>
                                                             <Center>
-                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
                                                                     Demo
                                                                 </Text>
                                                                 <Box justifyContent={'flex-end'} ml={'14px'} mr={'6px'}>
-                                                                    <CloseIcon color={'#666C80'} />
+                                                                    <CloseIcon color={'default.darkGrayCreate'} />
                                                                 </Box>
                                                             </Center>
                                                         </Flex>
                                                     </Box>
                                                 </Center>
-                                                <Text color={'#2180C2'} mt={'20'} ml={'8px'}>
+                                                <Text cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
                                                     + Add Tag(s)
                                                 </Text>
                                             </Center>
@@ -147,20 +147,21 @@ const CreateProjectModal = (props: any) => {
                                                     Shared with:
                                                 </Text>
                                                 <Center>
-                                                    <Box ml={14} mt={16} bg={'#F2F4F8'} height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
+                                                    <Box ml={14} mt={16} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
                                                         <Flex>
                                                             <Center>
-                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
                                                                     SB
                                                                 </Text>
                                                                 <Box justifyContent={'flex-end'} ml={'14px'} mr={'6px'}>
-                                                                    <CloseIcon color={'#666C80'} />
+                                                                    <CloseIcon color={'default.darkGrayCreate'} />
                                                                 </Box>
                                                             </Center>
                                                         </Flex>
                                                     </Box>
                                                 </Center>
-                                                <Text color={'#2180C2'} mt={'20'} ml={'8px'} onClick={addShareMemberModal.onOpen}>
+
+                                                <Text cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'} onClick={addShareMemberModal.onOpen}>
                                                     + Add Member(s)
                                                 </Text>
                                                 <Share isOpen={addShareMemberModal.isOpen} onClose={addShareMemberModal.onClose}></Share>
@@ -179,10 +180,10 @@ const CreateProjectModal = (props: any) => {
                                                 onClick={props.onClose}
                                                 colorScheme="gray"
                                                 bg={'white'}
-                                                color={'#2180C2'}
+                                                color={'default.shareModalButton'}
                                                 width={'80px'}
                                                 border={'1px'}
-                                                borderColor={'#2180C2'}
+                                                borderColor={'default.shareModalButton'}
                                                 height={'36px'}
                                                 borderRadius={4}
                                             >

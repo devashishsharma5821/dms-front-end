@@ -77,7 +77,8 @@ export const colors = {
         lightGray: '#F2F4F5',
         darkGrayCreate: '#666C80',
         bgExclamationText: 'rgba(50, 150, 237, 0.2)',
-        bgExclamationIcon: '#BFE1FF'
+        bgExclamationIcon: '#BFE1FF',
+        tagBoxColor: '#F2F4F8'
     },
     light: {
         header: '#1A3F59',
