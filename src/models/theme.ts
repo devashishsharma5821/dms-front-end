@@ -78,7 +78,8 @@ export const colors = {
         darkGrayCreate: '#666C80',
         bgExclamationText: 'rgba(50, 150, 237, 0.2)',
         bgExclamationIcon: '#BFE1FF',
-        tagBoxColor: '#F2F4F8'
+        tagBoxColor: '#F2F4F8',
+        textDeployPiplineButton: '#AEB1B8'
     },
     light: {
         header: '#1A3F59',
