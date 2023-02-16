@@ -5,7 +5,7 @@ type LogoProps = {
     children?: never;
 };
 
-export const OrIcon: React.FC<LogoProps> = () => {
+export const OrIconSmall: React.FC<LogoProps> = () => {
     return (
         <svg width="38" height="64" viewBox="0 0 38 64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <line x1="19.5" y1="2.18557e-08" x2="19.5" y2="64" stroke="#D8DCDE" />
@@ -19,4 +19,4 @@ export const OrIcon: React.FC<LogoProps> = () => {
     );
 };
 
-export default OrIcon;
+export default OrIconSmall;

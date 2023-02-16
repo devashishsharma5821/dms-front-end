@@ -25,10 +25,10 @@ import {
     Checkbox
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
-import OrIcon from '../../assets/icons/OrIcon';
+import OrIconSmall from '../../assets/icons/OrIconSmall';
 import ComputeJsonModal from './ComputeJsonModal';
 import useAppStore from '../../store';
-import { ComputeAppStoreState, DmsComputeData } from '../../models/computeDetails';
+import { ComputeAppStoreState } from '../../models/computeDetails';
 import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 
 const DeployPipelineModal = (props: any) => {
@@ -148,7 +148,7 @@ const DeployPipelineModal = (props: any) => {
                                                 </FormControl>
                                                 <Box ml={'14px'} mr={'23px'}>
                                                     {' '}
-                                                    <OrIcon />
+                                                    <OrIconSmall />
                                                 </Box>
                                                 <Box width={'324px'}>
                                                     <Text fontWeight={600} color={textColorTitle} mt={14}>
