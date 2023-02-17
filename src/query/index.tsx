@@ -336,6 +336,18 @@ export const GET_DB_SETTINGS = gql`
 //             `;
 // };
 
+export const GET_ALL_PROJECTS = gql`
+    query dmsProjects {
+        dmsProjects {
+          id
+          name
+          created_by
+          created_at
+          project_variables
+        }
+    }
+`;
+
 export const createProject = (variables: any) => {
     return gql`mutation {
                 dmsCreateProject(
