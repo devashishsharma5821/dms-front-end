@@ -11,7 +11,7 @@ const LeftSideBarMenuCreateProjectModal = (props: any) => {
     const createProjectModal = useDisclosure();
     const triggerAction = (type: string) => {
         if (type === 'Start from scratch') {
-            createProjectModal.onOpen();
+            props.openCreateProjectFromScratch();
         }
     };
     const subMenuForCreateProject = [
@@ -31,7 +31,7 @@ const LeftSideBarMenuCreateProjectModal = (props: any) => {
         }
     ];
     return (
-        <Modal size={'md'} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} size={'md'} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
 
             <ModalContent width={'491px'}>
@@ -103,8 +103,6 @@ const LeftSideBarMenuCreateProjectModal = (props: any) => {
                                             );
                                         }
                                     })}
-
-                                {createProjectModal.isOpen && <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} />}
                             </Flex>
                         );
                     })}

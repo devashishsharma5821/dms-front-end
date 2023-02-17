@@ -11,6 +11,8 @@ import Help from '../menuSystem/help/Help';
 import Explorer from '../menuSystem/explorer/Explorer';
 import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 import Experiment from '../menuSystem/experiment/Experiment';
+import LeftSideBarMenuCreateProjectModal from '../modalSystem/LeftSideBarMenuCreateProjectModal';
+import CreateProjectModal from '../modalSystem/CreateProjectModal';
 
 const SideBarMenu = () => {
     const themebg = useColorModeValue('light.header', 'dark.header');
@@ -20,7 +22,9 @@ const SideBarMenu = () => {
     const [activateThirdSubMenu, setActivateThirdSubMenu] = React.useState(false);
     const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
     const [currentIndex, setCurrentIndex] = React.useState(0);
-    const createModal = useDisclosure();
+    const createComputeModal = useDisclosure();
+    const createProjectFromModal = useDisclosure();
+    const createProjectModal = useDisclosure();
     const navigate = useNavigate();
     const hoverIn = () => {
         setIsHovering(true);
@@ -68,8 +72,13 @@ const SideBarMenu = () => {
         }
     };
 
-    const triggerCreateModal = () => {
-        createModal.onOpen();
+    const triggerCreateModal = (type: string) => {
+        if(type === 'compute') {
+            createComputeModal.onOpen();
+        } else if(type === 'projectFrom') {
+            createProjectFromModal.onOpen();
+        }
+
     };
     const thirdLevelMenu = () => {
         return (
@@ -95,7 +104,7 @@ const SideBarMenu = () => {
                             <Box width={'254px'} pl={'0px'} mt="17">
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' && (
                                     <h3>
-                                        <CreateNew openCreateModal={() => triggerCreateModal()} />
+                                        <CreateNew openCreateModal={(type: string) => triggerCreateModal(type)} />
                                     </h3>
                                 )}
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Recent' && (
@@ -120,7 +129,10 @@ const SideBarMenu = () => {
             </div>
         );
     };
-
+    const openCreateProjectFromScratch = () => {
+        createProjectFromModal.onClose();
+        createProjectModal.onOpen();
+    }
     return (
         <Flex>
             <>
@@ -248,7 +260,9 @@ const SideBarMenu = () => {
                             )}
                         </VStack>
                     </Flex>
-                    {createModal.isOpen && <ComputeJsonModal isOpen={createModal.isOpen} onClose={createModal.onClose} />}
+                    {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
+                    {createProjectFromModal.isOpen && <LeftSideBarMenuCreateProjectModal isOpen={createProjectFromModal.isOpen} onClose={createProjectFromModal.onClose} openCreateProjectFromScratch={openCreateProjectFromScratch} />}
+                    {createProjectModal.isOpen && <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} />}
                 </div>
                 {activateSubMenu && secondLevelMenu()}
                 {activateThirdSubMenu && thirdLevelMenu()}

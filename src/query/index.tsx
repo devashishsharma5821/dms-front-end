@@ -302,6 +302,7 @@ export const getComputeListData = () => {
     `;
     return { GET_COMPUTELIST };
 };
+
 export const GET_DB_SETTINGS = gql`
     query db_settings {
         dmsDatabricksSettings {
@@ -318,3 +319,42 @@ export const GET_DB_SETTINGS = gql`
         }
     }
 `;
+
+
+// Project and Projects API Start Here
+
+// export const createProject = (values: any) => {
+//     return gql`
+//             mutation {
+//                 dmsCreateProject(
+//                     name: "${values.name}",
+//                     project_variables: "${values.variables}",
+//                     description: "${values.description}",
+//                     tags: "${values.tags}"
+//                 )
+//             }
+//             `;
+// };
+
+export const createProject = (variables: any) => {
+    return gql`mutation {
+                dmsCreateProject(
+                    name: "${variables.name}",
+                    project_variables: "${variables.project_variables}",
+                )
+            }`;
+};
+
+export const editProject = (variables: any) => {
+    return gql`
+            mutation {
+                dmsEditProject(
+                    id: "${variables.id}",
+                    name: "${variables.name}",
+                    project_variables: "${variables.project_variables}",
+                    description: "${variables.description}",
+                    tags: "${variables.tags}"
+                )
+            }
+            `;
+};

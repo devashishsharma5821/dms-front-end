@@ -13,3 +13,7 @@ export class TransformerDetail{
     schema!: Schema;
     __typename!: string;
 }
+
+export interface TransformersAppStoreState {
+    TransformersData: TransformerDetail[];
+}
