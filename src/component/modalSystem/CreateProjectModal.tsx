@@ -45,7 +45,7 @@ const CreateProjectModal = (props: any) => {
             <ModalOverlay />
 
             <ModalContent>
-                <ModalHeader fontSize={16} color={textColor} mt={'13px'} ml={'20px'}>
+                <ModalHeader fontSize={16} color={projectId} mt={'13px'} ml={'20px'}>
                     Create Project
                 </ModalHeader>
                 <ModalCloseButton color={textColor} mr={'10px'} mt={'12px'} />
@@ -131,7 +131,7 @@ const CreateProjectModal = (props: any) => {
                                                                     Demo
                                                                 </Text>
                                                                 <Box justifyContent={'flex-end'} ml={'14px'} mr={'6px'}>
-                                                                    <CloseIcon color={'default.darkGrayCreate'} />
+                                                                    <CloseIcon color={'#666C80'} />
                                                                 </Box>
                                                             </Center>
                                                         </Flex>
@@ -156,7 +156,7 @@ const CreateProjectModal = (props: any) => {
                                                                     SB
                                                                 </Text>
                                                                 <Box justifyContent={'flex-end'} ml={'14px'} mr={'6px'}>
-                                                                    <CloseIcon color={'default.darkGrayCreate'} />
+                                                                    <CloseIcon color={'#666C80'} />
                                                                 </Box>
                                                             </Center>
                                                         </Flex>

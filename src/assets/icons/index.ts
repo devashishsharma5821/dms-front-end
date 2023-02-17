@@ -41,3 +41,5 @@ export { DownloadIcon } from './DownloadIcon';
 export { CopyIcon } from './CopyIcon';
 export { LineageIcon } from './LineageIcon';
 export { SamplePic } from './SamplePic';
+export { ScratchIcon } from './ScratchIcon';
+export { TemplateIconCreateProject } from './TemplateIconCreateProject';

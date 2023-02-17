@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import './CreateNew.scss';
-import { Box, Center, Divider, Flex, Square, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Center, Divider, Flex, Square, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 
 import PlusIcont from '../../../assets/icons/PlusIcont';
 import { WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteWorkflowsIcon } from '../../../assets/icons';
+import LeftSideBarMenuCreateProjectModal from '../../modalSystem/LeftSideBarMenuCreateProjectModal';
 
 const CreateNew = (props: any) => {
     const textColor = useColorModeValue('dark.header', 'default.whiteText');
     const headerIconColor = useColorModeValue('black', 'white');
+    const createProjectModal = useDisclosure();
     const triggerAction = (type: string) => {
         if (type === 'Compute') {
             props.openCreateModal();
+        } else if (type === 'Project') {
+            createProjectModal.onOpen();
         }
     };
     const subMenuForCreate = [
@@ -18,11 +22,13 @@ const CreateNew = (props: any) => {
             sections: [
                 {
                     name: 'Compute',
-                    icon: <WhiteComputeIcon color={'#666C80'} />
+                    icon: <WhiteComputeIcon color={'#666C80'} />,
+                    type: 'icon'
                 },
                 {
                     name: 'Project',
-                    icon: <WhiteCollection color={'#666C80'} />
+                    icon: <WhiteCollection color={'#666C80'} />,
+                    type: 'icon'
                 }
             ]
         },
@@ -30,11 +36,13 @@ const CreateNew = (props: any) => {
             sections: [
                 {
                     name: 'Dataset',
-                    icon: <WhiteDatasetIcon color={'#666C80'} />
+                    icon: <WhiteDatasetIcon color={'#666C80'} />,
+                    type: 'icon'
                 },
                 {
                     name: 'Experiment',
-                    icon: <WhiteExperiment color={'#666C80'} />
+                    icon: <WhiteExperiment color={'#666C80'} />,
+                    type: 'icon'
                 }
             ]
         },
@@ -42,11 +50,13 @@ const CreateNew = (props: any) => {
             sections: [
                 {
                     name: 'Notebook',
-                    icon: <WhiteNotebookIcon color={'#666C80'} />
+                    icon: <WhiteNotebookIcon color={'#666C80'} />,
+                    type: 'icon'
                 },
                 {
                     name: 'Workflow',
-                    icon: <WhiteWorkflowsIcon color={'#666C80'} />
+                    icon: <WhiteWorkflowsIcon color={'#666C80'} />,
+                    type: 'icon'
                 }
             ]
         }
@@ -71,26 +81,31 @@ const CreateNew = (props: any) => {
                             {row.sections &&
                                 row.sections.map((section) => {
                                     return (
-                                        <Box
-                                            _hover={{ bg: 'default.toolbarButton', color: 'white' }}
-                                            ml={'14px'}
-                                            bg="default.lightGray"
-                                            width={'106px'}
-                                            height="76px"
-                                            mt={'14px'}
-                                            className="sidebar-box"
-                                            borderRadius={'4'}
-                                            onClick={() => triggerAction(section.name)}
-                                        >
-                                            <Center mt={'14px'}>{section.icon}</Center>
+                                        <>
+                                            {section.type === 'icon' && (
+                                                <Box
+                                                    _hover={{ bg: 'default.toolbarButton', color: 'white' }}
+                                                    ml={'14px'}
+                                                    bg="default.lightGray"
+                                                    width={'106px'}
+                                                    height="76px"
+                                                    mt={'14px'}
+                                                    className="sidebar-box"
+                                                    borderRadius={'4'}
+                                                    onClick={() => triggerAction(section.name)}
+                                                >
+                                                    <Center mt={'14px'}>{section.icon}</Center>
 
-                                            <Box textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}>
-                                                {' '}
-                                                {section.name}{' '}
-                                            </Box>
-                                        </Box>
+                                                    <Box textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}>
+                                                        {' '}
+                                                        {section.name}{' '}
+                                                    </Box>
+                                                </Box>
+                                            )}
+                                        </>
                                     );
                                 })}
+                            {createProjectModal.isOpen && <LeftSideBarMenuCreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} />}
                         </Flex>
                     );
                 })}

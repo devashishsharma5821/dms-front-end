@@ -15,7 +15,6 @@ const Header = (props: any) => {
     const settingsModal = useDisclosure();
     const ViewDataModal = useDisclosure();
     const notebookModal = useDisclosure();
-    const createProject = useDisclosure();
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'16px'} mt={'7px'} mb={'7px'}>
@@ -84,8 +83,6 @@ const Header = (props: any) => {
                         <ViewData isOpen={ViewDataModal.isOpen} onClose={ViewDataModal.onClose}></ViewData>
                         <MenuItem onClick={notebookModal.onOpen}>Notebook</MenuItem>
                         <NotebookModal isOpen={notebookModal.isOpen} onClose={notebookModal.onClose}></NotebookModal>
-                        <MenuItem onClick={createProject.onOpen}>Project</MenuItem>
-                        <CreateProjectModal isOpen={createProject.isOpen} onClose={createProject.onClose}></CreateProjectModal>
                     </MenuList>
                 </Menu>
                 <Box ml={'12'} mr={'23'}>
