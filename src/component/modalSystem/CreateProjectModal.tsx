@@ -22,7 +22,7 @@ import {
     Text,
     useDisclosure,
     Avatar,
-    useToast, Spinner
+    useToast
 } from '@chakra-ui/react';
 import { CloseIcon } from '../../assets/icons';
 import { CopyIcon } from '@chakra-ui/icons';
@@ -59,7 +59,7 @@ const CreateProjectModal = (props: any) => {
                                     <Flex>
                                         <Center>
                                             <Text color={projectId} fontSize={'16px'} fontWeight={400} ml={8}>
-                                                b1af12
+                                                Yet to be Assigned
                                             </Text>
                                             <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
                                                 <CopyIcon color={'default.darkGrayCreate'} />
@@ -97,6 +97,7 @@ const CreateProjectModal = (props: any) => {
                                         duration: 5000,
                                         position: 'top-right'
                                     });
+                                    props.onSuccess();
                                 })
                                 .catch((err: any) => {
                                     console.log('error ===>', err);
@@ -129,7 +130,7 @@ const CreateProjectModal = (props: any) => {
                                             validate={(value: any) => {
                                                 let error;
                                                 if (value.length === 0) {
-                                                    error = 'create a Project is required';
+                                                    error = 'Project name is required';
                                                 }
 
                                                 return error;
@@ -137,11 +138,19 @@ const CreateProjectModal = (props: any) => {
                                         />
                                         <FormErrorMessage>{errors.name}</FormErrorMessage>
                                     </FormControl>
-                                    <FormControl isInvalid={!!errors.description && touched.description}>
+                                    <FormControl isInvalid={!!errors.description}>
                                         <FormLabel htmlFor="description" color={textColorTitle} mb={6} mt={'16px'}>
                                             Description
                                         </FormLabel>
-                                        <Input borderRadius={3} height={'84px'} placeholder="Some text" />
+                                        <Field
+                                            borderRadius={3}
+                                            border={'1px'}
+                                            borderColor={'light.lighterGrayishBlue'}
+                                            as={Input}
+                                            id="description"
+                                            name="description"
+                                            variant="outline"
+                                        />
                                         <FormErrorMessage>{errors.description}</FormErrorMessage>
                                         <Flex>
                                             <Center>

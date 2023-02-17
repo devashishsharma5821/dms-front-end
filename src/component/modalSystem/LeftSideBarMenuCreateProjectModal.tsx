@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Divider, Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ModalFooter, useColorModeValue, Center, Flex, Box, useDisclosure } from '@chakra-ui/react';
+import { Button, Divider, Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ModalFooter, useColorModeValue, Center, Flex, Box } from '@chakra-ui/react';
 import { ScratchIcon, TemplateIconCreateProject } from '../../assets/icons';
-import CreateProjectModal from './CreateProjectModal';
 import OrIconCreateProject from '../../assets/icons/OrIconCreateProject';
 
 const LeftSideBarMenuCreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
-    const createProjectModal = useDisclosure();
     const triggerAction = (type: string) => {
         if (type === 'Start from scratch') {
             props.openCreateProjectFromScratch();
