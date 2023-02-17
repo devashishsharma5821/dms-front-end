@@ -55,7 +55,7 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteCollection color="white"/>,
                 iconName: 'Projects',
-                route: '/notfound'
+                route: '/project'
             },
             {
                 icon: <PipelineIcon />,

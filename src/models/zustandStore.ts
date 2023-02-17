@@ -13,7 +13,7 @@ import {
     ShutdownEvent
 } from '@antuit-zebra/pipeline-interactive-driver-client-ts';
 import { TransformerInfo } from './transformer';
-import { GetAllProjectsDetail } from './project';
+import { GetAllProjectsDetail, GetSingleProjectDetail } from './project';
 
 export interface AppState {
     i18n: any;
@@ -22,6 +22,7 @@ export interface AppState {
     DmsComputeData: any;
     TransformersData: any;
     AllProjectsData: any;
+    SingleProjectData: any;
     UserConfig: [];
     lastAliveMessage: AliveEvent | null;
     inferStartedMessaage: StartedEvent | null;
@@ -46,6 +47,7 @@ export type updateDmsDatabricksCredentialsValidToken = (token: boolean) => void;
 export type updateDmsComputeData = (computeData: DmsComputeData[]) => void;
 export type updateTransformersData = (transformersData: TransformerInfo[]) => void;
 export type updateAllProjectsData = (projectsData: GetAllProjectsDetail[]) => void;
+export type updateSingleProjectData = (projectData: GetSingleProjectDetail) => void;
 export type updateUserConfig = (UserConfig: []) => void;
 export type connectionEstablished = () => void;
 export type receiveMessage = (action: any) => void;
@@ -58,5 +60,6 @@ export type setComputeState = (value: string) => void;
 export type getAndUpdateDmsComputeData = () => void;
 export type getAndUpdateTransformersData = () => void;
 export type getAndUpdateAllProjectsData = () => void;
+export type getAndUpdateSingleProjectData = (id: string) => void;
 export type submitMessage = (content: any) => void;
 export type dmsRunCompute = (id: string) => void;
