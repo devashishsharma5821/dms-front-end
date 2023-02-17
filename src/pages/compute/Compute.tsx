@@ -147,7 +147,7 @@ const Compute = () => {
                 setLoading(false);
                 toast({
                     title: `${err}`,
-                    status: 'success',
+                    status: 'error',
                     isClosable: true,
                     duration: 5000,
                     position: 'top-right'

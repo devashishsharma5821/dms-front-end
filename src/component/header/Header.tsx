@@ -6,7 +6,6 @@ import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
 import ViewData from '../modalSystem/ViewData';
 import NotebookModal from '../modalSystem/NotebookModal';
-import CreateProjectModal from '../modalSystem/CreateProjectModal';
 
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');

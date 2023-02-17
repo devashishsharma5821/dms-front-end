@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './CreateNew.scss';
-import { Box, Center, Divider, Flex, Square, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
-
+import { Box, Center, Divider, Flex, Square, Text, useColorModeValue } from '@chakra-ui/react';
 import PlusIcont from '../../../assets/icons/PlusIcont';
 import { WhiteCollection, WhiteComputeIcon, WhiteDatasetIcon, WhiteExperiment, WhiteNotebookIcon, WhiteWorkflowsIcon } from '../../../assets/icons';
-import LeftSideBarMenuCreateProjectModal from '../../modalSystem/LeftSideBarMenuCreateProjectModal';
 
 const CreateNew = (props: any) => {
     const textColor = useColorModeValue('dark.header', 'default.whiteText');
     const headerIconColor = useColorModeValue('black', 'white');
-    const createProjectModal = useDisclosure();
     const triggerAction = (type: string) => {
         if (type === 'Compute') {
-            props.openCreateModal();
+            props.openCreateModal('compute');
         } else if (type === 'Project') {
-            createProjectModal.onOpen();
+            props.openCreateModal('projectFrom');
         }
     };
     const subMenuForCreate = [
@@ -84,6 +81,7 @@ const CreateNew = (props: any) => {
                                         <>
                                             {section.type === 'icon' && (
                                                 <Box
+                                                    key={section.name}
                                                     _hover={{ bg: 'default.toolbarButton', color: 'white' }}
                                                     ml={'14px'}
                                                     bg="default.lightGray"
@@ -105,7 +103,6 @@ const CreateNew = (props: any) => {
                                         </>
                                     );
                                 })}
-                            {createProjectModal.isOpen && <LeftSideBarMenuCreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} />}
                         </Flex>
                     );
                 })}

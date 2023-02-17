@@ -21,11 +21,15 @@ import {
     Box,
     Text,
     useDisclosure,
-    Avatar
+    Avatar,
+    useToast, Spinner
 } from '@chakra-ui/react';
 import { CloseIcon } from '../../assets/icons';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
+import { CreateProject, ProjectCreate, ProjectCreateDetail } from '../../models/project';
+import client from '../../apollo-client';
+import { createProject } from '../../query';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -34,14 +38,9 @@ const CreateProjectModal = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const addShareMemberModal = useDisclosure();
-    interface CreateProjectModal {
-        createProject: string;
-        description: string;
-        tags: string[];
-    }
-
+    const toast = useToast();
     return (
-        <Modal size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
 
             <ModalContent>
@@ -75,21 +74,47 @@ const CreateProjectModal = (props: any) => {
                         initialValues={
                             {
                                 validateOnMount: true,
-                                createProject: '',
+                                name: '',
                                 description: '',
-                                tags: []
-                            } as CreateProjectModal
+                                tags: '',
+                                project_variables: 'none'
+                            } as CreateProject
                         }
                         validateOnBlur={true}
                         validateOnChange={true}
                         onSubmit={(values) => {
                             setLoading(true);
+                            client
+                                .mutate<ProjectCreate<ProjectCreateDetail>>({
+                                    mutation: createProject(values)
+                                })
+                                .then(() => {
+                                    setLoading(false);
+                                    toast({
+                                        title: `Project has being created`,
+                                        status: 'success',
+                                        isClosable: true,
+                                        duration: 5000,
+                                        position: 'top-right'
+                                    });
+                                })
+                                .catch((err: any) => {
+                                    console.log('error ===>', err);
+                                    setLoading(false);
+                                    toast({
+                                        title: `${err}`,
+                                        status: 'error',
+                                        isClosable: true,
+                                        duration: 5000,
+                                        position: 'top-right'
+                                    });
+                                });
                         }}
                     >
                         {({ handleSubmit, errors, touched, isValid }) => (
                             <form onSubmit={handleSubmit}>
                                 <VStack align="flex-start">
-                                    <FormControl isInvalid={!!errors.createProject && touched.createProject} isRequired>
+                                    <FormControl isInvalid={!!errors.name && touched.name} isRequired>
                                         <FormLabel htmlFor="notebookName" color={textColorTitle} mb={6}>
                                             Project Name
                                         </FormLabel>
@@ -98,8 +123,8 @@ const CreateProjectModal = (props: any) => {
                                             border={'1px'}
                                             borderColor={'light.lighterGrayishBlue'}
                                             as={Input}
-                                            id="createProject"
-                                            name="createProject"
+                                            id="name"
+                                            name="name"
                                             variant="outline"
                                             validate={(value: any) => {
                                                 let error;
@@ -110,7 +135,7 @@ const CreateProjectModal = (props: any) => {
                                                 return error;
                                             }}
                                         />
-                                        <FormErrorMessage>{errors.createProject}</FormErrorMessage>
+                                        <FormErrorMessage>{errors.name}</FormErrorMessage>
                                     </FormControl>
                                     <FormControl isInvalid={!!errors.description && touched.description}>
                                         <FormLabel htmlFor="description" color={textColorTitle} mb={6} mt={'16px'}>

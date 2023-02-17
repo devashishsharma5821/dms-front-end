@@ -80,10 +80,9 @@ const shareData1 = {
                         
                         <Flex as="nav" align="center" justify="space-between" wrap="wrap">
 
-                        {shareData1.data.map((icons) => {
+                        {shareData1.data.map((icons, iconsIndex) => {
                             return(
-                              
-                            <><Center>
+                            <><Center key={iconsIndex}>
                                     <Avatar ml={16} p={'5px'}  borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
                                     <Box mt={'17px'} width={'300px'}>
                                         <Text ml={12} color={accesstextColor}>{icons?.firstName} {icons?.lastName}</Text>
