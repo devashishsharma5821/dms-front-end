@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './project.scss';
 import { Box, Stack, Text } from '@chakra-ui/react';
 import DMSGrid from '../../component/dmsGrid/DMSGrid';
+import useAppStore from '../../store';
+import { GetAllProjectsAppStoreState } from '../../models/project';
+import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 
 const Project = () => {
+    const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
+    useEffect(() => {
+        if (AllProjectsData === null) {
+            getAndUpdateAllProjectsData();
+        } else {
+            console.log('Here is your Projects Data', AllProjectsData);
+        }
+    }, [AllProjectsData]);
     return (
         <>
             <Box marginLeft={36}>
