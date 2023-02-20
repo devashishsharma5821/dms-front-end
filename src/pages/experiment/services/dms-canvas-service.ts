@@ -1,6 +1,4 @@
 import * as joint from '@antuit/rappid-v1';
-// import * as dagre from 'dagre';
-import * as _ from 'lodash';
 import {StencilService} from './stencil-service';
 import {ToolbarService} from './toolbar-service';
 import {InspectorService} from './inspector-service';
@@ -8,7 +6,7 @@ import {HaloService} from './halo-service';
 import {KeyboardService} from './keyboard-service';
 import * as appShapes from './app-shapes';
 
-class KitchenSinkService {
+class DmsCanvasService {
 
     el: HTMLElement;
     graph: joint.dia.Graph | any;
@@ -467,4 +465,4 @@ class KitchenSinkService {
     }
 }
 
-export default KitchenSinkService;
+export default DmsCanvasService;
