@@ -139,6 +139,7 @@ const ExperimentsPage = () => {
                 const stencilMarkup = new shapes.standard.EmbeddedImage({
                     size: { width: 257, height: 52 },
                     attrs: {
+                        idOfTransformer: currentObj.id,
                         root: {
                             dataTooltip: currentObj.name,
                             dataTooltipPosition: 'left',
@@ -474,7 +475,7 @@ const ExperimentsPage = () => {
                     });
                 }
                 const combinedGroupPorts = [...inputPorts, ...outputPorts];
-                stencilMarkup.addPorts(combinedGroupPorts);
+                stencilMarkup.attributes.CombinedPorts = combinedGroupPorts;
                 (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
                 return transformersList;
             }, TransformersData[0]);

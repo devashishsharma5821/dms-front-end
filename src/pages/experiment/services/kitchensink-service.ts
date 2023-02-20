@@ -145,8 +145,10 @@ class KitchenSinkService {
 
         this.renderPlugin('stencil-container', stencilService.stencil);
         stencilService.setShapes(stencil);
-
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
+            // Add the ports coming from backend transformers Api and bind it to paper canvas on drop event
+            const portsToAdd = elementView.model.attributes.CombinedPorts;
+            elementView.model.addPorts(portsToAdd);
             this.selection.collection.reset([elementView.model]);
         });
     }
