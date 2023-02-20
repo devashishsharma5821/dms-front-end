@@ -3,16 +3,15 @@ import { Box, Stack, Text } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import {  GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
-
-const ProjectDetails = () => {
+import { useParams } from "react-router-dom"
+const ProjectDetails = (props: any) => {
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
+    const params = useParams();
     useEffect(() => {
         if (SingleProjectData === null) {
-            // Hard Code Project ID 7 For now
-            // This needs to come from Previous Page
-            getAndUpdateSingleProjectData("7");
+            getAndUpdateSingleProjectData(params.projectId as string);
         } else {
-            console.log('Project 7 Data', SingleProjectData);
+            console.log('Project Details Data via Route Params', SingleProjectData);
         }
     }, [SingleProjectData]);
     return (
@@ -28,6 +27,9 @@ const ProjectDetails = () => {
                         Duis aute irure dolor in reprehenderit in voluptate velit
                     </Text>
                 </Stack>
+                {SingleProjectData &&
+                <Text fontSize="lg" ml={'24'} noOfLines={[2]}>{SingleProjectData.basic.name}</Text>
+                }
             </Box>
         </>
     );

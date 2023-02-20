@@ -33,7 +33,7 @@ export const AppRouter = (props: any) => {
                                     }
                                 />
                                 <Route path="/project" element={<Project />} />
-                                <Route path="/projectDetails" element={<ProjectDetails />} />
+                                <Route path="/projectDetails/:projectId" element={<ProjectDetails />} />
                             </Routes>
                         </Box>
                     </SocketWrapper>
