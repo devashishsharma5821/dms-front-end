@@ -47,11 +47,11 @@ export const SamplePic: React.FC<LogoProps> = () => {
                     d="M480.5 143H474.5V137H465.5V155H480.5V143ZM479.879 141.5L476 137.621V141.5H479.879ZM464.75 135.5H476L482 141.5V155.75C482 155.949 481.921 156.14 481.78 156.28C481.64 156.421 481.449 156.5 481.25 156.5H464.75C464.551 156.5 464.36 156.421 464.22 156.28C464.079 156.14 464 155.949 464 155.75V136.25C464 136.051 464.079 135.86 464.22 135.72C464.36 135.579 464.551 135.5 464.75 135.5ZM468.5 146H477.5V147.5H468.5V146ZM468.5 141.5H472.25V143H468.5V141.5ZM468.5 150.5H477.5V152H468.5V150.5Z"
                     fill="#666C80"
                 />
-                <rect x="252.5" y="59.5" width="242" height="103" rx="3.5" stroke="#C7C7C7" shape-rendering="crispEdges" />
+                <rect x="252.5" y="59.5" width="242" height="103" rx="3.5" stroke="#C7C7C7" shapeRendering="crispEdges" />
             </g>
-            <rect x="692" y="215" width="249" height="111" rx="5" stroke="#2D9CDB" stroke-opacity="0.5" stroke-width="6" />
+            <rect x="692" y="215" width="249" height="111" rx="5" stroke="#2D9CDB" strokeOpacity="0.5" strokeWidth="6" />
             <g filter="url(#filter1_d_6471_16385)">
-                <rect x="695" y="218" width="243" height="104" rx="4" fill="white" shape-rendering="crispEdges" />
+                <rect x="695" y="218" width="243" height="104" rx="4" fill="white" shapeRendering="crispEdges" />
                 <g clip-path="url(#clip0_6471_16385)">
                     <path
                         fill-rule="evenodd"

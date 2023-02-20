@@ -28,7 +28,14 @@ const Project = () => {
                         Duis aute irure dolor in reprehenderit in voluptate velit
                     </Text>
                 </Stack>
-                <DMSGrid />
+                {
+                    AllProjectsData &&
+                    AllProjectsData.map((project) => {
+                        return <>
+                        <Text marginLeft={136}>{project.name}</Text>
+                        </>
+                    })
+                }
             </Box>
         </>
     );
