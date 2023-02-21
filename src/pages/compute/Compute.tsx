@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useContext } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
 import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -39,6 +39,7 @@ import { submitMessage } from '../../zustandActions/socketActions';
 import { Action } from '@antuit/web-sockets-gateway-client';
 import { newComputeData } from './generateNewComputeData';
 import { disperseMessage } from '../../models/messages';
+import { useNavigate } from 'react-router-dom';
 
 const Compute = () => {
     const opid = v4();
@@ -52,6 +53,7 @@ const Compute = () => {
     const [rowCount, setRowCount] = useState<number | undefined>(0);
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
     const gridRef = useRef<AgGridReact<DmsComputeData>>(null);
+    const navigate = useNavigate();
     const deleteCompute = useDisclosure();
     const alertConfirm = useDisclosure();
     const alertConfirmForDefaultFlag = {
@@ -83,6 +85,7 @@ const Compute = () => {
     const [stopRefreshId, setRefreshComputeId] = useState<string>('');
     const toast = useToast();
     const context = useContext(ComputeContext);
+
     window.addEventListener('resize', () => {
         gridRef?.current!?.api?.sizeColumnsToFit();
     });
@@ -230,17 +233,17 @@ const Compute = () => {
     const actionsRow = (params: any) => {
         return (
             <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
-                {loading ? (
-                    <Spinner />
-                ) : params?.data?.status === 'STOPPED' ? (
-                    <div className="icons" onClick={() => onPlayClickHandler(params.data)}>
-                        <PlayIcon />
-                    </div>
-                ) : (
-                    <div className="icons" onClick={() => onStopClickHandler(params.data)}>
-                        <StopCompute />
-                    </div>
-                )}
+                {loading && <Spinner />}
+                {!loading &&
+                    (params?.data?.status === 'STOPPED' ? (
+                        <div className="icons" onClick={() => onPlayClickHandler(params.data)}>
+                            <PlayIcon />
+                        </div>
+                    ) : (
+                        <div className="icons" onClick={() => onStopClickHandler(params.data)}>
+                            <StopCompute />
+                        </div>
+                    ))}
                 <div className="icons" onClick={() => onRefreshClickHandler(params.data)}>
                     <ReStartIcon />
                 </div>
@@ -318,14 +321,26 @@ const Compute = () => {
                 });
             });
     };
+
     const defaultRow = (params: any) => {
         getAndUpdateDmsComputeData();
         return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
     };
+    const navigateToComputeDetails = (id: string) => {
+        navigate('/computedetails/' + id);
+    };
+
+    const computeIdHandler = (params: any) => {
+        return (
+            <div className="computeIdCell" onClick={() => navigateToComputeDetails(params.data.id)}>
+                {params.data.id}
+            </div>
+        );
+    };
 
     const [rowData, setRowData] = useState<DmsComputeData[]>([]);
     const [columnDefs] = useState<ColDef[]>([
-        { headerName: 'Compute Id', field: 'id' },
+        { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
         { headerName: 'Compute Name', field: 'name' },
         { headerName: 'Created On', field: 'created_at' },
         { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useApolloClient, DocumentNode } from '@apollo/client';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useToast } from '@chakra-ui/react';
-import { GET_DB_SETTINGS } from '../../query/index';
+import { dmsRunCompute, GET_DB_SETTINGS } from '../../query/index';
 import { COMPUTE_MODAL_PROPS } from '../../models/types';
 import '../../styles/FormBuilderClasses.scss';
 import FormBuilder from '../jsonSchemaFormBuilder/FormBuilder';
 import formSchema from '../jsonSchemaFormBuilder/computeFormSchema.json';
 import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscaling, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling } from '../../query';
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
-import { createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues } from '../../models/computeDetails';
+import { createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues, agGridClickHandler, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
 import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
@@ -41,9 +41,36 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             }
         }
     }, [isComputeCreated]);
+    const onPlayClickHandler: agGridClickHandler = (id) => {
+        client
+            .mutate<ComputeRun<RunComputeDetail>>({
+                mutation: dmsRunCompute(id)
+            })
+            .then(() => {
+                getAndUpdateDmsComputeData();
+                toast({
+                    title: `Compute is starting`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+            })
+            .catch((err: any) => {
+                console.log('error ===>', err);
+                toast({
+                    title: `${err}`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+            });
+    };
 
     const handleSubmitCompute = (values: CreateComputeSubmitHandlerValues) => {
         let mutation: DocumentNode | null = null;
+        let createMutation: boolean = false;
         setIsDisabled(true);
         if (props?.isEdit) {
             if (!values.enable_autoscaling) {
@@ -57,6 +84,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             } else {
                 mutation = dmsCreateComputeOnEnableAutoscaling(values);
             }
+            createMutation = true;
         }
 
         client
@@ -64,6 +92,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                 mutation: mutation
             })
             .then((response) => {
+                createMutation && onPlayClickHandler(response?.data?.dmsCreateCompute);
                 setIsDisabled(false);
                 toast({
                     title: `Compute ${props?.isEdit ? 'edited' : 'created'} successfully`,
