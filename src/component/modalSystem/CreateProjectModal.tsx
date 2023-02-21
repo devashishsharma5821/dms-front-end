@@ -30,6 +30,7 @@ import Share from './Share';
 import { CreateProject, ProjectCreate, ProjectCreateDetail } from '../../models/project';
 import client from '../../apollo-client';
 import { createProject } from '../../query';
+import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -97,6 +98,7 @@ const CreateProjectModal = (props: any) => {
                                         duration: 5000,
                                         position: 'top-right'
                                     });
+                                    getAndUpdateAllProjectsData();
                                     props.onSuccess();
                                 })
                                 .catch((err: any) => {

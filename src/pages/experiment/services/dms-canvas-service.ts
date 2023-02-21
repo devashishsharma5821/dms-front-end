@@ -1,6 +1,4 @@
 import * as joint from '@antuit/rappid-v1';
-// import * as dagre from 'dagre';
-import * as _ from 'lodash';
 import {StencilService} from './stencil-service';
 import {ToolbarService} from './toolbar-service';
 import {InspectorService} from './inspector-service';
@@ -8,7 +6,7 @@ import {HaloService} from './halo-service';
 import {KeyboardService} from './keyboard-service';
 import * as appShapes from './app-shapes';
 
-class KitchenSinkService {
+class DmsCanvasService {
 
     el: HTMLElement;
     graph: joint.dia.Graph | any;
@@ -145,8 +143,10 @@ class KitchenSinkService {
 
         this.renderPlugin('stencil-container', stencilService.stencil);
         stencilService.setShapes(stencil);
-
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
+            // Add the ports coming from backend transformers Api and bind it to paper canvas on drop event
+            const portsToAdd = elementView.model.attributes.CombinedPorts;
+            elementView.model.addPorts(portsToAdd);
             this.selection.collection.reset([elementView.model]);
         });
     }
@@ -465,4 +465,4 @@ class KitchenSinkService {
     }
 }
 
-export default KitchenSinkService;
+export default DmsCanvasService;

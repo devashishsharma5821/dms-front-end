@@ -25,7 +25,7 @@ import { ToolbarService } from './services/toolbar-service';
 import { InspectorService } from './services/inspector-service';
 import { HaloService } from './services/halo-service';
 import { KeyboardService } from './services/keyboard-service';
-import RappidService from './services/kitchensink-service';
+import DmsCanvasService from './services/dms-canvas-service';
 import { TransformersAppStoreState } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
 import { shapes } from '@antuit/rappid-v1';
@@ -39,7 +39,7 @@ import { newComputeData } from '../compute/generateNewComputeData';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
-    let rappid: RappidService;
+    let rappid: DmsCanvasService;
     const elementRef = React.useRef<HTMLDivElement>(null);
     const [DmsComputeData, UserConfig, connectionState] = useAppStore((state: ExperimentAppStoreState) => [state.DmsComputeData, state.UserConfig, state.connectionState]);
     const [TransformersData] = useAppStore((state: TransformersAppStoreState) => [state.TransformersData]);
@@ -107,7 +107,7 @@ const ExperimentsPage = () => {
 
     const initializeAndStartRapid = (stencil: any, group: any) => {
         if (!rappid) {
-            rappid = new RappidService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+            rappid = new DmsCanvasService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
             setTimeout(() => {
                 setPaperScrollerState(rappid.getPaperScroller());
             }, 500);
@@ -139,6 +139,7 @@ const ExperimentsPage = () => {
                 const stencilMarkup = new shapes.standard.EmbeddedImage({
                     size: { width: 257, height: 52 },
                     attrs: {
+                        idOfTransformer: currentObj.id,
                         root: {
                             dataTooltip: currentObj.name,
                             dataTooltipPosition: 'left',
@@ -474,7 +475,7 @@ const ExperimentsPage = () => {
                     });
                 }
                 const combinedGroupPorts = [...inputPorts, ...outputPorts];
-                stencilMarkup.addPorts(combinedGroupPorts);
+                stencilMarkup.attributes.CombinedPorts = combinedGroupPorts;
                 (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
                 return transformersList;
             }, TransformersData[0]);
