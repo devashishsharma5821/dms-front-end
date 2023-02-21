@@ -133,7 +133,6 @@ const Toolbar = (props: toolbarPropsType) => {
                     </>
                 );
             })}
-            <Spacer />
             <Flex height={'56px'} gap="2">
                 <>
                     <Center>

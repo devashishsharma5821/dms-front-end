@@ -492,12 +492,12 @@ const ExperimentsPage = () => {
 
     const returnCurrentTransformersIcon = (icon: string) => {
         const location = window.location.host;
-        if(location === 'localhost:4200') {
+        if (location === 'localhost:4200') {
             return `/v3-dms/assets/icon/transformersIcons/${icon}`;
         } else {
             return `/assets/icon/transformersIcons/${icon}`;
         }
-    }
+    };
     useEffect(() => {
         client
             .query<DataBricksTokenResponse<DataBricksTokenDetails>>({

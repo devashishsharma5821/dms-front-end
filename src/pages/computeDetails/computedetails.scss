@@ -1,0 +1,100 @@
+.main-heading {
+    color: rgb(117, 133, 143);
+}
+.computeDetailsMainContainer {
+    display: flex;
+    margin-top: 5px;
+    flex-direction: column;
+    // background-color: #2180c2;
+    height: 500px;
+}
+
+.computedetailsContainer-1 {
+    display: flex;
+    align-items: center;
+    .back-button {
+        border: 2px solid rgb(226, 229, 230);
+        background: white;
+        color: rgb(117, 133, 143);
+        border-radius: 2px;
+        margin-right: 8px;
+        height: 30px;
+        width: 8px;
+    }
+    .delete-button {
+        font-style: normal;
+        color: #2180c2;
+        font-size: 16px;
+        line-height: 16px;
+        margin-left: 24px;
+        border: 1px solid #2180c2;
+        border-radius: 3px;
+    }
+    width: 400px;
+}
+
+.computedetailsContainer-2 {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 785px;
+    margin: 20px 0px;
+    border: 1px solid rgb(216, 220, 222);
+    box-shadow: 0px 3px 3px #e8e0e0;
+    height: 250px;
+    border-radius: 7px;
+    .computedetailsContainer-2sub-1 {
+        display: flex;
+        height: 200px;
+        width: 400px;
+        // border: 2px solid red;
+
+        .computedetailsContainer-2subsub-2 {
+            display: flex;
+            flex-direction: column;
+            width: 320px;
+            justify-content: space-around;
+            .computedetailsContainer-2subsub-2sub-2 {
+                display: flex;
+                justify-content: space-between;
+            }
+            .computedetailsContainer-2subsub-2sub-3 {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+    }
+
+    .computedetailsContainer-2sub-2 {
+        display: flex;
+        background-color: rgb(247, 250, 252);
+        flex-direction: column;
+        justify-content: space-between;
+        height: 200px;
+        width: 270px;
+        .computedetailsContainer-2sub-2sub-1 {
+            display: flex;
+            align-items: center;
+            // border: 2px solid red;
+            height: 34px;
+        }
+        .computedetailsContainer-2sub-2sub-2 {
+            // border: 2px solid green;
+            height: 150px;
+            display: flex;
+            .computedetailsContainer-2sub-2sub-2sub-1 {
+                width: 150px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                // border: 2px solid yellow;
+            }
+            .computedetailsContainer-2sub-2sub-2sub-2 {
+                width: 108px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        }
+    }
+}
