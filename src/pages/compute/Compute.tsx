@@ -81,12 +81,23 @@ const Compute = () => {
         confirmButtonTitle: 'Confirm'
     };
     const [deleteComputeId, setDeleteComputeId] = useState<string | undefined>();
+    const [editComputeId, setEditComputeId] = useState<string | undefined>();
     const [stopComputeId, setStopComputeId] = useState<string | undefined>();
     const [stopRefreshId, setRefreshComputeId] = useState<string>('');
     const toast = useToast();
     const context = useContext(ComputeContext);
 
+    // TODO Convert the below and wrap it in a  lifecycle hook
+    // const autoSizeAll = useCallback((skipHeader: boolean) => {
+    //     const allColumnIds: string[] = [];
+    //     gridRef.current!.columnApi.getColumns()!.forEach((column) => {
+    //         allColumnIds.push(column.getId());
+    //     });
+    //     gridRef.current!.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+    // }, []);
+
     window.addEventListener('resize', () => {
+        // TODO Convert the sizeColumnsTOFIt to autosize as above
         gridRef?.current!?.api?.sizeColumnsToFit();
     });
     const [DmsComputeData, UserConfig] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig]);
@@ -307,10 +318,11 @@ const Compute = () => {
         // Remove the hardcoding
         client
             .mutate<EditCompute<any>>({
-                mutation: dmsEditCompute(161, true)
+                mutation: dmsEditCompute(editComputeId, true)
             })
             .then(() => {
                 alertConfirm.onClose();
+                // TODO, JALAJ remove the api call, and update the state manually
                 getAndUpdateDmsComputeData();
                 toast({
                     title: `Your Default is changed`,
@@ -319,11 +331,21 @@ const Compute = () => {
                     duration: 5000,
                     position: 'top-right'
                 });
+            }).catch((error: any) => {
+            toast({
+                title: error.message,
+                status: 'error',
+                isClosable: true,
+                duration: 5000,
+                position: 'top-right'
             });
+            deleteCompute.onClose();
+        });
     };
 
     const defaultRow = (params: any) => {
         getAndUpdateDmsComputeData();
+        setEditComputeId(params.data.id);
         return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
     };
     const navigateToComputeDetails = (id: string) => {
@@ -339,9 +361,10 @@ const Compute = () => {
     };
 
     const [rowData, setRowData] = useState<DmsComputeData[]>([]);
+    // TODO Write Default Columns Definitions which is common for all
     const [columnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
-        { headerName: 'Compute Name', field: 'name' },
+        { headerName: 'Compute Name', field: 'name'},
         { headerName: 'Created On', field: 'created_at' },
         { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },
         { headerName: 'Driver Type', field: 'resources.node_type.driver_type_id' },
