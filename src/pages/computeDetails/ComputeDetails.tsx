@@ -66,27 +66,24 @@ const ComputeDetails = () => {
     };
 
     const onEditClickHandler = (data: any) => {
-        console.log('onEditClickHandler');
-        // context.updateFormData({
-        //     id: data.id,
-        //     max_inactivity_min: data?.max_inactivity_min,
-        //     compute_name: data.name,
-        //     autoscale: data.resources.autoscale,
-        //     workers: data.resources.num_workers ? data.resources.num_workers : '0',
-        //     spot_instances: data.resources.spot_instances,
-        //     worker_type_id: data.resources.node_type.worker_type_id,
-        //     driver_type_id: data.resources.node_type.driver_type_id,
-        //     min_workers: data.resources?.autoscale?.min_workers,
-        //     max_workers: data.resources?.autoscale?.max_workers,
-        //     enable_autoscaling: data.resources.autoscale ? true : false,
-        //     terminate_after: data?.max_inactivity_min ? true : false
-        // });
-        editComputeModal.onOpen();
-        setIsEdit((prev) => {
-            return !prev;
+        context.updateFormData({
+            id: data.id,
+            max_inactivity_min: data?.max_inactivity_min,
+            compute_name: data.name,
+            autoscale: data.resources.autoscale,
+            workers: data.resources.num_workers ? data.resources.num_workers : '0',
+            spot_instances: data.resources.spot_instances,
+            worker_type_id: data.resources.node_type.worker_type_id,
+            driver_type_id: data.resources.node_type.driver_type_id,
+            min_workers: data.resources?.autoscale?.min_workers,
+            max_workers: data.resources?.autoscale?.max_workers,
+            enable_autoscaling: data.resources.autoscale ? true : false,
+            terminate_after: data?.max_inactivity_min ? true : false
         });
+        setIsEdit(true);
+        editComputeModal.onOpen();
     };
-
+    console.log('is edit ==> ', isEdit);
     const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData.id === computeId);
     if (!computeData) {
         return <div>loading</div>;
@@ -159,7 +156,7 @@ const ComputeDetails = () => {
                     </Box>
                     <Box className="computedetailsContainer-2sub-2">
                         <Box className="computedetailsContainer-2sub-2sub-1">
-                            <ButtonGroup ml={8} onClick={onEditClickHandler}>
+                            <ButtonGroup ml={8} onClick={() => onEditClickHandler(computeData[0])}>
                                 <Link color="rgb(33,128,194)" fontWeight={100} href="#">
                                     Edit Compute
                                 </Link>

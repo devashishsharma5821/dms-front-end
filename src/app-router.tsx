@@ -17,26 +17,21 @@ export const AppRouter = (props: any) => {
                 <Flex overflowY={'hidden'} flexDirection="column">
                     <SideBarMenu />
                     <SocketWrapper>
-                        <Box>
-                            <Routes>
-                                <Route path="/" element={<PageNotFound />} />
-                                <Route path="/home" element={<HomePage />} />
-                                <Route path="/experiment" element={<ExperimentsPage />} />
-                                <Route path="/notfound" element={<PageNotFound />} />
-                                <Route path="/notebook" element={<Notebook />} />
-                                <Route
-                                    path="/compute"
-                                    element={
-                                        <ContextCompute>
-                                            <Compute />
-                                        </ContextCompute>
-                                    }
-                                />
-                                <Route path="/project" element={<Project />} />
-                                <Route path="/projectDetails/:projectId" element={<ProjectDetails />} />
-                                <Route path="/computedetails/:computeId" element={<ComputeDetails />} />
-                            </Routes>
-                        </Box>
+                        <ContextCompute>
+                            <Box>
+                                <Routes>
+                                    <Route path="/" element={<PageNotFound />} />
+                                    <Route path="/home" element={<HomePage />} />
+                                    <Route path="/experiment" element={<ExperimentsPage />} />
+                                    <Route path="/notfound" element={<PageNotFound />} />
+                                    <Route path="/notebook" element={<Notebook />} />
+                                    <Route path="/compute" element={<Compute />} />
+                                    <Route path="/project" element={<Project />} />
+                                    <Route path="/projectDetails/:projectId" element={<ProjectDetails />} />
+                                    <Route path="/computedetails/:computeId" element={<ComputeDetails />} />
+                                </Routes>
+                            </Box>
+                        </ContextCompute>
                     </SocketWrapper>
                 </Flex>
             </Suspense>

@@ -85,6 +85,7 @@ const Compute = () => {
     const [stopRefreshId, setRefreshComputeId] = useState<string>('');
     const toast = useToast();
     const context = useContext(ComputeContext);
+
     window.addEventListener('resize', () => {
         gridRef?.current!?.api?.sizeColumnsToFit();
     });
