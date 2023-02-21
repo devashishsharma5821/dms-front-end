@@ -249,7 +249,7 @@ export const dmsDeleteCompute = (cellId: string | undefined) => {
             }`;
 };
 
-export const dmsEditCompute = (computeId: number, isDefault: boolean) => {
+export const dmsEditCompute = (computeId: string | undefined, isDefault: boolean) => {
     return gql`mutation {
             dmsEditCompute(  
                id: "${computeId}",

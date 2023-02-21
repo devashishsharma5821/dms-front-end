@@ -66,7 +66,7 @@ const Toolbar = (props: toolbarPropsType) => {
         setCommentChecked(false);
     };
     return (
-        <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" pl={90}>
+        <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" ml={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                 return (
                     <>
@@ -133,7 +133,7 @@ const Toolbar = (props: toolbarPropsType) => {
                     </>
                 );
             })}
-            <Flex height={'56px'} gap="2">
+            <Box ml='-200px'>
                 <>
                     <Center>
                         {props?.computeData?.length !== 0 &&
@@ -221,7 +221,7 @@ const Toolbar = (props: toolbarPropsType) => {
                         </ButtonGroup>
                     </Center>
                 )}
-            </Flex>
+            </Box>
             <Comments isOpen={commentModal.isOpen} onClose={commentModal.onClose} commentClosed={commentModalClosed}></Comments>
             {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
