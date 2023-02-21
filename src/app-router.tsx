@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense } from 'react';
 import Header from '../src/component/header/Header';
-import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage } from './pages';
+import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage, ProjectDetails } from './pages';
 import { Box, Flex } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 import { User } from './models/profile';
@@ -33,6 +33,7 @@ export const AppRouter = (props: any) => {
                                     }
                                 />
                                 <Route path="/project" element={<Project />} />
+                                <Route path="/projectDetails/:projectId" element={<ProjectDetails />} />
                             </Routes>
                         </Box>
                     </SocketWrapper>

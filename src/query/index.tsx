@@ -348,6 +348,39 @@ export const GET_ALL_PROJECTS = gql`
     }
 `;
 
+export const GET_SINGLE_PROJECT = (id: string) => {
+    return gql`
+   query dmsProject {
+  dmsProject(project_id: "${id}") {
+    basic {
+      id
+      name
+      created_by
+      created_at
+      project_variables
+    }
+    tasks {
+      id
+      title
+      description
+      is_completed
+      created_by
+      created_at
+}
+    experiments {
+      id
+      name
+    }
+    project_access {
+      id
+      user_id
+      access_level
+    }
+  }
+}
+`;
+}
+
 export const createProject = (variables: any) => {
     return gql`mutation {
                 dmsCreateProject(
