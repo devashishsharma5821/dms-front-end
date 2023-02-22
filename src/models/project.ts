@@ -1,6 +1,7 @@
 import { TransformerDetail } from './transformerDetail';
 
 export interface CreateProject {
+    id: string;
     name: string;
     description: string;
     tags: string;
@@ -58,7 +59,12 @@ export class ProjectCreate<T> {
 export class ProjectCreateDetail {
     dmsCreateProject!: boolean;
 }
-
+export class ProjectEdit<T> {
+    dmsEditProject!: T;
+}
+export class ProjectEditDetail {
+    dmsEditProject!: boolean;
+}
 export class EditCreateDetail {
     dmsEditProject!: boolean;
 }

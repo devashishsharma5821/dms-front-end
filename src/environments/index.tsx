@@ -1,6 +1,6 @@
 export const ENVIRONMENT = {
     BASE_URL: '/v3-dms',
-    VERSION: 'v3.4.2',
+    VERSION: 'v3.4.3',
     AGGRID_LICENSE_KEY:
         'CompanyName=Antuit, Inc.,LicensedGroup=antuit.ai,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=5,LicensedProductionInstancesCount=3,AssetReference=AG-030746,SupportServicesEnd=3_September_2023_[v2]_MTY5MzY5NTYwMDAwMA==2290aef0909f25ac395f29691245b752',
     IDENTITY_PROVIDER: 'azure',

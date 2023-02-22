@@ -27,9 +27,9 @@ import {
 import { CloseIcon } from '../../assets/icons';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
-import { CreateProject, ProjectCreate, ProjectCreateDetail } from '../../models/project';
+import { CreateProject, ProjectCreate, ProjectCreateDetail, ProjectEdit, ProjectEditDetail } from '../../models/project';
 import client from '../../apollo-client';
-import { createProject } from '../../query';
+import { createProject, editProject } from '../../query';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
@@ -40,13 +40,17 @@ const CreateProjectModal = (props: any) => {
     const [loading, setLoading] = useState(false);
     const addShareMemberModal = useDisclosure();
     const toast = useToast();
+    const isEdit = props.isEdit.status;
+    const isEditData = props.isEdit.data;
+    const data = {id: (isEdit) ? isEditData.basic.id : "", name: (isEdit) ? isEditData.basic.name : "", description: "", tags: "" , project_variables: "none"} as CreateProject;
+
     return (
         <Modal closeOnOverlayClick={false} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
 
             <ModalContent>
                 <ModalHeader fontSize={16} color={projectId} mt={'13px'} ml={'20px'}>
-                    Create Project
+                    {(isEdit) ? 'Edit Project': 'Create Project'}
                 </ModalHeader>
                 <ModalCloseButton color={textColor} mr={'10px'} mt={'12px'} />
                 <Divider color={'default.dividerColor'} mt={'13px'} mb={'20px'} />
@@ -75,43 +79,74 @@ const CreateProjectModal = (props: any) => {
                         initialValues={
                             {
                                 validateOnMount: true,
-                                name: '',
-                                description: '',
-                                tags: '',
-                                project_variables: 'none'
+                                id: data.id,
+                                name: data.name,
+                                description: data.description,
+                                tags: data.tags,
+                                project_variables: data.project_variables
                             } as CreateProject
                         }
                         validateOnBlur={true}
                         validateOnChange={true}
                         onSubmit={(values) => {
                             setLoading(true);
-                            client
-                                .mutate<ProjectCreate<ProjectCreateDetail>>({
-                                    mutation: createProject(values)
-                                })
-                                .then(() => {
-                                    setLoading(false);
-                                    toast({
-                                        title: `Project has being created`,
-                                        status: 'success',
-                                        isClosable: true,
-                                        duration: 5000,
-                                        position: 'top-right'
+                            if(isEdit) {
+                                client
+                                    .mutate<ProjectEdit<ProjectEditDetail>>({
+                                        mutation: editProject(values)
+                                    })
+                                    .then(() => {
+                                        setLoading(false);
+                                        toast({
+                                            title: `Project Edited successfully`,
+                                            status: 'success',
+                                            isClosable: true,
+                                            duration: 5000,
+                                            position: 'top-right'
+                                        });
+                                        getAndUpdateAllProjectsData();
+                                        props.onSuccess();
+                                    })
+                                    .catch((err: any) => {
+                                        console.log('error ===>', err);
+                                        setLoading(false);
+                                        toast({
+                                            title: `${err}`,
+                                            status: 'error',
+                                            isClosable: true,
+                                            duration: 5000,
+                                            position: 'top-right'
+                                        });
                                     });
-                                    getAndUpdateAllProjectsData();
-                                    props.onSuccess();
-                                })
-                                .catch((err: any) => {
-                                    console.log('error ===>', err);
-                                    setLoading(false);
-                                    toast({
-                                        title: `${err}`,
-                                        status: 'error',
-                                        isClosable: true,
-                                        duration: 5000,
-                                        position: 'top-right'
+                            } else {
+                                client
+                                    .mutate<ProjectCreate<ProjectCreateDetail>>({
+                                        mutation: createProject(values)
+                                    })
+                                    .then(() => {
+                                        setLoading(false);
+                                        toast({
+                                            title: `Project has being created`,
+                                            status: 'success',
+                                            isClosable: true,
+                                            duration: 5000,
+                                            position: 'top-right'
+                                        });
+                                        getAndUpdateAllProjectsData();
+                                        props.onSuccess();
+                                    })
+                                    .catch((err: any) => {
+                                        console.log('error ===>', err);
+                                        setLoading(false);
+                                        toast({
+                                            title: `${err}`,
+                                            status: 'error',
+                                            isClosable: true,
+                                            duration: 5000,
+                                            position: 'top-right'
+                                        });
                                     });
-                                });
+                            }
                         }}
                     >
                         {({ handleSubmit, errors, touched, isValid }) => (

@@ -1,19 +1,28 @@
 import React, { useEffect } from 'react';
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Box, Stack, Text, Button, useDisclosure } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import {  GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
 import { useParams } from "react-router-dom"
+import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 const ProjectDetails = (props: any) => {
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const params = useParams();
+    const createProjectModal = useDisclosure();
     useEffect(() => {
-        if (SingleProjectData === null) {
+        if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
             console.log('Project Details Data via Route Params', SingleProjectData);
         }
     }, [SingleProjectData]);
+    const editProject = () => {
+        createProjectModal.onOpen();
+    };
+    const onCreateProjectSuccess = () => {
+        getAndUpdateSingleProjectData(SingleProjectData.basic.id);
+        createProjectModal.onClose();
+    }
     return (
         <>
             <Box marginLeft={36}>
@@ -28,9 +37,39 @@ const ProjectDetails = (props: any) => {
                     </Text>
                 </Stack>
                 {SingleProjectData &&
-                <Text fontSize="lg" ml={'24'} noOfLines={[2]}>{SingleProjectData.basic.name}</Text>
+                    <>
+                        <Box ml={100}>
+                            <Text fontSize="lg" ml={'24'} noOfLines={[2]}>{SingleProjectData.basic.name}</Text>
+                            <Button
+                                colorScheme="gray"
+                                bg={'white'}
+                                color={'default.shareModalButton'}
+                                width={'80px'}
+                                border={'1px'}
+                                borderColor={'default.shareModalButton'}
+                                height={'36px'}
+                                borderRadius={4}
+                                onClick={editProject}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                colorScheme="gray"
+                                bg={'white'}
+                                color={'default.shareModalButton'}
+                                width={'80px'}
+                                border={'1px'}
+                                borderColor={'default.shareModalButton'}
+                                height={'36px'}
+                                borderRadius={4}
+                            >
+                                Delete
+                            </Button>
+                        </Box>
+                    </>
                 }
             </Box>
+            {createProjectModal.isOpen && <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: true, data: SingleProjectData}} />}
         </>
     );
 };
