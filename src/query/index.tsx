@@ -391,15 +391,25 @@ export const createProject = (variables: any) => {
 };
 
 export const editProject = (variables: any) => {
-    return gql`
-            mutation {
+    return gql`mutation {
                 dmsEditProject(
                     id: "${variables.id}",
                     name: "${variables.name}",
                     project_variables: "${variables.project_variables}",
-                    description: "${variables.description}",
-                    tags: "${variables.tags}"
                 )
-            }
-            `;
+            }`;
 };
+
+// export const editProject = (variables: any) => {
+//     return gql`
+//             mutation {
+//                 dmsEditProject(
+//                     id: "${variables.id}",
+//                     name: "${variables.name}",
+//                     project_variables: "${variables.project_variables}",
+//                     description: "${variables.description}",
+//                     tags: "${variables.tags}"
+//                 )
+//             }
+//             `;
+// };
