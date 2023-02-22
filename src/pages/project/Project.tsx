@@ -1,16 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './project.scss';
-import { Avatar, Box, Button, Center, Divider, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue } from '@chakra-ui/react';
+import { Avatar, Box, Center, Divider, Flex, Menu, MenuButton, MenuItem, MenuList, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState } from '../../models/project';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 import SearchComponent from '../../component/search/SearchComponent';
-import { Documentation } from '../../assets/icons';
-
+import { Documentation, DownArrow, GridCanvas } from '../../assets/icons';
+import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
+import { AgGridReact } from 'ag-grid-react';
 const Project = () => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
+    const CreateProject = useDisclosure();
+    const gridRef = useRef<AgGridReact<any>>(null);
+    const onSearchChange = (searchValue: string) => {
+        gridRef.current!.api.setQuickFilter(searchValue);
+    };
     useEffect(() => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
@@ -33,18 +39,31 @@ const Project = () => {
                 </Stack>
                 <Center flex="3" mr={5} justifyContent={'flex-end'} ml={'17'} mb={'-56px'} mt={'30px'} zIndex={2}>
                     <Box>
-                        <SearchComponent />
+                        <SearchComponent searchChange={onSearchChange} />
                     </Box>
                     <Stack direction="row" height={'30'} border={'3'}>
                         {' '}
                         <Divider orientation="vertical" ml={'14'} mr={'14'} />
                     </Stack>
-
-                    <Box>
-                        <Button color={'default.whiteText'} bg={'default.hoverSideBarMenu'} variant="outline">
-                            Create Project
-                        </Button>
-                    </Box>
+                    <Menu>
+                        <MenuButton color={'white'} bg={'#2180C2'} width={'165px'} height={'36px'} borderRadius={'3'}>
+                            {' '}
+                            <Center>
+                                <Text> Create Project</Text>
+                                <Divider orientation="vertical" ml={'12'} mr={'12'} colorScheme="black" size="4px" />
+                                <DownArrow color={'white'} />
+                            </Center>
+                        </MenuButton>
+                        <MenuList borderRadius={'0'} width={'195px'} height={'72px'} color={textColor} ml={'-16'}>
+                            <MenuItem mt={'5px'} onClick={CreateProject.onOpen}>
+                                <Text ml={'12'}>Start from scratch</Text>
+                            </MenuItem>
+                            <MenuItem>
+                                <Text ml={'12'}>Use a template</Text>
+                            </MenuItem>
+                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} />
+                        </MenuList>
+                    </Menu>
                 </Center>
                 <Tabs defaultIndex={0} width={'96%'}>
                     <TabList ml={'44px'} mt={'34px'} width={'100%'}>
