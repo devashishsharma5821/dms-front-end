@@ -23,7 +23,7 @@ const ProjectsViews = (props: any) => {
                                             <Text color={textColor}>Project Details</Text>
                                         </Box>
                                         <Box color={'default.containerAgGridRecords'}>
-                                            <Text ml={'14'}>4 Records</Text>
+                                            <Text ml={'14'}>{AllProjectsData?.length} Records</Text>
                                         </Box>
                                     </Center>
                                 </Flex>

@@ -31,6 +31,12 @@ const Project = () => {
                return project.created_by === userId;
             });
             setAllProjectsData(userOnlyProjects);
+        } else if(tabIndex === 2) {
+            const userId = UserConfig.userConfiguration.user.userId;
+            const userOnlyProjects = AllProjectsData.filter((project) => {
+                return project.created_by !== userId;
+            });
+            setAllProjectsData(userOnlyProjects);
         }
     }
     useEffect(() => {
@@ -95,7 +101,7 @@ const Project = () => {
                     <TabList ml={'44px'} mt={'34px'} width={'100%'}>
                         <Tab>All Projects</Tab>
                         <Tab ml={'26'}>My Projects</Tab>
-                        <Tab isDisabled ml={'26'}>Shared With Me</Tab>
+                        <Tab ml={'26'}>Shared With Me</Tab>
                     </TabList>
 
                     <TabPanels ml={'44px'} mr={'10px'}>
@@ -103,18 +109,10 @@ const Project = () => {
                             <ProjectsViews data={allProjectsData}></ProjectsViews>
                         </TabPanel>
                         <TabPanel>
-                            <Box border={'1px solid'} borderColor={'#D8DCDE'} borderRadius={8} width={'auto'} height={'auto'} mt={'20'}>
-                                {' '}
-                                <Text color={'#333333'} ml={'24'}>
-                                    <ProjectsViews data={allProjectsData}></ProjectsViews>
-                                </Text>
-                            </Box>
+                            <ProjectsViews data={allProjectsData}></ProjectsViews>
                         </TabPanel>
                         <TabPanel>
-                            <Box border={'1px solid'} borderColor={'#D8DCDE'} borderRadius={8} width={'auto'} height={'auto'} mt={'20'}>
-                                {' '}
-                                <Text>three!</Text>
-                            </Box>
+                            <ProjectsViews data={allProjectsData}></ProjectsViews>
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
