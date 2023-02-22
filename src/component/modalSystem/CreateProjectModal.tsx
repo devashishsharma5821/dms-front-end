@@ -98,7 +98,7 @@ const CreateProjectModal = (props: any) => {
                                     .then(() => {
                                         setLoading(false);
                                         toast({
-                                            title: `Project has being created`,
+                                            title: `Project Edited successfully`,
                                             status: 'success',
                                             isClosable: true,
                                             duration: 5000,

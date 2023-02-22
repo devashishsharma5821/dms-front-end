@@ -1,21 +1,21 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './project.scss';
 import { Avatar, Box, Center, Divider, Flex, Menu, MenuButton, MenuItem, MenuList, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState } from '../../models/project';
-import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import SearchComponent from '../../component/search/SearchComponent';
 import { Documentation, DownArrow, GridCanvas } from '../../assets/icons';
 import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
-import { AgGridReact } from 'ag-grid-react';
 const Project = () => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
-    const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
+    const navigate = useNavigate();
+    const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const CreateProject = useDisclosure();
-    const gridRef = useRef<AgGridReact<any>>(null);
     const onSearchChange = (searchValue: string) => {
-        gridRef.current!.api.setQuickFilter(searchValue);
+      // TODO Manipulate the data to get the search values back
     };
     useEffect(() => {
         if (AllProjectsData === null) {
@@ -24,6 +24,15 @@ const Project = () => {
             console.log('Here is your Projects Data', AllProjectsData);
         }
     }, [AllProjectsData]);
+
+    const navigateToDetails = (id: string) => {
+        navigate(`/projectDetails/${id}`);
+    };
+
+    const onCreateProjectSuccess = () => {
+        getAndUpdateAllProjectsData();
+        CreateProject.onClose();
+    }
     return (
         <>
             <Box marginLeft={36}>
@@ -61,7 +70,7 @@ const Project = () => {
                             <MenuItem>
                                 <Text ml={'12'}>Use a template</Text>
                             </MenuItem>
-                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} />
+                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: false, data: {}}}  />
                         </MenuList>
                     </Menu>
                 </Center>
@@ -91,7 +100,7 @@ const Project = () => {
                                         AllProjectsData.map((project) => {
                                             return (
                                                 <>
-                                                    <Box bg={'#FFFFFF'} width={'309px'} border={'1px'} borderColor={'#D8DCDE'} height={'287px'} borderRadius={8} ml={'22'} mt={'20'}>
+                                                    <Box cursor={"pointer"} onClick={() => navigateToDetails(project.id)} bg={'#FFFFFF'} width={'309px'} border={'1px'} borderColor={'#D8DCDE'} height={'287px'} borderRadius={8} ml={'22'} mt={'20'}>
                                                         <Box height={'69px'} bg={'#F7FAFC'} borderTopRadius={8}>
                                                             <Center ml={'24px'} pt={'8px'} justifyContent={'flex-start'}>
                                                                 <Documentation color={'#666C80'} />
@@ -107,7 +116,7 @@ const Project = () => {
                                                                     <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'21px'} />
                                                                     <Center>
                                                                         <Box width={'300px'}>
-                                                                            <Text ml={10} color={accesstextColor} mt={'21px'}>
+                                                                            <Text ml={10} color={accessTextColor} mt={'21px'}>
                                                                                 Created by
                                                                             </Text>
                                                                             <Text ml={10} color={'#333333'} fontWeight={700}>
