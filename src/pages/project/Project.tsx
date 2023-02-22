@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import './project.scss';
 import { Box, Stack, Text } from '@chakra-ui/react';
-import DMSGrid from '../../component/dmsGrid/DMSGrid';
+import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState } from '../../models/project';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 
 const Project = () => {
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
+    const navigate = useNavigate();
     useEffect(() => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
@@ -15,6 +16,9 @@ const Project = () => {
             console.log('Here is your Projects Data', AllProjectsData);
         }
     }, [AllProjectsData]);
+    const navigateToDetails = (id: string) => {
+        navigate(`/projectDetails/${id}`);
+    }
     return (
         <>
             <Box marginLeft={36}>
@@ -32,7 +36,7 @@ const Project = () => {
                     AllProjectsData &&
                     AllProjectsData.map((project) => {
                         return <>
-                        <Text marginLeft={136}>{project.name}</Text>
+                            <Text onClick={() => navigateToDetails(project.id)} cursor="pointer" color="#1A3F59" marginLeft={300}><a>{project.name}</a></Text>
                         </>
                     })
                 }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Box, Stack, Text, Button } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import {  GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
@@ -28,7 +28,35 @@ const ProjectDetails = (props: any) => {
                     </Text>
                 </Stack>
                 {SingleProjectData &&
-                <Text fontSize="lg" ml={'24'} noOfLines={[2]}>{SingleProjectData.basic.name}</Text>
+                    <>
+                        <Box ml={100}>
+                            <Text fontSize="lg" ml={'24'} noOfLines={[2]}>{SingleProjectData.basic.name}</Text>
+                            <Button
+                                colorScheme="gray"
+                                bg={'white'}
+                                color={'default.shareModalButton'}
+                                width={'80px'}
+                                border={'1px'}
+                                borderColor={'default.shareModalButton'}
+                                height={'36px'}
+                                borderRadius={4}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                colorScheme="gray"
+                                bg={'white'}
+                                color={'default.shareModalButton'}
+                                width={'80px'}
+                                border={'1px'}
+                                borderColor={'default.shareModalButton'}
+                                height={'36px'}
+                                borderRadius={4}
+                            >
+                                Delete
+                            </Button>
+                        </Box>
+                    </>
                 }
             </Box>
         </>
