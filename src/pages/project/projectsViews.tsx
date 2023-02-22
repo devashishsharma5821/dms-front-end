@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './project.scss';
-import { Avatar, Box, Center, Divider, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Avatar, Box, Center, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 
 import { Documentation } from '../../assets/icons';
 import { GetAllProjectsDetail } from '../../models/project';
@@ -9,10 +9,19 @@ const ProjectsViews = (props: any) => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const AllProjectsData = props.data as GetAllProjectsDetail[];
     const navigate = useNavigate();
+    const maxTextCharacters = 20;
     const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const navigateToDetails = (id: string) => {
         navigate(`/projectDetails/${id}`);
     };
+    const getTruncatedText = (name: string) => {
+        if(name.length >= 20) {
+            const newName = `${name.slice(0, maxTextCharacters)}...`;
+            return newName;
+        } else {
+            return name;
+        }
+    }
     return (
         <>
             <Box border={'1px solid'} borderColor={'#D8DCDE'} borderRadius={8} width={'100%'} height={'auto'} mt={'20'} pb={'20'}>
@@ -36,8 +45,8 @@ const ProjectsViews = (props: any) => {
                                                     <Box height={'69px'} bg={'#F7FAFC'} borderTopRadius={8}>
                                                         <Center ml={'24px'} pt={'8px'} justifyContent={'flex-start'}>
                                                             <Documentation color={'#666C80'} />
-                                                            <Text ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'}>
-                                                                {project.name}
+                                                            <Text title={project.name} ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'}>
+                                                                {getTruncatedText(project.name)}
                                                             </Text>
                                                         </Center>
                                                         <Text ml={'53'} color={'#646A78'} fontWeight={400}>
@@ -51,8 +60,8 @@ const ProjectsViews = (props: any) => {
                                                                         <Text ml={10} color={accessTextColor} mt={'21px'}>
                                                                             Created by
                                                                         </Text>
-                                                                        <Text ml={10} color={'#333333'} fontWeight={700}>
-                                                                            {project.created_by}
+                                                                        <Text title={project.created_by} ml={10} color={'#333333'} fontWeight={700}>
+                                                                            {getTruncatedText(project.created_by)}
                                                                         </Text>
 
                                                                         <Text ml={10} color={'#B3B3B3'} fontWeight={700}>
