@@ -268,7 +268,8 @@ const Compute = () => {
         );
     };
 
-    const defaultRowOnChange = () => {
+    const defaultRowOnChange = (event: any, params: any) => {
+        setEditComputeId(params.data.id);
         alertConfirm.onOpen();
     };
     const confirmAlertActionForDelete = () => {
@@ -345,8 +346,7 @@ const Compute = () => {
 
     const defaultRow = (params: any) => {
         getAndUpdateDmsComputeData();
-        setEditComputeId(params.data.id);
-        return <SwitchComponent params={params} defaultRowOnChange={defaultRowOnChange} />;
+        return <SwitchComponent params={params} defaultRowOnChange={(event: any, params: any) => defaultRowOnChange(event, params)} />;
     };
     const navigateToComputeDetails = (id: string) => {
         navigate('/computedetails/' + id);

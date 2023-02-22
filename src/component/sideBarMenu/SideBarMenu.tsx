@@ -265,7 +265,7 @@ const SideBarMenu = () => {
                     </Flex>
                     {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
                     {createProjectFromModal.isOpen && <LeftSideBarMenuCreateProjectModal isOpen={createProjectFromModal.isOpen} onClose={createProjectFromModal.onClose} openCreateProjectFromScratch={openCreateProjectFromScratch} />}
-                    {createProjectModal.isOpen && <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} />}
+                    {createProjectModal.isOpen && <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: false, data: {}}} />}
                 </div>
                 {activateSubMenu && secondLevelMenu()}
                 {activateThirdSubMenu && thirdLevelMenu()}
