@@ -413,3 +413,6 @@ export const editProject = (variables: any) => {
 //             }
 //             `;
 // };
+export const createAccess = (variables: any) => {
+    return gql `mutation {dmsCreateOrUpdateProjectAccess(user_id:"eea75cf9-06de-4fe7-b476-ac48856398df", project_ID:"22", access_level:VIEWER)}`;
+};
