@@ -1,26 +1,18 @@
-import React, {useRef } from 'react';
+import React, { useRef } from 'react';
 import { Button, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogBody } from '@chakra-ui/react';
 
-const AlertConfirmComponent = (props: any) => {
+const AlertConfirmComponent: any = (props: any) => {
     const cancelRef: any = useRef();
     return (
         <>
-            <AlertDialog
-                isOpen={props.isOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={props.onClose}
-                closeOnOverlayClick={false}
-                closeOnEsc={false}
-            >
+            <AlertDialog isOpen={props.isOpen} leastDestructiveRef={cancelRef} onClose={props.onClose} closeOnOverlayClick={false} closeOnEsc={false}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
-                        <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             {props.options.title}
                         </AlertDialogHeader>
 
-                        <AlertDialogBody>
-                            {props.options.description}
-                        </AlertDialogBody>
+                        <AlertDialogBody>{props.options.description}</AlertDialogBody>
 
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={props.onClose}>

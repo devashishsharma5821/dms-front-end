@@ -37,8 +37,8 @@ export interface AppState {
     connectionState: { connected: boolean; subscribed: boolean };
     message: Array<Message> | [];
     runStageData: RunStageDataEvent | null;
-    createdById: string | null;
     computeState: string;
+    dbSettingsData: any;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -55,9 +55,9 @@ export type resetMessages = () => void;
 export type hasSubscribed = () => void;
 export type disconnected = () => void;
 export type startConnecting = () => void;
-export type updateCreatedById = (computeId: string) => void;
 export type setComputeState = (value: string) => void;
 export type getAndUpdateDmsComputeData = () => void;
+export type getAndUpdateDbSettingsData = () => void;
 export type getAndUpdateTransformersData = () => void;
 export type getAndUpdateAllProjectsData = () => void;
 export type getAndUpdateSingleProjectData = (id: string) => void;

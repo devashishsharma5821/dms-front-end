@@ -8,7 +8,7 @@ import { ComputeContext } from '../../context/computeContext';
 import { useParams } from 'react-router-dom';
 import useAppStore from '../../store';
 import { useNavigate } from 'react-router-dom';
-import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
+import { getAndUpdateDbSettingsData, getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 import client from '../../apollo-client';
 import { ComputeDelete, DeleteComputeDetail } from '../../models/computeDetails';
 import { dmsDeleteCompute } from '../../query';
@@ -66,6 +66,7 @@ const ComputeDetails = () => {
     };
 
     const onEditClickHandler = (data: any) => {
+        getAndUpdateDbSettingsData();
         context.updateFormData({
             id: data.id,
             max_inactivity_min: data?.max_inactivity_min,

@@ -241,7 +241,7 @@ export const dmsRunCompute = (cellId: string | undefined) => {
             }`;
 };
 
-export const dmsDeleteCompute = (cellId: string | undefined) => {
+export const dmsDeleteCompute = (cellId: string | null) => {
     return gql` mutation {
             dmsDeleteCompute(  
                id: "${cellId}"  
@@ -249,7 +249,7 @@ export const dmsDeleteCompute = (cellId: string | undefined) => {
             }`;
 };
 
-export const dmsEditCompute = (computeId: string | undefined, isDefault: boolean) => {
+export const dmsEditCompute = (computeId: string | null, isDefault: boolean) => {
     return gql`mutation {
             dmsEditCompute(  
                id: "${computeId}",
@@ -257,7 +257,7 @@ export const dmsEditCompute = (computeId: string | undefined, isDefault: boolean
                   )
             }`;
 };
-export const dmsStopComputeRun = (cellId: string | undefined) => {
+export const dmsStopComputeRun = (cellId: string | null) => {
     return gql`mutation {
             dmsCancelComputeRun(  
                id: "${cellId}"  
@@ -320,7 +320,6 @@ export const GET_DB_SETTINGS = gql`
     }
 `;
 
-
 // Project and Projects API Start Here
 
 // export const createProject = (values: any) => {
@@ -339,11 +338,11 @@ export const GET_DB_SETTINGS = gql`
 export const GET_ALL_PROJECTS = gql`
     query dmsProjects {
         dmsProjects {
-          id
-          name
-          created_by
-          created_at
-          project_variables
+            id
+            name
+            created_by
+            created_at
+            project_variables
         }
     }
 `;
@@ -379,7 +378,7 @@ export const GET_SINGLE_PROJECT = (id: string) => {
   }
 }
 `;
-}
+};
 
 export const createProject = (variables: any) => {
     return gql`mutation {

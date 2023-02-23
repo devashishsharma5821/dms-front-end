@@ -85,7 +85,7 @@ export class GetDbSettingsType<T> {
     dmsDatabricksSettings!: T;
 }
 
-export type agGridClickHandler = (data: any) => void;
+export type agGridClickHandler = (id: any, DmsComputeData?: any) => void;
 
 export interface STOP_COMPUTE_RUNNING_MODALS_PROPS {
     computeId: string | undefined;
@@ -156,6 +156,7 @@ export interface SocketWrapperAppStoreState {
 export interface ComputeAppStoreState {
     DmsComputeData: DmsComputeData[];
     UserConfig: any;
+    dbSettingsData: any;
 }
 
 export interface CreateComputeSubmitHandlerValues {
