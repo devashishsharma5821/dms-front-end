@@ -1,34 +1,19 @@
 import React, { useEffect } from 'react';
-import {
-    Box,
-    Stack,
-    Text,
-    Button,
-    useDisclosure,
-    Flex,
-    Center,
-    Input,
-    Editable,
-    Avatar,
-    useColorModeValue,
-    Link,
-    useEditableControls,
-    ButtonGroup,
-    EditablePreview,
-    EditableInput
-} from '@chakra-ui/react';
+import { Box, Text, Button, useDisclosure, Flex, Center, Input, Editable, Avatar, useColorModeValue, useEditableControls, ButtonGroup, EditablePreview, EditableInput } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import { GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import Project from '../Project';
 
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
+import { EditIcon } from '@chakra-ui/icons';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
+    const navigate = useNavigate();
     const params = useParams();
     const createProjectModal = useDisclosure();
     function EditableControls() {
@@ -85,47 +70,37 @@ const ProjectDetails = (props: any) => {
         getAndUpdateSingleProjectData(SingleProjectData.basic.id);
         createProjectModal.onClose();
     };
+    const navigateToDetails = () => {
+        navigate(`/project`);
+    };
 
     return (
         <>
             <Box marginLeft={36}>
-                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'35'} mb={'24'} color={'#666C80'}>
+                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'35'} color={'#666C80'}>
                     <Text>Projects / My Project</Text>
                 </Box>
 
-                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'35'} mb={'24'} color={'#666C80'}>
+                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'6px'} mb={'24'} color={'#666C80'}>
                     <Flex flexDir={'row'}>
-                        <Button> </Button>
-                        <Text> {SingleProjectData && SingleProjectData.basic.name}</Text>
+                        <Button mr={'8px'} color={'#75858F'} border={'1px'} borderColor={'#D8DCDE'} bg={'white'} onClick={navigateToDetails}>
+                            {' '}
+                            <> {'<'} </>
+                        </Button>
+                        <Text fontSize={24} color={accesstextColor}>
+                            {' '}
+                            {SingleProjectData && SingleProjectData.basic.name}
+                        </Text>
                         {SingleProjectData && (
                             <>
-                                <Box ml={100}>
-                                    <Button
-                                        colorScheme="gray"
-                                        bg={'white'}
-                                        color={'default.shareModalButton'}
-                                        width={'80px'}
-                                        border={'1px'}
-                                        borderColor={'default.shareModalButton'}
-                                        height={'36px'}
-                                        borderRadius={4}
-                                        onClick={editProject}
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        colorScheme="gray"
-                                        bg={'white'}
-                                        color={'default.shareModalButton'}
-                                        width={'80px'}
-                                        border={'1px'}
-                                        borderColor={'default.shareModalButton'}
-                                        height={'36px'}
-                                        borderRadius={4}
-                                    >
+                                <Flex mt={'8px'} ml={'2px'}>
+                                    <Box bg={'white'} color={'default.shareModalButton'} width={'80px'} height={'36px'} onClick={editProject}>
+                                        <PencilIcon color={' #666C80'} height={'20px'} Height={'20px'} />
+                                    </Box>
+                                    <Button colorScheme="gray" bg={'white'} color={'#0387B0'} border={'1px'} borderColor={'default.shareModalButton'} borderRadius={4} ml={'-38px'} mt={'-10px'}>
                                         Delete
                                     </Button>
-                                </Box>
+                                </Flex>
                             </>
                         )}
                     </Flex>
@@ -135,7 +110,7 @@ const ProjectDetails = (props: any) => {
                                 <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'21px'} />
                                 <Center>
                                     <Box width={'450px'}>
-                                        <Text ml={12} mt={'21px'} color={textColor2}>
+                                        <Text ml={12} mt={'21px'} color={textColor2} fontWeight={400}>
                                             Created by
                                         </Text>
                                         <Text ml={12} color={accesstextColor} fontWeight={700}>
@@ -144,7 +119,7 @@ const ProjectDetails = (props: any) => {
 
                                         <Flex flexDir={'row'}>
                                             <Box>
-                                                <Text ml={12} color={accesstextColor} mt={'12px'}>
+                                                <Text ml={12} color={textColor2} mt={'12px'} fontWeight={400}>
                                                     Project ID
                                                 </Text>
                                                 <Text ml={12} color={accesstextColor} fontWeight={700}>
@@ -152,7 +127,7 @@ const ProjectDetails = (props: any) => {
                                                 </Text>
                                             </Box>
                                             <Box ml={'115px'}>
-                                                <Text ml={12} color={accesstextColor} mt={'12px'}>
+                                                <Text ml={12} color={textColor2} mt={'12px'} fontWeight={400}>
                                                     Project Name
                                                 </Text>
                                                 <Text ml={12} color={accesstextColor} fontWeight={700}>
@@ -162,7 +137,7 @@ const ProjectDetails = (props: any) => {
                                         </Flex>
                                         <Flex flexDir={'row'}>
                                             <Box>
-                                                <Text ml={12} color={accesstextColor} mt={'12px'}>
+                                                <Text ml={12} color={textColor2} mt={'12px'} fontWeight={400}>
                                                     Created On
                                                 </Text>
                                                 <Text ml={12} color={accesstextColor} fontWeight={700}>
@@ -170,7 +145,7 @@ const ProjectDetails = (props: any) => {
                                                 </Text>
                                             </Box>
                                             <Box ml={'40px'}>
-                                                <Text ml={12} color={accesstextColor} mt={'12px'}>
+                                                <Text ml={12} color={textColor2} mt={'12px'} fontWeight={400}>
                                                     Last Modified
                                                 </Text>
                                                 <Text ml={12} color={accesstextColor} fontWeight={700}>
@@ -178,8 +153,8 @@ const ProjectDetails = (props: any) => {
                                                 </Text>
                                             </Box>
                                         </Flex>
-                                        <Flex ml={'10px'} mt={'-6px'}>
-                                            <Text color={accesstextColor} mt={'15'}>
+                                        <Flex ml={'12px'} mt={'-6px'}>
+                                            <Text color={textColor2} mt={'15'} fontWeight={400}>
                                                 Tag:
                                             </Text>
                                             <Center>
