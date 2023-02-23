@@ -13,8 +13,15 @@ import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 import Experiment from '../menuSystem/experiment/Experiment';
 import LeftSideBarMenuCreateProjectModal from '../modalSystem/LeftSideBarMenuCreateProjectModal';
 import CreateProjectModal from '../modalSystem/CreateProjectModal';
+import client from '../../apollo-client';
+import { GetDbSettingsType } from '../../models/outputDetail';
+import { DbSettingsDetail } from '../../models/computeDetails';
+import { GET_DB_SETTINGS } from '../../query';
+import useAppStore from '../../store';
+import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
 
 const SideBarMenu = () => {
+    const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
     const themebg = useColorModeValue('light.header', 'dark.header');
     const themeSecondLevel = useColorModeValue('default.whiteText', 'dark.bgDark');
     const [isHovering, setIsHovering] = React.useState(false);
@@ -73,12 +80,16 @@ const SideBarMenu = () => {
     };
 
     const triggerCreateModal = (type: string) => {
-        if(type === 'compute') {
-            createComputeModal.onOpen();
-        } else if(type === 'projectFrom') {
+        if (type === 'compute') {
+            if (!dbSettingsData.length) {
+                const check = getAndUpdateDbSettingsData();
+                check && createComputeModal.onOpen();
+            } else {
+                createComputeModal.onOpen();
+            }
+        } else if (type === 'projectFrom') {
             createProjectFromModal.onOpen();
         }
-
     };
     const thirdLevelMenu = () => {
         return (
@@ -135,7 +146,7 @@ const SideBarMenu = () => {
     };
     const onCreateProjectSuccess = () => {
         createProjectModal.onClose();
-    }
+    };
     return (
         <Flex>
             <>
@@ -264,8 +275,16 @@ const SideBarMenu = () => {
                         </VStack>
                     </Flex>
                     {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
-                    {createProjectFromModal.isOpen && <LeftSideBarMenuCreateProjectModal isOpen={createProjectFromModal.isOpen} onClose={createProjectFromModal.onClose} openCreateProjectFromScratch={openCreateProjectFromScratch} />}
-                    {createProjectModal.isOpen && <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: false, data: {}}} />}
+                    {createProjectFromModal.isOpen && (
+                        <LeftSideBarMenuCreateProjectModal
+                            isOpen={createProjectFromModal.isOpen}
+                            onClose={createProjectFromModal.onClose}
+                            openCreateProjectFromScratch={openCreateProjectFromScratch}
+                        />
+                    )}
+                    {createProjectModal.isOpen && (
+                        <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {} }} />
+                    )}
                 </div>
                 {activateSubMenu && secondLevelMenu()}
                 {activateThirdSubMenu && thirdLevelMenu()}

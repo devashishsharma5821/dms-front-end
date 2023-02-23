@@ -2,7 +2,7 @@ import { Dictionary } from './schema';
 import { DataTablesRequest, AzureBlobGetContainersRequest, AzureBlobBrowseContainerRequest } from '@antuit-zebra/pipeline-interactive-driver-client-ts';
 import { PipelineExperimentCore_Input } from '@antuit-zebra/pipeline-interactive-driver-client-ts/dms_commons/protobuf/common';
 export type BaseRequest = {
-    userId: string;
+    userId: string | null;
     experimentId: number;
     opId: string;
     project_id?: number | undefined;

@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useApolloClient, DocumentNode } from '@apollo/client';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useToast } from '@chakra-ui/react';
-import { dmsRunCompute, GET_DB_SETTINGS } from '../../query/index';
+import { dmsRunCompute } from '../../query/index';
 import { COMPUTE_MODAL_PROPS } from '../../models/types';
 import '../../styles/FormBuilderClasses.scss';
 import FormBuilder from '../jsonSchemaFormBuilder/FormBuilder';
 import formSchema from '../jsonSchemaFormBuilder/computeFormSchema.json';
 import { dmsCreateComputeOffEnableAutoscaling, dmsCreateComputeOnEnableAutoscaling, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling } from '../../query';
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
-import { createCompute, DbSettingsDetail, GetDbSettingsType, CreateComputeSubmitHandlerValues, agGridClickHandler, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
-import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
+import { createCompute, CreateComputeSubmitHandlerValues, agGridClickHandler, ComputeRun, RunComputeDetail } from '../../models/computeDetails';
+import { getAndUpdateDmsComputeData, onPlayClickHandler } from '../../zustandActions/computeActions';
+import { useNavigate } from 'react-router-dom';
+import useAppStore from '../../store';
+import { useLoading } from '../../context/loadingContext';
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
+    const [dbSettingsData, DmsComputeData] = useAppStore((state: any) => [state.dbSettingsData, state.DmsComputeData]);
+    const navigate = useNavigate();
     const client = useApolloClient();
     const toast = useToast();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [isComputeCreated, setIsComputeCreated] = useState<boolean>(false);
+    const { loading, setLoading } = useLoading();
     useEffect(() => {
-        client
-            .query<GetDbSettingsType<DbSettingsDetail>>({
-                query: GET_DB_SETTINGS
-            })
-            .then((response) => {
-                formSchema.worker_type_id.options = response.data.dmsDatabricksSettings.node_types;
-                formSchema.driver_type_id.options = response.data.dmsDatabricksSettings.node_types;
-            })
-            .catch((err) => {
-                console.log('catch', err);
-            });
-    }, []);
+        formSchema.worker_type_id.options = dbSettingsData;
+        formSchema.driver_type_id.options = dbSettingsData;
+    }, [dbSettingsData]);
 
     useEffect(() => {
         if (isComputeCreated) {
@@ -41,37 +38,41 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             }
         }
     }, [isComputeCreated]);
-    const onPlayClickHandler: agGridClickHandler = (id) => {
-        client
-            .mutate<ComputeRun<RunComputeDetail>>({
-                mutation: dmsRunCompute(id)
-            })
-            .then(() => {
-                getAndUpdateDmsComputeData();
-                toast({
-                    title: `Compute is starting`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-            })
-            .catch((err: any) => {
-                console.log('error ===>', err);
-                toast({
-                    title: `${err}`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-            });
-    };
+    // MOVE TO ZUSTAND
+    // const onPlayClickHandler: agGridClickHandler = (id) => {
+    //     client
+    //         .mutate<ComputeRun<RunComputeDetail>>({
+    //             mutation: dmsRunCompute(id)
+    //         })
+    //         .then(() => {
+    //             // TODO MANULLY UPDATE
+    //             getAndUpdateDmsComputeData();
+    //             toast({
+    //                 title: `Compute is starting`,
+    //                 status: 'success',
+    //                 isClosable: true,
+    //                 duration: 5000,
+    //                 position: 'top-right'
+    //             });
+    //         })
+    //         .catch((err: any) => {
+    //             console.log('error ===>', err);
+    //             toast({
+    //                 title: `${err}`,
+    //                 status: 'success',
+    //                 isClosable: true,
+    //                 duration: 5000,
+    //                 position: 'top-right'
+    //             });
+    //         });
+    // };
 
     const handleSubmitCompute = (values: CreateComputeSubmitHandlerValues) => {
         let mutation: DocumentNode | null = null;
         let createMutation: boolean = false;
+        setLoading(true);
         setIsDisabled(true);
+
         if (props?.isEdit) {
             if (!values.enable_autoscaling) {
                 mutation = dmsEditComputeOffEnableAutoscaling(values);
@@ -91,8 +92,14 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             .mutate<dmsCreateComputeResponse<createCompute>>({
                 mutation: mutation
             })
-            .then((response) => {
-                createMutation && onPlayClickHandler(response?.data?.dmsCreateCompute);
+            .then(async (response) => {
+                setLoading(false);
+                if (createMutation) {
+                    const rep = await onPlayClickHandler(response?.data?.dmsCreateCompute, DmsComputeData);
+                    getAndUpdateDmsComputeData();
+                } else {
+                    getAndUpdateDmsComputeData();
+                }
                 setIsDisabled(false);
                 toast({
                     title: `Compute ${props?.isEdit ? 'edited' : 'created'} successfully`,
@@ -102,10 +109,11 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                     position: 'top-right'
                 });
                 setIsComputeCreated(true);
-                getAndUpdateDmsComputeData();
                 props.onClose();
+                navigate('/compute');
             })
             .catch((err) => {
+                setLoading(false);
                 setIsDisabled(false);
                 toast({
                     title: `${err}`,

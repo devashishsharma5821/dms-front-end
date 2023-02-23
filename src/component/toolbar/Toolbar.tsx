@@ -38,10 +38,13 @@ import { toolbarPropsType } from '../../models/toolbar';
 import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
 import { LineageIcon } from '../../assets/icons';
 import LineageModal from '../modalSystem/LineageModal';
+import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
+import useAppStore from '../../store';
 
 const Toolbar = (props: toolbarPropsType) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
     const [commentChecked, setCommentChecked] = React.useState(false);
+    const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
     const propertiesModal = useDisclosure();
     const saveAsModal = useDisclosure();
     const VariablesModal = useDisclosure();
@@ -65,6 +68,16 @@ const Toolbar = (props: toolbarPropsType) => {
         commentModal.onClose();
         setCommentChecked(false);
     };
+
+    const onCreateModalOpenHandler = async () => {
+        if (!dbSettingsData.length) {
+            const check = await getAndUpdateDbSettingsData();
+            check && createModal.onOpen();
+        } else {
+            createModal.onOpen();
+        }
+    };
+
     return (
         <Flex height={'56px'} minWidth="max-content" alignItems="center" gap="2" ml={90}>
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
@@ -133,7 +146,7 @@ const Toolbar = (props: toolbarPropsType) => {
                     </>
                 );
             })}
-            <Box ml='-200px'>
+            <Box ml="-200px">
                 <>
                     <Center>
                         {props?.computeData?.length !== 0 &&
@@ -201,7 +214,7 @@ const Toolbar = (props: toolbarPropsType) => {
                                             })}
                                     </PopoverBody>
                                     <PopoverFooter border="0" display="flex" alignItems="center" justifyContent="center" pb={4}>
-                                        <ButtonGroup size="sm" onClick={createModal.onOpen}>
+                                        <ButtonGroup size="sm" onClick={onCreateModalOpenHandler}>
                                             <Link color="teal.500" href="#">
                                                 Create Compute
                                             </Link>

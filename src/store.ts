@@ -17,14 +17,14 @@ const useAppStore = create<AppState>((set) => ({
     runStageStarted: null,
     runStageData: null,
     shutdownMessage: null,
-    createdById: null,
     inferStageCompleted: null,
     inferStageError: null,
     uncategorizedEvents: [],
     currentRunState: { running: false, lastStageId: null },
     connectionState: { connected: false, subscribed: false },
     message: [],
-    computeState: ''
+    computeState: '',
+    dbSettingsData: []
 }));
 
 export default useAppStore;
