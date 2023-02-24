@@ -5,17 +5,24 @@ import { GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
-import Project from '../Project';
-
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
-import { EditIcon } from '@chakra-ui/icons';
+
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const navigate = useNavigate();
     const params = useParams();
+    const maxTextCharacters = 20;
     const createProjectModal = useDisclosure();
+    const getTruncatedText = (name: string) => {
+        if (name?.length >= 20) {
+            const newName = `${name.slice(0, maxTextCharacters)}...`;
+            return newName;
+        } else {
+            return name;
+        }
+    };
     function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -131,7 +138,7 @@ const ProjectDetails = (props: any) => {
                                                     Project Name
                                                 </Text>
                                                 <Text ml={12} color={accesstextColor} fontWeight={700}>
-                                                    {SingleProjectData && SingleProjectData.basic.name}
+                                                    {getTruncatedText(SingleProjectData && SingleProjectData.basic.name)}
                                                 </Text>
                                             </Box>
                                         </Flex>
@@ -176,9 +183,15 @@ const ProjectDetails = (props: any) => {
                                             </Text>
                                         </Flex>
 
-                                        <Editable maxWidth={'400px'} textAlign="left" fontWeight={400} ml={16}>
+                                        <Editable
+                                            maxWidth={'400px'}
+                                            textAlign="left"
+                                            fontWeight={400}
+                                            ml={16}
+                                            defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore..."
+                                        >
                                             <Flex>
-                                                <Center mt={'-6px'}>
+                                                <Center mt={'-12px'}>
                                                     <Text mt={'10px'} color={textColor2}>
                                                         Description
                                                     </Text>
@@ -186,13 +199,8 @@ const ProjectDetails = (props: any) => {
                                                 </Center>
                                             </Flex>
                                             <EditablePreview />
-                                            <Input as={EditableInput} height={'97px'} />
+                                            <Input as={EditableInput} height={'40px'} />
                                         </Editable>
-                                        <Box ml={16} mt={'-30px'}>
-                                            <Text color={textColor2} fontWeight={400}>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore...{' '}
-                                            </Text>
-                                        </Box>
                                     </Box>
                                 </Center>
                             </Flex>
