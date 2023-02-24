@@ -34,7 +34,7 @@ const ProjectDetails = (props: any) => {
         ) : (
             <Flex justifyContent="center">
                 <Button {...getEditButtonProps()} bg={'textColor'} mt={'10px'} ml={'12px'} width={'33px'} height={'33px'}>
-                    <Text color={'#2180C2'}>Edit</Text>
+                    <Text color={'default.toolbarButton'}>Edit</Text>
                 </Button>
             </Flex>
         );
@@ -57,9 +57,9 @@ const ProjectDetails = (props: any) => {
                 email: 'Arjun.Guntuka@antuit.com'
             },
             {
-                firstName: 'Shirin',
-                lastName: 'Bampoori',
-                email: 'shirin.bampoori@antuit.com'
+                firstName: 'Jalaj',
+                lastName: 'Goel',
+                email: 'Jalaj.Goel@antuit.com'
             }
         ]
     };
@@ -84,13 +84,13 @@ const ProjectDetails = (props: any) => {
     return (
         <>
             <Box marginLeft={36}>
-                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'35'} color={'#666C80'}>
+                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'35'} color={'default.darkGrayCreate'}>
                     <Text>Projects / My Project</Text>
                 </Box>
 
-                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'6px'} mb={'24'} color={'#666C80'}>
+                <Box fontSize={16} fontWeight={700} ml={'44'} mt={'6px'} mb={'24'} color={'default.darkGrayCreate'}>
                     <Flex flexDir={'row'}>
-                        <Button mr={'8px'} color={'#75858F'} border={'1px'} borderColor={'#D8DCDE'} bg={'white'} onClick={navigateToDetails}>
+                        <Button mr={'8px'} color={'default.accessByNumber'} border={'1px'} borderColor={'light.lighterGrayishBlue'} bg={'white'} onClick={navigateToDetails}>
                             {' '}
                             <> {'<'} </>
                         </Button>
@@ -102,16 +102,25 @@ const ProjectDetails = (props: any) => {
                             <>
                                 <Flex mt={'8px'} ml={'2px'}>
                                     <Box bg={'white'} color={'default.shareModalButton'} width={'80px'} height={'36px'} onClick={editProject}>
-                                        <PencilIcon color={' #666C80'} height={'20px'} Height={'20px'} />
+                                        <PencilIcon color={'#666C80'} height={'20px'} Height={'20px'} />
                                     </Box>
-                                    <Button colorScheme="gray" bg={'white'} color={'#0387B0'} border={'1px'} borderColor={'default.shareModalButton'} borderRadius={4} ml={'-38px'} mt={'-10px'}>
+                                    <Button
+                                        colorScheme="gray"
+                                        bg={'white'}
+                                        color={'default.hoverSideBarMenu'}
+                                        border={'1px'}
+                                        borderColor={'default.shareModalButton'}
+                                        borderRadius={4}
+                                        ml={'-38px'}
+                                        mt={'-10px'}
+                                    >
                                         Delete
                                     </Button>
                                 </Flex>
                             </>
                         )}
                     </Flex>
-                    <Box width={'883px'} height={'320px'} borderRadius={8} border={'1px'} borderColor={'#D8DCDE'} mt={'32px'}>
+                    <Box width={'883px'} height={'320px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'}>
                         <Center>
                             <Flex ml={'24px'} width={'500px'} maxHeight={'320px'}>
                                 <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'21px'} />
@@ -165,10 +174,10 @@ const ProjectDetails = (props: any) => {
                                                 Tag:
                                             </Text>
                                             <Center>
-                                                <Box ml={14} mt={14} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                <Box ml={14} mt={14} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={70}>
                                                     <Flex>
                                                         <Center>
-                                                            <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                            <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
                                                                 Demo
                                                             </Text>
                                                             <Box justifyContent={'flex-end'} ml={'14px'}>
@@ -178,7 +187,7 @@ const ProjectDetails = (props: any) => {
                                                     </Flex>
                                                 </Box>
                                             </Center>
-                                            <Text color={'#2180C2'} mt={'20'} ml={20}>
+                                            <Text color={'default.toolbarButton'} mt={'20'} ml={20}>
                                                 + Add Tag
                                             </Text>
                                         </Flex>
@@ -211,17 +220,17 @@ const ProjectDetails = (props: any) => {
                                             <Text mt={'24px'} ml={12} color={accesstextColor}>
                                                 Access by
                                             </Text>
-                                            <Box ml={14} mt={16} bg={' #F2F4F8'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
-                                                <Text color={'#75858F'} fontSize={'14px'} mt={4}>
+                                            <Box ml={14} mt={16} bg={'default.tagBoxColor'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
+                                                <Text color={'default.accessByNumber'} fontSize={'14px'} mt={4}>
                                                     10
                                                 </Text>
                                             </Box>
                                             <Center flex="2" justifyContent={'flex-end'} mr={46}>
-                                                <Text color={'#2180C2'} mt={'21px'}>
+                                                <Text color={'default.toolbarButton'} mt={'21px'}>
                                                     {' '}
                                                     Edit
                                                 </Text>
-                                                <Text color={'#2180C2'} mt={'21px'} ml={16}>
+                                                <Text color={'default.toolbarButton'} mt={'21px'} ml={16}>
                                                     {' '}
                                                     Copy Link
                                                 </Text>
