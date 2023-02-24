@@ -101,7 +101,7 @@ const ProjectDetails = (props: any) => {
                         {SingleProjectData && (
                             <>
                                 <Flex mt={'8px'} ml={'2px'}>
-                                    <Box bg={'white'} color={'default.shareModalButton'} width={'80px'} height={'36px'} onClick={editProject}>
+                                    <Box bg={'none'} color={'default.shareModalButton'} width={'80px'} height={'36px'} onClick={editProject}>
                                         <PencilIcon color={'#666C80'} height={'20px'} Height={'20px'} />
                                     </Box>
                                     <Button
