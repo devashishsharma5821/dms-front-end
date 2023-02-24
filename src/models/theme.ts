@@ -79,7 +79,8 @@ export const colors = {
         bgExclamationText: 'rgba(50, 150, 237, 0.2)',
         bgExclamationIcon: '#BFE1FF',
         tagBoxColor: '#F2F4F8',
-        textDeployPiplineButton: '#AEB1B8'
+        textDeployPiplineButton: '#AEB1B8',
+        accessByNumber: '#75858F'
     },
     light: {
         header: '#1A3F59',
