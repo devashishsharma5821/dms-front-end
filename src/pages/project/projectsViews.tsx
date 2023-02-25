@@ -13,7 +13,6 @@ const ProjectsViews = (props: any) => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const AllProjectsData = props.data as GetAllProjectsDetail[];
     const navigate = useNavigate();
-    const maxTextCharacters = 20;
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const navigateToDetails = (id: string) => {

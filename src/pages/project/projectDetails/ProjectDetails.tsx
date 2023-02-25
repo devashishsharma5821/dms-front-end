@@ -180,14 +180,18 @@ const ProjectDetails = (props: any) => {
                                                 <Center>
                                                     <Box ml={14} mt={14} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={70}>
                                                         <Flex>
-                                                            <Center>
-                                                                <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                    Demo
-                                                                </Text>
-                                                                <Box justifyContent={'flex-end'} ml={'14px'}>
-                                                                    <CloseIcon color={'default.darkGrayCreate'} />
-                                                                </Box>
-                                                            </Center>
+                                                            {SingleProjectData &&
+                                                                SingleProjectData.basic.tags.map((tag: string) => {
+                                                                    return (<Center mr={'5px'}>
+                                                                        <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                            {tag}
+                                                                        </Text>
+                                                                        <Box justifyContent={'flex-end'} ml={'14px'}>
+                                                                            <CloseIcon color={'default.darkGrayCreate'} />
+                                                                        </Box>
+                                                                    </Center>)
+                                                                })
+                                                            }
                                                         </Flex>
                                                     </Box>
                                                 </Center>
@@ -201,7 +205,7 @@ const ProjectDetails = (props: any) => {
                                                 textAlign="left"
                                                 fontWeight={400}
                                                 ml={16}
-                                                defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore..."
+                                                defaultValue={SingleProjectData && SingleProjectData.basic.description}
                                             >
                                                 <Flex>
                                                     <Center mt={'-12px'}>

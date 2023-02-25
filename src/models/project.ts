@@ -4,7 +4,7 @@ export interface CreateProject {
     id: string;
     name: string;
     description: string;
-    tags: string;
+    tags: string[];
     project_variables: string;
 }
 
@@ -17,6 +17,8 @@ export interface GetAllProjectsDetail {
     "created_by": string,
     "created_at": string,
     "project_variables": string
+    description: string;
+    tags: string[];
 }
 export interface GetAllProjectsAppStoreState {
     AllProjectsData: GetAllProjectsDetail[];
@@ -33,7 +35,9 @@ export interface GetSingleProjectDetail {
     name: string,
     created_by: string,
     created_at: string,
-    project_variables: string
+    project_variables: string;
+    description: string;
+    tags: string[];
     },
 tasks : {
     id: string,
