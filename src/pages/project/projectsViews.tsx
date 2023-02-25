@@ -1,27 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './project.scss';
 import { Avatar, Box, Center, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 
 import { Documentation } from '../../assets/icons';
 import { GetAllProjectsDetail } from '../../models/project';
+import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
+import useAppStore from '../../store';
+import { GetAllUsersDataAppStoreState } from '../../models/profile';
+import { getUserNameFromId, getTruncatedText } from '../../utils/common.utils';
 const ProjectsViews = (props: any) => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const AllProjectsData = props.data as GetAllProjectsDetail[];
     const navigate = useNavigate();
     const maxTextCharacters = 20;
+    const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const navigateToDetails = (id: string) => {
         navigate(`/projectDetails/${id}`);
     };
-    const getTruncatedText = (name: string) => {
-        if(name.length >= 20) {
-            const newName = `${name.slice(0, maxTextCharacters)}...`;
-            return newName;
+    useEffect(() => {
+        if (AllUsersData === null) {
+            const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
+            getAndUpdateAllUsersData(variablesForAllUsers);
         } else {
-            return name;
+            console.log('Here is your All Users Data', AllUsersData);
         }
-    }
+    }, [AllUsersData]);
     return (
         <>
             <Box border={'1px solid'} borderColor={'#D8DCDE'} borderRadius={8} width={'100%'} height={'auto'} mt={'20'} pb={'20'}>
@@ -37,7 +42,7 @@ const ProjectsViews = (props: any) => {
                                     </Center>
                                 </Flex>
                                 <Flex flexWrap={'wrap'} flexDirection={'row'}>
-                                    {AllProjectsData &&
+                                    {AllProjectsData && AllUsersData &&
                                     AllProjectsData.map((project: GetAllProjectsDetail) => {
                                         return (
                                             <>
@@ -54,15 +59,16 @@ const ProjectsViews = (props: any) => {
                                                         </Text>
                                                         <Box ml={'20px'}>
                                                             <Flex>
-                                                                <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'21px'} />
+                                                                <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(AllUsersData, project.created_by)} color={'default.whiteText'} mt={'21px'} />
                                                                 <Center>
                                                                     <Box width={'300px'}>
                                                                         <Text ml={10} color={accessTextColor} mt={'21px'}>
                                                                             Created by
                                                                         </Text>
                                                                         <Text title={project.created_by} ml={10} color={'#333333'} fontWeight={700}>
-                                                                            {getTruncatedText(project.created_by)}
+                                                                            {getUserNameFromId(AllUsersData, project.created_by)}
                                                                         </Text>
+
 
                                                                         <Text ml={10} color={'#B3B3B3'} fontWeight={700}>
                                                                             {project.created_at.replace('T', ' ')}

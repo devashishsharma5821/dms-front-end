@@ -64,7 +64,7 @@ const CreateProjectModal = (props: any) => {
                                     <Flex>
                                         <Center>
                                             <Text color={projectId} fontSize={'16px'} fontWeight={400} ml={8}>
-                                                Yet to be Assigned
+                                                {(isEdit) ? data.id: 'Yet to be Assigned'}
                                             </Text>
                                             <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
                                                 <CopyIcon color={'default.darkGrayCreate'} />
