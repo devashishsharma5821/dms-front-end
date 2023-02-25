@@ -1,19 +1,40 @@
-import React, { useEffect } from 'react';
-import { Box, Text, Button, useDisclosure, Flex, Center, Input, Editable, Avatar, useColorModeValue, useEditableControls, ButtonGroup, EditablePreview, EditableInput } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import {
+    Box,
+    Text,
+    Button,
+    useDisclosure,
+    Flex,
+    Center,
+    Input,
+    Editable,
+    Avatar,
+    useColorModeValue,
+    useEditableControls,
+    ButtonGroup,
+    EditablePreview,
+    EditableInput,
+    Toast
+} from '@chakra-ui/react';
 import useAppStore from '../../../store';
-import { GetSingleProjectAppStoreState } from '../../../models/project';
-import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
+import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete } from '../../../models/project';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../../models/profile';
+import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
+import client from '../../../apollo-client';
+import { deleteProject } from '../../../query';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
+    const [deleteId, setDeleteId] = useState<string>('');
+    const deleteConfirmationModal = useDisclosure();
     const navigate = useNavigate();
     const params = useParams();
     const createProjectModal = useDisclosure();
@@ -82,11 +103,41 @@ const ProjectDetails = (props: any) => {
     const navigateToDetails = () => {
         navigate(`/project`);
     };
-
+    const onDeleteHandler = (id: string) => {
+        deleteConfirmationModal.onOpen();
+        setDeleteId(id);
+    };
+    const submitDeleteHandler = () => {
+        client
+            .mutate<ProjectDelete<DeleteProjectDetail>>({
+                mutation: deleteProject(deleteId)
+            })
+            .then(() => {
+                Toast({
+                    title: `Project is deleted successfully`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                getAndUpdateAllProjectsData();
+            })
+            .catch(() => {
+                Toast({
+                    title: `ProjectCannot be Deleted`,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                navigate('/project');
+                deleteConfirmationModal.onClose();
+            });
+    };
     return (
         <>
             {
-                AllUsersData &&
+                AllUsersData && SingleProjectData &&
                 <Box marginLeft={36}>
                     <Box fontSize={16} fontWeight={700} ml={'44'} mt={'35'} color={'default.darkGrayCreate'}>
                         <Text>Projects / My Project</Text>
@@ -117,6 +168,7 @@ const ProjectDetails = (props: any) => {
                                             borderRadius={4}
                                             ml={'-38px'}
                                             mt={'-10px'}
+                                            onClick={() => onDeleteHandler(SingleProjectData.basic.id)}
                                         >
                                             Delete
                                         </Button>
@@ -127,14 +179,14 @@ const ProjectDetails = (props: any) => {
                         <Box width={'883px'} height={'320px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'}>
                             <Center>
                                 <Flex ml={'24px'} width={'500px'} maxHeight={'320px'}>
-                                    <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(AllUsersData, SingleProjectData.basic.created_by)} color={'default.whiteText'} mt={'21px'} />
+                                    <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)} color={'default.whiteText'} mt={'21px'} />
                                     <Center>
                                         <Box width={'450px'}>
                                             <Text ml={12} mt={'21px'} color={textColor2} fontWeight={400}>
                                                 Created by
                                             </Text>
                                             <Text ml={12} color={accesstextColor} fontWeight={700}>
-                                                {getUserNameFromId(AllUsersData, SingleProjectData.basic.created_by)}
+                                                {getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)}
                                             </Text>
 
                                             <Flex flexDir={'row'}>
@@ -180,7 +232,7 @@ const ProjectDetails = (props: any) => {
                                                 <Center>
                                                     <Box ml={14} mt={14} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={70}>
                                                         <Flex>
-                                                            {SingleProjectData &&
+                                                            {SingleProjectData && SingleProjectData.basic.tags !== null &&
                                                                 SingleProjectData.basic.tags.map((tag: string) => {
                                                                     return (<Center mr={'5px'}>
                                                                         <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
@@ -191,6 +243,13 @@ const ProjectDetails = (props: any) => {
                                                                         </Box>
                                                                     </Center>)
                                                                 })
+                                                            }
+                                                            {SingleProjectData && SingleProjectData.basic.tags === null &&
+                                                            <Center mr={'5px'}>
+                                                                    <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                       No Tags Available
+                                                                    </Text>
+                                                                </Center>
                                                             }
                                                         </Flex>
                                                     </Box>
@@ -271,6 +330,9 @@ const ProjectDetails = (props: any) => {
                     </Box>
                 </Box>
             }
+            {deleteConfirmationModal.isOpen && (
+                <DeleteConfirmationModal isOpen={deleteConfirmationModal.isOpen} onClose={deleteConfirmationModal.onClose} submitDeleteHandler={submitDeleteHandler} options={{name: SingleProjectData.basic.name, label: 'project', placeholder: 'My Project 00'}} />
+            )}
             {createProjectModal.isOpen && (
                 <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: true, data: SingleProjectData }} />
             )}

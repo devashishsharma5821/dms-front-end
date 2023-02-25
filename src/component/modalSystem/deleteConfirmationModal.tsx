@@ -17,9 +17,9 @@ import {
     ModalHeader,
     ModalOverlay
 } from '@chakra-ui/react';
-import './deleteComputeModal.scss';
+import './deleteConfirmationModal.scss';
 
-export const DeleteComputeModal = ({ isOpen, onClose, submitDeleteHandler, computeName }: any) => {
+export const DeleteConfirmationModal = ({ isOpen, onClose, submitDeleteHandler, options }: any) => {
     const [inputedText, setInputedText] = useState<string>('');
     const [inputedTextFlag, setInputedTextFlag] = useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -33,7 +33,7 @@ export const DeleteComputeModal = ({ isOpen, onClose, submitDeleteHandler, compu
 
     const onChangeHandler = (e: any) => {
         setInputedText(e.target.value);
-        e.target.value === computeName ? setInputedTextFlag(true) : setInputedTextFlag(false);
+        e.target.value === options.name ? setInputedTextFlag(true) : setInputedTextFlag(false);
     };
 
     return (
@@ -42,7 +42,7 @@ export const DeleteComputeModal = ({ isOpen, onClose, submitDeleteHandler, compu
                 <ModalOverlay />
                 <ModalContent justifyContent="center" maxWidth={600} borderRadius="3px">
                     <ModalHeader fontSize="15px" padding="15px" borderBottom="1px solid rgb(234,234,234)">
-                        Delete
+                        Delete {options.label.toUpperCase()}
                     </ModalHeader>
                     <ModalCloseButton padding="24px" />
                     <Box display="flex" flexDirection="column" alignItems="center" className="alertBoxContainer">
@@ -57,7 +57,7 @@ export const DeleteComputeModal = ({ isOpen, onClose, submitDeleteHandler, compu
                         <ModalBody pb={6} width="94%" fontSize="15px" marginTop="16px">
                             You are about to permanently delete&nbsp;
                             <Box display="inline" fontSize="14px" fontWeight="600">
-                                compute
+                                {options.label}
                             </Box>
                             &nbsp;and all its contents.
                             <Box display="inline" fontSize="14px" fontWeight="600">
@@ -69,7 +69,7 @@ export const DeleteComputeModal = ({ isOpen, onClose, submitDeleteHandler, compu
                             <FormLabel fontSize="15px" paddingBottom="5px">
                                 Type compute name to confirm.
                             </FormLabel>
-                            <Input type="text" borderRadius="2px" height="35px" value={inputedText} onChange={onChangeHandler} border="1px solid rgb(204,204,204)" placeholder="my-compute 1" />
+                            <Input type="text" borderRadius="2px" height="35px" value={inputedText} onChange={onChangeHandler} border="1px solid rgb(204,204,204)" placeholder={options.placeholder} />
                         </FormControl>
                         <Box width="93%" margin="21px 0px">
                             <Checkbox isChecked={isChecked} onChange={setCheckedItems} fontSize="15px">

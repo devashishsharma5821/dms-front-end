@@ -3,7 +3,7 @@ import { Box, Button, useColorModeValue, Text, Avatar, Link, ButtonGroup, useDis
 import { EditIcon } from '../../assets/icons';
 import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
 import './computedetails.scss';
-import { DeleteComputeModal } from './DeleteComputeModal';
+import { DeleteConfirmationModal } from '../../component/modalSystem/deleteConfirmationModal';
 import { ComputeContext } from '../../context/computeContext';
 import { useParams } from 'react-router-dom';
 import useAppStore from '../../store';
@@ -208,7 +208,7 @@ const ComputeDetails = () => {
                     </Box>
                 </Box>
                 {deleteComputeModal.isOpen && (
-                    <DeleteComputeModal isOpen={deleteComputeModal.isOpen} onClose={deleteComputeModal.onClose} submitDeleteHandler={submitDeleteHandler} computeName={computeData[0].name} />
+                    <DeleteConfirmationModal isOpen={deleteComputeModal.isOpen} onClose={deleteComputeModal.onClose} submitDeleteHandler={submitDeleteHandler} options={{name:computeData[0].name, label: 'compute', placeholder: 'My Compute 00'}} />
                 )}
                 {editComputeModal.isOpen && <ComputeJsonModal isOpen={editComputeModal.isOpen} isEdit={isEdit} onClose={editComputeModal.onClose} />}
             </Box>

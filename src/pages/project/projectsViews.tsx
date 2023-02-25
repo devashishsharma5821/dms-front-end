@@ -50,7 +50,7 @@ const ProjectsViews = (props: any) => {
                                                         <Center ml={'24px'} pt={'8px'} justifyContent={'flex-start'}>
                                                             <Documentation color={'#666C80'} />
                                                             <Text title={project.name} ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'}>
-                                                                {getTruncatedText(project.name)}
+                                                                {getTruncatedText(project && project.name)}
                                                             </Text>
                                                         </Center>
                                                         <Text ml={'53'} color={'#646A78'} fontWeight={400}>
@@ -58,14 +58,14 @@ const ProjectsViews = (props: any) => {
                                                         </Text>
                                                         <Box ml={'20px'}>
                                                             <Flex>
-                                                                <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(AllUsersData, project.created_by)} color={'default.whiteText'} mt={'21px'} />
+                                                                <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(AllUsersData, project && project.created_by)} color={'default.whiteText'} mt={'21px'} />
                                                                 <Center>
                                                                     <Box width={'300px'}>
                                                                         <Text ml={10} color={accessTextColor} mt={'21px'}>
                                                                             Created by
                                                                         </Text>
                                                                         <Text title={project.created_by} ml={10} color={'#333333'} fontWeight={700}>
-                                                                            {getUserNameFromId(AllUsersData, project.created_by)}
+                                                                            {getUserNameFromId(AllUsersData, project && project.created_by)}
                                                                         </Text>
 
 

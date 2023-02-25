@@ -75,3 +75,9 @@ export class EditCreateDetail {
 export class EditCreate<T> {
     dmsEditProject!: T;
 }
+export class ProjectDelete<T> {
+    dmsDeleteProject!: T;
+}
+export class DeleteProjectDetail {
+    dmsDeleteProject!: boolean;
+}
