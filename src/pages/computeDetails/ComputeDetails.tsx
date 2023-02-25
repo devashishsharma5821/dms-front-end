@@ -12,7 +12,9 @@ import { getAndUpdateDbSettingsData, getAndUpdateDmsComputeData } from '../../zu
 import client from '../../apollo-client';
 import { ComputeDelete, DeleteComputeDetail } from '../../models/computeDetails';
 import { dmsDeleteCompute } from '../../query';
-
+import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
+import { GetAllUsersDataAppStoreState } from '../../models/profile';
+import { getUserNameFromId } from '../../utils/common.utils';
 const ComputeDetails = () => {
     const [DmsComputeData] = useAppStore((state: any) => [state.DmsComputeData]);
     const textColor = useColorModeValue('light.header', 'dark.white');
@@ -23,7 +25,15 @@ const ComputeDetails = () => {
     const context = useContext(ComputeContext);
     const navigate = useNavigate();
     const { computeId } = useParams();
-
+    const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
+    useEffect(() => {
+        if (AllUsersData === null) {
+            const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
+            getAndUpdateAllUsersData(variablesForAllUsers);
+        } else {
+            console.log('Here is your All Users Data', AllUsersData);
+        }
+    }, [AllUsersData]);
     useEffect(() => {
         getAndUpdateDmsComputeData();
     }, []);
@@ -103,7 +113,7 @@ const ComputeDetails = () => {
                     <Text fontSize="18px" fontWeight="700">
                         {computeData[0].name}
                     </Text>
-                    <Box ml={10}>
+                    <Box cursor={"pointer"} ml={10} onClick={() => onEditClickHandler(computeData[0])}>
                         <EditIcon />
                     </Box>
                     <Button variant="outline" className="delete-button" fontWeight={100} onClick={() => onDeleteHandler(computeData[0].id)}>
@@ -113,13 +123,13 @@ const ComputeDetails = () => {
                 <Box className="computedetailsContainer-2">
                     <Box className="computedetailsContainer-2sub-1">
                         <Box className="computedetailsContainer-2subsub-1">
-                            <Avatar borderRadius="full" boxSize="40px" name={`R K`} bg="rgb(160,186,194)" fontSize="14px" mt={10} />
+                            <Avatar borderRadius="full" boxSize="40px" name={getUserNameFromId(AllUsersData, computeData[0] && computeData[0].created_by)} bg="rgb(160,186,194)" fontSize="14px" mt={10} />
                         </Box>
                         <Box className="computedetailsContainer-2subsub-2">
                             <Box ml={15}>
                                 <Text fontSize={14}>Created by</Text>
                                 <Text fontSize={14} fontWeight={600}>
-                                    Ritesh Kumar
+                                    {getUserNameFromId(AllUsersData, computeData[0] && computeData[0].created_by)}
                                 </Text>
                             </Box>
                             <Box ml={15} className="computedetailsContainer-2subsub-2sub-2">
