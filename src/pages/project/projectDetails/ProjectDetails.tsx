@@ -18,7 +18,11 @@ import {
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete } from '../../../models/project';
-import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
+import {
+    getAndUpdateAllProjectsData,
+    getAndUpdateSingleProjectData,
+    updateSingleProjectData
+} from '../../../zustandActions/projectActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
@@ -27,13 +31,14 @@ import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions'
 import { GetAllUsersDataAppStoreState } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import client from '../../../apollo-client';
-import { deleteProject } from '../../../query';
+import { deleteProject, editProject } from '../../../query';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [deleteId, setDeleteId] = useState<string>('');
+    const [inlineDescription, setInlineDescription] = useState<string>('');
     const deleteConfirmationModal = useDisclosure();
     const navigate = useNavigate();
     const params = useParams();
@@ -83,6 +88,7 @@ const ProjectDetails = (props: any) => {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
             console.log('Project Details Data via Route Params', SingleProjectData);
+            setInlineDescription((SingleProjectData.basic.description === null) ? "" : SingleProjectData.basic.description);
         }
     }, [SingleProjectData]);
     useEffect(() => {
@@ -93,7 +99,7 @@ const ProjectDetails = (props: any) => {
             console.log('Here is your All Users Data In Project Details', AllUsersData);
         }
     }, [AllUsersData]);
-    const editProject = () => {
+    const editProjectModal = () => {
         createProjectModal.onOpen();
     };
     const onCreateProjectSuccess = () => {
@@ -120,7 +126,9 @@ const ProjectDetails = (props: any) => {
                     duration: 5000,
                     position: 'top-right'
                 });
-                getAndUpdateAllProjectsData();
+                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
+                navigate('/project');
+                deleteConfirmationModal.onClose();
             })
             .catch(() => {
                 Toast({
@@ -130,9 +138,46 @@ const ProjectDetails = (props: any) => {
                     duration: 5000,
                     position: 'top-right'
                 });
-                navigate('/project');
-                deleteConfirmationModal.onClose();
             });
+    };
+    const handleEditDescriptionChange = (editChangeValue: string) => {
+        setInlineDescription(editChangeValue);
+
+    }
+    const handleEditDescription = (nextDescription: string) => {
+        console.log('T', nextDescription);
+        if(nextDescription !== SingleProjectData.basic.description) {
+            const variables = {
+                id : SingleProjectData.basic.id,
+                name: SingleProjectData.basic.name,
+                project_variables: SingleProjectData.basic.project_variables,
+                description: nextDescription,
+                tags: (SingleProjectData.basic.tags === null) ? [] : SingleProjectData.basic.tags
+            };
+            client
+                .mutate<ProjectDelete<DeleteProjectDetail>>({
+                    mutation: editProject(variables)
+                })
+                .then(() => {
+                    Toast({
+                        title: `Project Description Edited Successfully`,
+                        status: 'success',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                    getAndUpdateAllProjectsData();
+                })
+                .catch(() => {
+                    Toast({
+                        title: `Project Description Cannot be Edited`,
+                        status: 'error',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                });
+        }
     };
     return (
         <>
@@ -156,7 +201,7 @@ const ProjectDetails = (props: any) => {
                             {SingleProjectData && (
                                 <>
                                     <Flex mt={'8px'} ml={'2px'}>
-                                        <Box bg={'none'} color={'default.shareModalButton'} width={'80px'} height={'36px'} onClick={editProject}>
+                                        <Box bg={'none'} color={'default.shareModalButton'} width={'80px'} height={'36px'} onClick={editProjectModal}>
                                             <PencilIcon color={'#666C80'} height={'20px'} Height={'20px'} />
                                         </Box>
                                         <Button
@@ -264,7 +309,9 @@ const ProjectDetails = (props: any) => {
                                                 textAlign="left"
                                                 fontWeight={400}
                                                 ml={16}
-                                                defaultValue={SingleProjectData && SingleProjectData.basic.description}
+                                                onSubmit={handleEditDescription}
+                                                onChange={handleEditDescriptionChange}
+                                                value={inlineDescription}
                                             >
                                                 <Flex>
                                                     <Center mt={'-12px'}>
