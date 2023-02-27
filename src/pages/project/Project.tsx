@@ -6,9 +6,10 @@ import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetAllProjectsDetail } from '../../models/project';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 import SearchComponent from '../../component/search/SearchComponent';
-import { Documentation, DownArrow, GridCanvas } from '../../assets/icons';
+import { DownArrow } from '../../assets/icons';
 import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
 import ProjectsViews from './projectsViews';
+
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
     const textColor = useColorModeValue('light.header', 'dark.white');
@@ -47,10 +48,6 @@ const Project = () => {
             console.log('Here is your Projects Data', AllProjectsData);
         }
     }, [AllProjectsData]);
-
-    const navigateToDetails = (id: string) => {
-        navigate(`/projectDetails/${id}`);
-    };
 
     const onCreateProjectSuccess = () => {
         getAndUpdateAllProjectsData();

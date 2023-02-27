@@ -29,6 +29,23 @@ export const getUserConfig = () => {
     return { GET_USER_CONFIGURATION };
 };
 
+export const GET_USERS_OF_ESP = (variables: any) => {
+    return gql`
+query getUsers {
+  getUsers(
+    input: { isActive: ${variables.isActive}, pageNumber: ${variables.pageNumber}, limit: ${variables.limit}, searchText: "${variables.searchText}" }
+  ) {
+    users {
+      userId
+      firstName
+      lastName
+      applicationName
+    }
+    rowCount
+  }
+}
+`;
+};
 export const getTransformersData = () => {
     const GET_TRANSFORMERS = gql`
         query get_transformers {
@@ -321,20 +338,6 @@ export const GET_DB_SETTINGS = gql`
 `;
 
 // Project and Projects API Start Here
-
-// export const createProject = (values: any) => {
-//     return gql`
-//             mutation {
-//                 dmsCreateProject(
-//                     name: "${values.name}",
-//                     project_variables: "${values.variables}",
-//                     description: "${values.description}",
-//                     tags: "${values.tags}"
-//                 )
-//             }
-//             `;
-// };
-
 export const GET_ALL_PROJECTS = gql`
     query dmsProjects {
         dmsProjects {
@@ -343,6 +346,8 @@ export const GET_ALL_PROJECTS = gql`
             created_by
             created_at
             project_variables
+            tags
+            description
         }
     }
 `;
@@ -357,6 +362,8 @@ export const GET_SINGLE_PROJECT = (id: string) => {
       created_by
       created_at
       project_variables
+      tags
+      description
     }
     tasks {
       id
@@ -385,6 +392,8 @@ export const createProject = (variables: any) => {
                 dmsCreateProject(
                     name: "${variables.name}",
                     project_variables: "${variables.project_variables}",
+                    description: "${variables.description}",
+                    tags: "${variables.tags}"
                 )
             }`;
 };
@@ -395,23 +404,18 @@ export const editProject = (variables: any) => {
                     id: "${variables.id}",
                     name: "${variables.name}",
                     project_variables: "${variables.project_variables}",
+                    description: "${variables.description}",
+                    tags: "${variables.tags}"
                 )
             }`;
 };
 
-// export const editProject = (variables: any) => {
-//     return gql`
-//             mutation {
-//                 dmsEditProject(
-//                     id: "${variables.id}",
-//                     name: "${variables.name}",
-//                     project_variables: "${variables.project_variables}",
-//                     description: "${variables.description}",
-//                     tags: "${variables.tags}"
-//                 )
-//             }
-//             `;
-// };
 export const createAccess = (variables: any) => {
     return gql `mutation {dmsCreateOrUpdateProjectAccess(user_id:"eea75cf9-06de-4fe7-b476-ac48856398df", project_ID:"22", access_level:VIEWER)}`;
 };
+
+export const deleteProject = (id: string) => {
+    return gql `mutation {
+        dmsDeleteProject(id: "${id}")
+    }`;
+}

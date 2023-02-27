@@ -42,7 +42,12 @@ const CreateProjectModal = (props: any) => {
     const toast = useToast();
     const isEdit = props.isEdit.status;
     const isEditData = props.isEdit.data;
-    const data = {id: (isEdit) ? isEditData.basic.id : "", name: (isEdit) ? isEditData.basic.name : "", description: "", tags: "" , project_variables: "none"} as CreateProject;
+    const data = {
+        id: (isEdit) ? isEditData.basic.id : "",
+        name: (isEdit) ? isEditData.basic.name : "",
+        description: (isEdit) ? isEditData.basic.description : "",
+        tags: (isEdit) ? isEditData.basic.tags : [],
+        project_variables: "none"} as CreateProject;
 
     return (
         <Modal closeOnOverlayClick={false} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -64,7 +69,7 @@ const CreateProjectModal = (props: any) => {
                                     <Flex>
                                         <Center>
                                             <Text color={projectId} fontSize={'16px'} fontWeight={400} ml={8}>
-                                                Yet to be Assigned
+                                                {(isEdit) ? data.id: 'Yet to be Assigned'}
                                             </Text>
                                             <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
                                                 <CopyIcon color={'default.darkGrayCreate'} />

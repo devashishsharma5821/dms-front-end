@@ -14,10 +14,12 @@ import {
 } from '@antuit-zebra/pipeline-interactive-driver-client-ts';
 import { TransformerInfo } from './transformer';
 import { GetAllProjectsDetail, GetSingleProjectDetail } from './project';
+import { AllUsers } from './profile';
 
 export interface AppState {
     i18n: any;
     config: any;
+    AllUsersData: any;
     DmsDatabricksCredentialsValidToken: boolean;
     DmsComputeData: any;
     TransformersData: any;
@@ -43,6 +45,7 @@ export interface AppState {
 
 export type updateI18N = (translation: {}) => void;
 export type updateAppConfig = (config: {}) => void;
+export type updateAllUsersData = (allUsersData: AllUsers[]) => void;
 export type updateDmsDatabricksCredentialsValidToken = (token: boolean) => void;
 export type updateDmsComputeData = (computeData: DmsComputeData[]) => void;
 export type updateTransformersData = (transformersData: TransformerInfo[]) => void;
@@ -55,6 +58,7 @@ export type resetMessages = () => void;
 export type hasSubscribed = () => void;
 export type disconnected = () => void;
 export type startConnecting = () => void;
+export type getAndUpdateAllUsersData = (variables: any) => void;
 export type setComputeState = (value: string) => void;
 export type getAndUpdateDmsComputeData = () => void;
 export type getAndUpdateDbSettingsData = () => void;

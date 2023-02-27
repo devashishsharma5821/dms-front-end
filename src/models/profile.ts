@@ -1,3 +1,5 @@
+import { GetAllProjectsDetail } from './project';
+
 export interface AppAlerts {
 }
 
@@ -6,6 +8,20 @@ export interface Applications {
     applicationName: string;
     configJson: any;
     i18n: any;
+}
+export class GetAllUsersType<T> {
+    getUsers!: {
+        users: T;
+    }
+}
+export interface AllUsers {
+        userId: string;
+        firstName: string;
+        lastName: string;
+        applicationName: string;
+}
+export interface GetAllUsersDataAppStoreState {
+    AllUsersData: AllUsers[];
 }
 export interface User {
     userId: string;
