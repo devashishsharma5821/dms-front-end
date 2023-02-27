@@ -12,6 +12,8 @@ const CreateNew = (props: any) => {
             props.openCreateModal('compute');
         } else if (type === 'Project') {
             props.openCreateModal('projectFrom');
+        } else if (type === 'Dataset') {
+            props.openCreateModal('dataset');
         }
     };
     const subMenuForCreate = [

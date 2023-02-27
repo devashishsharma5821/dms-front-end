@@ -19,6 +19,7 @@ import { DbSettingsDetail } from '../../models/computeDetails';
 import { GET_DB_SETTINGS } from '../../query';
 import useAppStore from '../../store';
 import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
+import CreateDatasetModal from '../modalSystem/CreateDatasetModal';
 
 const SideBarMenu = () => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
@@ -32,6 +33,7 @@ const SideBarMenu = () => {
     const createComputeModal = useDisclosure();
     const createProjectFromModal = useDisclosure();
     const createProjectModal = useDisclosure();
+    const createDatasetModal = useDisclosure();
     const navigate = useNavigate();
     const hoverIn = () => {
         setIsHovering(true);
@@ -89,6 +91,8 @@ const SideBarMenu = () => {
             }
         } else if (type === 'projectFrom') {
             createProjectFromModal.onOpen();
+        } else if (type === 'dataset') {
+            createDatasetModal.onOpen();
         }
     };
     const thirdLevelMenu = () => {
@@ -275,6 +279,7 @@ const SideBarMenu = () => {
                         </VStack>
                     </Flex>
                     {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
+                    {createDatasetModal.isOpen && <CreateDatasetModal isOpen={createDatasetModal.isOpen} onClose={createDatasetModal.onClose} />}
                     {createProjectFromModal.isOpen && (
                         <LeftSideBarMenuCreateProjectModal
                             isOpen={createProjectFromModal.isOpen}
