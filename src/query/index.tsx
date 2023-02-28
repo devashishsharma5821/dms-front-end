@@ -40,6 +40,7 @@ query getUsers {
       firstName
       lastName
       applicationName
+      email
     }
     rowCount
   }

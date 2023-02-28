@@ -1,5 +1,3 @@
-import { GetAllProjectsDetail } from './project';
-
 export interface AppAlerts {
 }
 
@@ -19,6 +17,7 @@ export interface AllUsers {
         firstName: string;
         lastName: string;
         applicationName: string;
+        email: string;
 }
 export interface GetAllUsersDataAppStoreState {
     AllUsersData: AllUsers[];
