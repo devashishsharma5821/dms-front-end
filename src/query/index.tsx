@@ -420,7 +420,7 @@ export const createAccess = (variables: any) => {
     (
     user_id: "${variables.userId}", 
     project_ID:"${variables.projectId}", , 
-    access_level:VIEWER
+    access_level: VIEWER
     )
     }`;
 };

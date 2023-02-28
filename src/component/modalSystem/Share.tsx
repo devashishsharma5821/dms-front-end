@@ -13,6 +13,9 @@ import client from '../../apollo-client';
 import { ComputeDelete, DeleteComputeDetail } from '../../models/computeDetails';
 import { createAccess, dmsDeleteCompute } from '../../query';
 import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
+import { useParams } from 'react-router-dom';
+import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { GetSingleProjectAppStoreState } from '../../models/project';
 
 const Share = (props: any) => {
   
@@ -27,7 +30,34 @@ const Share = (props: any) => {
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [selectedUser, setSelectedUser] = React.useState("");
+    const [accessUserList, setAccessUserList] = React.useState([{}]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
+    const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
+    const params = useParams();
+
+    useEffect(() => {
+        if (SingleProjectData === null) {
+            getAndUpdateSingleProjectData(params.projectId as string);
+        } else {
+           console.log('Single Project Details, inside Share Modal', SingleProjectData);
+           if(SingleProjectData.project_access === null) {
+               setAccessUserList([]);
+           } else {
+               const reformattedProjectAccessData = SingleProjectData.project_access.map((singleProjectAccess) => {
+                   const sharedUser = AllUsersData?.filter((singleUser) => {
+                      return singleUser.userId === singleProjectAccess.user_id
+                   });
+                   return {
+                       firstName: (sharedUser?.length > 0) ? sharedUser[0].firstName : '',
+                       lastName: (sharedUser?.length > 0) ? sharedUser[0].lastName: '',
+                       email: (sharedUser?.length > 0) ? sharedUser[0].email: ''
+                   }
+               });
+               setAccessUserList(reformattedProjectAccessData);
+           }
+        }
+    }, [SingleProjectData]);
+
     useEffect(() => {
         if (AllUsersData === null) {
             const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
@@ -39,8 +69,8 @@ const Share = (props: any) => {
     };
     const handleShare = () => {
         const hardCodeMutation = {
-            userId: 'ccced22b-1fcc-4102-af6e-8e32cc676549',
-            projectId: '39'
+            userId: selectedUser,
+            projectId: params.projectId
         };
         client
             .mutate<ShareCreate<ShareCreateDetail>>({
@@ -54,6 +84,8 @@ const Share = (props: any) => {
                     duration: 5000,
                     position: 'top-right'
                 });
+                getAndUpdateSingleProjectData(params.projectId as string);
+                setSelectedUser('');
             })
             .catch(() => {
                 Toast({
@@ -65,7 +97,6 @@ const Share = (props: any) => {
                 });
             });
     };
-    const sampleAPILessArray: any = [];
     return (
                 <Modal size={'3xl'}
                      initialFocusRef={initialRef}
@@ -110,8 +141,8 @@ const Share = (props: any) => {
                                         <Flex as="nav" align="center" justify="space-between" wrap="wrap">
 
                                             {
-                                                sampleAPILessArray.length > 0 &&
-                                                sampleAPILessArray.map((icons: any, iconsIndex: number) => {
+                                                accessUserList.length > 0 &&
+                                                accessUserList.map((icons: any, iconsIndex: number) => {
                                                     return(
                                                         <><Center key={iconsIndex}>
                                                             <Avatar ml={16} p={'5px'}  borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
@@ -136,7 +167,7 @@ const Share = (props: any) => {
                                                     ) })
                                             }
                                             {
-                                                sampleAPILessArray.length === 0 &&
+                                                accessUserList.length === 0 &&
                                                 <Box>
                                                     <Text color={accesstextColor} >This Project Is not Shared with Any Users</Text>
                                                 </Box>
