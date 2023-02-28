@@ -388,24 +388,29 @@ export const GET_SINGLE_PROJECT = (id: string) => {
 };
 
 export const createProject = (variables: any) => {
+    const tags = (variables.tags !== null && variables.tags !== "") ? variables.tags.split(',') : [];
+    console.log('VariableCreate', tags)
     return gql`mutation {
                 dmsCreateProject(
                     name: "${variables.name}",
                     project_variables: "${variables.project_variables}",
                     description: "${variables.description}",
-                    tags: "${variables.tags}"
+                    tags: ${JSON.stringify(tags)}
                 )
             }`;
 };
 
 export const editProject = (variables: any) => {
+    console.log('VariableEdit1', variables.tags)
+    const tags = (variables.tags !== null && variables.tags !== "" ) ? variables.tags.split(',') : [];
+    console.log('VariableEdit', tags)
     return gql`mutation {
                 dmsEditProject(
                     id: "${variables.id}",
                     name: "${variables.name}",
                     project_variables: "${variables.project_variables}",
                     description: "${variables.description}",
-                    tags: "${variables.tags}"
+                    tags: ${JSON.stringify(tags)}
                 )
             }`;
 };

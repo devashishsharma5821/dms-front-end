@@ -26,6 +26,7 @@ const ProjectsViews = (props: any) => {
             console.log('Here is your All Users Data', AllUsersData);
         }
     }, [AllUsersData]);
+    console.log('ZZZZZ',AllProjectsData )
     return (
         <>
             <Box border={'1px solid'} borderColor={'#D8DCDE'} borderRadius={8} width={'100%'} height={'auto'} mt={'20'} pb={'20'}>

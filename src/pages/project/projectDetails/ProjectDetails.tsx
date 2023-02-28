@@ -14,7 +14,7 @@ import {
     ButtonGroup,
     EditablePreview,
     EditableInput,
-    Toast
+    Toast, Tag, TagLabel, TagCloseButton, HStack
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete } from '../../../models/project';
@@ -126,7 +126,7 @@ const ProjectDetails = (props: any) => {
                     duration: 5000,
                     position: 'top-right'
                 });
-                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
+                getAndUpdateAllProjectsData();
                 navigate('/project');
                 deleteConfirmationModal.onClose();
             })
@@ -275,31 +275,39 @@ const ProjectDetails = (props: any) => {
                                                     Tag:
                                                 </Text>
                                                 <Center>
-                                                    <Box ml={14} mt={14} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={70}>
-                                                        <Flex>
-                                                            {SingleProjectData && SingleProjectData.basic.tags !== null &&
+                                                    <>
+                                                        <HStack spacing={4}>
+                                                            {
+                                                                SingleProjectData && SingleProjectData.basic.tags !== null &&
                                                                 SingleProjectData.basic.tags.map((tag: string) => {
-                                                                    return (<Center mr={'5px'}>
-                                                                        <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                            {tag}
-                                                                        </Text>
-                                                                        <Box justifyContent={'flex-end'} ml={'14px'}>
-                                                                            <CloseIcon color={'default.darkGrayCreate'} />
-                                                                        </Box>
-                                                                    </Center>)
+                                                                    return (
+                                                                        <Tag
+                                                                            size={'sm'}
+                                                                            key={tag}
+                                                                            borderRadius='none'
+                                                                            variant='solid'
+                                                                        >
+                                                                            <TagLabel>{tag}</TagLabel>
+                                                                            <TagCloseButton />
+                                                                        </Tag>
+                                                                    )
                                                                 })
                                                             }
-                                                            {SingleProjectData && SingleProjectData.basic.tags === null &&
-                                                            <Center mr={'5px'}>
-                                                                    <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                       No Tags Available
-                                                                    </Text>
-                                                                </Center>
-                                                            }
-                                                        </Flex>
-                                                    </Box>
+                                                        </HStack>
+                                                        <HStack spacing={4}>
+                                                        {SingleProjectData && SingleProjectData.basic.tags === null &&
+                                                            <Tag
+                                                            size={'sm'}
+                                                            borderRadius='none'
+                                                            variant='solid'
+                                                            >
+                                                            <TagLabel>No Tags available</TagLabel>
+                                                            </Tag>
+                                                        }
+                                                        </HStack>
+                                                    </>
                                                 </Center>
-                                                <Text color={'default.toolbarButton'} mt={'20'} ml={20}>
+                                                <Text color={'default.toolbarButton'} mt={'12'} ml={20}>
                                                     + Add Tag
                                                 </Text>
                                             </Flex>
