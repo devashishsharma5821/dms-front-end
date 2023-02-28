@@ -4,3 +4,11 @@ export interface ShareData {
     lastName: string;
     email: string;
 }
+
+export class ShareCreate<T> {
+    dmsCreateOrUpdateProjectAccess!: T;
+}
+
+export class ShareCreateDetail {
+    dmsCreateOrUpdateProjectAccess!: boolean;
+}
