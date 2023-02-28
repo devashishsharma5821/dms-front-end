@@ -22,8 +22,6 @@ const ProjectsViews = (props: any) => {
         if (AllUsersData === null) {
             const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
             getAndUpdateAllUsersData(variablesForAllUsers);
-        } else {
-            console.log('Here is your All Users Data', AllUsersData);
         }
     }, [AllUsersData]);
     return (
@@ -44,9 +42,9 @@ const ProjectsViews = (props: any) => {
                                     {AllProjectsData && AllUsersData &&
                                     AllProjectsData.map((project: GetAllProjectsDetail) => {
                                         return (
-                                            <>
-                                                <Box cursor={"pointer"} onClick={() => navigateToDetails(project.id)} bg={'#FFFFFF'} width={'309px'} border={'1px'} borderColor={'#D8DCDE'} height={'287px'} borderRadius={8} ml={'22'} mt={'20'}>
-                                                    <Box height={'69px'} bg={'#F7FAFC'} borderTopRadius={8}>
+                                            <div key={project.id}>
+                                                <Box key={project.id} cursor={"pointer"} onClick={() => navigateToDetails(project.id)} bg={'#FFFFFF'} width={'309px'} border={'1px'} borderColor={'#D8DCDE'} height={'287px'} borderRadius={8} ml={'22'} mt={'20'}>
+                                                    <Box key={project.id} height={'69px'} bg={'#F7FAFC'} borderTopRadius={8}>
                                                         <Center ml={'24px'} pt={'8px'} justifyContent={'flex-start'}>
                                                             <Documentation color={'#666C80'} />
                                                             <Text title={project.name} ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'}>
@@ -117,7 +115,7 @@ const ProjectsViews = (props: any) => {
                                                         </Box>
                                                     </Box>
                                                 </Box>
-                                            </>
+                                            </div>
                                         );
                                     })}
                                 </Flex>

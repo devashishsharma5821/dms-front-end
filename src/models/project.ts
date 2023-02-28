@@ -4,7 +4,7 @@ export interface CreateProject {
     id: string;
     name: string;
     description: string;
-    tags: string[];
+    tags: string;
     project_variables: string;
 }
 

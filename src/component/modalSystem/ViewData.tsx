@@ -170,7 +170,7 @@ const ViewData = (props: any) => {
 
                                     {viewDataColumnData.data.map((icons: { variableGlobal: string; valueGlobal: string }) => {
                                         return (
-                                            <>
+                                            <div key={icons.valueGlobal}>
                                                 <Flex>
                                                     <Center fontWeight={400}>
                                                         <Box width={'160px'}>
@@ -185,7 +185,7 @@ const ViewData = (props: any) => {
                                                         </Box>
                                                     </Center>
                                                 </Flex>
-                                            </>
+                                            </div>
                                         );
                                     })}
                                 </Box>
