@@ -45,7 +45,6 @@ const Project = () => {
             getAndUpdateAllProjectsData();
         } else {
             setAllProjectsData(AllProjectsData);
-            console.log('Here is your Projects Data', AllProjectsData);
         }
     }, [AllProjectsData]);
 

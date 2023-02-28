@@ -48,7 +48,6 @@ class DmsCanvasService {
     }
 
     startRappid(stencil: any, group: any) {
-        console.log('I am in start Rappid Service')
         // Set the Theme of the Joint JS based on the CSS included in the canvasStyles
         joint.setTheme('modern');
         this.initializePaper();

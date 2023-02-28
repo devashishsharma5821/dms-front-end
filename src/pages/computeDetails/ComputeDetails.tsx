@@ -30,8 +30,6 @@ const ComputeDetails = () => {
         if (AllUsersData === null) {
             const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
             getAndUpdateAllUsersData(variablesForAllUsers);
-        } else {
-            console.log('Here is your All Users Data', AllUsersData);
         }
     }, [AllUsersData]);
     useEffect(() => {
@@ -94,7 +92,6 @@ const ComputeDetails = () => {
         setIsEdit(true);
         editComputeModal.onOpen();
     };
-    console.log('is edit ==> ', isEdit);
     const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData.id === computeId);
     if (!computeData) {
         return <div>loading</div>;

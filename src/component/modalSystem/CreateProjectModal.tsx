@@ -62,15 +62,12 @@ const CreateProjectModal = (props: any) => {
         }
     };
     const removeTag = (tag: string, tagIndex: number, formikValues: any) => {
-        console.log('Form', formikValues, tag);
         const formicValuesTags = formikValues.tags.split(',');
         const newFormikValuesTags = formicValuesTags.filter((newTag: string) => {return newTag !== tag})
-        console.log('Form1', newFormikValuesTags);
         formikValues.tags = newFormikValuesTags.join(',');
         editProjectQuery(formikValues);
     };
     const editProjectQuery = (formikValues: any) => {
-        console.log('Formik Values', formikValues);
         client
             .mutate<ProjectEdit<ProjectEditDetail>>({
                 mutation: editProject(formikValues)

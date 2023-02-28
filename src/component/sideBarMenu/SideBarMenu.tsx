@@ -169,7 +169,7 @@ const SideBarMenu = () => {
                                         const listSections = sections.section.map((icons, iconIndex) => {
                                             if (icons.iconName === 'Create') {
                                                 return (
-                                                    <Box width={'38px'} height={'40px'}>
+                                                    <Box key={iconIndex} width={'38px'} height={'40px'}>
                                                         <Square>
                                                             <CreateIcon />
                                                         </Square>
@@ -178,18 +178,18 @@ const SideBarMenu = () => {
                                             }
                                             if (lastItemLength === iconIndex) {
                                                 return (
-                                                    <>
+                                                    <div key={iconIndex}>
                                                         <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'}>
                                                             <Square>{icons.icon}</Square>
                                                         </Box>
                                                         <Center>
                                                             <Divider orientation="horizontal" bg={'dark.borderColor'} />
                                                         </Center>
-                                                    </>
+                                                    </div>
                                                 );
                                             } else {
                                                 return (
-                                                    <Box m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'}>
+                                                    <Box key={iconIndex} m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'}>
                                                         <Square>{icons.icon}</Square>
                                                     </Box>
                                                 );
@@ -213,6 +213,7 @@ const SideBarMenu = () => {
                                             if (icons.iconName === 'Create') {
                                                 return (
                                                     <Box
+                                                        key={iconIndex}
                                                         onClick={() => {
                                                             checkForSubMenuOrNavigation(icons, iconIndex);
                                                         }}
@@ -230,7 +231,7 @@ const SideBarMenu = () => {
                                             }
                                             if (lastItemLength === iconIndex) {
                                                 return (
-                                                    <>
+                                                    <div key={iconIndex}>
                                                         <Flex
                                                             align="center"
                                                             justify="left"
@@ -249,7 +250,7 @@ const SideBarMenu = () => {
                                                         <Center>
                                                             <Divider mb={'8px'} ml={'8px'} mr={'8px'} orientation="horizontal" bg={'dark.borderColor'} />
                                                         </Center>
-                                                    </>
+                                                    </div>
                                                 );
                                             } else {
                                                 return (
@@ -260,6 +261,7 @@ const SideBarMenu = () => {
                                                             checkForSubMenuOrNavigation(icons, iconIndex);
                                                         }}
                                                         className={'sidebar'}
+                                                        key={iconIndex}
                                                     >
                                                         <Box m={'8px 8px'} width={'30px'} height={'32px'}>
                                                             <Square>{icons.icon}</Square>

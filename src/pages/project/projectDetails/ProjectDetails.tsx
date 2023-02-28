@@ -87,7 +87,6 @@ const ProjectDetails = (props: any) => {
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
-            console.log('Project Details Data via Route Params', SingleProjectData);
             setInlineDescription((SingleProjectData.basic.description === null) ? "" : SingleProjectData.basic.description);
         }
     }, [SingleProjectData]);
@@ -95,8 +94,6 @@ const ProjectDetails = (props: any) => {
         if (AllUsersData === null) {
             const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
             getAndUpdateAllUsersData(variablesForAllUsers);
-        } else {
-            console.log('Here is your All Users Data In Project Details', AllUsersData);
         }
     }, [AllUsersData]);
     const editProjectModal = () => {
@@ -145,7 +142,6 @@ const ProjectDetails = (props: any) => {
 
     }
     const handleEditDescription = (nextDescription: string) => {
-        console.log('T', nextDescription);
         if(nextDescription !== SingleProjectData.basic.description) {
             const variables = {
                 id : SingleProjectData.basic.id,

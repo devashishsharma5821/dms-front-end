@@ -55,7 +55,6 @@ const DeployPipelineModal = (props: any) => {
         );
     };
     useEffect(() => {
-        console.log('I am here');
         if (DmsComputeData === null || DmsComputeData === undefined) {
             getAndUpdateDmsComputeData();
         }
