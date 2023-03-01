@@ -48,14 +48,14 @@ const CreateProjectModal = (props: any) => {
     const isEdit = props.isEdit.status;
     const isEditData = props.isEdit.data;
     const [data, setData] = useState({
-        id: (isEdit) ? isEditData.basic.id : "",
-        name: (isEdit) ? isEditData.basic.name : "",
-        description: (isEdit) ? isEditData.basic.description : "",
-        tags: (isEdit) ? (isEditData.basic.tags !== null && isEditData.basic.tags.length > 0) ? isEditData.basic.tags.join(','): "" : "",
-        project_variables: "none"
+        id: isEdit ? isEditData.basic.id : '',
+        name: isEdit ? isEditData.basic.name : '',
+        description: isEdit ? isEditData.basic.description : '',
+        tags: isEdit ? (isEditData.basic.tags !== null && isEditData.basic.tags.length > 0 ? isEditData.basic.tags.join(',') : '') : '',
+        project_variables: 'none'
     } as CreateProject);
     const addTagHandler = (type: string, formikValues: any) => {
-        if(type === 'trigger') {
+        if (type === 'trigger') {
             setAddTagClicked(!addTagClicked);
         } else {
             setAddTagClicked(false);
@@ -63,7 +63,9 @@ const CreateProjectModal = (props: any) => {
     };
     const removeTag = (tag: string, tagIndex: number, formikValues: any) => {
         const formicValuesTags = formikValues.tags.split(',');
-        const newFormikValuesTags = formicValuesTags.filter((newTag: string) => {return newTag !== tag})
+        const newFormikValuesTags = formicValuesTags.filter((newTag: string) => {
+            return newTag !== tag;
+        });
         formikValues.tags = newFormikValuesTags.join(',');
         editProjectQuery(formikValues);
     };
@@ -95,14 +97,14 @@ const CreateProjectModal = (props: any) => {
                     position: 'top-right'
                 });
             });
-    }
+    };
     return (
         <Modal closeOnOverlayClick={false} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
 
             <ModalContent>
                 <ModalHeader fontSize={16} color={projectId} mt={'13px'} ml={'20px'}>
-                    {(isEdit) ? 'Edit Project': 'Create Project'}
+                    {isEdit ? 'Edit Project' : 'Create Project'}
                 </ModalHeader>
                 <ModalCloseButton color={textColor} mr={'10px'} mt={'12px'} />
                 <Divider color={'default.dividerColor'} mt={'13px'} mb={'20px'} />
@@ -116,7 +118,7 @@ const CreateProjectModal = (props: any) => {
                                     <Flex>
                                         <Center>
                                             <Text color={projectId} fontSize={'16px'} fontWeight={400} ml={8}>
-                                                {(isEdit) ? data.id: 'Yet to be Assigned'}
+                                                {isEdit ? data.id : 'Yet to be Assigned'}
                                             </Text>
                                             <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
                                                 <CopyIcon color={'default.darkGrayCreate'} />
@@ -142,7 +144,7 @@ const CreateProjectModal = (props: any) => {
                         validateOnChange={true}
                         onSubmit={(values) => {
                             setLoading(true);
-                            if(isEdit) {
+                            if (isEdit) {
                                 client
                                     .mutate<ProjectEdit<ProjectEditDetail>>({
                                         mutation: editProject(values)
@@ -231,15 +233,7 @@ const CreateProjectModal = (props: any) => {
                                         <FormLabel htmlFor="description" color={textColorTitle} mb={6} mt={'16px'}>
                                             Description
                                         </FormLabel>
-                                        <Field
-                                            borderRadius={3}
-                                            border={'1px'}
-                                            borderColor={'light.lighterGrayishBlue'}
-                                            as={Input}
-                                            id="description"
-                                            name="description"
-                                            variant="outline"
-                                        />
+                                        <Field borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="description" name="description" variant="outline" />
                                         <FormErrorMessage>{errors.description}</FormErrorMessage>
                                         <Flex>
                                             <Center>
@@ -247,58 +241,40 @@ const CreateProjectModal = (props: any) => {
                                                     Tags:
                                                 </Text>
                                                 <Center>
-                                                    {
-                                                        addTagClicked &&
+                                                    {addTagClicked && (
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
-                                                            <Field
-                                                                borderRadius={3}
-                                                                border={'1px'}
-                                                                borderColor={'light.lighterGrayishBlue'}
-                                                                as={Input}
-                                                                id="tags"
-                                                                name="tags"
-                                                                variant="outline"
-                                                            />
+                                                            <Field borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="tags" name="tags" variant="outline" />
                                                             <FormErrorMessage>{errors.description}</FormErrorMessage>
                                                         </Box>
-
-                                                    }
-                                                    {
-                                                        !addTagClicked &&
+                                                    )}
+                                                    {!addTagClicked && (
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
                                                             <HStack spacing={4}>
-                                                                {
-                                                                    values && values.tags && values.tags.split(',').length > 0 &&
+                                                                {values &&
+                                                                    values.tags &&
+                                                                    values.tags.split(',').length > 0 &&
                                                                     values.tags.split(',').map((tag, tagIndex) => {
                                                                         return (
-                                                                            <Tag
-                                                                                size={'sm'}
-                                                                                key={tag}
-                                                                                borderRadius='none'
-                                                                                variant='solid'
-                                                                            >
+                                                                            <Tag size={'sm'} key={tag} borderRadius="none" variant="solid">
                                                                                 <TagLabel>{tag}</TagLabel>
                                                                                 <TagCloseButton onClick={() => removeTag(tag, tagIndex, values)} />
                                                                             </Tag>
-                                                                        )
-                                                                    })
-                                                                }
+                                                                        );
+                                                                    })}
                                                             </HStack>
                                                         </Box>
-                                                    }
+                                                    )}
                                                 </Center>
-                                                {
-                                                    !addTagClicked &&
+                                                {!addTagClicked && (
                                                     <Text onClick={() => addTagHandler('trigger', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
                                                         + Add Tag(s)
                                                     </Text>
-                                                }
-                                                {  addTagClicked &&
-                                                <Text onClick={() => addTagHandler('add', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
-                                                    Add Tag
-                                                </Text>
-                                                }
-
+                                                )}
+                                                {addTagClicked && (
+                                                    <Text onClick={() => addTagHandler('add', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
+                                                        Add Tag
+                                                    </Text>
+                                                )}
                                             </Center>
                                         </Flex>
 
@@ -362,7 +338,7 @@ const CreateProjectModal = (props: any) => {
                                                     type="submit"
                                                     colorScheme="blue"
                                                 >
-                                                    {(!isEdit) ? 'Create' : 'Edit'}
+                                                    {!isEdit ? 'Create' : 'Edit'}
                                                 </Button>
                                             ) : (
                                                 <Button
@@ -375,7 +351,7 @@ const CreateProjectModal = (props: any) => {
                                                     type="submit"
                                                     colorScheme="blue"
                                                 >
-                                                    {(!isEdit) ? 'Create' : 'Edit'}
+                                                    {!isEdit ? 'Create' : 'Edit'}
                                                 </Button>
                                             )}
                                         </ModalFooter>
