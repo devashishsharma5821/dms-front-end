@@ -7,7 +7,7 @@ import {
 import {  DownArrowShare, LinkChain } from '../../assets/icons';
 import { ShareCreate, ShareCreateDetail, ShareData } from '../../models/share';
 import useAppStore from '../../store';
-import { GetAllUsersDataAppStoreState } from '../../models/profile';
+import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../models/profile';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { ComputeDelete, DeleteComputeDetail } from '../../models/computeDetails';
@@ -16,6 +16,7 @@ import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions'
 import { useParams } from 'react-router-dom';
 import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
+import { getFormattedUserData } from '../../utils/common.utils';
 
 const Share = (props: any) => {
   
@@ -30,7 +31,7 @@ const Share = (props: any) => {
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [selectedUser, setSelectedUser] = React.useState("");
-    const [accessUserList, setAccessUserList] = React.useState([{}]);
+    const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const params = useParams();
@@ -43,17 +44,9 @@ const Share = (props: any) => {
            if(SingleProjectData.project_access === null) {
                setAccessUserList([]);
            } else {
-               const reformattedProjectAccessData = SingleProjectData.project_access.map((singleProjectAccess) => {
-                   const sharedUser = AllUsersData?.filter((singleUser) => {
-                      return singleUser.userId === singleProjectAccess.user_id
-                   });
-                   return {
-                       firstName: (sharedUser?.length > 0) ? sharedUser[0].firstName : '',
-                       lastName: (sharedUser?.length > 0) ? sharedUser[0].lastName: '',
-                       email: (sharedUser?.length > 0) ? sharedUser[0].email: ''
-                   }
-               });
-               setAccessUserList(reformattedProjectAccessData);
+               if(AllUsersData && SingleProjectData) {
+                   setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+               }
            }
         }
     }, [SingleProjectData]);
