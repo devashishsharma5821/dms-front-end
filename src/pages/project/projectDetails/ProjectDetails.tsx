@@ -14,15 +14,15 @@ import {
     ButtonGroup,
     EditablePreview,
     EditableInput,
-    Toast, Tag, TagLabel, TagCloseButton, HStack
+    Toast,
+    Tag,
+    TagLabel,
+    TagCloseButton,
+    HStack
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete } from '../../../models/project';
-import {
-    getAndUpdateAllProjectsData,
-    getAndUpdateSingleProjectData,
-    updateSingleProjectData
-} from '../../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingleProjectData } from '../../../zustandActions/projectActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
@@ -64,15 +64,17 @@ const ProjectDetails = (props: any) => {
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
+
             setInlineDescription((SingleProjectData.basic.description === null) ? "" : SingleProjectData.basic.description);
                 if(AllUsersData && SingleProjectData) {
                     setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
                 }
+
         }
     }, [SingleProjectData]);
     useEffect(() => {
         if (AllUsersData === null) {
-            const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
+            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
         }
     }, [AllUsersData]);
@@ -119,16 +121,15 @@ const ProjectDetails = (props: any) => {
     };
     const handleEditDescriptionChange = (editChangeValue: string) => {
         setInlineDescription(editChangeValue);
-
-    }
+    };
     const handleEditDescription = (nextDescription: string) => {
-        if(nextDescription !== SingleProjectData.basic.description) {
+        if (nextDescription !== SingleProjectData.basic.description) {
             const variables = {
-                id : SingleProjectData.basic.id,
+                id: SingleProjectData.basic.id,
                 name: SingleProjectData.basic.name,
                 project_variables: SingleProjectData.basic.project_variables,
                 description: nextDescription,
-                tags: (SingleProjectData.basic.tags === null) ? [] : SingleProjectData.basic.tags
+                tags: SingleProjectData.basic.tags === null ? [] : SingleProjectData.basic.tags
             };
             client
                 .mutate<ProjectDelete<DeleteProjectDetail>>({
@@ -157,8 +158,7 @@ const ProjectDetails = (props: any) => {
     };
     return (
         <>
-            {
-                AllUsersData && SingleProjectData &&
+            {AllUsersData && SingleProjectData && (
                 <Box marginLeft={36}>
                     <Box fontSize={16} fontWeight={700} ml={'44'} mt={'35'} color={'default.darkGrayCreate'}>
                         <Text>Projects / My Project</Text>
@@ -200,7 +200,14 @@ const ProjectDetails = (props: any) => {
                         <Box width={'883px'} height={'320px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'}>
                             <Center>
                                 <Flex ml={'24px'} width={'500px'} maxHeight={'320px'}>
-                                    <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)} color={'default.whiteText'} mt={'21px'} />
+                                    <Avatar
+                                        p={'5px'}
+                                        borderRadius="full"
+                                        boxSize="42px"
+                                        name={getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)}
+                                        color={'default.whiteText'}
+                                        mt={'21px'}
+                                    />
                                     <Center>
                                         <Box width={'450px'}>
                                             <Text ml={12} mt={'21px'} color={textColor2} fontWeight={400}>
@@ -253,33 +260,23 @@ const ProjectDetails = (props: any) => {
                                                 <Center>
                                                     <>
                                                         <HStack spacing={4}>
-                                                            {
-                                                                SingleProjectData && SingleProjectData.basic.tags !== null &&
+                                                            {SingleProjectData &&
+                                                                SingleProjectData.basic.tags !== null &&
                                                                 SingleProjectData.basic.tags.map((tag: string) => {
                                                                     return (
-                                                                        <Tag
-                                                                            size={'sm'}
-                                                                            key={tag}
-                                                                            borderRadius='none'
-                                                                            variant='solid'
-                                                                        >
+                                                                        <Tag size={'sm'} key={tag} borderRadius="none" variant="solid">
                                                                             <TagLabel>{tag}</TagLabel>
                                                                             <TagCloseButton />
                                                                         </Tag>
-                                                                    )
-                                                                })
-                                                            }
+                                                                    );
+                                                                })}
                                                         </HStack>
                                                         <HStack spacing={4}>
-                                                        {SingleProjectData && SingleProjectData.basic.tags === null &&
-                                                            <Tag
-                                                            size={'sm'}
-                                                            borderRadius='none'
-                                                            variant='solid'
-                                                            >
-                                                            <TagLabel>No Tags available</TagLabel>
-                                                            </Tag>
-                                                        }
+                                                            {SingleProjectData && SingleProjectData.basic.tags === null && (
+                                                                <Tag size={'sm'} borderRadius="none" variant="solid">
+                                                                    <TagLabel>No Tags available</TagLabel>
+                                                                </Tag>
+                                                            )}
                                                         </HStack>
                                                     </>
                                                 </Center>
@@ -335,6 +332,7 @@ const ProjectDetails = (props: any) => {
                                                 </Center>
                                             </Center>
                                         </Flex>
+
                                         {accessUserList &&
                                         accessUserList.map((icons: any, iconsIndex: number) => {
                                             return (
@@ -354,15 +352,21 @@ const ProjectDetails = (props: any) => {
                                                 </div>
                                             );
                                         })}
+
                                     </Box>
                                 </Flex>
                             </Center>
                         </Box>
                     </Box>
                 </Box>
-            }
+            )}
             {deleteConfirmationModal.isOpen && (
-                <DeleteConfirmationModal isOpen={deleteConfirmationModal.isOpen} onClose={deleteConfirmationModal.onClose} submitDeleteHandler={submitDeleteHandler} options={{name: SingleProjectData.basic.name, label: 'project', placeholder: 'My Project 00'}} />
+                <DeleteConfirmationModal
+                    isOpen={deleteConfirmationModal.isOpen}
+                    onClose={deleteConfirmationModal.onClose}
+                    submitDeleteHandler={submitDeleteHandler}
+                    options={{ name: SingleProjectData.basic.name, label: 'project', placeholder: 'My Project 00' }}
+                />
             )}
             {createProjectModal.isOpen && (
                 <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: true, data: SingleProjectData }} />

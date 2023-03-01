@@ -80,7 +80,8 @@ export const colors = {
         bgExclamationIcon: '#BFE1FF',
         tagBoxColor: '#F2F4F8',
         textDeployPiplineButton: '#AEB1B8',
-        accessByNumber: '#75858F'
+        accessByNumber: '#75858F',
+        bgDatasetLevels: '#929AA9'
     },
     light: {
         header: '#1A3F59',
