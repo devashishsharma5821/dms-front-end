@@ -32,7 +32,6 @@ import { Field, Formik } from 'formik';
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
-
     const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
@@ -74,17 +73,17 @@ const CreateDataset = (props: any) => {
                 <Divider color={'default.dividerColor'} mt={'13px'} mb={'19px'} />
                 <Center>
                     <Box>
-                        <Avatar borderRadius="full" boxSize="32px" name={'1'} bg={'#929AA9'} color={'default.whiteText'} mb={'8px'} />
+                        <Avatar borderRadius="full" boxSize="32px" name={'1'} bg={'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
                         <Text ml={'-8px'}>Details</Text>
                     </Box>
                     <Divider orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-12px'} />
                     <Box>
-                        <Avatar borderRadius="full" boxSize="32px" name={'2'} bg={'#929AA9'} color={'default.whiteText'} mb={'8px'} />
+                        <Avatar borderRadius="full" boxSize="32px" name={'2'} bg={'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
                         <Text ml={'-8px'}>Source</Text>
                     </Box>
                     <Divider orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-12px'} />
                     <Box>
-                        <Avatar borderRadius="full" boxSize="32px" name={'3'} bg={'#929AA9'} color={'default.whiteText'} mb={'8px'} />
+                        <Avatar borderRadius="full" boxSize="32px" name={'3'} bg={'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
                         <Text ml={'-8px'}> Preview</Text>
                     </Box>
                 </Center>
@@ -102,7 +101,7 @@ const CreateDataset = (props: any) => {
                                     mb={14}
                                     ml={14}
                                     border={'1px'}
-                                    borderColor={'#D8DCDE'}
+                                    borderColor={'light.lighterGrayishBlue'}
                                     as={Select}
                                     id="existingCompute"
                                     name="existingCompute"
@@ -131,7 +130,7 @@ const CreateDataset = (props: any) => {
                                 Create New Project
                             </Text>
 
-                            <Button width={'127px'} height={'36px'} mt={18} color={'#2180C2'} bg={'white'} border={'1px'} borderColor={'#2180C2'}>
+                            <Button width={'127px'} height={'36px'} mt={18} color={'default.toolbarButton'} bg={'white'} border={'1px'} borderColor={'default.toolbarButton'}>
                                 Create Compute
                             </Button>
                         </Box>
@@ -168,7 +167,7 @@ const CreateDataset = (props: any) => {
                                             width={486}
                                             borderRadius={3}
                                             border={'1px'}
-                                            borderColor={'#D8DCDE'}
+                                            borderColor={'light.lighterGrayishBlue'}
                                             as={Input}
                                             id="datasetName"
                                             name="datasetName"
@@ -186,7 +185,16 @@ const CreateDataset = (props: any) => {
                                         <FormLabel htmlFor="Description" fontWeight={600} mt={20} mb={6} color={datasetTitleColor}>
                                             Description
                                         </FormLabel>
-                                        <Field height={100} width={486} borderRadius={3} border={'1px'} borderColor={'#D8DCDE'} as={Input} id="DescriptionDatasetName" name="Description" />
+                                        <Field
+                                            height={100}
+                                            width={486}
+                                            borderRadius={3}
+                                            border={'1px'}
+                                            borderColor={'light.lighterGrayishBlue'}
+                                            as={Input}
+                                            id="DescriptionDatasetName"
+                                            name="Description"
+                                        />
                                     </FormControl>
                                 </VStack>
                             </Formik>
@@ -200,7 +208,7 @@ const CreateDataset = (props: any) => {
                                     <Box ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
                                         <Flex>
                                             <Center>
-                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
                                                     Demo
                                                 </Text>
                                                 <Box justifyContent={'flex-end'} ml={'14px'}>
@@ -210,7 +218,7 @@ const CreateDataset = (props: any) => {
                                         </Flex>
                                     </Box>
                                 </Center>
-                                <Text color={'#2180C2'} mt={'20'} ml={20}>
+                                <Text color={'default.toolbarButton'} mt={'20'} ml={20}>
                                     + Add Tag
                                 </Text>
                             </Center>
@@ -301,10 +309,10 @@ const CreateDataset = (props: any) => {
                         onClick={props.onClose}
                         colorScheme="gray"
                         bg={'white'}
-                        color={'#2180C2'}
+                        color={'default.toolbarButton'}
                         width={'81px'}
                         border={'1px'}
-                        borderColor={'#2180C2'}
+                        borderColor={'default.toolbarButton'}
                         height={'40px'}
                         borderRadius={4}
                     >
@@ -315,10 +323,10 @@ const CreateDataset = (props: any) => {
                         onClick={props.onClose}
                         colorScheme="gray"
                         bg={'white'}
-                        color={'#2180C2'}
+                        color={'default.toolbarButton'}
                         width={'81px'}
                         border={'1px'}
-                        borderColor={'#2180C2'}
+                        borderColor={'default.toolbarButton'}
                         height={'40px'}
                         borderRadius={4}
                         ml={'20px'}
