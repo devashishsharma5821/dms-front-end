@@ -26,7 +26,7 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingl
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
-import { getUserNameFromId, getTruncatedText } from '../../../utils/common.utils';
+import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
@@ -39,6 +39,7 @@ const ProjectDetails = (props: any) => {
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [deleteId, setDeleteId] = useState<string>('');
     const [inlineDescription, setInlineDescription] = useState<string>('');
+    const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const deleteConfirmationModal = useDisclosure();
     const navigate = useNavigate();
     const params = useParams();
@@ -59,35 +60,16 @@ const ProjectDetails = (props: any) => {
             </Flex>
         );
     }
-    const shareData1 = {
-        data: [
-            {
-                firstName: 'Shirin',
-                lastName: 'Bampoori',
-                email: 'shirin.bampoori@antuit.com'
-            },
-            {
-                firstName: 'Zubin',
-                lastName: 'Shah',
-                email: 'Zubin.Shah@antuit.com'
-            },
-            {
-                firstName: 'Arjun',
-                lastName: 'Guntuka',
-                email: 'Arjun.Guntuka@antuit.com'
-            },
-            {
-                firstName: 'Jalaj',
-                lastName: 'Goel',
-                email: 'Jalaj.Goel@antuit.com'
-            }
-        ]
-    };
     useEffect(() => {
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
-            setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
+
+            setInlineDescription((SingleProjectData.basic.description === null) ? "" : SingleProjectData.basic.description);
+                if(AllUsersData && SingleProjectData) {
+                    setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+                }
+
         }
     }, [SingleProjectData]);
     useEffect(() => {
@@ -350,25 +332,27 @@ const ProjectDetails = (props: any) => {
                                                 </Center>
                                             </Center>
                                         </Flex>
-                                        {shareData1 &&
-                                            shareData1.data.map((icons) => {
-                                                return (
-                                                    <>
-                                                        <Center>
-                                                            <Avatar ml={16} p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
-                                                            <Box mt={'17px'} width={'300px'}>
-                                                                <Text ml={12} color={accesstextColor}>
-                                                                    {icons?.firstName} {icons?.lastName}
-                                                                </Text>
-                                                                <Text ml={12} color={'default.veryLightGrayTextColor'}>
-                                                                    {icons.email}{' '}
-                                                                </Text>
-                                                            </Box>
-                                                        </Center>
-                                                        <Center mr={'36px'}></Center>
-                                                    </>
-                                                );
-                                            })}
+
+                                        {accessUserList &&
+                                        accessUserList.map((icons: any, iconsIndex: number) => {
+                                            return (
+                                                <div key={iconsIndex}>
+                                                    <Center>
+                                                        <Avatar ml={16} p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
+                                                        <Box mt={'17px'} width={'300px'}>
+                                                            <Text ml={12} color={accesstextColor}>
+                                                                {icons?.firstName} {icons?.lastName}
+                                                            </Text>
+                                                            <Text ml={12} color={'default.veryLightGrayTextColor'}>
+                                                                {icons.email}{' '}
+                                                            </Text>
+                                                        </Box>
+                                                    </Center>
+                                                    <Center mr={'36px'}></Center>
+                                                </div>
+                                            );
+                                        })}
+
                                     </Box>
                                 </Flex>
                             </Center>

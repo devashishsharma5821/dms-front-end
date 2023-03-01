@@ -93,21 +93,47 @@ const ProjectsViews = (props: any) => {
                                                                 Last Edited 10 min ago
                                                             </Text>
                                                         </Box>
-                                                    </Center>
-                                                </Flex>
-                                            </Box>
-                                            <Flex>
-                                                <Flex>
-                                                    <Center ml={20} mt={16}>
-                                                        <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                            <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                Tag Name 1
-                                                            </Text>
-                                                        </Box>
-                                                        <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                            <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                Tag Name 1
-                                                            </Text>
+
+                                                        <Flex>
+                                                            <Flex>
+                                                                <Center ml={20} mt={16}>
+                                                                    {project && project.tags !== null &&  project.tags.map((tag, tagIndex) => {
+                                                                        return (
+                                                                            <Box key={tagIndex} mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
+                                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                                    {tag}
+                                                                                </Text>
+                                                                            </Box>
+                                                                        )
+                                                                    })}
+                                                                    {project && project.tags === null &&
+                                                                    <Box mr={10} bg={'#F2F4F8'}
+                                                                         height={'24px'} borderRadius={3} width={'auto'}
+                                                                         pr={'5px'}>
+                                                                        <Text color={'#1A3F59'} fontSize={'14px'}
+                                                                              mt={'2px'} ml={6}>
+                                                                            No Tags Available
+                                                                        </Text>
+                                                                    </Box>
+                                                                    }
+                                                                </Center>
+                                                            </Flex>
+                                                        </Flex>
+                                                        <Box ml={'20px'} m={'18px'}>
+                                                            <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Shah zubin'} color={'default.whiteText'} />
+                                                            <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Goel jalaj'} color={'default.whiteText'} />
+                                                            <Avatar
+                                                                mr={'6'}
+                                                                p={'5px'}
+                                                                borderRadius="full"
+                                                                boxSize="32px"
+                                                                name={'+ 1'}
+                                                                color={'#111111'}
+                                                                bg={'white'}
+                                                                border={'1px'}
+                                                                borderColor={'#B3B3B3'}
+                                                            />
+
                                                         </Box>
                                                         <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
                                                             <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>

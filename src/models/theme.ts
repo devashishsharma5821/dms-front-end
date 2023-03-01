@@ -93,7 +93,9 @@ export const colors = {
         hoverSideBarMenu: '#0387B0',
         slightlyDesaturatedBlue: '#9792C8',
         veryDarkBlue: '#08192E',
-        grayishBlue: '#ECEAFD'
+        grayishBlue: '#ECEAFD',
+        badge: '#2E2E2E'
+
     },
     dark: {
         header: '#3D3D3F',
@@ -104,7 +106,8 @@ export const colors = {
         veryLightDarkGrayishBlue: '#434248',
         lightGrayishBlue: '#C9C5E9',
         veryDarkGray: '#171717',
-        bgDark: '#1a202c'
+        bgDark: '#1a202c',
+        badge: '#BFE1FF'
     },
     brand: {
         500: '#0387B0'
