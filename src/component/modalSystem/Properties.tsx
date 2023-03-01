@@ -52,25 +52,26 @@ const Properties = (props: any) => {
             </Flex>
         );
     }
-    const shareData1 = {
-        data: [
+    const shareData1 = [
             {
+                userId: "",
                 firstName: 'Shirin',
                 lastName: 'Bampoori',
                 email: 'shirin.bampoori@antuit.com'
             },
             {
+                userId: "",
                 firstName: 'Zubin',
                 lastName: 'Shah',
                 email: 'Zubin.Shah@antuit.com'
             },
             {
+                userId: "",
                 firstName: 'Arjun',
                 lastName: 'Guntuka',
                 email: 'Arjun.Guntuka@antuit.com'
             }
-        ]
-    } as ShareData;
+        ] as ShareData [];
 
     return (
         <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -199,7 +200,7 @@ const Properties = (props: any) => {
                                                     </Center>
                                                 </Center>
                                             </Flex>
-                                            {shareData1.data.map((icons) => {
+                                            {shareData1.map((icons) => {
                                                 return (
                                                     <>
                                                         <Center>

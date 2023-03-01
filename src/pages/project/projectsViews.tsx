@@ -80,21 +80,25 @@ const ProjectsViews = (props: any) => {
                                                         <Flex>
                                                             <Flex>
                                                                 <Center ml={20} mt={16}>
-                                                                    <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                                        <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                            Tag Name 1
+                                                                    {project && project.tags !== null &&  project.tags.map((tag, tagIndex) => {
+                                                                        return (
+                                                                            <Box key={tagIndex} mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
+                                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                                    {tag}
+                                                                                </Text>
+                                                                            </Box>
+                                                                        )
+                                                                    })}
+                                                                    {project && project.tags === null &&
+                                                                    <Box mr={10} bg={'#F2F4F8'}
+                                                                         height={'24px'} borderRadius={3} width={'auto'}
+                                                                         pr={'5px'}>
+                                                                        <Text color={'#1A3F59'} fontSize={'14px'}
+                                                                              mt={'2px'} ml={6}>
+                                                                            No Tags Available
                                                                         </Text>
                                                                     </Box>
-                                                                    <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                                        <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                            Tag Name 1
-                                                                        </Text>
-                                                                    </Box>
-                                                                    <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                                        <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                            +2 More
-                                                                        </Text>
-                                                                    </Box>
+                                                                    }
                                                                 </Center>
                                                             </Flex>
                                                         </Flex>
