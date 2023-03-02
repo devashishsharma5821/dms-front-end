@@ -36,6 +36,9 @@ const Share = (props: any) => {
     const params = useParams();
 
     useEffect(() => {
+        if(props.retainData.length > 0) {
+            setAccessUserList(props.retainData);
+        }
         if(props.isEdit) {
             setAccessUserList([]);
             if (SingleProjectData === null) {
@@ -64,13 +67,13 @@ const Share = (props: any) => {
     };
     const handleShare = () => {
         if(props.isEdit) {
-            const hardCodeMutation = {
+            const mutationVariable = {
                 userId: selectedUser,
                 projectId: params.projectId
             };
             client
                 .mutate<ShareCreate<ShareCreateDetail>>({
-                    mutation: createAccess(hardCodeMutation)
+                    mutation: createAccess(mutationVariable)
                 })
                 .then(() => {
                     Toast({

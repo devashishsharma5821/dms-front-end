@@ -351,7 +351,7 @@ const CreateProjectModal = (props: any) => {
                                                     + Add Member(s)
                                                 </Text>
                                                 {addShareMemberModal.isOpen &&
-                                                <Share isOpen={addShareMemberModal.isOpen} onClose={addShareMemberModal.onClose} isEdit={isEdit} onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateProjectMode(userList)}></Share>
+                                                <Share isOpen={addShareMemberModal.isOpen} retainData={accessUserListCreateMode} onClose={addShareMemberModal.onClose} isEdit={isEdit} onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateProjectMode(userList)}></Share>
                                                 }
 
                                             </Center>
@@ -368,7 +368,7 @@ const CreateProjectModal = (props: any) => {
                                                             });
                                                             const avatarName = (sharedUser.length > 0) ? `${sharedUser[0].firstName} ${sharedUser[0].lastName}` : '';
                                                           return(
-                                                              <Avatar key={userAccessIndex} mr={'5px'} p={'5px'} borderRadius="full" boxSize="42px" name={`${sharedUser[0].firstName} ${sharedUser[0].lastName}`} color={'default.whiteText'} />
+                                                              <Avatar key={userAccessIndex} mr={'5px'} p={'5px'} borderRadius="full" boxSize="42px" name={avatarName} color={'default.whiteText'} />
                                                           )
                                                         })
                                                     }

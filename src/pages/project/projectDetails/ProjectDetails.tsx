@@ -28,7 +28,7 @@ import CreateProjectModal from '../../../component/modalSystem/CreateProjectModa
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
-import { GetAllUsersDataAppStoreState } from '../../../models/profile';
+import { GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import client from '../../../apollo-client';
 import { deleteProject, editProject } from '../../../query';
@@ -335,7 +335,7 @@ const ProjectDetails = (props: any) => {
                                         </Flex>
 
                                         {accessUserList &&
-                                        accessUserList.map((icons: any, iconsIndex: number) => {
+                                        accessUserList.map((icons: User, iconsIndex: number) => {
                                             return (
                                                 <div key={iconsIndex}>
                                                     <Center>
