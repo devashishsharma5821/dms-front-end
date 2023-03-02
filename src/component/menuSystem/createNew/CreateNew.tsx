@@ -74,9 +74,9 @@ const CreateNew = (props: any) => {
             </Flex>
             <Divider mt={'16px'} mb={'10px'} orientation="horizontal" bg={'light.lighterGrayishBlue'} />
             {subMenuForCreate &&
-                subMenuForCreate.map((row) => {
+                subMenuForCreate.map((row, rowIndex) => {
                     return (
-                        <Flex>
+                        <Flex key={rowIndex}>
                             {row.sections &&
                                 row.sections.map((section) => {
                                     return (

@@ -154,7 +154,7 @@
         "disable": true,
         "conditionalRender": true,
         "isDefaultValue": true,
-        "defaultValue": 2,
+        "defaultValue": 60,
         "errormessage": "minutes of inactivity",
         "className": "minutesOfInactivity",
         "min": "0",
