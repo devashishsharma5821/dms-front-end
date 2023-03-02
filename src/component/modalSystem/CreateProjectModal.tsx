@@ -364,12 +364,9 @@ const CreateProjectModal = (props: any) => {
                                                         isEditData && isEditData.project_access &&
                                                         isEditData.project_access.map((userAccess: any, userAccessIndex: any) => {
                                                             const sharedUser = isAllUsersData?.filter((singleUser: any) => {
-                                                                console.log('1', singleUser, userAccess)
                                                                 return singleUser.userId === userAccess.user_id;
                                                             });
-                                                            console.log("avatar", sharedUser)
                                                             const avatarName = (sharedUser.length > 0) ? `${sharedUser[0].firstName} ${sharedUser[0].lastName}` : '';
-                                                            console.log("avatar", avatarName)
                                                           return(
                                                               <Avatar key={userAccessIndex} mr={'5px'} p={'5px'} borderRadius="full" boxSize="42px" name={`${sharedUser[0].firstName} ${sharedUser[0].lastName}`} color={'default.whiteText'} />
                                                           )
