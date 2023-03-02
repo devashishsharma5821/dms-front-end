@@ -82,7 +82,9 @@ const Compute = () => {
     const [rowData, setRowData] = useState<DmsComputeData[]>([]);
 
     // TODO Write Default Columns Definitions which is common for all
-
+    const defaultColDef = {
+        resizable: true,
+    };
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
         { headerName: 'Compute Name', field: 'name' },
@@ -92,9 +94,9 @@ const Compute = () => {
         { headerName: 'Workers', field: 'resources.num_workers' },
         { headerName: 'Total Cores', field: 'totalCores' },
         { headerName: 'Total Memory', field: 'totalMemory' },
-        { headerName: 'Status', field: 'status' },
-        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
-        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
+        { headerName: 'Status', field: 'status', pinned: 'right' },
+        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow, pinned: 'right' },
+        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow, pinned: 'right' }
     ]);
 
     useEffect(() => {
@@ -125,6 +127,10 @@ const Compute = () => {
             });
         }
     }, [DmsComputeData]);
+
+    const onFirstDataRendered = () => {
+        gridRef?.current!?.api?.sizeColumnsToFit();
+    };
 
     const alertConfirmForDefaultFlag = {
         title: 'Change Default',
@@ -519,12 +525,13 @@ const Compute = () => {
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
                                 <AgGridReact<DmsComputeData>
                                     ref={gridRef}
+                                    onFirstDataRendered={onFirstDataRendered}
                                     rowData={rowData}
                                     pagination={true}
                                     paginationPageSize={10}
+                                    defaultColDef={defaultColDef}
                                     columnDefs={columnDefs}
                                     onCellClicked={onCellClicked}
-                                    onRowClicked={(e) => console.log('row clicked', e.rowIndex)}
                                     rowSelection={'single'}
                                     animateRows={true}
                                 ></AgGridReact>

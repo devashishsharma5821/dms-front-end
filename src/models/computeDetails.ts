@@ -122,6 +122,8 @@ export interface DmsComputeData {
             worker_memory_mb: number;
             driver_num_cores: number;
             worker_num_cores: number;
+            total_num_cores: number;
+            total_memory_mb: number;
         };
         spot_instances: boolean;
     };

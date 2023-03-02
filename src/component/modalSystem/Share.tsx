@@ -44,7 +44,6 @@ const Share = (props: any) => {
             if (SingleProjectData === null) {
                 getAndUpdateSingleProjectData(params.projectId as string);
             } else {
-                console.log('Single Project Details, inside Share Modal', SingleProjectData);
                 if(SingleProjectData.project_access === null) {
                     setAccessUserList([]);
                 } else {
@@ -99,7 +98,6 @@ const Share = (props: any) => {
             const sharedUser = AllUsersData?.filter((singleUser) => {
                 return singleUser.userId === selectedUser;
             });
-            console.log("Shared User", sharedUser);
             let newAccessList = [...accessUserList];
             newAccessList.push(sharedUser[0]);
             setAccessUserList(newAccessList);
@@ -107,7 +105,6 @@ const Share = (props: any) => {
     };
     const closeShareModal = (ev: any) => {
         ev.preventDefault();
-        console.log('Hello')
         if(props.isEdit) {
             props.onClose();
         } else {
