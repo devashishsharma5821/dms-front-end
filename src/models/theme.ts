@@ -81,7 +81,8 @@ export const colors = {
         tagBoxColor: '#F2F4F8',
         textDeployPiplineButton: '#AEB1B8',
         accessByNumber: '#75858F',
-        bgDatasetLevels: '#929AA9'
+        bgDatasetLevels: '#929AA9',
+        titleForDropFile: ' #1D1E23'
     },
     light: {
         header: '#1A3F59',
@@ -95,7 +96,6 @@ export const colors = {
         veryDarkBlue: '#08192E',
         grayishBlue: '#ECEAFD',
         badge: '#2E2E2E'
-
     },
     dark: {
         header: '#3D3D3F',
