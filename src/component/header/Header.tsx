@@ -41,7 +41,10 @@ const Header = (props: any) => {
                     <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
                         Share
                     </Button>
-                    <Share isOpen={isOpen} onClose={onClose}></Share>
+                    {isOpen &&
+                     <Share isOpen={isOpen} onClose={onClose}></Share>
+                    }
+
                 </Box>
                 <Box>
                     {' '}

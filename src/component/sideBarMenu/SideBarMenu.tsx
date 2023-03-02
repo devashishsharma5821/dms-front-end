@@ -290,7 +290,7 @@ const SideBarMenu = () => {
                         />
                     )}
                     {createProjectModal.isOpen && (
-                        <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {} }} />
+                        <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
                     )}
                 </div>
                 {activateSubMenu && secondLevelMenu()}
