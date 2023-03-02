@@ -15,6 +15,7 @@ import {
 import { TransformerInfo } from './transformer';
 import { GetAllProjectsDetail, GetSingleProjectDetail } from './project';
 import { AllUsers } from './profile';
+import { AnyRecord } from 'dns';
 
 export interface AppState {
     i18n: any;
@@ -41,6 +42,7 @@ export interface AppState {
     runStageData: RunStageDataEvent | null;
     computeState: string;
     dbSettingsData: any;
+    SpinnerInfo: any;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -67,3 +69,4 @@ export type getAndUpdateAllProjectsData = () => void;
 export type getAndUpdateSingleProjectData = (id: string) => void;
 export type submitMessage = (content: any) => void;
 export type dmsRunCompute = (id: string) => void;
+export type updateSpinnerInfo = (SpinnerInfo: any) => void;

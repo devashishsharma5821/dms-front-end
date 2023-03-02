@@ -1,13 +1,13 @@
 import { AllUsers } from '../models/profile';
 import { GetSingleProjectDetail } from '../models/project';
 
-export const getUserNameFromId = (userData:AllUsers[], userId: string) => {
+export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
     const currentUser = userData?.filter((user: AllUsers) => {
         return user.userId === userId;
     });
     const fullName = `${currentUser[0].firstName} ${currentUser[0].lastName}`;
     return fullName;
-}
+};
 
 export const getTruncatedText = (name: string) => {
     const maxTextCharacters = 20;

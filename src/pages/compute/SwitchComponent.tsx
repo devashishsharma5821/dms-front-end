@@ -2,6 +2,7 @@ import { Switch } from '@chakra-ui/react';
 
 export const SwitchComponent = (props: any) => {
     const onChangeSwitch = (event: any, params: any) => {
+        props.gridRef.current!.api.recomputeAggregates();
         props.defaultRowOnChange(event, params);
     };
     if (props.params.data.is_default) {

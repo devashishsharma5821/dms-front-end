@@ -15,9 +15,13 @@ function GetFormElements(props: GetFormElementsPropType) {
             child: elementSchema.child,
             uiSchema: elementSchema.uiSchema,
             uiSchemaOptions: elementSchema.uiSchemaOptions,
-            uniqueKey: props.uniqueKey
+            uniqueKey: props.uniqueKey,
+            defaultValue: props.defaultValue
         };
 
+        if (elementSchema.type === 'heading') {
+            return <p>{elementSchema.value}</p>;
+        }
         if (elementSchema.type === 'text' || elementSchema.type === 'email' || elementSchema.type === 'number') {
             return <TextField {...fieldProps} />;
         }

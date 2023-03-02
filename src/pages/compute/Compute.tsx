@@ -1,5 +1,23 @@
 import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
-import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, useToast, Spinner } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Center,
+    Divider,
+    Flex,
+    Stack,
+    Text,
+    useColorModeValue,
+    useDisclosure,
+    Spinner,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverCloseButton,
+    PopoverHeader,
+    PopoverBody
+} from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
@@ -9,15 +27,13 @@ import { v4 } from 'uuid';
 import { PlayIcon, ReStartIcon, EditIcon, DeleteIcon, StopCompute } from '../../assets/icons';
 
 import client from '../../apollo-client';
-import { dmsDeleteCompute, dmsEditCompute, dmsRunCompute, dmsStopComputeRun, getComputeListData } from '../../query';
+import { dmsDeleteCompute, dmsEditCompute, dmsStopComputeRun, getComputeListData } from '../../query';
 import {
     ComputeDelete,
     ComputeDetailListResponse,
-    ComputeRun,
     ComputeStop,
     DeleteComputeDetail,
     EditCompute,
-    RunComputeDetail,
     StopComputeDetail,
     ComputeAppStoreState,
     DmsComputeData,
@@ -34,18 +50,20 @@ import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
 
 import { BusHelper } from '../../helpers/BusHelper';
 import './compute.scss';
-import { updateDmsComputeData, getAndUpdateDmsComputeData, getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
+import { updateDmsComputeData, getAndUpdateDbSettingsData, onPlayClickHandler } from '../../zustandActions/computeActions';
 import { submitMessage } from '../../zustandActions/socketActions';
 import { Action } from '@antuit/web-sockets-gateway-client';
 import { newComputeData } from './generateNewComputeData';
 import { disperseMessage } from '../../models/messages';
 import { useNavigate } from 'react-router-dom';
-import { useLoading } from '../../context/loadingContext';
+import { createStandaloneToast } from '@chakra-ui/react';
+import { DeleteConfirmationModal } from '../../component/modalSystem/deleteConfirmationModal';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+const { toast } = createStandaloneToast();
 
 const Compute = () => {
-    const [DmsComputeData, UserConfig, dbSettingsData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData]);
+    const [DmsComputeData, UserConfig, dbSettingsData, SpinnerInfo] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData, state.SpinnerInfo]);
     const opid = v4();
-    const { loading, setLoading } = useLoading();
     const textColor = useColorModeValue('light.header', 'dark.white');
     const textColorIcon = useColorModeValue('#666C80', 'white');
     const createModal = useDisclosure();
@@ -58,10 +76,26 @@ const Compute = () => {
     const [isEdit, setIsEdit] = useState<boolean | undefined>();
     const gridRef = useRef<AgGridReact<DmsComputeData>>(null);
     const navigate = useNavigate();
-    const deleteCompute = useDisclosure();
+    const deleteComputeModal = useDisclosure();
     const alertConfirm = useDisclosure();
-    const toast = useToast();
     const context = useContext(ComputeContext);
+    const [rowData, setRowData] = useState<DmsComputeData[]>([]);
+
+    // TODO Write Default Columns Definitions which is common for all
+
+    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+        { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
+        { headerName: 'Compute Name', field: 'name' },
+        { headerName: 'Created On', field: 'created_at' },
+        { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },
+        { headerName: 'Driver Type', field: 'resources.node_type.driver_type_id' },
+        { headerName: 'Workers', field: 'resources.num_workers' },
+        { headerName: 'Total Cores', field: 'totalCores' },
+        { headerName: 'Total Memory', field: 'totalMemory' },
+        { headerName: 'Status', field: 'status' },
+        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
+        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
+    ]);
 
     useEffect(() => {
         if (DmsComputeData === null) {
@@ -98,12 +132,7 @@ const Compute = () => {
         cancelButtonTitle: 'Cancel',
         confirmButtonTitle: 'Confirm'
     };
-    const alertConfirmForDelete = {
-        title: 'Delete Compute',
-        description: 'Are you sure you want to delete the Compute?',
-        cancelButtonTitle: 'Cancel',
-        confirmButtonTitle: 'Confirm'
-    };
+
     const alertConfirmForStop = {
         title: 'Stop Compute',
         description: 'Are you sure you want to stop the Compute?',
@@ -156,60 +185,9 @@ const Compute = () => {
     //     }
     // };
 
-    const select = (state: { lastAliveMessage: string }) => {
-        return state.lastAliveMessage;
-    };
-
-    const onPlayClickHandler: agGridClickHandler = (data) => {
-        setLoading(true);
-        client
-            .mutate<ComputeRun<RunComputeDetail>>({
-                mutation: dmsRunCompute(data?.id)
-            })
-            .then(() => {
-                setLoading(false);
-                getAndUpdateDmsComputeData();
-                toast({
-                    title: `Compute is starting`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-                // if (data?.id) {
-                //     const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
-                //         experimentId: 1,
-                //         opId: opid,
-                //         userId: data?.id,
-                //         //TODO Below are added just for fixing errors
-                //         project_id: 12,
-                //         get_datatables: undefined,
-                //         az_blob_get_containers: undefined,
-                //         az_blob_browse_container: undefined
-                //     });
-                //     submitMessage([
-                //         { content: { action: Action.Subscribe, subject: `dms_pid.out.${data?.id}` } },
-                //         {
-                //             content: aliveMessage
-                //         }
-                //     ]);
-                //     // submitMessage();
-                // }
-                // let unsubscribe = useAppStore.subscribe(onComputeStarted);
-                // })
-                // .catch((err: any) => console.error(err));
-            })
-            .catch((err: any) => {
-                setLoading(false);
-                toast({
-                    title: `${err}`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
-            });
-    };
+    // const select = (state: { lastAliveMessage: string }) => {
+    //     return state.lastAliveMessage;
+    // };
 
     const confirmAlertActionForStop = () => {
         client
@@ -226,7 +204,15 @@ const Compute = () => {
                     position: 'top-right'
                 });
                 setTimeout(() => {
-                    getAndUpdateDmsComputeData();
+                    const newData = DmsComputeData.map((computeData) => {
+                        if (computeData.id === globalComputeId) {
+                            computeData.status = 'STOPPED';
+                            return computeData;
+                        } else {
+                            return computeData;
+                        }
+                    });
+                    useAppStore.setState(() => ({ DmsComputeData: newData }));
                     if (UserConfig && globalComputeId) {
                         const shutDownRequest = BusHelper.GetShutdownRequestMessage({
                             experimentId: parseInt(globalComputeId),
@@ -254,7 +240,7 @@ const Compute = () => {
     const onDeleteClickHandler: agGridClickHandler = (data) => {
         if (!data.is_default) {
             setGlobalComputeId(data?.id);
-            deleteCompute.onOpen();
+            deleteComputeModal.onOpen();
         } else {
             stopDeletingSettingDefault.onOpen();
         }
@@ -283,7 +269,8 @@ const Compute = () => {
             min_workers: data.resources?.autoscale?.min_workers,
             max_workers: data.resources?.autoscale?.max_workers,
             enable_autoscaling: data.resources.autoscale ? true : false,
-            terminate_after: data?.max_inactivity_min ? true : false
+            terminate_after: data?.max_inactivity_min ? true : false,
+            computeHeadingId: data?.id
         });
         setIsEdit(true);
         if (!dbSettingsData.length) {
@@ -294,11 +281,11 @@ const Compute = () => {
         }
     };
 
-    const actionsRow = (params: any) => {
+    function actionsRow(params: any) {
         return (
             <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
                 {params?.data?.status === 'STOPPED' ? (
-                    <div className="icons" onClick={() => onPlayClickHandler(params.data)}>
+                    <div className="icons" onClick={() => onPlayClickHandler(params.data.id)}>
                         <PlayIcon />
                     </div>
                 ) : (
@@ -306,18 +293,18 @@ const Compute = () => {
                         <StopCompute />
                     </div>
                 )}
-                <div className="icons" onClick={() => onRefreshClickHandler(params.data)}>
-                    <ReStartIcon />
-                </div>
                 <div className="icons" onClick={() => onEditClickHandler(params.data)}>
                     <EditIcon />
                 </div>
                 <div className="icons" onClick={() => onDeleteClickHandler(params.data)} style={{ cursor: 'pointer' }}>
                     <DeleteIcon color={textColorIcon} height={'18px'} width={'16px'} />
                 </div>
+                <div className="icons" onClick={() => onRefreshClickHandler(params.data)}>
+                    <ReStartIcon />
+                </div>
             </Flex>
         );
-    };
+    }
 
     const defaultRowOnChange = (data: any) => {
         if (!data.is_default) {
@@ -328,7 +315,7 @@ const Compute = () => {
         }
     };
 
-    const confirmAlertActionForDelete = () => {
+    const submitDeleteHandler = () => {
         client
             .mutate<ComputeDelete<DeleteComputeDetail>>({
                 mutation: dmsDeleteCompute(globalComputeId)
@@ -341,20 +328,20 @@ const Compute = () => {
                     duration: 5000,
                     position: 'top-right'
                 });
-                getAndUpdateDmsComputeData();
+                const newData = DmsComputeData.filter((computeData: any) => computeData.id !== globalComputeId);
+                useAppStore.setState(() => ({ DmsComputeData: newData }));
+                deleteComputeModal.onClose();
                 setGlobalComputeId(null);
-                deleteCompute.onClose();
             })
-            .catch(() => {
+            .catch((err: any) => {
                 toast({
-                    title: `A running compute can't be deleted`,
+                    title: err.message,
                     status: 'error',
                     isClosable: true,
                     duration: 5000,
                     position: 'top-right'
                 });
-                setGlobalComputeId(null);
-                deleteCompute.onClose();
+                deleteComputeModal.onClose();
             });
     };
 
@@ -369,6 +356,13 @@ const Compute = () => {
         messageQue.push({ content: aliveMessage });
         submitMessage(messageQue);
         setGlobalComputeId(null);
+        toast({
+            title: `Compute refreshed successfully`,
+            status: 'success',
+            isClosable: true,
+            duration: 5000,
+            position: 'top-right'
+        });
         refreshCompute.onClose();
     };
 
@@ -381,10 +375,6 @@ const Compute = () => {
     };
 
     const confirmAlertAction = () => {
-        // dmsEditCompute
-        // Api Call here, same as edit API, but make the default true or false based on trigger
-        // Remove the hardcoding
-
         client
             .mutate<EditCompute<any>>({
                 mutation: dmsEditCompute(globalComputeId, true)
@@ -397,6 +387,7 @@ const Compute = () => {
                         computeData.is_default = true;
                         return computeData;
                     }
+
                     if (computeData.is_default) {
                         computeData.is_default = false;
                         return computeData;
@@ -426,40 +417,25 @@ const Compute = () => {
                     position: 'top-right'
                 });
                 setGlobalComputeId(null);
-                deleteCompute.onClose();
+                deleteComputeModal.onClose();
             });
     };
 
-    const defaultRow = (params: any) => {
-        return <SwitchComponent params={params} defaultRowOnChange={() => defaultRowOnChange(params.data)} />;
-    };
+    function defaultRow(params: any) {
+        return <SwitchComponent params={params} gridRef={gridRef} defaultRowOnChange={() => defaultRowOnChange(params.data)} />;
+    }
+
     const navigateToComputeDetails = (id: string) => {
         navigate('/computedetails/' + id);
     };
 
-    const computeIdHandler = (params: any) => {
+    function computeIdHandler(params: any) {
         return (
             <div className="computeIdCell" onClick={() => navigateToComputeDetails(params.data.id)}>
                 {params.data.id}
             </div>
         );
-    };
-
-    const [rowData, setRowData] = useState<DmsComputeData[]>([]);
-    // TODO Write Default Columns Definitions which is common for all
-    const [columnDefs] = useState<ColDef[]>([
-        { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
-        { headerName: 'Compute Name', field: 'name' },
-        { headerName: 'Created On', field: 'created_at' },
-        { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },
-        { headerName: 'Driver Type', field: 'resources.node_type.driver_type_id' },
-        { headerName: 'Workers', field: 'resources.num_workers' },
-        { headerName: 'Total Cores', field: 'totalCores' },
-        { headerName: 'Total Memory', field: 'totalMemory' },
-        { headerName: 'Status', field: 'status' },
-        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
-        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
-    ]);
+    }
 
     const onCellClicked = (params: any) => {
         actionsRow(params.data);
@@ -468,19 +444,20 @@ const Compute = () => {
     const triggerCreateModal = () => {
         context.updateFormData({
             id: '',
-            max_inactivity_min: null,
-            compute_name: '',
+            max_inactivity_min: 8,
+            compute_name: 'My Compute',
             autoscale: false,
             workers: null,
             spot_instances: false,
-            worker_type_id: '',
-            min_workers: null,
-            max_workers: null,
+            worker_type_id: 'Standard_DS3_v2',
+            min_workers: 2,
+            max_workers: 2,
             enable_autoscaling: false,
-            terminate_after: false
+            terminate_after: true
         });
         setIsEdit(false);
         if (!dbSettingsData.length) {
+            updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
             const check = getAndUpdateDbSettingsData();
             check && createModal.onOpen();
         } else {
@@ -488,12 +465,15 @@ const Compute = () => {
         }
     };
 
-    console.log('loading', loading);
-
     const onSearchChange = (searchValue: string) => {
         gridRef.current!.api.setQuickFilter(searchValue);
         setRowCount(gridRef.current!.api.getModel().getRowCount());
     };
+
+    const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData.id === globalComputeId);
+    if (!computeData) {
+        return <div>loading...</div>;
+    }
 
     return (
         <>
@@ -533,10 +513,10 @@ const Compute = () => {
                                 </Box>
                             </Center>
                         </Center>
+                        {SpinnerInfo.loading && SpinnerInfo.to && <Spinner className="spinner" size="xl" thickness="4px" />}
 
                         <Box mr={'17'} mb={'17'}>
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
-                                {loading && <Spinner ml={14} />}
                                 <AgGridReact<DmsComputeData>
                                     ref={gridRef}
                                     rowData={rowData}
@@ -563,17 +543,15 @@ const Compute = () => {
                             confirm={confirmAlertAction}
                         />
                     )}
-                    {deleteCompute.isOpen && (
-                        <AlertConfirmComponent
-                            isOpen={deleteCompute.isOpen}
-                            onClose={() => {
-                                setGlobalComputeId(null);
-                                deleteCompute.onClose();
-                            }}
-                            options={alertConfirmForDelete}
-                            confirm={confirmAlertActionForDelete}
+                    {deleteComputeModal.isOpen && (
+                        <DeleteConfirmationModal
+                            isOpen={deleteComputeModal.isOpen}
+                            onClose={deleteComputeModal.onClose}
+                            submitDeleteHandler={submitDeleteHandler}
+                            options={{ name: computeData[0]?.name, label: 'compute', placeholder: 'My Compute 00' }}
                         />
                     )}
+
                     {stopComputeRunning.isOpen && (
                         <AlertConfirmComponent
                             isOpen={stopComputeRunning.isOpen}

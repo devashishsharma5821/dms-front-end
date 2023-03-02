@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData } from '../../query';
 import { startCase } from 'lodash';
-import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from '@chakra-ui/react';
+import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Spinner } from '@chakra-ui/react';
 import { useApolloClient } from '@apollo/client';
 import { ComputeDetailListResponse, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { GET_DATABRICKS_CREDS } from '../../query/index';
@@ -41,7 +41,12 @@ const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
     let rappid: DmsCanvasService;
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState] = useAppStore((state: ExperimentAppStoreState) => [state.DmsComputeData, state.UserConfig, state.connectionState]);
+    const [DmsComputeData, UserConfig, connectionState, SpinnerInfo] = useAppStore((state: ExperimentAppStoreState) => [
+        state.DmsComputeData,
+        state.UserConfig,
+        state.connectionState,
+        state.SpinnerInfo
+    ]);
     const [TransformersData] = useAppStore((state: TransformersAppStoreState) => [state.TransformersData]);
     const opid = v4();
     const computeRunningModal = useDisclosure();
@@ -482,7 +487,7 @@ const ExperimentsPage = () => {
         }
         setTransformersGroup(transformersGroup);
         setTransformedNewDataForStencil(transformedNewDataForStencil);
-    }
+    };
     useEffect(() => {
         if (TransformersData === null) {
             getAndUpdateTransformersData();
@@ -724,6 +729,7 @@ const ExperimentsPage = () => {
                 <Box width={'100%'} height={'56px'} bg={themebg}>
                     <Toolbar computeData={newComputedata} is_default={dmsComputeRunningStatusIsDefaultOne} />
                 </Box>
+
                 <Flex>
                     <Box w="var(--chakra-space-60)" h="calc(90vh)" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
                         <Box textAlign="right" ml="26">
@@ -748,6 +754,7 @@ const ExperimentsPage = () => {
                                 Transformers
                             </Box>
                         </Box>
+
                         <Box>
                             <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
                                 <DrawerOverlay bg="transparent" />
@@ -794,6 +801,8 @@ const ExperimentsPage = () => {
                         </div>
                     </Box>
                     <Box>
+                        {SpinnerInfo.loading && SpinnerInfo.to && <Spinner className="spinner" size="xl" thickness="4px" />}
+
                         {/*<a>{translationToUse[config['title']]}</a>*/}
                         {/*<br></br>*/}
                         {/*{message}*/}
