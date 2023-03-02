@@ -25,7 +25,9 @@ const useAppStore = create<AppState>((set) => ({
     connectionState: { connected: false, subscribed: false },
     message: [],
     computeState: '',
-    dbSettingsData: []
+    dbSettingsData: [],
+    toastMessage: {},
+    SpinnerInfo: { loading: false, to: 'none' }
 }));
 
 export default useAppStore;

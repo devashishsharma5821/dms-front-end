@@ -10,7 +10,7 @@ import client from './apollo-client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { dmsTheme } from './styles/DMSThemeProvider';
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react';
 /* MSAL should be instantiated outside of the component tree to prevent it from being re-instantiated on re-renders. */
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -21,7 +21,7 @@ root.render(
             <MsalProvider instance={msalInstance}>
                 <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>
                     <ChakraProvider theme={dmsTheme}>
-                    <App />
+                        <App />
                     </ChakraProvider>
                 </MsalAuthenticationTemplate>
             </MsalProvider>

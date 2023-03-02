@@ -9,6 +9,10 @@ import {
     dmsRunCompute as dmsRunComputesType
 } from '../models/zustandStore';
 
+import { createStandaloneToast } from '@chakra-ui/react';
+import { updateSpinnerInfo } from './commonActions';
+const { toast } = createStandaloneToast();
+
 export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async () => {
     const { GET_COMPUTELIST } = getComputeListData();
     const response = await client.query<ComputeDetailListResponse<Array<ComputeDetail>>>({
@@ -17,59 +21,65 @@ export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async
     useAppStore.setState(() => ({ DmsComputeData: response.data.dmsComputes }));
 };
 
-export const onPlayClickHandler: agGridClickHandler = async (id, DmsComputeData) => {
-    console.log('onPlayClickHandler ===>', id, DmsComputeData);
-    const response = await client.mutate<ComputeRun<RunComputeDetail>>({
-        mutation: dmsRunCompute(id)
-    });
-
-    const newData: any = DmsComputeData.map((computeData: any) => {
-        if (id === computeData.id) {
-            computeData.status = 'STARTING';
-            return computeData;
-        }
-        if (!(id === computeData.id)) {
-            return computeData;
-        }
-    });
-    useAppStore.setState(() => ({ DmsComputeData: newData }));
+export const onPlayClickHandler: agGridClickHandler = async (id) => {
+    let runComputeId: any;
+    if (typeof id === 'object') {
+        runComputeId = id.id;
+    } else {
+        runComputeId = id;
+    }
+    try {
+        const response = await client.mutate<ComputeRun<RunComputeDetail>>({
+            mutation: dmsRunCompute(runComputeId)
+        });
+        toast({
+            title: 'Compute is starting',
+            status: 'success',
+            isClosable: true,
+            duration: 5000,
+            position: 'top-right'
+        });
+    } catch (error: any) {
+        toast({
+            title: error.message,
+            status: 'error',
+            isClosable: true,
+            duration: 5000,
+            position: 'top-right'
+        });
+    }
+    useAppStore.setState((state) => ({
+        DmsComputeData: state.DmsComputeData.map((computeData: any) => {
+            if (runComputeId === computeData.id) {
+                computeData.status = 'STARTING';
+                return computeData;
+            }
+            if (!(runComputeId === computeData.id)) {
+                return computeData;
+            }
+        })
+    }));
 };
 
-// client
-//     .mutate<ComputeRun<RunComputeDetail>>({
-//         mutation: dmsRunCompute(id)
-//     })
-//     .then(() => {
-//         // TODO MANULLY UPDATE
-//         getAndUpdateDmsComputeData();
-
-//         // TODO : Below toast should be displayed
-
-//         // toast({
-//         //     title: `Compute is starting`,
-//         //     status: 'success',
-//         //     isClosable: true,
-//         //     duration: 5000,
-//         //     position: 'top-right'
-//         // });
-//     })
-//     .catch((err: any) => {
-//         console.log('error ===>', err);
-//         // toast({
-//         //     title: `${err}`,
-//         //     status: 'success',
-//         //     isClosable: true,
-//         //     duration: 5000,
-//         //     position: 'top-right'
-//         // });
-//     });
-
 export const getAndUpdateDbSettingsData: any = async () => {
-    const response = await client.query<GetDbSettingsType<DbSettingsDetail>>({
-        query: GET_DB_SETTINGS
-    });
-    useAppStore.setState(() => ({ dbSettingsData: response.data.dmsDatabricksSettings.node_types }));
-    return true;
+    try {
+        const response = await client.query<GetDbSettingsType<DbSettingsDetail>>({
+            query: GET_DB_SETTINGS
+        });
+        updateSpinnerInfo({ loading: false, to: 'none' });
+        useAppStore.setState(() => ({ dbSettingsData: response.data.dmsDatabricksSettings.node_types }));
+        return true;
+    } catch (error: any) {
+        toast({
+            title: error.message,
+            status: 'error',
+            isClosable: true,
+            duration: 5000,
+            position: 'top-right'
+        });
+        updateSpinnerInfo({ loading: false, to: 'none' });
+        return false;
+    }
 };
 
 export const DmsRunCompute: dmsRunComputesType = async (id: string) => {
