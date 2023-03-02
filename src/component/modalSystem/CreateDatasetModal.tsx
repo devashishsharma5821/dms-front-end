@@ -76,12 +76,12 @@ const CreateDataset = (props: any) => {
                         <Avatar borderRadius="full" boxSize="32px" name={'1'} bg={'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
                         <Text ml={'-8px'}>Details</Text>
                     </Box>
-                    <Divider orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-12px'} />
+                    <Divider orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-22px'} />
                     <Box>
                         <Avatar borderRadius="full" boxSize="32px" name={'2'} bg={'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
                         <Text ml={'-8px'}>Source</Text>
                     </Box>
-                    <Divider orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-12px'} />
+                    <Divider orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-22px'} colorScheme={'#929AA9'} />
                     <Box>
                         <Avatar borderRadius="full" boxSize="32px" name={'3'} bg={'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
                         <Text ml={'-8px'}> Preview</Text>
@@ -91,7 +91,7 @@ const CreateDataset = (props: any) => {
                     <Center width={'856px'} bg={boxColor} height={'92px'} mt={'10px'} mb={'21px'} ml={'21px'}>
                         <FormControl isRequired>
                             <Box>
-                                <FormLabel htmlFor="existingCompute" fontWeight={600} color={datasetTitleColor} mt={14} ml={14}>
+                                <FormLabel htmlFor="existingCompute" color={datasetTitleColor} mt={14} ml={14}>
                                     Project Name
                                 </FormLabel>
                                 <Select
@@ -126,7 +126,7 @@ const CreateDataset = (props: any) => {
                             <OrIconSmall />
                         </Box>
                         <Box width={'768px'}>
-                            <Text fontWeight={600} color={datasetTitleColor} mb={'-14px'}>
+                            <Text color={datasetTitleColor} mb={'-14px'}>
                                 Create New Project
                             </Text>
 
@@ -139,9 +139,7 @@ const CreateDataset = (props: any) => {
                 <Flex flexDirection={'row'}>
                     <Box width={'55%'} ml={'21'}>
                         <Flex mb={'19px'}>
-                            <Text fontWeight={600} color={datasetTitleColor}>
-                                Dataset ID:
-                            </Text>
+                            <Text color={datasetTitleColor}>Dataset ID:</Text>
                             <Text fontWeight={400} color={textColor} ml={'8px'}>
                                 f8iEY4
                             </Text>
@@ -160,7 +158,7 @@ const CreateDataset = (props: any) => {
                             >
                                 <VStack align="flex-start">
                                     <FormControl isRequired>
-                                        <FormLabel htmlFor="datasetName" fontWeight={600} mb={6} color={datasetTitleColor}>
+                                        <FormLabel htmlFor="datasetName" mb={6} color={datasetTitleColor}>
                                             Dataset Name
                                         </FormLabel>
                                         <Field
@@ -182,7 +180,7 @@ const CreateDataset = (props: any) => {
                                             }}
                                         />
 
-                                        <FormLabel htmlFor="Description" fontWeight={600} mt={20} mb={6} color={datasetTitleColor}>
+                                        <FormLabel htmlFor="Description" mt={20} mb={6} color={datasetTitleColor}>
                                             Description
                                         </FormLabel>
                                         <Field
@@ -201,7 +199,7 @@ const CreateDataset = (props: any) => {
                         </Flex>
                         <Flex>
                             <Center>
-                                <Text fontWeight={600} color={datasetTitleColor} mt={'20'}>
+                                <Text color={datasetTitleColor} mt={'20'}>
                                     Tag:
                                 </Text>
                                 <Center>
@@ -225,7 +223,7 @@ const CreateDataset = (props: any) => {
                         </Flex>
                         <Flex mb={'21px'}>
                             <Center>
-                                <Text fontWeight={600} color={datasetTitleColor} mt={'20'}>
+                                <Text color={datasetTitleColor} mt={'20'}>
                                     Shared with:
                                 </Text>
                                 <Center>
@@ -261,13 +259,13 @@ const CreateDataset = (props: any) => {
                     <Flex mt={-86}>
                         <Center>
                             <Box>
-                                <Text ml={'20px'} fontWeight={600} color={datasetTitleColor}>
+                                <Text ml={'20px'} color={datasetTitleColor}>
                                     Select Source
                                 </Text>
 
-                                {sorceSelectDataset?.map((row) => {
+                                {sorceSelectDataset?.map((row, rowIndex) => {
                                     return (
-                                        <Flex flexDirection={'row'} key={'DatasetModal'}>
+                                        <Flex flexDirection={'row'} key={rowIndex}>
                                             {row.sections &&
                                                 row.sections.map((section) => {
                                                     return (
