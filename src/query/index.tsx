@@ -301,6 +301,8 @@ export const getComputeListData = () => {
                         driver_memory_mb
                         worker_num_cores
                         driver_num_cores
+                        total_num_cores
+                        total_memory_mb
                     }
                     autoscale {
                         min_workers

@@ -90,7 +90,6 @@ const CreateProjectModal = (props: any) => {
                 getAndUpdateSingleProjectData(data.id);
             })
             .catch((err: any) => {
-                console.log('error ===>', err);
                 setLoading(false);
                 toast({
                     title: `${err}`,
@@ -102,7 +101,6 @@ const CreateProjectModal = (props: any) => {
             });
     }
     const createUserAccessForCreateProjectMode = (userList:AllUsers) => {
-        console.log('Here is the User List of All Users Access', userList);
         setAccessUserListCreateMode(userList);
     }
     const setCreateProjectSuccess = () => {
@@ -181,7 +179,6 @@ const CreateProjectModal = (props: any) => {
                                         props.onSuccess();
                                     })
                                     .catch((err: any) => {
-                                        console.log('error ===>', err);
                                         setLoading(false);
                                         toast({
                                             title: `${err}`,
@@ -228,7 +225,6 @@ const CreateProjectModal = (props: any) => {
                                         }
                                     })
                                     .catch((err: any) => {
-                                        console.log('error ===>', err);
                                         setLoading(false);
                                         toast({
                                             title: `${err}`,

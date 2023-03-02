@@ -21,9 +21,6 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const toast = useToast();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [isComputeCreated, setIsComputeCreated] = useState<boolean>(false);
-
-    console.log('computeid', context.computeHeadingId);
-
     useEffect(() => {
         formSchema.worker_type_id.options = dbSettingsData;
         formSchema.driver_type_id.options = dbSettingsData;
@@ -37,7 +34,6 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                 props.onClose();
                 setIsComputeCreated(false);
             } catch (err) {
-                console.log('Error in Get computes', err);
             }
         }
     }, [isComputeCreated]);
@@ -100,7 +96,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     return (
         <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
-            <ModalContent maxWidth={750} color="#171717">
+            <ModalContent maxWidth={632} color="#171717">
                 <ModalHeader height="var(--chakra-space-60)" fontSize={16} borderBottom="1px solid #EAEAEA" fontWeight="700" flex={'none'} padding={20}>
                     {props?.isEdit ? 'Edit Compute' : 'Create Compute'}
                 </ModalHeader>

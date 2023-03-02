@@ -14,6 +14,7 @@ function GetFormElements(props: GetFormElementsPropType) {
             disable: elementSchema.disable,
             child: elementSchema.child,
             uiSchema: elementSchema.uiSchema,
+            extraStyles: elementSchema.extraStyles,
             uiSchemaOptions: elementSchema.uiSchemaOptions,
             uniqueKey: props.uniqueKey,
             defaultValue: props.defaultValue

@@ -26,3 +26,18 @@ div.ag-center-cols-container {
     z-index: 1000000;
     top: 40%;
 }
+.ag-theme-alpine {
+    --ag-foreground-color: #333333;
+    --ag-background-color: white;
+    --ag-header-foreground-color: #333333;
+    --ag-header-background-color: #F6F6F6;
+    font-family: 'IBM Plex Sans';
+}
+.ag-ltr .ag-cell {
+   font-size: 16px;
+    font-weight: 400;
+}
+.ag-header-cell-text {
+    font-size: 16px;
+    font-weight: 600;
+}

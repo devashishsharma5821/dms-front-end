@@ -22,8 +22,8 @@
         "className": "workerType",
         "required": true,
         "isDefaultValue": true,
-        "defaultValue": "Standard_DS3_v2 56GB | 16Cores",
-        "errormessage": "Select Worker Type Id",
+        "defaultValue": "Select Worker Type",
+        "errormessage": "Worker Type is Required",
         "child": "child",
         "options": [],
         "uiSchema": {
@@ -36,8 +36,8 @@
         "className": "DriverType",
         "required": true,
         "isDefaultValue": true,
-        "defaultValue": "Standard_DS3_v2 56GB | 16Cores",
-        "errormessage": "Select Driver Type Id",
+        "defaultValue": "Select Driver Type",
+        "errormessage": "Driver Type is required",
         "child": "child",
         "options": [],
         "uiSchema": {
@@ -136,7 +136,7 @@
         "isDefaultValue": true,
         "defaultValue": true,
         "uiSchema": {
-            "grid-column": "auto / span 2",
+            "grid-column": "auto / span 3",
             "display": "flex",
             "justify-content": "flex-end",
             "flex-direction": "row-reverse"
@@ -158,8 +158,11 @@
         "errormessage": "minutes of inactivity",
         "className": "minutesOfInactivity",
         "min": "0",
+        "extraStyles": {
+            "inputWidth": "50px"
+        },
         "uiSchema": {
-            "grid-column": "auto / span 6",
+            "grid-column": "auto / span 5",
             "display": "flex",
             "justify-content": "flex-end",
             "flex-direction": "row-reverse"

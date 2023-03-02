@@ -25,6 +25,7 @@ export class InputFieldType<T> {
     children?: any;
     props?: T;
     as?: any;
+    extraStyles?: any
 }
 
 export interface FormSchemaType {
@@ -36,6 +37,7 @@ export interface FormSchemaType {
     errormessage?: string;
     className?: string;
     uiSchema?: any;
+    extraStyles?: any;
     conditionalRender?: boolean;
     child?: string;
     min?: string;

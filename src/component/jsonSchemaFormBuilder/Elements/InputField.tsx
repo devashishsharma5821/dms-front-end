@@ -6,7 +6,8 @@ type Props = ChakraInputProps & FieldHookConfig<'input'>;
 
 const InputField = (props: InputFieldType<Props>) => {
     const [field] = useField(props.name);
-    return <Input {...props} {...field} disabled={props?.disable ? props.disable : false} required key={props?.uniqueKey} />;
+    console.log('Props', props)
+    return <Input width={props?.extraStyles?.inputWidth && props?.extraStyles?.inputWidth} {...props} {...field} disabled={props?.disable ? props.disable : false} required key={props?.uniqueKey} />;
 };
 
 export default InputField;

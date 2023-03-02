@@ -711,11 +711,9 @@ const ExperimentsPage = () => {
     const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     const toggleLeftMenu = () => {
-        console.log('1', leftMenuOpen);
         setLeftMenuOpen(!leftMenuOpen);
     };
     useEffect(() => {
-        console.log('LeftMenOpen', leftMenuOpen);
         if (leftMenuOpen) {
             transformerMenuDrawer.onOpen();
             setTimeout(() => {

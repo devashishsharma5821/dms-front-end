@@ -7,7 +7,7 @@ const AlertConfirmComponent: any = (props: any) => {
         <>
             <AlertDialog isOpen={props.isOpen} leastDestructiveRef={cancelRef} onClose={props.onClose} closeOnOverlayClick={false} closeOnEsc={false}>
                 <AlertDialogOverlay>
-                    <AlertDialogContent>
+                    <AlertDialogContent padding={'5px'}>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             {props.options.title}
                         </AlertDialogHeader>
@@ -15,10 +15,10 @@ const AlertConfirmComponent: any = (props: any) => {
                         <AlertDialogBody>{props.options.description}</AlertDialogBody>
 
                         <AlertDialogFooter>
-                            <Button ref={cancelRef} onClick={props.onClose}>
+                            <Button type="button" variant="outline" colorScheme="blue" ref={cancelRef} onClick={props.onClose}>
                                 {props.options.cancelButtonTitle}
                             </Button>
-                            <Button onClick={props.confirm} ml={3}>
+                            <Button type="submit" variant="solid" colorScheme="blue" onClick={props.confirm} ml={3}>
                                 {props.options.confirmButtonTitle}
                             </Button>
                         </AlertDialogFooter>

@@ -61,7 +61,6 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
-        console.log('Single1')
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
