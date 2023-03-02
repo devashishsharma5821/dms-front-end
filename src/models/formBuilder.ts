@@ -14,6 +14,7 @@ export interface FieldPropsType {
     uioptions?: any;
     errormessage?: string | undefined;
     uniqueKey: string;
+    defaultValue: any;
 }
 
 export class InputFieldType<T> {
@@ -43,6 +44,7 @@ export interface FormSchemaType {
     options?: any;
     uioptions?: any;
     worker_type_id?: any;
+    value?: any;
 }
 export interface MainFormType {
     values: any;
@@ -107,4 +109,6 @@ export interface GetFormElementsPropType {
     uniqueKey: string;
     elementName: string;
     formSchemaKey: FormSchemaType;
+    defaultValue: any;
+    isEdit: boolean | undefined;
 }

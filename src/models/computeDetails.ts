@@ -85,7 +85,7 @@ export class GetDbSettingsType<T> {
     dmsDatabricksSettings!: T;
 }
 
-export type agGridClickHandler = (id: any, DmsComputeData?: any) => void;
+export type agGridClickHandler = (id: any) => void;
 
 export interface STOP_COMPUTE_RUNNING_MODALS_PROPS {
     computeId: string | undefined;
@@ -126,7 +126,7 @@ export interface DmsComputeData {
         spot_instances: boolean;
     };
     status: string;
-    totalMemory?: number;
+    totalMemory?: number | string;
     totalCores?: number;
 }
 
@@ -144,6 +144,7 @@ export interface ExperimentAppStoreState {
     DmsComputeData: DmsComputeData[];
     UserConfig: any;
     connectionState: { connected: boolean; subscribed: boolean };
+    SpinnerInfo: any;
 }
 
 export interface SocketWrapperAppStoreState {
@@ -157,6 +158,7 @@ export interface ComputeAppStoreState {
     DmsComputeData: DmsComputeData[];
     UserConfig: any;
     dbSettingsData: any;
+    SpinnerInfo: any;
 }
 
 export interface CreateComputeSubmitHandlerValues {

@@ -4,15 +4,11 @@ import '../../../styles/FormBuilderClasses.scss';
 import { Button } from '@chakra-ui/button';
 import { Box } from '@chakra-ui/layout';
 import { MainFormType } from '../../../models/formBuilder';
+import { Spinner } from '@chakra-ui/react';
 
 const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit, isDisabled }: MainFormType) => {
     useEffect(() => {
         if (values?.enable_autoscaling === false || values?.enable_autoscaling === undefined) {
-            // const fieldKeys = Object.keys(props.formSchema);
-            // const final = fieldKeys.filter((data: any) => {
-            //     return props.formSchema[data].conditionalRender == true;
-            // });
-
             formSchema['min_workers'].show = false;
             formSchema['max_workers'].show = false;
             formSchema['min_workers'].required = false;
@@ -38,14 +34,14 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
     return (
         <form className="needs-validation" onSubmit={handleSubmit}>
             {Object.keys(formSchema).map((key, idx) => {
-                return <GetFormElements uniqueKey={`${key}_${idx}`} elementName={key} formSchemaKey={formSchema[key]} />;
+                return <GetFormElements uniqueKey={`${key}_${idx}`} elementName={key} formSchemaKey={formSchema[key]} defaultValue={formSchema[key].defaultValue} isEdit={isEdit} />;
             })}
             <Box className="main-container">
                 <Button type="button" variant="outline" colorScheme="blue" className="cancel-button" onClick={onClose}>
                     Cancel
                 </Button>
                 <Button type="submit" variant="solid" colorScheme="blue" isDisabled={isDisabled}>
-                    {isEdit ? 'Edit' : 'Create'}
+                    {!isDisabled ? isEdit ? 'Edit' : 'Create' : <Spinner />}
                 </Button>
             </Box>
         </form>

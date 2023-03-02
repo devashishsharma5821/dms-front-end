@@ -28,7 +28,7 @@ import CreateProjectModal from '../../../component/modalSystem/CreateProjectModa
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
-import { GetAllUsersDataAppStoreState } from '../../../models/profile';
+import { GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import client from '../../../apollo-client';
 import { deleteProject, editProject } from '../../../query';
@@ -61,6 +61,7 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
+        console.log('Single1')
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
@@ -334,7 +335,7 @@ const ProjectDetails = (props: any) => {
                                         </Flex>
 
                                         {accessUserList &&
-                                        accessUserList.map((icons: any, iconsIndex: number) => {
+                                        accessUserList.map((icons: User, iconsIndex: number) => {
                                             return (
                                                 <div key={iconsIndex}>
                                                     <Center>
@@ -369,7 +370,7 @@ const ProjectDetails = (props: any) => {
                 />
             )}
             {createProjectModal.isOpen && (
-                <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: true, data: SingleProjectData }} />
+                <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: true, data: SingleProjectData, usersData: AllUsersData }} />
             )}
         </>
     );

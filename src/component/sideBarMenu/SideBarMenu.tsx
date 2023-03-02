@@ -20,6 +20,7 @@ import { GET_DB_SETTINGS } from '../../query';
 import useAppStore from '../../store';
 import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
 import CreateDatasetModal from '../modalSystem/CreateDatasetModal';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 
 const SideBarMenu = () => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
@@ -84,6 +85,7 @@ const SideBarMenu = () => {
     const triggerCreateModal = (type: string) => {
         if (type === 'compute') {
             if (!dbSettingsData.length) {
+                updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
                 const check = getAndUpdateDbSettingsData();
                 check && createComputeModal.onOpen();
             } else {
@@ -290,7 +292,7 @@ const SideBarMenu = () => {
                         />
                     )}
                     {createProjectModal.isOpen && (
-                        <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {} }} />
+                        <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
                     )}
                 </div>
                 {activateSubMenu && secondLevelMenu()}

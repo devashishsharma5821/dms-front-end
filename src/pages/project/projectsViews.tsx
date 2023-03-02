@@ -60,7 +60,7 @@ const ProjectsViews = (props: any) => {
                                         <Box key={project.id} height={'69px'} bg={'#F7FAFC'} borderTopRadius={8}>
                                             <Center ml={'24px'} pt={'8px'} justifyContent={'flex-start'}>
                                                 <Documentation color={'#666C80'} />
-                                                <Text title={project.name} ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'} color={'default.blackText'}>
+                                                <Text title={project.name} ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'}>
                                                     {getTruncatedText(project && project.name)}
                                                 </Text>
                                             </Center>
@@ -79,7 +79,7 @@ const ProjectsViews = (props: any) => {
                                                     />
                                                     <Center>
                                                         <Box width={'300px'}>
-                                                            <Text ml={10} color={'default.blackText'} mt={'21px'}>
+                                                            <Text ml={10} color={accessTextColor} mt={'21px'}>
                                                                 Created by
                                                             </Text>
                                                             <Text title={project.created_by} ml={10} color={'#333333'} fontWeight={700}>
@@ -93,6 +93,7 @@ const ProjectsViews = (props: any) => {
                                                                 Last Edited 10 min ago
                                                             </Text>
                                                         </Box>
+
 
                                                         <Flex>
                                                             <Flex>
@@ -138,6 +139,7 @@ const ProjectsViews = (props: any) => {
                                                                 +2 More
                                                             </Text>
                                                         </Box>
+
                                                     </Center>
                                                 </Flex>
                                             </Box>

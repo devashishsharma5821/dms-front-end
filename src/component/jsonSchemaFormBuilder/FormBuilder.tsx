@@ -17,7 +17,6 @@ function FormBuilder({ formSchema, onClose, onSubmit, isEdit, isDisabled }: Form
 
     const initForm = (formSchema: FormSchemaType, values?: any) => {
         const { _formData, _validationSchema } = CreateYupSchema(formSchema, values);
-
         isEdit ? setFormData(context.formData) : setFormData(_formData);
 
         setValidationSchema(Yup.object().shape({ ..._validationSchema }));

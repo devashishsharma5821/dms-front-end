@@ -7,20 +7,22 @@ import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 import { User } from './models/profile';
 import { ContextCompute } from './context/computeContext';
 import SocketWrapper from './component/SocketWrapper';
-import { LoadingProvider } from './context/loadingContext';
+import { ToastProvider } from '@chakra-ui/react';
 
 export const AppRouter = (props: any) => {
     const user = props.user as User;
+
     return (
-        <Router basename="/v3-dms">
-            <Suspense fallback={<div>Loading...</div>}>
-                <Header firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
-                <Flex overflowY={'hidden'} flexDirection="column">
-                    <SideBarMenu />
-                    <SocketWrapper>
-                        <LoadingProvider>
+        <>
+            <Router basename="/v3-dms">
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Header firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
+                    <Flex overflowY={'hidden'} flexDirection="column">
+                        <SideBarMenu />
+                        <SocketWrapper>
                             <ContextCompute>
                                 <Box>
+                                    <ToastProvider />
                                     <Routes>
                                         <Route path="/" element={<PageNotFound />} />
                                         <Route path="/home" element={<HomePage />} />
@@ -34,10 +36,10 @@ export const AppRouter = (props: any) => {
                                     </Routes>
                                 </Box>
                             </ContextCompute>
-                        </LoadingProvider>
-                    </SocketWrapper>
-                </Flex>
-            </Suspense>
-        </Router>
+                        </SocketWrapper>
+                    </Flex>
+                </Suspense>
+            </Router>
+        </>
     );
 };
