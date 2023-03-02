@@ -27,7 +27,6 @@ const Share = (props: any) => {
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
-    const {  onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [selectedUser, setSelectedUser] = React.useState("");
@@ -37,17 +36,20 @@ const Share = (props: any) => {
     const params = useParams();
 
     useEffect(() => {
-        if (SingleProjectData === null) {
-            getAndUpdateSingleProjectData(params.projectId as string);
-        } else {
-           console.log('Single Project Details, inside Share Modal', SingleProjectData);
-           if(SingleProjectData.project_access === null) {
-               setAccessUserList([]);
-           } else {
-               if(AllUsersData && SingleProjectData) {
-                   setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
-               }
-           }
+        if(props.isEdit) {
+            setAccessUserList([]);
+            if (SingleProjectData === null) {
+                getAndUpdateSingleProjectData(params.projectId as string);
+            } else {
+                console.log('Single Project Details, inside Share Modal', SingleProjectData);
+                if(SingleProjectData.project_access === null) {
+                    setAccessUserList([]);
+                } else {
+                    if(AllUsersData && SingleProjectData) {
+                        setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+                    }
+                }
+            }
         }
     }, [SingleProjectData]);
 
@@ -61,35 +63,55 @@ const Share = (props: any) => {
         setSelectedUser(ev.target.value);
     };
     const handleShare = () => {
-        const hardCodeMutation = {
-            userId: selectedUser,
-            projectId: params.projectId
-        };
-        client
-            .mutate<ShareCreate<ShareCreateDetail>>({
-                mutation: createAccess(hardCodeMutation)
-            })
-            .then(() => {
-                Toast({
-                    title: `Project Shared Successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
+        if(props.isEdit) {
+            const hardCodeMutation = {
+                userId: selectedUser,
+                projectId: params.projectId
+            };
+            client
+                .mutate<ShareCreate<ShareCreateDetail>>({
+                    mutation: createAccess(hardCodeMutation)
+                })
+                .then(() => {
+                    Toast({
+                        title: `Project Shared Successfully`,
+                        status: 'success',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                    getAndUpdateSingleProjectData(params.projectId as string);
+                    setSelectedUser('');
+                })
+                .catch(() => {
+                    Toast({
+                        title: `Project will not be shared successfully`,
+                        status: 'error',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
                 });
-                getAndUpdateSingleProjectData(params.projectId as string);
-                setSelectedUser('');
-            })
-            .catch(() => {
-                Toast({
-                    title: `Project will not be shared successfully`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+        } else {
+            const sharedUser = AllUsersData?.filter((singleUser) => {
+                return singleUser.userId === selectedUser;
             });
+            console.log("Shared User", sharedUser);
+            let newAccessList = [...accessUserList];
+            newAccessList.push(sharedUser[0]);
+            setAccessUserList(newAccessList);
+        }
     };
+    const closeShareModal = (ev: any) => {
+        ev.preventDefault();
+        console.log('Hello')
+        if(props.isEdit) {
+            props.onClose();
+        } else {
+            props.onCreateUserAccess(accessUserList);
+            props.onClose();
+        }
+    }
     return (
                 <Modal size={'3xl'}
                      initialFocusRef={initialRef}
@@ -102,7 +124,7 @@ const Share = (props: any) => {
                     <ModalOverlay />
                     <ModalContent width={'713px'} borderRadius={'2'} maxHeight={'734px'}>
                      <ModalHeader  color={shretextColor} mt={'13'} ml={20}>Share</ModalHeader>
-                    <ModalCloseButton  mt={'12'} mr={8} color={textColor2} />
+                    <ModalCloseButton onClick={closeShareModal} mt={'12'} mr={8} color={textColor2} />
                     <Divider color={"default.dividerColor"}/>
                         {
                             AllUsersData &&
@@ -182,7 +204,7 @@ const Share = (props: any) => {
                      <Link mt={-2}  ml={8} color={'light.button'}href='https://chakra-ui.com' isExternal> Copy Link </Link>
                      </Flex>
                  </Box>
-                 <Button onClick={onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'22'} width={'72px'} height={'40px'}>Close</Button>
+                 <Button onClick={closeShareModal} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'22'} width={'72px'} height={'40px'}>Close</Button>
                   
                   </ModalFooter>
                  </ModalContent>
