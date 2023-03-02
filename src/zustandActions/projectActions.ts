@@ -21,6 +21,6 @@ export const getAndUpdateSingleProjectData: getAndUpdateSingleProjectDataType = 
     const response = await client.query<GetSingleProject<Array<GetSingleProjectDetail>>>({
         query: GET_SINGLE_PROJECT(id)
     });
-    useAppStore.setState(() => ({ SingleProjectData: response.data.dmsProject }));
+    useAppStore.setState(() => ({ SingleProjectData: response?.data?.dmsProject }));
 };
 export const updateSingleProjectData: updateSingleProjectDataType = (SingleProjectData) => useAppStore.setState(() => ({ SingleProjectData: SingleProjectData }));

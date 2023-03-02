@@ -26,7 +26,7 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
             disconnected();
         },
         onError: () => {
-            console.log('Soccet connection error');
+            console.log('Socket connection error');
             disconnected();
         },
         onMessage: (ev: MessageEvent) => {

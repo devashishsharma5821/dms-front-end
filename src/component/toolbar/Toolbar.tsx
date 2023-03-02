@@ -40,6 +40,7 @@ import { LineageIcon } from '../../assets/icons';
 import LineageModal from '../modalSystem/LineageModal';
 import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
 import useAppStore from '../../store';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 
 const Toolbar = (props: toolbarPropsType) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -71,6 +72,7 @@ const Toolbar = (props: toolbarPropsType) => {
 
     const onCreateModalOpenHandler = async () => {
         if (!dbSettingsData.length) {
+            updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
             const check = await getAndUpdateDbSettingsData();
             check && createModal.onOpen();
         } else {
@@ -168,7 +170,7 @@ const Toolbar = (props: toolbarPropsType) => {
                                                 <Box>{compute.name}</Box>
                                             </Center>
                                             <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
-                                                <Text>{compute.totalMemory / 1024} GB</Text>
+                                                <Text>{compute.totalMemory}</Text>
                                                 <Divider orientation="vertical" mr={'8'} height={'16px'} />
                                                 <Text> | {compute.totalCores} Cores</Text>
                                             </Center>
@@ -205,7 +207,7 @@ const Toolbar = (props: toolbarPropsType) => {
                                                             </Box>
                                                         </Center>
                                                         <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
-                                                            <Text>{compute?.totalMemory / 1024} GB</Text>
+                                                            <Text>{compute?.totalMemory}</Text>
                                                             <Divider orientation="vertical" mr={'8'} height={'16px'} />
                                                             <Text> | {compute?.totalCores} Cores</Text>
                                                         </Center>

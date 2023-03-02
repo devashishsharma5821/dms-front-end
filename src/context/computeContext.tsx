@@ -15,7 +15,8 @@ export const ComputeContext = createContext<any>({
         min_workers: null,
         max_workers: null,
         enable_autoscaling: false,
-        terminate_after: false
+        terminate_after: false,
+        computeHeadingId: ''
     },
     updateFormData: (data: FormData) => {}
 });
@@ -33,7 +34,8 @@ export const ContextCompute = (props: React.PropsWithChildren) => {
         min_workers: null,
         max_workers: null,
         enable_autoscaling: false,
-        terminate_after: false
+        terminate_after: false,
+        computeHeadingId: ''
     });
     const updateFormData = (data: FormData) => {
         setFormData({
@@ -48,7 +50,8 @@ export const ContextCompute = (props: React.PropsWithChildren) => {
             min_workers: data?.min_workers,
             max_workers: data?.max_workers,
             enable_autoscaling: data?.enable_autoscaling,
-            terminate_after: data?.terminate_after
+            terminate_after: data?.terminate_after,
+            computeHeadingId: data?.computeHeadingId
         });
     };
 

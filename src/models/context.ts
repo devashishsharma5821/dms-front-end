@@ -11,4 +11,5 @@ export interface FormData {
     max_workers: number | null;
     enable_autoscaling: boolean;
     terminate_after: boolean;
+    computeHeadingId: string | number;
 }
