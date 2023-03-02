@@ -49,7 +49,6 @@ const Share = (props: any) => {
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
-    const { onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [selectedUser, setSelectedUser] = React.useState('');
@@ -59,15 +58,18 @@ const Share = (props: any) => {
     const params = useParams();
 
     useEffect(() => {
-        if (SingleProjectData === null) {
-            getAndUpdateSingleProjectData(params.projectId as string);
-        } else {
-            console.log('Single Project Details, inside Share Modal', SingleProjectData);
-            if (SingleProjectData?.project_access === null) {
-                setAccessUserList([]);
+        if (props.isEdit) {
+            setAccessUserList([]);
+            if (SingleProjectData === null) {
+                getAndUpdateSingleProjectData(params.projectId as string);
             } else {
-                if (AllUsersData && SingleProjectData) {
-                    setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+                console.log('Single Project Details, inside Share Modal', SingleProjectData);
+                if (SingleProjectData.project_access === null) {
+                    setAccessUserList([]);
+                } else {
+                    if (AllUsersData && SingleProjectData) {
+                        setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+                    }
                 }
             }
         }
@@ -83,34 +85,54 @@ const Share = (props: any) => {
         setSelectedUser(ev.target.value);
     };
     const handleShare = () => {
-        const hardCodeMutation = {
-            userId: selectedUser,
-            projectId: params.projectId
-        };
-        client
-            .mutate<ShareCreate<ShareCreateDetail>>({
-                mutation: createAccess(hardCodeMutation)
-            })
-            .then(() => {
-                Toast({
-                    title: `Project Shared Successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
+        if (props.isEdit) {
+            const hardCodeMutation = {
+                userId: selectedUser,
+                projectId: params.projectId
+            };
+            client
+                .mutate<ShareCreate<ShareCreateDetail>>({
+                    mutation: createAccess(hardCodeMutation)
+                })
+                .then(() => {
+                    Toast({
+                        title: `Project Shared Successfully`,
+                        status: 'success',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                    getAndUpdateSingleProjectData(params.projectId as string);
+                    setSelectedUser('');
+                })
+                .catch(() => {
+                    Toast({
+                        title: `Project will not be shared successfully`,
+                        status: 'error',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
                 });
-                getAndUpdateSingleProjectData(params.projectId as string);
-                setSelectedUser('');
-            })
-            .catch(() => {
-                Toast({
-                    title: `Project will not be shared successfully`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+        } else {
+            const sharedUser = AllUsersData?.filter((singleUser) => {
+                return singleUser.userId === selectedUser;
             });
+            console.log('Shared User', sharedUser);
+            let newAccessList = [...accessUserList];
+            newAccessList.push(sharedUser[0]);
+            setAccessUserList(newAccessList);
+        }
+    };
+    const closeShareModal = (ev: any) => {
+        ev.preventDefault();
+        console.log('Hello');
+        if (props.isEdit) {
+            props.onClose();
+        } else {
+            props.onCreateUserAccess(accessUserList);
+            props.onClose();
+        }
     };
     return (
         <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -119,7 +141,7 @@ const Share = (props: any) => {
                 <ModalHeader color={shretextColor} mt={'13'} ml={20}>
                     Share
                 </ModalHeader>
-                <ModalCloseButton mt={'12'} mr={8} color={textColor2} />
+                <ModalCloseButton onClick={closeShareModal} mt={'12'} mr={8} color={textColor2} />
                 <Divider color={'default.dividerColor'} />
                 {AllUsersData && (
                     <ModalBody pb={6}>
@@ -160,48 +182,54 @@ const Share = (props: any) => {
                                     Access by{' '}
                                 </Text>
 
-                                <Flex as="nav" align="center" justify="space-between" wrap="wrap">
-                                    {accessUserList.length > 0 &&
-                                        accessUserList.map((icons: any, iconsIndex: number) => {
-                                            return (
-                                                <>
-                                                    <Center key={iconsIndex}>
-                                                        <Avatar ml={16} p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
-                                                        <Box mt={'17px'} width={'300px'}>
-                                                            <Text ml={12} color={accesstextColor}>
-                                                                {icons?.firstName} {icons?.lastName}
-                                                            </Text>
-                                                            <Text ml={12} color={'default.veryLightGrayTextColor'}>
-                                                                {icons.email}{' '}
-                                                            </Text>
-                                                        </Box>
-                                                    </Center>
-                                                    <Center mr={'36px'}>
-                                                        <Menu>
-                                                            <MenuButton>
-                                                                <Text mr={'9px'} color={textColor2}>
-                                                                    {' '}
-                                                                    Can View
+                                <Box borderColor={'light.lighterGrayishBlue'} borderWidth={1} mt={20} mb={20} ml={20} mr={20} pb={10} width={'667px'} maxHeight={'472px'}>
+                                    <Text mt={17} ml={16} color={accesstextColor}>
+                                        Access by{' '}
+                                    </Text>
+
+                                    <Flex as="nav" align="center" justify="space-between" wrap="wrap">
+                                        {accessUserList.length > 0 &&
+                                            accessUserList.map((icons: any, iconsIndex: number) => {
+                                                return (
+                                                    <>
+                                                        <Center key={iconsIndex}>
+                                                            <Avatar ml={16} p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
+                                                            <Box mt={'17px'} width={'300px'}>
+                                                                <Text ml={12} color={accesstextColor}>
+                                                                    {icons?.firstName} {icons?.lastName}
                                                                 </Text>
-                                                            </MenuButton>
-                                                            <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
-                                                                <MenuItem>Can View</MenuItem>
-                                                                <MenuItem>Can Edits</MenuItem>
-                                                                <Divider />
-                                                                <MenuItem>Remove</MenuItem>
-                                                            </MenuList>
-                                                        </Menu>
-                                                        <DownArrowShare />
-                                                    </Center>
-                                                </>
-                                            );
-                                        })}
-                                    {accessUserList.length === 0 && (
-                                        <Box>
-                                            <Text color={accesstextColor}>This Project Is not Shared with Any Users</Text>
-                                        </Box>
-                                    )}
-                                </Flex>
+                                                                <Text ml={12} color={'default.veryLightGrayTextColor'}>
+                                                                    {icons.email}{' '}
+                                                                </Text>
+                                                            </Box>
+                                                        </Center>
+                                                        <Center mr={'36px'}>
+                                                            <Menu>
+                                                                <MenuButton>
+                                                                    <Text mr={'9px'} color={textColor2}>
+                                                                        {' '}
+                                                                        Can View
+                                                                    </Text>
+                                                                </MenuButton>
+                                                                <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
+                                                                    <MenuItem>Can View</MenuItem>
+                                                                    <MenuItem>Can Edits</MenuItem>
+                                                                    <Divider />
+                                                                    <MenuItem>Remove</MenuItem>
+                                                                </MenuList>
+                                                            </Menu>
+                                                            <DownArrowShare />
+                                                        </Center>
+                                                    </>
+                                                );
+                                            })}
+                                        {accessUserList.length === 0 && (
+                                            <Box>
+                                                <Text color={accesstextColor}>This Project Is not Shared with Any Users</Text>
+                                            </Box>
+                                        )}
+                                    </Flex>
+                                </Box>
                             </Box>
                         </FormControl>
                     </ModalBody>
@@ -217,7 +245,7 @@ const Share = (props: any) => {
                             </Link>
                         </Flex>
                     </Box>
-                    <Button onClick={onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'22'} width={'72px'} height={'40px'}>
+                    <Button onClick={closeShareModal} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'22'} width={'72px'} height={'40px'}>
                         Close
                     </Button>
                 </ModalFooter>

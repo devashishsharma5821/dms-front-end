@@ -12,6 +12,7 @@ import {
     ModalBody,
     FormControl,
     Input,
+    Textarea,
     FormLabel,
     ModalFooter,
     FormErrorMessage,
@@ -26,15 +27,17 @@ import {
     Tag,
     TagLabel,
     TagCloseButton,
-    HStack
+    HStack, Toast
 } from '@chakra-ui/react';
 import { CloseIcon } from '../../assets/icons';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
 import { CreateProject, ProjectCreate, ProjectCreateDetail, ProjectEdit, ProjectEditDetail } from '../../models/project';
 import client from '../../apollo-client';
-import { createProject, editProject } from '../../query';
+import { createAccess, createProject, editProject } from '../../query';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { AllUsers } from '../../models/profile';
+import { ShareCreate, ShareCreateDetail } from '../../models/share';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -44,18 +47,20 @@ const CreateProjectModal = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [addTagClicked, setAddTagClicked] = useState(false);
     const addShareMemberModal = useDisclosure();
+    const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
     const toast = useToast();
     const isEdit = props.isEdit.status;
     const isEditData = props.isEdit.data;
+    const isAllUsersData = props.isEdit.usersData;
     const [data, setData] = useState({
-        id: isEdit ? isEditData.basic.id : '',
-        name: isEdit ? isEditData.basic.name : '',
-        description: isEdit ? isEditData.basic.description : '',
-        tags: isEdit ? (isEditData.basic.tags !== null && isEditData.basic.tags.length > 0 ? isEditData.basic.tags.join(',') : '') : '',
-        project_variables: 'none'
+        id: (isEdit) ? isEditData.basic.id : "",
+        name: (isEdit) ? isEditData.basic.name : "",
+        description: (isEdit) ? isEditData.basic.description : "",
+        tags: (isEdit) ? (isEditData.basic.tags !== null && isEditData.basic.tags.length > 0) ? isEditData.basic.tags.join(','): "" : "",
+        project_variables: "none",
     } as CreateProject);
     const addTagHandler = (type: string, formikValues: any) => {
-        if (type === 'trigger') {
+        if(type === 'trigger') {
             setAddTagClicked(!addTagClicked);
         } else {
             setAddTagClicked(false);
@@ -63,9 +68,7 @@ const CreateProjectModal = (props: any) => {
     };
     const removeTag = (tag: string, tagIndex: number, formikValues: any) => {
         const formicValuesTags = formikValues.tags.split(',');
-        const newFormikValuesTags = formicValuesTags.filter((newTag: string) => {
-            return newTag !== tag;
-        });
+        const newFormikValuesTags = formicValuesTags.filter((newTag: string) => {return newTag !== tag})
         formikValues.tags = newFormikValuesTags.join(',');
         editProjectQuery(formikValues);
     };
@@ -97,6 +100,22 @@ const CreateProjectModal = (props: any) => {
                     position: 'top-right'
                 });
             });
+    }
+    const createUserAccessForCreateProjectMode = (userList:AllUsers) => {
+        console.log('Here is the User List of All Users Access', userList);
+        setAccessUserListCreateMode(userList);
+    }
+    const setCreateProjectSuccess = () => {
+        getAndUpdateAllProjectsData();
+        toast({
+            title: `Project has being created`,
+            status: 'success',
+            isClosable: true,
+            duration: 5000,
+            position: 'top-right'
+        });
+        setLoading(false);
+        props.onSuccess();
     };
     return (
         <Modal closeOnOverlayClick={false} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -104,7 +123,7 @@ const CreateProjectModal = (props: any) => {
 
             <ModalContent>
                 <ModalHeader fontSize={16} color={projectId} mt={'13px'} ml={'20px'}>
-                    {isEdit ? 'Edit Project' : 'Create Project'}
+                    {(isEdit) ? 'Edit Project': 'Create Project'}
                 </ModalHeader>
                 <ModalCloseButton color={textColor} mr={'10px'} mt={'12px'} />
                 <Divider color={'default.dividerColor'} mt={'13px'} mb={'20px'} />
@@ -118,7 +137,7 @@ const CreateProjectModal = (props: any) => {
                                     <Flex>
                                         <Center>
                                             <Text color={projectId} fontSize={'16px'} fontWeight={400} ml={8}>
-                                                {isEdit ? data.id : 'Yet to be Assigned'}
+                                                {(isEdit) ? data.id: 'Yet to be Assigned'}
                                             </Text>
                                             <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
                                                 <CopyIcon color={'default.darkGrayCreate'} />
@@ -144,7 +163,7 @@ const CreateProjectModal = (props: any) => {
                         validateOnChange={true}
                         onSubmit={(values) => {
                             setLoading(true);
-                            if (isEdit) {
+                            if(isEdit) {
                                 client
                                     .mutate<ProjectEdit<ProjectEditDetail>>({
                                         mutation: editProject(values)
@@ -177,17 +196,36 @@ const CreateProjectModal = (props: any) => {
                                     .mutate<ProjectCreate<ProjectCreateDetail>>({
                                         mutation: createProject(values)
                                     })
-                                    .then(() => {
-                                        setLoading(false);
-                                        toast({
-                                            title: `Project has being created`,
-                                            status: 'success',
-                                            isClosable: true,
-                                            duration: 5000,
-                                            position: 'top-right'
-                                        });
-                                        getAndUpdateAllProjectsData();
-                                        props.onSuccess();
+                                    .then((response) => {
+                                        // Here we are checking if any of the users have given access if they have, execute apis to give user access to that project.
+                                        if(accessUserListCreateMode.length > 0) {
+                                            accessUserListCreateMode.map((user: any, userIndex: any) => {
+                                                const mutationVariables = {
+                                                    userId: user.userId,
+                                                    projectId: response?.data?.dmsCreateProject
+                                                };
+                                                client
+                                                    .mutate<ShareCreate<ShareCreateDetail>>({
+                                                        mutation: createAccess(mutationVariables)
+                                                    })
+                                                    .then(() => {
+                                                        if(accessUserListCreateMode.length === (userIndex + 1)) {
+                                                            setCreateProjectSuccess();
+                                                        }
+                                                    })
+                                                    .catch(() => {
+                                                        Toast({
+                                                            title: `Project Was not created as expected.`,
+                                                            status: 'error',
+                                                            isClosable: true,
+                                                            duration: 5000,
+                                                            position: 'top-right'
+                                                        });
+                                                    });
+                                            });
+                                        } else {
+                                            setCreateProjectSuccess();
+                                        }
                                     })
                                     .catch((err: any) => {
                                         console.log('error ===>', err);
@@ -233,7 +271,15 @@ const CreateProjectModal = (props: any) => {
                                         <FormLabel htmlFor="description" color={textColorTitle} mb={6} mt={'16px'}>
                                             Description
                                         </FormLabel>
-                                        <Field borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="description" name="description" variant="outline" />
+                                        <Field
+                                            borderRadius={3}
+                                            border={'1px'}
+                                            borderColor={'light.lighterGrayishBlue'}
+                                            as={Textarea}
+                                            id="description"
+                                            name="description"
+                                            variant="outline"
+                                        />
                                         <FormErrorMessage>{errors.description}</FormErrorMessage>
                                         <Flex>
                                             <Center>
@@ -241,40 +287,58 @@ const CreateProjectModal = (props: any) => {
                                                     Tags:
                                                 </Text>
                                                 <Center>
-                                                    {addTagClicked && (
+                                                    {
+                                                        addTagClicked &&
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
-                                                            <Field borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="tags" name="tags" variant="outline" />
+                                                            <Field
+                                                                borderRadius={3}
+                                                                border={'1px'}
+                                                                borderColor={'light.lighterGrayishBlue'}
+                                                                as={Input}
+                                                                id="tags"
+                                                                name="tags"
+                                                                variant="outline"
+                                                            />
                                                             <FormErrorMessage>{errors.description}</FormErrorMessage>
                                                         </Box>
-                                                    )}
-                                                    {!addTagClicked && (
+
+                                                    }
+                                                    {
+                                                        !addTagClicked &&
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
                                                             <HStack spacing={4}>
-                                                                {values &&
-                                                                    values.tags &&
-                                                                    values.tags.split(',').length > 0 &&
+                                                                {
+                                                                    values && values.tags && values.tags.split(',').length > 0 &&
                                                                     values.tags.split(',').map((tag, tagIndex) => {
                                                                         return (
-                                                                            <Tag size={'sm'} key={tag} borderRadius="none" variant="solid">
+                                                                            <Tag
+                                                                                size={'sm'}
+                                                                                key={tag}
+                                                                                borderRadius='none'
+                                                                                variant='solid'
+                                                                            >
                                                                                 <TagLabel>{tag}</TagLabel>
                                                                                 <TagCloseButton onClick={() => removeTag(tag, tagIndex, values)} />
                                                                             </Tag>
-                                                                        );
-                                                                    })}
+                                                                        )
+                                                                    })
+                                                                }
                                                             </HStack>
                                                         </Box>
-                                                    )}
+                                                    }
                                                 </Center>
-                                                {!addTagClicked && (
+                                                {
+                                                    !addTagClicked &&
                                                     <Text onClick={() => addTagHandler('trigger', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
                                                         + Add Tag(s)
                                                     </Text>
-                                                )}
-                                                {addTagClicked && (
-                                                    <Text onClick={() => addTagHandler('add', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
-                                                        Add Tag
-                                                    </Text>
-                                                )}
+                                                }
+                                                {  addTagClicked &&
+                                                <Text onClick={() => addTagHandler('add', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
+                                                    Add Tag
+                                                </Text>
+                                                }
+
                                             </Center>
                                         </Flex>
 
@@ -283,32 +347,48 @@ const CreateProjectModal = (props: any) => {
                                                 <Text color={projectId} mt={'20'}>
                                                     Shared with:
                                                 </Text>
-                                                <Center>
-                                                    <Box ml={14} mt={16} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
-                                                        <Flex>
-                                                            <Center>
-                                                                <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                    SB
-                                                                </Text>
-                                                                <Box justifyContent={'flex-end'} ml={'14px'} mr={'6px'}>
-                                                                    <CloseIcon color={'#666C80'} />
-                                                                </Box>
-                                                            </Center>
-                                                        </Flex>
-                                                    </Box>
-                                                </Center>
-
                                                 <Text cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'} onClick={addShareMemberModal.onOpen}>
                                                     + Add Member(s)
                                                 </Text>
-                                                <Share isOpen={addShareMemberModal.isOpen} onClose={addShareMemberModal.onClose}></Share>
+                                                {addShareMemberModal.isOpen &&
+                                                <Share isOpen={addShareMemberModal.isOpen} onClose={addShareMemberModal.onClose} isEdit={isEdit} onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateProjectMode(userList)}></Share>
+                                                }
+
                                             </Center>
                                         </Flex>
-                                        <Flex>
-                                            <Center>
-                                                <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} />
-                                            </Center>
-                                        </Flex>
+                                        {
+                                            isEdit &&
+                                            <Flex>
+                                                <Center>
+                                                    {
+                                                        isEditData && isEditData.project_access &&
+                                                        isEditData.project_access.map((userAccess: any, userAccessIndex: any) => {
+                                                            const sharedUser = isAllUsersData?.filter((singleUser: any) => {
+                                                                return singleUser.userId === userAccess.user_id;
+                                                            });
+                                                            const avatarName = (sharedUser.length > 0) ? `${sharedUser[0].firstName} ${sharedUser[0].lastName}` : '';
+                                                          return(
+                                                              <Avatar key={userAccessIndex} mr={'5px'} p={'5px'} borderRadius="full" boxSize="42px" name={`${sharedUser[0].firstName} ${sharedUser[0].lastName}`} color={'default.whiteText'} />
+                                                          )
+                                                        })
+                                                    }
+                                                </Center>
+                                            </Flex>
+                                        }
+                                        {
+                                            !isEdit &&
+                                            <Flex>
+                                                <Center>
+                                                    {
+                                                        accessUserListCreateMode && accessUserListCreateMode.map((user: any, userIndex: any) => {
+                                                            return (
+                                                                <Avatar mr={'5px'} key={userIndex} p={'5px'} borderRadius="full" boxSize="42px" name={`${user.firstName} ${user.lastName}`} color={'default.whiteText'} />
+                                                            )
+                                                        })
+                                                    }
+                                                </Center>
+                                            </Flex>
+                                        }
                                         <Divider color={'default.dividerColor'} mt={'26px'} ml={'-24px'} width={'509px'} />
 
                                         <ModalFooter mb={'18px'} mt={'21px'} mr={'0px'}>
@@ -338,7 +418,7 @@ const CreateProjectModal = (props: any) => {
                                                     type="submit"
                                                     colorScheme="blue"
                                                 >
-                                                    {!isEdit ? 'Create' : 'Edit'}
+                                                    {(!isEdit) ? 'Create' : 'Edit'}
                                                 </Button>
                                             ) : (
                                                 <Button
@@ -351,7 +431,7 @@ const CreateProjectModal = (props: any) => {
                                                     type="submit"
                                                     colorScheme="blue"
                                                 >
-                                                    {!isEdit ? 'Create' : 'Edit'}
+                                                    {(!isEdit) ? 'Create' : 'Edit'}
                                                 </Button>
                                             )}
                                         </ModalFooter>

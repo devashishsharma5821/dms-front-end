@@ -61,6 +61,7 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
+        console.log('Single1')
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
@@ -369,7 +370,7 @@ const ProjectDetails = (props: any) => {
                 />
             )}
             {createProjectModal.isOpen && (
-                <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: true, data: SingleProjectData }} />
+                <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: true, data: SingleProjectData, usersData: AllUsersData }} />
             )}
         </>
     );

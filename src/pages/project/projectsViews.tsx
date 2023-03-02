@@ -60,7 +60,7 @@ const ProjectsViews = (props: any) => {
                                         <Box key={project.id} height={'69px'} bg={'#F7FAFC'} borderTopRadius={8}>
                                             <Center ml={'24px'} pt={'8px'} justifyContent={'flex-start'}>
                                                 <Documentation color={'#666C80'} />
-                                                <Text title={project.name} ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'} color={'default.blackText'}>
+                                                <Text title={project.name} ml={'10px'} fontWeight={700} fontSize={20} pt={'4px'}>
                                                     {getTruncatedText(project && project.name)}
                                                 </Text>
                                             </Center>
@@ -79,7 +79,7 @@ const ProjectsViews = (props: any) => {
                                                     />
                                                     <Center>
                                                         <Box width={'300px'}>
-                                                            <Text ml={10} color={'default.blackText'} mt={'21px'}>
+                                                            <Text ml={10} color={accessTextColor} mt={'21px'}>
                                                                 Created by
                                                             </Text>
                                                             <Text title={project.created_by} ml={10} color={'#333333'} fontWeight={700}>
@@ -93,54 +93,33 @@ const ProjectsViews = (props: any) => {
                                                                 Last Edited 10 min ago
                                                             </Text>
                                                         </Box>
-
-                                                        <Flex>
-                                                            <Flex>
-                                                                <Center ml={20} mt={16}>
-                                                                    {project &&
-                                                                        project.tags !== null &&
-                                                                        project.tags.map((tag, tagIndex) => {
-                                                                            return (
-                                                                                <Box key={tagIndex} mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                                                    <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                                        {tag}
-                                                                                    </Text>
-                                                                                </Box>
-                                                                            );
-                                                                        })}
-                                                                    {project && project.tags === null && (
-                                                                        <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                                            <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                                No Tags Available
-                                                                            </Text>
-                                                                        </Box>
-                                                                    )}
-                                                                </Center>
-                                                            </Flex>
-                                                        </Flex>
-                                                        <Box ml={'20px'} m={'18px'}>
-                                                            <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Shah zubin'} color={'default.whiteText'} />
-                                                            <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Goel jalaj'} color={'default.whiteText'} />
-                                                            <Avatar
-                                                                mr={'6'}
-                                                                p={'5px'}
-                                                                borderRadius="full"
-                                                                boxSize="32px"
-                                                                name={'+ 1'}
-                                                                color={'#111111'}
-                                                                bg={'white'}
-                                                                border={'1px'}
-                                                                borderColor={'#B3B3B3'}
-                                                            />
-                                                        </Box>
-                                                        <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                            <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                +2 More
-                                                            </Text>
-                                                        </Box>
                                                     </Center>
                                                 </Flex>
                                             </Box>
+                                            <Flex>
+                                                <Flex>
+                                                    <Center ml={20} mt={16}>
+                                                        {project &&
+                                                            project.tags !== null &&
+                                                            project.tags.map((tag, tagIndex) => {
+                                                                return (
+                                                                    <Box key={tagIndex} mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
+                                                                        <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                            {tag}
+                                                                        </Text>
+                                                                    </Box>
+                                                                );
+                                                            })}
+                                                        {project && project.tags === null && (
+                                                            <Box mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
+                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                    No Tags Available
+                                                                </Text>
+                                                            </Box>
+                                                        )}
+                                                    </Center>
+                                                </Flex>
+                                            </Flex>
                                             <Box ml={'20px'} m={'18px'}>
                                                 <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Shah zubin'} color={'default.whiteText'} />
                                                 <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Goel jalaj'} color={'default.whiteText'} />

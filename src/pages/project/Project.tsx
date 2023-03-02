@@ -89,7 +89,7 @@ const Project = () => {
                             <MenuItem>
                                 <Text ml={'12'}>Use a template</Text>
                             </MenuItem>
-                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: false, data: {}}}  />
+                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: false, data: {}, usersData: []}}  />
                         </MenuList>
                     </Menu>
                 </Center>
