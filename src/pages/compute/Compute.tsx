@@ -83,7 +83,7 @@ const Compute = () => {
 
     // TODO Write Default Columns Definitions which is common for all
     const defaultColDef = {
-        resizable: true,
+        resizable: true
     };
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
@@ -276,7 +276,7 @@ const Compute = () => {
             max_workers: data.resources?.autoscale?.max_workers,
             enable_autoscaling: data.resources.autoscale ? true : false,
             terminate_after: data?.max_inactivity_min ? true : false,
-            computeHeadingId: data?.id
+            computeId: data.id
         });
         setIsEdit(true);
         if (!dbSettingsData.length) {
@@ -462,13 +462,16 @@ const Compute = () => {
             min_workers: 2,
             max_workers: 2,
             enable_autoscaling: false,
-            terminate_after: true
+            terminate_after: true,
+            computeId: ''
         });
         setIsEdit(false);
         if (!dbSettingsData.length) {
             updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
             const check = getAndUpdateDbSettingsData();
-            check && createModal.onOpen();
+            check.then((data: any) => {
+                data && createModal.onOpen();
+            });
         } else {
             createModal.onOpen();
         }

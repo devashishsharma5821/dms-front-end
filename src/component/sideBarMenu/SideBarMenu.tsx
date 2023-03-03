@@ -87,7 +87,9 @@ const SideBarMenu = () => {
             if (!dbSettingsData.length) {
                 updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
                 const check = getAndUpdateDbSettingsData();
-                check && createComputeModal.onOpen();
+                check.then((data: any) => {
+                    data && createComputeModal.onOpen();
+                });
             } else {
                 createComputeModal.onOpen();
             }
@@ -292,7 +294,12 @@ const SideBarMenu = () => {
                         />
                     )}
                     {createProjectModal.isOpen && (
-                        <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
+                        <CreateProjectModal
+                            isOpen={createProjectModal.isOpen}
+                            onClose={createProjectModal.onClose}
+                            onSuccess={onCreateProjectSuccess}
+                            isEdit={{ status: false, data: {}, usersData: [] }}
+                        />
                     )}
                 </div>
                 {activateSubMenu && secondLevelMenu()}

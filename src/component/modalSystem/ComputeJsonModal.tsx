@@ -24,7 +24,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     useEffect(() => {
         formSchema.worker_type_id.options = dbSettingsData;
         formSchema.driver_type_id.options = dbSettingsData;
-        formSchema.Compute_id.value = context.id;
+        // formSchema.Compute_id.value = context.id;
     }, [dbSettingsData]);
 
     useEffect(() => {
@@ -33,8 +33,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                 getAndUpdateDmsComputeData();
                 props.onClose();
                 setIsComputeCreated(false);
-            } catch (err) {
-            }
+            } catch (err) {}
         }
     }, [isComputeCreated]);
 

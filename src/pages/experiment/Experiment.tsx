@@ -721,6 +721,9 @@ const ExperimentsPage = () => {
             }, 10);
         } else transformerMenuDrawer.onClose();
     }, [leftMenuOpen]);
+
+    console.log('SpinnerInfo', SpinnerInfo);
+
     return (
         <>
             <Box ref={elementRef} width={'100%'}>
@@ -791,6 +794,7 @@ const ExperimentsPage = () => {
                         {/*    <div className="toolbar-container" />*/}
                         {/*</div>*/}
                         <div className="app-body">
+                            {SpinnerInfo.loading && SpinnerInfo.to && <Spinner className="spinner" size="xl" thickness="4px" />}
                             {/*<div id="stencil-container" className="stencil-container" />*/}
                             <Box className="paper-container" />
                             {/*<div className="inspector-container" />*/}
@@ -799,8 +803,6 @@ const ExperimentsPage = () => {
                         </div>
                     </Box>
                     <Box>
-                        {SpinnerInfo.loading && SpinnerInfo.to && <Spinner className="spinner" size="xl" thickness="4px" />}
-
                         {/*<a>{translationToUse[config['title']]}</a>*/}
                         {/*<br></br>*/}
                         {/*{message}*/}

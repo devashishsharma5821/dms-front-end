@@ -66,10 +66,8 @@ export const getAndUpdateDbSettingsData: any = async () => {
         const response = await client.query<GetDbSettingsType<DbSettingsDetail>>({
             query: GET_DB_SETTINGS
         });
+        updateSpinnerInfo({ loading: false, to: 'none' });
         useAppStore.setState(() => ({ dbSettingsData: response.data.dmsDatabricksSettings.node_types }));
-        setTimeout(() => {
-            updateSpinnerInfo({ loading: false, to: 'none' });
-        }, 1000);
         return true;
     } catch (error: any) {
         toast({

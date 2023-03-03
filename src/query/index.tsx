@@ -391,7 +391,7 @@ export const GET_SINGLE_PROJECT = (id: string) => {
 };
 
 export const createProject = (variables: any) => {
-    const tags = (variables.tags !== null && variables.tags !== "") ? variables.tags.split(',') : [];
+    const tags = variables.tags !== null && variables.tags !== '' ? variables.tags.split(',') : [];
     return gql`mutation {
                 dmsCreateProject(
                     name: "${variables.name}",
@@ -403,7 +403,7 @@ export const createProject = (variables: any) => {
 };
 
 export const editProject = (variables: any) => {
-    const tags = (variables.tags !== null && variables.tags !== "" ) ? variables.tags.split(',') : [];
+    const tags = variables.tags !== null && variables.tags !== '' ? variables.tags.split(',') : [];
     return gql`mutation {
                 dmsEditProject(
                     id: "${variables.id}",
@@ -416,7 +416,7 @@ export const editProject = (variables: any) => {
 };
 
 export const createAccess = (variables: any) => {
-    return gql `
+    return gql`
     mutation {
     dmsCreateOrUpdateProjectAccess
     (
@@ -428,7 +428,7 @@ export const createAccess = (variables: any) => {
 };
 
 export const deleteProject = (id: string) => {
-    return gql `mutation {
+    return gql`mutation {
         dmsDeleteProject(id: "${id}")
     }`;
-}
+};

@@ -25,7 +25,7 @@ export class InputFieldType<T> {
     children?: any;
     props?: T;
     as?: any;
-    extraStyles?: any
+    extraStyles?: any;
 }
 
 export interface FormSchemaType {
@@ -47,6 +47,8 @@ export interface FormSchemaType {
     uioptions?: any;
     worker_type_id?: any;
     value?: any;
+    isDefault?: any;
+    default_heading_value?: any;
 }
 export interface MainFormType {
     values: any;
