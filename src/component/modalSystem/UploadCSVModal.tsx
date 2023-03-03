@@ -1,68 +1,14 @@
 import React, { useState } from 'react';
-import {
-    Button,
-    Divider,
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalOverlay,
-    ModalCloseButton,
-    ModalFooter,
-    useColorModeValue,
-    Center,
-    Flex,
-    Box,
-    Text,
-    FormControl,
-    FormLabel,
-    Select,
-    Stack,
-    Avatar,
-    Input,
-    VStack
-} from '@chakra-ui/react';
-import { CloseIcon, DownArrowShare } from '../../assets/icons';
-import OrIconSmall from '../../assets/icons/OrIconSmall';
-import SourceDBFS from '../../assets/icons/SourceDBFS';
-import SourceCSV from '../../assets/icons/SourceCSV';
-import SourceAzure from '../../assets/icons/SourceAzure';
-import SourceDatabricks from '../../assets/icons/SourceDatabricks';
-import { Field, Formik } from 'formik';
+import { Button, Divider, Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ModalFooter, useColorModeValue, Center, Flex, Box, Text, Avatar } from '@chakra-ui/react';
 import TickIcon from '../../assets/icons/TickIcon';
 
 const UploadCSVModal = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
-    const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
-    const sorceSelectDataset = [
-        {
-            sections: [
-                {
-                    name: 'Databricks Tables',
-                    icon: <SourceDatabricks color={'#666C80'} />,
-                    type: 'icon'
-                },
-                { name: 'Azure Blob Storage', icon: <SourceAzure color={'#666C80'} />, type: 'icon' }
-            ]
-        },
-        {
-            sections: [
-                {
-                    name: 'DBFS',
-                    icon: <SourceDBFS color={'#666C80'} />,
-                    type: 'icon'
-                },
-                {
-                    name: 'Upload CSV',
-                    icon: <SourceCSV color={'#666C80'} />,
-                    type: 'icon'
-                }
-            ]
-        }
-    ];
+
     return (
         <Modal size={'lg'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
@@ -106,12 +52,13 @@ const UploadCSVModal = (props: any) => {
                         <Text fontWeight={700} color={datasetTitleColor}>
                             Upload CSV Files
                         </Text>
-                        <Box mt={'8px'} width={'856px'} height={'315px'} border={'2px'} borderRadius={4} borderColor={'#E0E3E9'}>
+                        <Box mt={'8px'} width={'856px'} height={'315px'} border={'2px'} borderRadius={4} borderColor={'#E0E3E9'} borderStyle={'dashed'}>
                             <Center>
                                 <Box>
-                                    <Text fontSize={'21px'} color={'default.titleForDropFile'} mt={'86px'}>
+                                    <Text fontSize={'21px'} color={titleDarkCSV} mt={'86px'}>
                                         Drop files here to upload
                                     </Text>
+
                                     <Text fontSize={'14px'} color={'default.containerAgGridRecords'} ml={'100px'}>
                                         or
                                     </Text>
