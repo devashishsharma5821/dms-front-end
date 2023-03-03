@@ -29,7 +29,6 @@ import {
     TagCloseButton,
     HStack, Toast
 } from '@chakra-ui/react';
-import { CloseIcon } from '../../assets/icons';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
 import { CreateProject, ProjectCreate, ProjectCreateDetail, ProjectEdit, ProjectEditDetail } from '../../models/project';
