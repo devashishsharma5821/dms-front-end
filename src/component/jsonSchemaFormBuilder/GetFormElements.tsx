@@ -2,6 +2,7 @@ import { TextField, SelectField, FieldSwitch } from './Elements/FormElements';
 import { FormSchemaType, GetFormElementsPropType } from '../.././models/formBuilder';
 
 function GetFormElements(props: GetFormElementsPropType) {
+    console.log('props ===>', props);
     const getFormElement = (elementName: string, elementSchema: FormSchemaType) => {
         const fieldProps = {
             name: elementName,
@@ -20,9 +21,14 @@ function GetFormElements(props: GetFormElementsPropType) {
             defaultValue: props.defaultValue
         };
 
-        if (elementSchema.type === 'heading') {
-            return <p>{elementSchema.value}</p>;
+        if (props.isEdit === true && elementSchema.isDefault === true) {
+            return (
+                <p>
+                    {elementSchema.default_heading_value} {elementSchema.value}
+                </p>
+            );
         }
+
         if (elementSchema.type === 'text' || elementSchema.type === 'email' || elementSchema.type === 'number') {
             return <TextField {...fieldProps} />;
         }

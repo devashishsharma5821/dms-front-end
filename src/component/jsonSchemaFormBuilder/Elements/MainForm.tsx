@@ -28,6 +28,11 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
         } else {
             formSchema['max_inactivity_min'].disable = false;
         }
+
+        if (values?.computeId) {
+            formSchema['default'].value = values.computeId;
+        }
+
         initForm(formSchema, values);
     }, [values]);
 
@@ -36,7 +41,7 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
             {Object.keys(formSchema).map((key, idx) => {
                 return <GetFormElements uniqueKey={`${key}_${idx}`} elementName={key} formSchemaKey={formSchema[key]} defaultValue={formSchema[key].defaultValue} isEdit={isEdit} />;
             })}
-            <Box borderTop={"1px solid #EAEAEA"} pt={'10px'} className="main-container">
+            <Box borderTop={'1px solid #EAEAEA'} pt={'10px'} className="main-container">
                 <Button type="button" variant="outline" colorScheme="blue" className="cancel-button" onClick={onClose}>
                     Cancel
                 </Button>

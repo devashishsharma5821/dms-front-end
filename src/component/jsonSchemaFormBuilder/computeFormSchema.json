@@ -1,7 +1,8 @@
 {
-    "Compute_id": {
-        "type": "heading",
-        "value": "Compute Id: e002fg"
+    "default": {
+        "isDefault": true,
+        "default_heading_value": "Compute ID:",
+        "value": ""
     },
     "compute_name": {
         "type": "text",

@@ -1,11 +1,10 @@
-
 .available-magnet {
-  fill: #5DA271;
+    fill: #5da271;
 }
 
 /* element styling */
 .available-cell rect {
-  stroke-dasharray: 5, 2;
+    stroke-dasharray: 5, 2;
 }
 //.joint-stencil {
 //    position: relative !important;
@@ -22,59 +21,67 @@
 //        top:20px !important;
 //    }
 //}
-.joint-stencil.joint-theme-modern .search{
-    background: #FFFFFF;
-    border: 1px solid #D8DCDE;
+.joint-stencil.joint-theme-modern .search {
+    background: #ffffff;
+    border: 1px solid #d8dcde;
 }
 .joint-stencil.joint-theme-modern .groups-toggle .btn {
     position: relative !important;
     left: 10px;
 }
 div.joint-stencil.joint-theme-modern {
-    border: none ;
+    border: none;
     background: transparent;
 }
-div.joint-paper.joint-theme-modern{
+div.joint-paper.joint-theme-modern {
     background: transparent;
 }
-div.joint-stencil.joint-theme-modern .groups-toggle .btn{
-  width: unset;
-  border: none;
-  padding: 15px;
-  font-weight: 600;
-  font-size: 16px;
-  color: #2180C2;
-  top: -15px;
-  left: 5px;
+div.joint-stencil.joint-theme-modern .groups-toggle .btn {
+    width: unset;
+    border: none;
+    padding: 15px;
+    font-weight: 600;
+    font-size: 16px;
+    color: #2180c2;
+    top: -15px;
+    left: 5px;
 }
 .joint-stencil.joint-theme-modern .groups-toggle .btn-expand {
-  background-image: none;
+    background-image: none;
 }
 .joint-stencil.joint-theme-modern .groups-toggle .btn-collapse {
-  background-image: none;
+    background-image: none;
 }
 
-div.joint-stencil.joint-theme-modern .groups-toggle .btn:hover{
+div.joint-stencil.joint-theme-modern .groups-toggle .btn:hover {
     background: transparent;
 }
 //.v-line {
 //    font-size: 16px !important;
 //}
 .v-line-new {
-  border-left: 2px solid #2180C2;
-  height: 10px;
-  margin-left: 14px;
+    border-left: 2px solid #2180c2;
+    height: 10px;
+    margin-left: 14px;
 }
 .collapseButtonReSpace {
-  margin-left: -18px;
+    margin-left: -18px;
 }
 .joint-stencil.joint-theme-modern.searchable.collapsible > .content {
-  top: 85px;
+    top: 85px;
 }
-div.joint-stencil.joint-theme-modern .group, .joint-stencil.joint-theme-modern .group:first-child{
+div.joint-stencil.joint-theme-modern .group,
+.joint-stencil.joint-theme-modern .group:first-child {
     border: none;
 }
 div.joint-paper.joint-theme-modern {
-  background: transparent;
-  margin-left: 8px;
+    background: transparent;
+    margin-left: 8px;
+}
+.spinner {
+    left: 47%;
+    position: absolute;
+    text-align: center;
+    z-index: 1000000;
+    top: 40%;
 }

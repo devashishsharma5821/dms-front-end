@@ -73,8 +73,10 @@ const Toolbar = (props: toolbarPropsType) => {
     const onCreateModalOpenHandler = async () => {
         if (!dbSettingsData.length) {
             updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
-            const check = await getAndUpdateDbSettingsData();
-            check && createModal.onOpen();
+            const check = getAndUpdateDbSettingsData();
+            check.then((data: any) => {
+                data && createModal.onOpen();
+            });
         } else {
             createModal.onOpen();
         }
