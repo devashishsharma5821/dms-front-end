@@ -41,20 +41,23 @@ const Header = (props: any) => {
                     <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
                         Share
                     </Button>
-                    {isOpen &&
-                     <Share isOpen={isOpen} onClose={onClose}></Share>
-                    }
-
+                    {isOpen && <Share isOpen={isOpen} onClose={onClose}></Share>}
                 </Box>
                 <Box>
                     {' '}
                     <ColorModeSwitcher />
                 </Box>
+                <Box ml={'24'}>
+                    <GridCanvas />
+                </Box>
+
                 <Menu>
-                    <MenuButton ml={'24'}>
-                        <GridCanvas />
+                    <MenuButton>
+                        <Box mr={'27'} ml={'11'}>
+                            <DownArrow color={'#A3B4D1'} />
+                        </Box>
                     </MenuButton>
-                    <MenuList borderRadius={'0'} width={'110'} color={textColor} ml={'-46'}>
+                    <MenuList borderRadius={'0'} width={'110'} color={textColor} mt={'8'} ml={'-66px'}>
                         <MenuItem>
                             <GridCanvas />
                             <Text ml={'12'}>Dot</Text>
@@ -69,14 +72,15 @@ const Header = (props: any) => {
                         </MenuItem>
                     </MenuList>
                 </Menu>
-                <Box mr={'27'} ml={'11'}>
-                    <DownArrow color={'#A3B4D1'} />
-                </Box>
+
+                <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                 <Menu>
                     <MenuButton>
-                        <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
+                        <Box ml={'12'} mr={'23'}>
+                            <DownArrow color={'#A3B4D1'} />
+                        </Box>
                     </MenuButton>
-                    <MenuList width={127} borderRadius={'0'} mr={'-26'} mt={'-2'} color={textColor}>
+                    <MenuList width={127} borderRadius={'0'} mr={'18'} mt={'10'} color={textColor}>
                         <MenuItem>My Profile</MenuItem>
                         <MenuItem onClick={settingsModal.onOpen}>Settings</MenuItem>
                         <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose}></Settings>
@@ -87,9 +91,6 @@ const Header = (props: any) => {
                         <NotebookModal isOpen={notebookModal.isOpen} onClose={notebookModal.onClose}></NotebookModal>
                     </MenuList>
                 </Menu>
-                <Box ml={'12'} mr={'23'}>
-                    <DownArrow color={'#A3B4D1'} />
-                </Box>
             </Center>
         </Flex>
     );
