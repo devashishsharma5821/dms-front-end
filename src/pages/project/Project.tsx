@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './project.scss';
-import { Avatar, Box, Center, Divider, Flex, Menu, MenuButton, MenuItem, MenuList, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
+import { Box, Center, Divider, Menu, MenuButton, MenuItem, MenuList, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetAllProjectsDetail } from '../../models/project';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
@@ -16,8 +16,6 @@ const Project = () => {
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
     const [UserConfig] = useAppStore((state: any) => [state.UserConfig]);
     const [allProjectsData, setAllProjectsData] = React.useState<GetAllProjectsDetail[]>(AllProjectsData);
-    const navigate = useNavigate();
-    const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const CreateProject = useDisclosure();
     const onSearchChange = (searchValue: string) => {
       // TODO Manipulate the data to get the search values back
