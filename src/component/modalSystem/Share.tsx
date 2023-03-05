@@ -1,9 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, FC } from 'react';
 import {
     Box, Flex, Text, useColorModeValue, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList,
     ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody,
     ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Link, Select, Toast
 } from '@chakra-ui/react';
+import {
+    MultiSelect,
+    MultiSelectProps,
+    MultiSelectTheme,
+    SelectionVisibilityMode,
+    useMultiSelect,
+} from 'chakra-multiselect';
 import {  DownArrowShare, LinkChain } from '../../assets/icons';
 import { ShareCreate, ShareCreateDetail, ShareDelete, ShareDeleteDetail } from '../../models/share';
 import useAppStore from '../../store';
@@ -32,7 +39,8 @@ const Share = (props: any) => {
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const params = useParams();
-
+    const userOptions = AllUsersData.map((user) => ({ label: user.email, value: user.email }))
+    const [userValue, setUserValue] = React.useState([]);
     useEffect(() => {
         if(props.retainData.length > 0) {
             setAccessUserList(props.retainData);
@@ -59,7 +67,10 @@ const Share = (props: any) => {
             getAndUpdateAllUsersData(variablesForAllUsers);
         };
     }, [AllUsersData]);
+
+
     const handleUserChange = (ev: any) => {
+        setUserValue(ev);
         setSelectedUser(ev.target.value);
     };
     const accessMenuChanged = (access: any) => {
@@ -142,7 +153,7 @@ const Share = (props: any) => {
             props.onCreateUserAccess(accessUserList);
             props.onClose();
         }
-    }
+    };
     return (
                 <Modal size={'3xl'}
                      initialFocusRef={initialRef}
@@ -166,6 +177,12 @@ const Share = (props: any) => {
                                 <FormControl>
                                     <FormLabel  color={textColor2} mt={'20'} ml={20} mb={10}>Send to</FormLabel>
                                     <Flex>
+                                        {/*<MultiSelect*/}
+                                        {/*    value={userValue}*/}
+                                        {/*    options={userOptions}*/}
+                                        {/*    label='Type name or email to begin searching'*/}
+                                        {/*    onChange={handleUserChange!}*/}
+                                        {/*/>*/}
                                         <Select onChange={handleUserChange} color={defaultInBoxTextColor} borderRadius={'2'} width={'581px'} ml={20} height={'36px'} placeholder='Type name or email with comma seperated'>
                                             {AllUsersData.map((user, userIndex) => {
                                                 return(
