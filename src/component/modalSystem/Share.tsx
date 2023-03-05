@@ -4,13 +4,13 @@ import {
     ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody,
     ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Link, Select, Toast
 } from '@chakra-ui/react';
-import {
-    MultiSelect,
-    MultiSelectProps,
-    MultiSelectTheme,
-    SelectionVisibilityMode,
-    useMultiSelect,
-} from 'chakra-multiselect';
+    import {
+        MultiSelect,
+        MultiSelectProps,
+        MultiSelectTheme,
+        SelectionVisibilityMode,
+        useMultiSelect,
+    } from 'chakra-multiselect';
 import {  DownArrowShare, LinkChain } from '../../assets/icons';
 import { ShareCreate, ShareCreateDetail, ShareDelete, ShareDeleteDetail } from '../../models/share';
 import useAppStore from '../../store';
