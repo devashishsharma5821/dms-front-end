@@ -9,7 +9,9 @@ import SearchComponent from '../../component/search/SearchComponent';
 import { DownArrow } from '../../assets/icons';
 import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
 import ProjectsViews from './projectsViews';
-
+import { projectsSearch } from '../../utils/common.utils';
+import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
+import { GetAllUsersDataAppStoreState } from '../../models/profile';
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
     const textColor = useColorModeValue('light.header', 'dark.white');
@@ -17,8 +19,20 @@ const Project = () => {
     const [UserConfig] = useAppStore((state: any) => [state.UserConfig]);
     const [allProjectsData, setAllProjectsData] = React.useState<GetAllProjectsDetail[]>(AllProjectsData);
     const CreateProject = useDisclosure();
-    const onSearchChange = (searchValue: string) => {
-      // TODO Manipulate the data to get the search values back
+    const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
+    useEffect(() => {
+        if (AllUsersData === null) {
+            const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
+            getAndUpdateAllUsersData(variablesForAllUsers);
+        }
+    }, [AllUsersData]);
+    const onSearchChange = async (searchValue: string) => {
+        if(searchValue.length > 0) {
+            const search = await projectsSearch(AllProjectsData, searchValue, AllUsersData);
+            setAllProjectsData(search);
+        } else {
+            setAllProjectsData(AllProjectsData);
+        }
     };
     const handleTabsChange = (tabIndex: number) => {
         setTabIndex(tabIndex);
@@ -97,18 +111,21 @@ const Project = () => {
                         <Tab ml={'26'}>My Projects</Tab>
                         <Tab ml={'26'}>Shared With Me</Tab>
                     </TabList>
+                    {
+                        AllUsersData && allProjectsData &&
+                        <TabPanels ml={'44px'} mr={'10px'}>
+                            <TabPanel>
+                                <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
+                            </TabPanel>
+                            <TabPanel>
+                                <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
+                            </TabPanel>
+                            <TabPanel>
+                                <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
+                            </TabPanel>
+                        </TabPanels>
+                    }
 
-                    <TabPanels ml={'44px'} mr={'10px'}>
-                        <TabPanel>
-                            <ProjectsViews data={allProjectsData}></ProjectsViews>
-                        </TabPanel>
-                        <TabPanel>
-                            <ProjectsViews data={allProjectsData}></ProjectsViews>
-                        </TabPanel>
-                        <TabPanel>
-                            <ProjectsViews data={allProjectsData}></ProjectsViews>
-                        </TabPanel>
-                    </TabPanels>
                 </Tabs>
             </Box>
         </>

@@ -33,3 +33,12 @@ export const getFormattedUserData = (allUserData: AllUsers[], projectData: GetSi
 
     return reformattedProjectAccessData;
 };
+
+export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any) => {
+    const searchTerm = keyword.toLowerCase();
+    return projectData.filter((project: any) => {
+        const user = getUserNameFromId(AllUsersData, project.created_by);
+        return project.name.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
+               user.toLowerCase().match(new RegExp(searchTerm, 'g'));
+    })
+}
