@@ -13,10 +13,6 @@ import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 import Experiment from '../menuSystem/experiment/Experiment';
 import LeftSideBarMenuCreateProjectModal from '../modalSystem/LeftSideBarMenuCreateProjectModal';
 import CreateProjectModal from '../modalSystem/CreateProjectModal';
-import client from '../../apollo-client';
-import { GetDbSettingsType } from '../../models/outputDetail';
-import { DbSettingsDetail } from '../../models/computeDetails';
-import { GET_DB_SETTINGS } from '../../query';
 import useAppStore from '../../store';
 import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
 import CreateDatasetModal from '../modalSystem/CreateDatasetModal';
@@ -69,17 +65,19 @@ const SideBarMenu = () => {
         setActivateThirdSubMenu(true);
     };
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
-        if (data.route) {
-            sideBarMenuIcons[0].section[currentIndex].isClicked = false;
-            navigate(data.route);
-        } else if (data.hasSubMenu) {
-            // Turn on the Sub Menu
-            //data.isClicked = true;
-            sideBarMenuIcons[0].section[currentIndex].isClicked = false;
-            setCurrentIndex(index);
-            sideBarMenuIcons[0].section[index].isClicked = true;
-            setActivateSubMenu(true);
-        }
+        if(!data.disabled) {
+            if (data.route) {
+                sideBarMenuIcons[0].section[currentIndex].isClicked = false;
+                navigate(data.route);
+            } else if (data.hasSubMenu) {
+                // Turn on the Sub Menu
+                //data.isClicked = true;
+                sideBarMenuIcons[0].section[currentIndex].isClicked = false;
+                setCurrentIndex(index);
+                sideBarMenuIcons[0].section[index].isClicked = true;
+                setActivateSubMenu(true);
+            }
+        };
     };
 
     const triggerCreateModal = (type: string) => {

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import { Suspense } from 'react';
 import Header from '../src/component/header/Header';
 import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage, ProjectDetails, ComputeDetails } from './pages';
@@ -24,7 +24,8 @@ export const AppRouter = (props: any) => {
                                 <Box overflow={'hidden'}>
                                     <ToastProvider />
                                     <Routes>
-                                        <Route path="/" element={<PageNotFound />} />
+                                        <Route path="/" element={<Navigate to="/compute" />}>
+                                        </Route>
                                         <Route path="/home" element={<HomePage />} />
                                         <Route path="/experiment" element={<ExperimentsPage />} />
                                         <Route path="/notfound" element={<PageNotFound />} />

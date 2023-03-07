@@ -23,30 +23,35 @@ const sideBarMenuIcons = [
                 icon: <CreateIcon />,
                 iconName: 'Create',
                 hasSubMenu: [],
-                isClicked: false
+                isClicked: false,
+                disabled: false
             },
             {
                 icon: <WhiteHome />,
                 iconName: 'Home',
-                route: '/home'
+                route: '/home',
+                disabled: true
             },
             {
                 icon: <WhiteRecentIcon color="white"/>,
                 iconName: 'Recent',
                 hasSubMenu: [],
-                isClicked: false
+                isClicked: false,
+                disabled: true
             },
             {
                 icon: <WhiteExperiment color="white" />,
                 iconName: 'Explorer',
                 hasSubMenu: [],
-                isClicked: false
+                isClicked: false,
+                disabled: true
             },
               { 
                 icon: <WhiteInfoIcon color="white"/>,
                 iconName: 'Help',
                 hasSubMenu: [],
-                isClicked: false
+                isClicked: false,
+                  disabled: true
             },
         ]
     },
@@ -55,22 +60,26 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteCollection color="white"/>,
                 iconName: 'Projects',
-                route: '/project'
+                route: '/project',
+                disabled: false
             },
             {
                 icon: <PipelineIcon />,
                 iconName: 'Pipeline',
-                route: '/notfound'
+                route: '/notfound',
+                disabled: true
             },
             {
                 icon: <WhiteComputeIcon color="white"/>,
                 iconName: 'Compute',
-                route: '/compute'
+                route: '/compute',
+                disabled: false
             },
             {
                 icon: <WhiteDatasetIcon color="white"/>,
                 iconName: 'Dataset',
-                route: '/notfound'
+                route: '/notfound',
+                disabled: true
             }
         ]
     },
@@ -79,17 +88,20 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteNotebookIcon color="white"/>,
                 iconName: 'Notebook',
-                route: '/notebook'
+                route: '/notebook',
+                disabled: true
             },
             {
                 icon: <WhiteArtifactsIcon />,
                 iconName: 'Artifact Store',
-                route: '/notfound'
+                route: '/notfound',
+                disabled: true
             },
             {
                 icon: <WhiteWorkflowsIcon color="white"/>,
                 iconName: 'Workflows',
-                route: '/notfound'
+                route: '/notfound',
+                disabled: true
             }
         ]
     },
@@ -99,7 +111,8 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteSettingIcon />,
                 iconName: 'Settings',
-                route: '/notfound'
+                route: '/notfound',
+                disabled: true
             }
         ]
     },
@@ -108,7 +121,8 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteFluentIcon />,
                 iconName: 'Auto Expand',
-                route: '/notfound'
+                route: '/notfound',
+                disabled: true
             }
         ]
     },
