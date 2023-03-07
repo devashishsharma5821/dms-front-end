@@ -1,6 +1,10 @@
 import { AllUsers } from '../models/profile';
 import { GetSingleProjectDetail } from '../models/project';
 
+export const convertTime = (date: string) => {
+    return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(Date.parse(date));
+};
+
 export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
     const currentUser = userData?.filter((user: AllUsers) => {
         return user.userId === userId;

@@ -351,6 +351,11 @@ export const GET_ALL_PROJECTS = gql`
             project_variables
             tags
             description
+             project_access {
+            id
+            user_id
+            access_level
+          }
         }
     }
 `;

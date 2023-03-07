@@ -6,6 +6,11 @@ export interface CreateProject {
     description: string;
     tags: string;
     project_variables: string;
+    project_access : {
+        id: string,
+        user_id: string,
+        access_level: string,
+    }
 }
 
 export class GetAllProjects<T> {
@@ -19,6 +24,11 @@ export interface GetAllProjectsDetail {
     "project_variables": string
     description: string;
     tags: string[];
+    project_access : {
+        id: string,
+        user_id: string,
+        access_level: string,
+    }[];
 }
 export interface GetAllProjectsAppStoreState {
     AllProjectsData: GetAllProjectsDetail[];

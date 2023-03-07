@@ -57,6 +57,7 @@ const CreateProjectModal = (props: any) => {
         description: (isEdit) ? isEditData.basic.description : "",
         tags: (isEdit) ? (isEditData.basic.tags !== null && isEditData.basic.tags.length > 0) ? isEditData.basic.tags.join(','): "" : "",
         project_variables: "none",
+        project_access: (isEdit) ? isEditData.basic.project_access : ""
     } as CreateProject);
     const addTagHandler = (type: string, formikValues: any) => {
         if(type === 'trigger') {
@@ -153,7 +154,8 @@ const CreateProjectModal = (props: any) => {
                                 name: data.name,
                                 description: data.description,
                                 tags: data.tags,
-                                project_variables: data.project_variables
+                                project_variables: data.project_variables,
+                                project_access: data.project_access
                             } as CreateProject
                         }
                         validateOnBlur={true}

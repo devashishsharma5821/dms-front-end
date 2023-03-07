@@ -52,6 +52,7 @@ import { useNavigate } from 'react-router-dom';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { DeleteConfirmationModal } from '../../component/modalSystem/deleteConfirmationModal';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import { convertTime } from '../../utils/common.utils';
 const { toast } = createStandaloneToast();
 
 const Compute = () => {
@@ -81,7 +82,7 @@ const Compute = () => {
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
         { headerName: 'Compute Name', field: 'name' },
-        { headerName: 'Created On', field: 'created_at', valueFormatter: convertTime },
+        { headerName: 'Created On', field: 'created_at', valueFormatter: (params: any) => convertTime(params.value) },
         { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },
         { headerName: 'Driver Type', field: 'resources.node_type.driver_type_id' },
         { headerName: 'Workers', field: 'resources.num_workers' },
@@ -420,9 +421,6 @@ const Compute = () => {
             });
     };
 
-    function convertTime(params: any) {
-        return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(Date.parse(params.value));
-    }
     function defaultRow(params: any) {
         return <SwitchComponent params={params} gridRef={gridRef} defaultRowOnChange={() => defaultRowOnChange(params.data)} />;
     }
