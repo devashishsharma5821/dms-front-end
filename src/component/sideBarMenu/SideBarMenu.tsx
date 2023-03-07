@@ -13,10 +13,6 @@ import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
 import Experiment from '../menuSystem/experiment/Experiment';
 import LeftSideBarMenuCreateProjectModal from '../modalSystem/LeftSideBarMenuCreateProjectModal';
 import CreateProjectModal from '../modalSystem/CreateProjectModal';
-import client from '../../apollo-client';
-import { GetDbSettingsType } from '../../models/outputDetail';
-import { DbSettingsDetail } from '../../models/computeDetails';
-import { GET_DB_SETTINGS } from '../../query';
 import useAppStore from '../../store';
 import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
 import CreateDatasetModal from '../modalSystem/CreateDatasetModal';
@@ -69,17 +65,19 @@ const SideBarMenu = () => {
         setActivateThirdSubMenu(true);
     };
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
-        if (data.route) {
-            sideBarMenuIcons[0].section[currentIndex].isClicked = false;
-            navigate(data.route);
-        } else if (data.hasSubMenu) {
-            // Turn on the Sub Menu
-            //data.isClicked = true;
-            sideBarMenuIcons[0].section[currentIndex].isClicked = false;
-            setCurrentIndex(index);
-            sideBarMenuIcons[0].section[index].isClicked = true;
-            setActivateSubMenu(true);
-        }
+        if(!data.disabled) {
+            if (data.route) {
+                sideBarMenuIcons[0].section[currentIndex].isClicked = false;
+                navigate(data.route);
+            } else if (data.hasSubMenu) {
+                // Turn on the Sub Menu
+                //data.isClicked = true;
+                sideBarMenuIcons[0].section[currentIndex].isClicked = false;
+                setCurrentIndex(index);
+                sideBarMenuIcons[0].section[index].isClicked = true;
+                setActivateSubMenu(true);
+            }
+        };
     };
 
     const triggerCreateModal = (type: string) => {
@@ -102,7 +100,7 @@ const SideBarMenu = () => {
     const thirdLevelMenu = () => {
         return (
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '445px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
-                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
+                <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         <Box width={'254px'} pl={'0px'} mt="17">
                             <h3>
@@ -117,7 +115,7 @@ const SideBarMenu = () => {
     const secondLevelMenu = () => {
         return (
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
-                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
+                <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         {sideBarMenuIcons[0].section[currentIndex].isClicked && (
                             <Box width={'254px'} pl={'0px'} mt="17">
@@ -159,7 +157,7 @@ const SideBarMenu = () => {
         <Flex>
             <>
                 <div style={{ ...zIndexStyle, position: 'absolute' }} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
-                    <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
+                    <Flex h={'100vh'} overflow={'hidden'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
                         <VStack>
                             {!isHovering && (
                                 <Box ml="6" mr="6" mt="30">

@@ -12,3 +12,12 @@ export class ShareCreate<T> {
 export class ShareCreateDetail {
     dmsCreateOrUpdateProjectAccess!: boolean;
 }
+
+export class ShareDelete<T> {
+    dmsDeleteProjectAccess!: T;
+}
+
+
+export class ShareDeleteDetail {
+    dmsDeleteProjectAccess!: boolean;
+}

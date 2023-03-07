@@ -1,18 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, FC } from 'react';
 import {
     Box, Flex, Text, useColorModeValue, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList,
-    useDisclosure, ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody, Input,
+    ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody,
     ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Link, Select, Toast
 } from '@chakra-ui/react';
+    import {
+        MultiSelect,
+        MultiSelectProps,
+        MultiSelectTheme,
+        SelectionVisibilityMode,
+        useMultiSelect,
+    } from 'chakra-multiselect';
 import {  DownArrowShare, LinkChain } from '../../assets/icons';
-import { ShareCreate, ShareCreateDetail, ShareData } from '../../models/share';
+import { ShareCreate, ShareCreateDetail, ShareDelete, ShareDeleteDetail } from '../../models/share';
 import useAppStore from '../../store';
-import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../models/profile';
+import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
-import { ComputeDelete, DeleteComputeDetail } from '../../models/computeDetails';
-import { createAccess, dmsDeleteCompute } from '../../query';
-import { getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
+import { createAccess, deleteAccess } from '../../query';
 import { useParams } from 'react-router-dom';
 import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
@@ -34,7 +39,8 @@ const Share = (props: any) => {
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const params = useParams();
-
+    const userOptions = AllUsersData.map((user) => ({ label: user.email, value: user.email }))
+    const [userValue, setUserValue] = React.useState([]);
     useEffect(() => {
         if(props.retainData.length > 0) {
             setAccessUserList(props.retainData);
@@ -61,9 +67,45 @@ const Share = (props: any) => {
             getAndUpdateAllUsersData(variablesForAllUsers);
         };
     }, [AllUsersData]);
+
+
     const handleUserChange = (ev: any) => {
+        setUserValue(ev);
         setSelectedUser(ev.target.value);
     };
+    const accessMenuChanged = (access: any) => {
+        const removedUser = AllUsersData?.filter((singleUser) => {
+            return singleUser.email === access.email;
+        });
+        const removeVariable = {
+            userId: removedUser[0].userId,
+            projectId: params.projectId
+        };
+        client
+            .mutate<ShareDelete<ShareDeleteDetail>>({
+                mutation: deleteAccess(removeVariable)
+            })
+            .then(() => {
+                Toast({
+                    title: `Access removed Successfully`,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+                getAndUpdateSingleProjectData(params.projectId as string);
+            })
+            .catch(() => {
+                Toast({
+                    title: `Access failed to be removed`,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-right'
+                });
+            });
+    }
+
     const handleShare = () => {
         if(props.isEdit) {
             const mutationVariable = {
@@ -111,7 +153,7 @@ const Share = (props: any) => {
             props.onCreateUserAccess(accessUserList);
             props.onClose();
         }
-    }
+    };
     return (
                 <Modal size={'3xl'}
                      initialFocusRef={initialRef}
@@ -135,6 +177,12 @@ const Share = (props: any) => {
                                 <FormControl>
                                     <FormLabel  color={textColor2} mt={'20'} ml={20} mb={10}>Send to</FormLabel>
                                     <Flex>
+                                        {/*<MultiSelect*/}
+                                        {/*    value={userValue}*/}
+                                        {/*    options={userOptions}*/}
+                                        {/*    label='Type name or email to begin searching'*/}
+                                        {/*    onChange={handleUserChange!}*/}
+                                        {/*/>*/}
                                         <Select onChange={handleUserChange} color={defaultInBoxTextColor} borderRadius={'2'} width={'581px'} ml={20} height={'36px'} placeholder='Type name or email with comma seperated'>
                                             {AllUsersData.map((user, userIndex) => {
                                                 return(
@@ -168,13 +216,13 @@ const Share = (props: any) => {
                                                         </Center><Center mr={'36px'}>
                                                             <Menu>
                                                                 <MenuButton>
-                                                                    <Text mr={'9px'} color={textColor2}> Can View</Text>
+                                                                    <Text mr={'9px'} color={textColor2}>Can View</Text>
                                                                 </MenuButton>
                                                                 <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
                                                                     <MenuItem>Can View</MenuItem>
                                                                     <MenuItem>Can Edits</MenuItem>
                                                                     <Divider />
-                                                                    <MenuItem>Remove</MenuItem>
+                                                                    <MenuItem onClick={()=> {accessMenuChanged(icons)}}>Remove</MenuItem>
                                                                 </MenuList>
                                                             </Menu>
                                                             <DownArrowShare />

@@ -19,7 +19,8 @@ import {
     Stack,
     Avatar,
     Input,
-    VStack
+    VStack,
+    useDisclosure
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
@@ -28,6 +29,7 @@ import SourceCSV from '../../assets/icons/SourceCSV';
 import SourceAzure from '../../assets/icons/SourceAzure';
 import SourceDatabricks from '../../assets/icons/SourceDatabricks';
 import { Field, Formik } from 'formik';
+import UploadCSVModal from './UploadCSVModal';
 
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
@@ -35,6 +37,12 @@ const CreateDataset = (props: any) => {
     const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
+    const createCSVModal = useDisclosure();
+    const triggerAction = (type: string) => {
+        if (type === 'Upload CSV') {
+            createCSVModal.onOpen();
+        }
+    };
     const sorceSelectDataset = [
         {
             sections: [
@@ -281,6 +289,7 @@ const CreateDataset = (props: any) => {
                                                                     mt={'14px'}
                                                                     className="sidebar-box"
                                                                     borderRadius={'4'}
+                                                                    onClick={() => triggerAction(section.name)}
                                                                 >
                                                                     <Center mt={'35px'}>{section.icon}</Center>
 
@@ -333,6 +342,7 @@ const CreateDataset = (props: any) => {
                     </Button>
                 </ModalFooter>
             </ModalContent>
+            {createCSVModal.isOpen && <UploadCSVModal isOpen={createCSVModal.isOpen} onClose={createCSVModal.onClose} />}
         </Modal>
     );
 };
