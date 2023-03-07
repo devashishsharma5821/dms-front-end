@@ -53,7 +53,7 @@ const Header = (props: any) => {
                         <Avatar borderRadius="full" boxSize="32px" name={`P G`} p={'5px'} />
                         <Avatar borderRadius="full" boxSize="32px" name={`N l`} ml={'-6px'} mr={'10px'} p={'5px'} />
                         <Box pl={'6'} pr={'6'}>
-                            <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline">
+                            <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline" width={'62px'} height={'28px'} borderRadius={3}>
                                 Share
                             </Button>
                             {isOpen && <Share isOpen={isOpen} onClose={onClose}></Share>}
@@ -72,7 +72,7 @@ const Header = (props: any) => {
 
                         <Menu>
                             <MenuButton>
-                                <Box mr={'27'} ml={'11'}>
+                                <Box mr={'34'} ml={'14'}>
                                     <DownArrow color={'#A3B4D1'} />
                                 </Box>
                             </MenuButton>

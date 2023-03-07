@@ -88,8 +88,9 @@ const Settings = (props: any) => {
                                                         ml={'-10px'}
                                                         width={'414px'}
                                                         height={'32px'}
-                                                        border={1}
+                                                        border={'3px'}
                                                         borderRadius={3}
+                                                        borderColor={'red'}
                                                         mt={'6px'}
                                                         as={Input}
                                                         id="userName"
