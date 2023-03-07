@@ -4,6 +4,7 @@ import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
+import MyProfileModal from '../modalSystem/MyProfileModal';
 // import ViewData from '../modalSystem/ViewData';
 // import NotebookModal from '../modalSystem/NotebookModal';
 const Header = (props: any) => {
@@ -12,6 +13,7 @@ const Header = (props: any) => {
     const [isExperiment, setIsExperiment] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const settingsModal = useDisclosure();
+    const myProfileModal = useDisclosure();
     // const ViewDataModal = useDisclosure();
     // const notebookModal = useDisclosure();
     useEffect(() => {
@@ -101,7 +103,13 @@ const Header = (props: any) => {
                         </Box>
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'18'} mt={'10'} color={textColor}>
-                        <MenuItem>My Profile</MenuItem>
+                        <MenuItem onClick={myProfileModal.onOpen}>My Profile</MenuItem>
+
+                        <MyProfileModal
+                            userDetail={{ firstName: props.firstName, lastName: props.lastName, email: props.email }}
+                            isOpen={myProfileModal.isOpen}
+                            onClose={myProfileModal.onClose}
+                        ></MyProfileModal>
                         <MenuItem onClick={settingsModal.onOpen}>Settings</MenuItem>
                         <Settings isOpen={settingsModal.isOpen} onClose={settingsModal.onClose}></Settings>
                         <MenuItem>Signout</MenuItem>

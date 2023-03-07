@@ -11,7 +11,7 @@ import { ToastProvider } from '@chakra-ui/react';
 
 export const AppRouter = (props: any) => {
     const user = props.user as User;
-
+    console.log(user);
     return (
         <>
             <Router basename="/v3-dms">
