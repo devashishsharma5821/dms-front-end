@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import { Suspense } from 'react';
 import Header from '../src/component/header/Header';
 import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage, ProjectDetails, ComputeDetails } from './pages';
@@ -17,14 +17,15 @@ export const AppRouter = (props: any) => {
             <Router basename="/v3-dms">
                 <Suspense fallback={<div>Loading...</div>}>
                     <Header firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
-                    <Flex overflowY={'hidden'} flexDirection="column">
+                    <Box height = {'100vh'} width = {'100vw'} overflow={'hidden'} flexDirection="column">
                         <SideBarMenu />
                         <SocketWrapper>
                             <ContextCompute>
-                                <Box>
+                                <Box overflow={'hidden'}>
                                     <ToastProvider />
                                     <Routes>
-                                        <Route path="/" element={<PageNotFound />} />
+                                        <Route path="/" element={<Navigate to="/compute" />}>
+                                        </Route>
                                         <Route path="/home" element={<HomePage />} />
                                         <Route path="/experiment" element={<ExperimentsPage />} />
                                         <Route path="/notfound" element={<PageNotFound />} />
@@ -37,7 +38,7 @@ export const AppRouter = (props: any) => {
                                 </Box>
                             </ContextCompute>
                         </SocketWrapper>
-                    </Flex>
+                    </Box>
                 </Suspense>
             </Router>
         </>

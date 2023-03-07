@@ -2,28 +2,19 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './project.scss';
 import { Avatar, Box, Center, Flex, Text, useColorModeValue } from '@chakra-ui/react';
-
 import { Documentation } from '../../assets/icons';
 import { GetAllProjectsDetail } from '../../models/project';
-import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
-import useAppStore from '../../store';
-import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { getUserNameFromId, getTruncatedText } from '../../utils/common.utils';
+
 const ProjectsViews = (props: any) => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const AllProjectsData = props.data as GetAllProjectsDetail[];
     const navigate = useNavigate();
-    const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
+    const AllUsersData = props.AllUsersData;
     const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const navigateToDetails = (id: string) => {
         navigate(`/projectDetails/${id}`);
     };
-    useEffect(() => {
-        if (AllUsersData === null) {
-            const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
-            getAndUpdateAllUsersData(variablesForAllUsers);
-        }
-    }, [AllUsersData]);
     return (
         <>
             <Box border={'1px solid'} borderColor={'#D8DCDE'} borderRadius={8} width={'100%'} height={'auto'} mt={'20'} pb={'20'}>

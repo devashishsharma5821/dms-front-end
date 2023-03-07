@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Divider, Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ModalFooter, useColorModeValue, Center, Flex, Box, Text, Avatar } from '@chakra-ui/react';
 import TickIcon from '../../assets/icons/TickIcon';
+import FileUploadComponent from '../../pages/dataset/fileUpload/FileUploadComponent';
 
 const UploadCSVModal = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
@@ -55,22 +56,7 @@ const UploadCSVModal = (props: any) => {
                         <Box mt={'8px'} width={'856px'} height={'315px'} border={'2px'} borderRadius={4} borderColor={'#E0E3E9'} borderStyle={'dashed'}>
                             <Center>
                                 <Box>
-                                    <Text fontSize={'21px'} color={titleDarkCSV} mt={'86px'}>
-                                        Drop files here to upload
-                                    </Text>
-
-                                    <Text fontSize={'14px'} color={'default.containerAgGridRecords'} ml={'100px'}>
-                                        or
-                                    </Text>
-                                    <Button width={'98px'} height={'36px'} bg={'default.toolbarButton'} mt={'4px'} ml={'60px'}>
-                                        Select File
-                                    </Button>
-                                    <Text fontSize={'12px'} color={'default.containerAgGridRecords'} mt={'20px'} ml={'70px'}>
-                                        Supports: CSV
-                                    </Text>
-                                    <Text fontSize={'12px'} color={'default.containerAgGridRecords'} mt={'4px'} ml={'10px'}>
-                                        Max file size 100mb | File limit 100 CSV
-                                    </Text>
+                                    <FileUploadComponent></FileUploadComponent>
                                 </Box>
                             </Center>
                         </Box>
