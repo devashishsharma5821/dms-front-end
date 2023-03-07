@@ -66,7 +66,7 @@ const Project = () => {
     }
     return (
         <>
-            <Box marginLeft={36}>
+            <Box marginLeft={36} overflowY={'auto'}>
                 <Box fontSize={'24px'} fontWeight={700} ml={'24'} mt={'35'} mb={'24'}>
                     Projects
                 </Box>

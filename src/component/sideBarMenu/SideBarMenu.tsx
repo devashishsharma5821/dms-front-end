@@ -102,7 +102,7 @@ const SideBarMenu = () => {
     const thirdLevelMenu = () => {
         return (
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '445px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
-                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
+                <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         <Box width={'254px'} pl={'0px'} mt="17">
                             <h3>
@@ -117,7 +117,7 @@ const SideBarMenu = () => {
     const secondLevelMenu = () => {
         return (
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
-                <Flex h={'95vh'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
+                <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         {sideBarMenuIcons[0].section[currentIndex].isClicked && (
                             <Box width={'254px'} pl={'0px'} mt="17">
@@ -159,7 +159,7 @@ const SideBarMenu = () => {
         <Flex>
             <>
                 <div style={{ ...zIndexStyle, position: 'absolute' }} id="mySidebar" onMouseOver={hoverIn} onMouseOut={hoverOut}>
-                    <Flex h={'95vh'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
+                    <Flex h={'100vh'} overflow={'hidden'} className={''} as="nav" justify="space-between" wrap="wrap" bg={themebg} color={'default.lightText'}>
                         <VStack>
                             {!isHovering && (
                                 <Box ml="6" mr="6" mt="30">
