@@ -113,8 +113,34 @@ const MyProfileModal = (props: any) => {
 
                 <Divider color={'default.dividerColor'} mt={'21px'} />
                 <ModalFooter>
-                    <Button onClick={onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'19'} width={'72px'} height={'40px'}>
-                        Close
+                    <Button
+                        onClick={onClose}
+                        bg={'default.whiteText'}
+                        borderRadius={4}
+                        mb={19}
+                        mr={15}
+                        mt={'19'}
+                        width={'82px'}
+                        height={'36px'}
+                        border={'1px'}
+                        borderColor={'default.textButton'}
+                        color={'default.textButton'}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        bg={'default.whiteText'}
+                        borderRadius={4}
+                        mb={19}
+                        mr={20}
+                        mt={'19'}
+                        width={'82px'}
+                        height={'36px'}
+                        border={'1px'}
+                        borderColor={'default.textButton'}
+                        color={'default.textButton'}
+                    >
+                        Save
                     </Button>
                 </ModalFooter>
             </ModalContent>
