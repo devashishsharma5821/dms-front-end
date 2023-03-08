@@ -14,7 +14,7 @@ import {
 import {  DownArrowShare, LinkChain } from '../../assets/icons';
 import { ShareCreate, ShareCreateDetail, ShareDelete, ShareDeleteDetail } from '../../models/share';
 import useAppStore from '../../store';
-import { GetAllUsersDataAppStoreState } from '../../models/profile';
+import { DMSAccessLevel, GetAllUsersDataAppStoreState } from '../../models/profile';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { createAccess, deleteAccess } from '../../query';
@@ -109,12 +109,18 @@ const Share = (props: any) => {
     const handleShare = () => {
         if(props.isEdit) {
             const mutationVariable = {
-                userId: selectedUser,
-                projectId: params.projectId
+                access: [
+                    {
+                        user_id: selectedUser,
+                        access_level: DMSAccessLevel[0]
+                    }
+                ],
+                project_id: params.projectId
             };
             client
                 .mutate<ShareCreate<ShareCreateDetail>>({
-                    mutation: createAccess(mutationVariable)
+                    mutation: createAccess(),
+                    variables: {input: mutationVariable}
                 })
                 .then(() => {
                     Toast({

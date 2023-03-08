@@ -408,28 +408,23 @@ export const createProject = (variables: any) => {
 };
 
 export const editProject = (variables: any) => {
-    const tags = (variables.tags !== null && variables.tags !== "" ) ? variables.tags.split(',') : [];
+    console.log('v', variables)
     return gql`mutation {
                 dmsEditProject(
                     id: "${variables.id}",
                     name: "${variables.name}",
                     project_variables: "${variables.project_variables}",
                     description: "${variables.description}",
-                    tags: ${JSON.stringify(tags)}
+                    tags: ${JSON.stringify(variables.tags)}
                 )
             }`;
 };
 
-export const createAccess = (variables: any) => {
+export const createAccess = () => {
     return gql `
-    mutation {
-    dmsCreateOrUpdateProjectAccess
-    (
-    user_id: "${variables.userId}", 
-    project_ID:"${variables.projectId}", , 
-    access_level: VIEWER
-    )
-    }`;
+    mutation dmsCreateAccess($input: DMSProjecAccessMutationInput!) {
+        dmsCreateOrUpdateProjectAccess(input: $input)
+}`;
 };
 
 export const deleteAccess = (variables: any) => {

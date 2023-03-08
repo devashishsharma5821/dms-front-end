@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './project.scss';
-import { Avatar, Box, Center, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Avatar, Box, Center, Flex, Text, useColorModeValue, AvatarGroup } from '@chakra-ui/react';
 import { Documentation } from '../../assets/icons';
 import { GetAllProjectsDetail } from '../../models/project';
 import { getUserNameFromId, getTruncatedText, convertTime } from '../../utils/common.utils';
@@ -72,7 +72,7 @@ const ProjectsViews = (props: any) => {
                                                         if(tagIndex < 3) {
                                                             return (
                                                                 <Box key={tagIndex} mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                                    <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                    <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600} mt={'2px'} ml={6}>
                                                                         {tagIndex > 1 ? `+ ${project.tags.length  - 2} more`: tag}
                                                                     </Text>
                                                                 </Box>
@@ -83,7 +83,7 @@ const ProjectsViews = (props: any) => {
                                                     <Box mr={10} bg={'#F2F4F8'}
                                                          height={'24px'} borderRadius={3} width={'auto'}
                                                          pr={'5px'}>
-                                                        <Text color={'#1A3F59'} fontSize={'14px'}
+                                                        <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600}
                                                               mt={'2px'} ml={6}>
                                                             No Tags Available
                                                         </Text>
@@ -95,14 +95,15 @@ const ProjectsViews = (props: any) => {
                                         {
                                             project.project_access && project.project_access.length > 0 &&
                                             <Box ml={'20px'} m={'18px'}>
-
-                                                {
-                                                    project.project_access.map((access, accessIndex) => {
-                                                       return (
-                                                           <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />
-                                                       );
-                                                    })
-                                                }
+                                                <AvatarGroup size={'md'} max={4} spacing={1}>
+                                                    {
+                                                        project.project_access.map((access, accessIndex) => {
+                                                            return (
+                                                                <Avatar name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />
+                                                            );
+                                                        })
+                                                    }
+                                                </AvatarGroup>
                                             </Box>
                                         }
                                         {

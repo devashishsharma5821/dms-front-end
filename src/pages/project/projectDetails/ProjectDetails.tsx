@@ -18,20 +18,32 @@ import {
     Tag,
     TagLabel,
     TagCloseButton,
-    HStack
+    HStack,
+    FormControl,
+    Stack,
+    Popover,
+    PopoverTrigger,
+    PopoverBody,
+    PopoverContent
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
-import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete } from '../../../models/project';
+import {
+    DeleteProjectDetail,
+    GetSingleProjectAppStoreState,
+    ProjectDelete,
+    ProjectEdit, ProjectEditDetail
+} from '../../../models/project';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingleProjectData } from '../../../zustandActions/projectActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
-import { GetAllUsersDataAppStoreState, User } from '../../../models/profile';
+import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import client from '../../../apollo-client';
 import { deleteProject, editProject } from '../../../query';
+import Share from '../../../component/modalSystem/Share';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -40,10 +52,14 @@ const ProjectDetails = (props: any) => {
     const [deleteId, setDeleteId] = useState<string>('');
     const [inlineDescription, setInlineDescription] = useState<string>('');
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
+    const [popOverTag, setPopOverTag] = React.useState('');
     const deleteConfirmationModal = useDisclosure();
+    const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
     const navigate = useNavigate();
     const params = useParams();
     const createProjectModal = useDisclosure();
+    const tagPopOver = useDisclosure()
+    const editAccessModal = useDisclosure();
     function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -76,6 +92,10 @@ const ProjectDetails = (props: any) => {
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
+        } else {
+            if(AllUsersData && SingleProjectData) {
+                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+            }
         }
     }, [AllUsersData]);
     const editProjectModal = () => {
@@ -122,6 +142,48 @@ const ProjectDetails = (props: any) => {
     const handleEditDescriptionChange = (editChangeValue: string) => {
         setInlineDescription(editChangeValue);
     };
+    const handleEditProject = (variables: any, toastMessages: any) => {
+        client
+            .mutate<ProjectEdit<ProjectEditDetail>>({
+                mutation: editProject(variables)
+            })
+            .then(() => {
+                Toast({
+                    title: toastMessages.successMessage,
+                    status: 'success',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-left'
+                });
+                getAndUpdateAllProjectsData();
+            })
+            .catch(() => {
+                Toast({
+                    title: toastMessages.errorMessage,
+                    status: 'error',
+                    isClosable: true,
+                    duration: 5000,
+                    position: 'top-left'
+                });
+            });
+    }
+    const handleAddTag = () => {
+        console.log('PopTag', popOverTag);
+        tagPopOver.onClose();
+        setPopOverTag('');
+        SingleProjectData.basic.tags.push(popOverTag);
+        const variables = {
+            id: SingleProjectData.basic.id,
+            name: SingleProjectData.basic.name,
+            project_variables: SingleProjectData.basic.project_variables,
+            description: SingleProjectData.basic.description,
+            tags: [...SingleProjectData.basic.tags]
+        };
+        handleEditProject(variables, {
+            successMessage: 'Project Tags Edited Successfully',
+            errorMessage: 'Project Tags Failed To edit'
+        })
+    }
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== SingleProjectData.basic.description) {
             const variables = {
@@ -131,31 +193,15 @@ const ProjectDetails = (props: any) => {
                 description: nextDescription,
                 tags: SingleProjectData.basic.tags === null ? [] : SingleProjectData.basic.tags
             };
-            client
-                .mutate<ProjectDelete<DeleteProjectDetail>>({
-                    mutation: editProject(variables)
-                })
-                .then(() => {
-                    Toast({
-                        title: `Project Description Edited Successfully`,
-                        status: 'success',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
-                    getAndUpdateAllProjectsData();
-                })
-                .catch(() => {
-                    Toast({
-                        title: `Project Description Cannot be Edited`,
-                        status: 'error',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
-                });
+            handleEditProject(variables, {
+                successMessage: 'Project Description Edited Successfully',
+                errorMessage: 'Project Description Failed To edit'
+            })
         }
     };
+    const createUserAccessForCreateProjectMode = (userList:AllUsers) => {
+        setAccessUserListCreateMode(userList);
+    }
     return (
         <>
             {AllUsersData && SingleProjectData && (
@@ -280,9 +326,34 @@ const ProjectDetails = (props: any) => {
                                                         </HStack>
                                                     </>
                                                 </Center>
-                                                <Text color={'default.toolbarButton'} mt={'12'} ml={20}>
-                                                    + Add Tag
-                                                </Text>
+                                                <Popover
+                                                    isOpen={tagPopOver.isOpen}
+                                                    onOpen={tagPopOver.onOpen}
+                                                    onClose={tagPopOver.onClose}
+                                                    placement='right'
+                                                    closeOnBlur={false}
+                                                >
+                                                    <PopoverTrigger>
+                                                        <Text color={'default.toolbarButton'} mt={'12'} ml={20}>
+                                                            + Add Tag
+                                                        </Text>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent p={5}>
+                                                        <Stack spacing={4}>
+                                                            <FormControl>
+                                                                <Input onChange={(evt: any) => setPopOverTag(evt.target.value)} value={popOverTag} placeholder="Type Here" />
+                                                            </FormControl>
+                                                            <ButtonGroup display='flex' justifyContent='flex-end'>
+                                                                <Button variant='outline' onClick={tagPopOver.onClose}>
+                                                                    Cancel
+                                                                </Button>
+                                                                <Button onClick={handleAddTag} colorScheme='teal'>
+                                                                    Add Tag
+                                                                </Button>
+                                                            </ButtonGroup>
+                                                        </Stack>
+                                                    </PopoverContent>
+                                                </Popover>
                                             </Flex>
 
                                             <Editable
@@ -321,7 +392,7 @@ const ProjectDetails = (props: any) => {
                                                     </Text>
                                                 </Box>
                                                 <Center flex="2" justifyContent={'flex-end'} mr={46}>
-                                                    <Text color={'default.toolbarButton'} mt={'21px'}>
+                                                    <Text onClick={editAccessModal.onOpen} cursor={'pointer'} color={'default.toolbarButton'} mt={'21px'}>
                                                         {' '}
                                                         Edit
                                                     </Text>
@@ -371,6 +442,11 @@ const ProjectDetails = (props: any) => {
             {createProjectModal.isOpen && (
                 <CreateProjectModal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: true, data: SingleProjectData, usersData: AllUsersData }} />
             )}
+            {
+                editAccessModal.isOpen && (
+                    <Share isOpen={editAccessModal.isOpen} retainData={accessUserListCreateMode} onClose={editAccessModal.onClose} isEdit={true} onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateProjectMode(userList)}></Share>
+                )
+            }
         </>
     );
 };
