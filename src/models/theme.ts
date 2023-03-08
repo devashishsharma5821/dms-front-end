@@ -82,7 +82,8 @@ export const colors = {
         textDeployPiplineButton: '#AEB1B8',
         accessByNumber: '#75858F',
         bgDatasetLevels: '#929AA9',
-        titleForDropFile: ' #1D1E23'
+        titleForDropFile: ' #1D1E23',
+        textButton: '#0073E6'
     },
     light: {
         header: '#1A3F59',
