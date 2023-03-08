@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, AvatarGroup } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
 import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
 import Share from '../modalSystem/Share';
@@ -44,16 +44,18 @@ const Header = (props: any) => {
                         My New Experiment
                     </Text>
 
-                    <Editable pl={'10'} defaultValue="Take some chakra">
-                        <PencilIcon color={'#A3B4D1'} height={'14px'} Height={'14px'} />
+                    <Editable pl={'10'} defaultValue="Take some chakra" cursor={'pointer'}>
+                        <PencilIcon color={'#A3B4D1'} height={'18px'} width={'18px'} />
                     </Editable>
                 </Center>
             )}
             <Center flex="3" mr={5} justifyContent={'flex-end'}>
                 {isExperiment && (
                     <>
-                        <Avatar borderRadius="full" boxSize="32px" name={`P G`} p={'5px'} />
-                        <Avatar borderRadius="full" boxSize="32px" name={`N l`} ml={'-6px'} mr={'10px'} p={'5px'} />
+                        <AvatarGroup size="sm" max={2}>
+                            <Avatar borderRadius="full" name={`P G`} />
+                            <Avatar borderRadius="full" name={`N l`} />
+                        </AvatarGroup>
                         <Box pl={'6'} pr={'6'}>
                             <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline" width={'62px'} height={'28px'} borderRadius={3}>
                                 Share

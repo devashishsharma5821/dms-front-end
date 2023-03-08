@@ -1,5 +1,4 @@
 import React from 'react';
-import { User } from '../../models/profile';
 import {
     Box,
     Flex,
@@ -18,7 +17,6 @@ import {
     Divider,
     Avatar
 } from '@chakra-ui/react';
-
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
@@ -26,7 +24,7 @@ const MyProfileModal = (props: any) => {
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
-    const { onClose } = useDisclosure();
+    const closeButton = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
 
@@ -37,14 +35,15 @@ const MyProfileModal = (props: any) => {
                 <ModalHeader color={shretextColor} mt={'13'} mb={'15'} ml={20}>
                     My Profile
                 </ModalHeader>
-                <ModalCloseButton mt={'18'} mr={'10px'} color={textColor2} />
+                <ModalCloseButton mt={'18'} mr={'10px'} color={closeButton} />
                 <Divider color={'default.dividerColor'} />
                 <ModalBody width={'496px'}>
                     <Box>
                         <Center>
                             <Flex width={'454px'} maxHeight={'382px'}>
                                 <Avatar
-                                    p={'5px'}
+                                    fontSize={'32px'}
+                                    fontWeight={700}
                                     borderRadius="full"
                                     boxSize="100px"
                                     name={`${props.userDetail?.firstName} ${props.userDetail?.lastName}`}
@@ -60,10 +59,10 @@ const MyProfileModal = (props: any) => {
                                         <Text color={accesstextColor} fontWeight={400}>
                                             {props.userDetail?.email}
                                         </Text>
-                                        <Text mt={'15px'} color={textColor2}>
+                                        <Text mt={'15px'} color={textColor2} fontWeight={600}>
                                             Your Info
                                         </Text>
-                                        <Text maxWidth={'298px'} color={accesstextColor} fontWeight={400} mt={'6px'}>
+                                        <Text maxWidth={'298px'} color={accesstextColor} fontWeight={400} mt={'6px'} mb={'32px'}>
                                             No Info Available.
                                         </Text>
                                     </Box>
@@ -111,10 +110,10 @@ const MyProfileModal = (props: any) => {
                     </Box>
                 </ModalBody>
 
-                <Divider color={'default.dividerColor'} mt={'21px'} />
+                <Divider color={'default.dividerColor'} mt={'16px'} />
                 <ModalFooter>
                     <Button
-                        onClick={onClose}
+                        onClick={props.onClose}
                         bg={'default.whiteText'}
                         borderRadius={4}
                         mb={19}

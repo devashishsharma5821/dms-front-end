@@ -32,8 +32,9 @@ import { Field, Formik } from 'formik';
 import UploadCSVModal from './UploadCSVModal';
 
 const CreateDataset = (props: any) => {
-    const textColor = useColorModeValue('light.header', 'default.whiteText');
+    const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
+    const idText = useColorModeValue('default.blackText', 'default.whiteText');
     const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
@@ -99,7 +100,7 @@ const CreateDataset = (props: any) => {
                     <Center width={'856px'} bg={boxColor} height={'92px'} mt={'10px'} mb={'21px'} ml={'21px'}>
                         <FormControl isRequired>
                             <Box>
-                                <FormLabel htmlFor="existingCompute" color={datasetTitleColor} mt={14} ml={14}>
+                                <FormLabel htmlFor="existingCompute" color={datasetTitleColor} mt={14} ml={14} fontWeight={600}>
                                     Project Name
                                 </FormLabel>
                                 <Select
@@ -134,7 +135,7 @@ const CreateDataset = (props: any) => {
                             <OrIconSmall />
                         </Box>
                         <Box width={'768px'}>
-                            <Text color={datasetTitleColor} mb={'-14px'}>
+                            <Text color={datasetTitleColor} mb={'-14px'} fontWeight={600}>
                                 Create New Project
                             </Text>
 
@@ -146,13 +147,6 @@ const CreateDataset = (props: any) => {
                 </Flex>
                 <Flex flexDirection={'row'}>
                     <Box width={'55%'} ml={'21'}>
-                        <Flex mb={'19px'}>
-                            <Text color={datasetTitleColor}>Dataset ID:</Text>
-                            <Text fontWeight={400} color={textColor} ml={'8px'}>
-                                f8iEY4
-                            </Text>
-                        </Flex>
-
                         <Flex>
                             <Formik
                                 initialValues={{
@@ -166,11 +160,12 @@ const CreateDataset = (props: any) => {
                             >
                                 <VStack align="flex-start">
                                     <FormControl isRequired>
-                                        <FormLabel htmlFor="datasetName" mb={6} color={datasetTitleColor}>
+                                        <FormLabel htmlFor="datasetName" mb={6} color={datasetTitleColor} fontWeight={600}>
                                             Dataset Name
                                         </FormLabel>
                                         <Field
-                                            width={486}
+                                            width={484}
+                                            height={34}
                                             borderRadius={3}
                                             border={'1px'}
                                             borderColor={'light.lighterGrayishBlue'}
@@ -188,12 +183,12 @@ const CreateDataset = (props: any) => {
                                             }}
                                         />
 
-                                        <FormLabel htmlFor="Description" mt={20} mb={6} color={datasetTitleColor}>
+                                        <FormLabel htmlFor="Description" mt={20} mb={6} color={datasetTitleColor} fontWeight={600}>
                                             Description
                                         </FormLabel>
                                         <Field
-                                            height={100}
-                                            width={486}
+                                            height={98}
+                                            width={484}
                                             borderRadius={3}
                                             border={'1px'}
                                             borderColor={'light.lighterGrayishBlue'}
@@ -207,7 +202,7 @@ const CreateDataset = (props: any) => {
                         </Flex>
                         <Flex>
                             <Center>
-                                <Text color={datasetTitleColor} mt={'20'}>
+                                <Text color={datasetTitleColor} mt={'20'} fontWeight={600}>
                                     Tag:
                                 </Text>
                                 <Center>
@@ -224,50 +219,32 @@ const CreateDataset = (props: any) => {
                                         </Flex>
                                     </Box>
                                 </Center>
-                                <Text color={'default.toolbarButton'} mt={'20'} ml={20}>
+                                <Text color={'default.toolbarButton'} mt={'20'} ml={20} fontWeight={600}>
                                     + Add Tag
                                 </Text>
                             </Center>
                         </Flex>
                         <Flex mb={'21px'}>
                             <Center>
-                                <Text color={datasetTitleColor} mt={'20'}>
+                                <Text color={datasetTitleColor} mt={'20'} fontWeight={600}>
                                     Shared with:
-                                </Text>
-                                <Center>
-                                    <Box ml={14} mt={16} bg={'default.tagBoxColor'} height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
-                                        <Flex>
-                                            <Center>
-                                                <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                    SB
-                                                </Text>
-                                                <Box justifyContent={'flex-end'} ml={'14px'} mr={'6px'}>
-                                                    <CloseIcon color={'#666C80'} />
-                                                </Box>
-                                            </Center>
-                                        </Flex>
-                                    </Box>
-                                </Center>
-
-                                <Text cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
-                                    + Add Member(s)
                                 </Text>
                             </Center>
                         </Flex>
                         <Flex>
                             <Center>
-                                <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={`Shirin Bampoori`} color={'default.whiteText'} />
+                                <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'-14px'} />
                             </Center>
                         </Flex>
                     </Box>
 
-                    <Stack direction="row" h="378px" p={4}>
+                    <Stack direction="row" h="338px" p={4}>
                         <Divider orientation="vertical" />
                     </Stack>
                     <Flex mt={-86}>
                         <Center>
                             <Box>
-                                <Text ml={'20px'} color={datasetTitleColor}>
+                                <Text ml={'20px'} color={datasetTitleColor} mt={'72px'} fontWeight={600}>
                                     Select Source
                                 </Text>
 
@@ -293,7 +270,7 @@ const CreateDataset = (props: any) => {
                                                                 >
                                                                     <Center mt={'35px'}>{section.icon}</Center>
 
-                                                                    <Box textAlign={'center'} mb={'14px'} mt={'4px'} color={'black'}>
+                                                                    <Box textAlign={'center'} mt={'4px'} color={'black'} fontWeight={400}>
                                                                         {' '}
                                                                         {section.name}{' '}
                                                                     </Box>
@@ -309,7 +286,7 @@ const CreateDataset = (props: any) => {
                         </Center>
                     </Flex>
                 </Flex>
-                <Divider color={'default.dividerColor'} mt={'26px'} width={'auto'} />
+                <Divider color={'default.dividerColor'} mt={'70px'} width={'auto'} />
                 <ModalFooter mb={'18px'} mt={'21px'} mr={'20px'}>
                     <Button
                         disabled={loading}
