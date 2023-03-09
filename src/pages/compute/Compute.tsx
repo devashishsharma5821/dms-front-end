@@ -1,16 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
-import {
-    Box,
-    Button,
-    Center,
-    Divider,
-    Flex,
-    Stack,
-    Text,
-    useColorModeValue,
-    useDisclosure,
-    Spinner
-} from '@chakra-ui/react';
+import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, Spinner } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
@@ -55,7 +44,7 @@ import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 const { toast } = createStandaloneToast();
 
 const Compute = () => {
-    const [DmsComputeData, UserConfig, dbSettingsData, SpinnerInfo] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData, state.SpinnerInfo]);
+    const [DmsComputeData, UserConfig, dbSettingsData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData]);
     const opid = v4();
     const textColor = useColorModeValue('light.header', 'dark.white');
     const textColorIcon = useColorModeValue('#666C80', 'white');
@@ -460,7 +449,7 @@ const Compute = () => {
         });
         setIsEdit(false);
         if (!dbSettingsData.length) {
-            updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
+            updateSpinnerInfo(true);
             const check = getAndUpdateDbSettingsData();
             check.then((data: any) => {
                 data && createModal.onOpen();
@@ -518,8 +507,6 @@ const Compute = () => {
                                 </Box>
                             </Center>
                         </Center>
-                        {SpinnerInfo.loading && SpinnerInfo.to && <Spinner className="spinner" size="xl" thickness="4px" />}
-
                         <Box mr={'17'} mb={'17'}>
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
                                 <AgGridReact<DmsComputeData>

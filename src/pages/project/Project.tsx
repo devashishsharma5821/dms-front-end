@@ -12,6 +12,10 @@ import ProjectsViews from './projectsViews';
 import { projectsSearch } from '../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import { createStandaloneToast } from '@chakra-ui/react';
+const { toast } = createStandaloneToast();
+
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
     const textColor = useColorModeValue('light.header', 'dark.white');
@@ -22,12 +26,19 @@ const Project = () => {
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     useEffect(() => {
         if (AllUsersData === null) {
-            const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
+            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
+            toast({
+                title: `Data is fetching`,
+                status: 'success',
+                isClosable: true,
+                duration: 5000,
+                position: 'top-right'
+            });
             getAndUpdateAllUsersData(variablesForAllUsers);
         }
     }, [AllUsersData]);
     const onSearchChange = async (searchValue: string) => {
-        if(searchValue.length > 0) {
+        if (searchValue.length > 0) {
             const search = await projectsSearch(AllProjectsData, searchValue, AllUsersData);
             setAllProjectsData(search);
         } else {
@@ -36,22 +47,22 @@ const Project = () => {
     };
     const handleTabsChange = (tabIndex: number) => {
         setTabIndex(tabIndex);
-        if(tabIndex === 0) {
+        if (tabIndex === 0) {
             setAllProjectsData(AllProjectsData);
-        } else if(tabIndex === 1) {
+        } else if (tabIndex === 1) {
             const userId = UserConfig.userConfiguration.user.userId;
             const userOnlyProjects = AllProjectsData.filter((project) => {
-               return project.created_by === userId;
+                return project.created_by === userId;
             });
             setAllProjectsData(userOnlyProjects);
-        } else if(tabIndex === 2) {
+        } else if (tabIndex === 2) {
             const userId = UserConfig.userConfiguration.user.userId;
             const userOnlyProjects = AllProjectsData.filter((project) => {
                 return project.created_by !== userId;
             });
             setAllProjectsData(userOnlyProjects);
         }
-    }
+    };
     useEffect(() => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
@@ -63,7 +74,7 @@ const Project = () => {
     const onCreateProjectSuccess = () => {
         getAndUpdateAllProjectsData();
         CreateProject.onClose();
-    }
+    };
     return (
         <>
             <Box marginLeft={36} overflowY={'auto'}>
@@ -101,7 +112,7 @@ const Project = () => {
                             <MenuItem>
                                 <Text ml={'12'}>Use a template</Text>
                             </MenuItem>
-                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: false, data: {}, usersData: []}}  />
+                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
                         </MenuList>
                     </Menu>
                 </Center>
@@ -111,8 +122,7 @@ const Project = () => {
                         <Tab ml={'26'}>My Projects</Tab>
                         <Tab ml={'26'}>Shared With Me</Tab>
                     </TabList>
-                    {
-                        AllUsersData && allProjectsData &&
+                    {AllUsersData && allProjectsData && (
                         <TabPanels ml={'44px'} mr={'10px'}>
                             <TabPanel>
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
@@ -124,8 +134,7 @@ const Project = () => {
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>
                         </TabPanels>
-                    }
-
+                    )}
                 </Tabs>
             </Box>
         </>

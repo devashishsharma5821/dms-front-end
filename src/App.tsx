@@ -6,6 +6,7 @@ import { protectedResources } from './authConfig';
 import UserConfiguration from './user-config';
 import { ENVIRONMENT } from './environments';
 import { Box, Flex } from '@chakra-ui/react';
+import './global.scss';
 console.log('dms: ', ENVIRONMENT.VERSION);
 const App = () => {
     const { instance, accounts, inProgress } = useMsal();
@@ -60,7 +61,11 @@ const App = () => {
         };
     }, [instance]);
 
-    return <Box height = {'100vh'} width = {'100vw'} overflow={"hidden"}>{isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span>}</Box>;
+    return (
+        <Box height={'100vh'} width={'100vw'} overflow={'hidden'}>
+            {isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span>}
+        </Box>
+    );
 };
 
 export default App;
