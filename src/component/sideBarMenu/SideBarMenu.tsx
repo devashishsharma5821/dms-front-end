@@ -83,7 +83,7 @@ const SideBarMenu = () => {
     const triggerCreateModal = (type: string) => {
         if (type === 'compute') {
             if (!dbSettingsData.length) {
-                updateSpinnerInfo({ loading: true, to: 'dbSettingData' });
+                updateSpinnerInfo(true);
                 const check = getAndUpdateDbSettingsData();
                 check.then((data: any) => {
                     data && createComputeModal.onOpen();

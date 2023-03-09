@@ -18,17 +18,16 @@ export const AppRouter = (props: any) => {
             <Router basename="/v3-dms">
                 <Suspense fallback={<div>Loading...</div>}>
                     <Header firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
-                    <Box height={'100vh'} width={'100vw'} overflow={'hidden'} flexDirection="column">
+                    <Box overflow={'hidden'} flexDirection="column">
                         <SideBarMenu />
                         {spinnerInfo && (
                             <div className="spinnerContainer">
                                 <Spinner className="spinner" size="xl" thickness="4px" />
                             </div>
                         )}
-                        ;
                         <SocketWrapper>
                             <ContextCompute>
-                                <Box>
+                                <Box overflow={'hidden'}>
                                     <ToastProvider />
                                     <Routes>
                                         <Route path="/" element={<Navigate to="/compute" />}></Route>
