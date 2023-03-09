@@ -29,7 +29,7 @@ const MyProfileModal = (props: any) => {
     const finalRef = React.useRef(null);
 
     return (
-        <Modal size={'md'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} size={'md'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
             <ModalContent minWidth={'496px'} borderRadius={'2'} maxHeight={'551px'}>
                 <ModalHeader color={shretextColor} mt={'13'} mb={'15'} ml={20}>
@@ -42,9 +42,9 @@ const MyProfileModal = (props: any) => {
                         <Center>
                             <Flex width={'454px'} maxHeight={'382px'}>
                                 <Avatar
-                                    fontSize={'32px'}
                                     fontWeight={700}
                                     borderRadius="full"
+                                    size={"full"}
                                     boxSize="100px"
                                     name={`${props.userDetail?.firstName} ${props.userDetail?.lastName}`}
                                     color={'default.whiteText'}
@@ -127,20 +127,20 @@ const MyProfileModal = (props: any) => {
                     >
                         Cancel
                     </Button>
-                    <Button
-                        bg={'default.whiteText'}
-                        borderRadius={4}
-                        mb={19}
-                        mr={20}
-                        mt={'19'}
-                        width={'82px'}
-                        height={'36px'}
-                        border={'1px'}
-                        borderColor={'default.textButton'}
-                        color={'default.textButton'}
-                    >
-                        Save
-                    </Button>
+                    {/*<Button*/}
+                    {/*    bg={'default.whiteText'}*/}
+                    {/*    borderRadius={4}*/}
+                    {/*    mb={19}*/}
+                    {/*    mr={20}*/}
+                    {/*    mt={'19'}*/}
+                    {/*    width={'82px'}*/}
+                    {/*    height={'36px'}*/}
+                    {/*    border={'1px'}*/}
+                    {/*    borderColor={'default.textButton'}*/}
+                    {/*    color={'default.textButton'}*/}
+                    {/*>*/}
+                    {/*    Save*/}
+                    {/*</Button>*/}
                 </ModalFooter>
             </ModalContent>
         </Modal>

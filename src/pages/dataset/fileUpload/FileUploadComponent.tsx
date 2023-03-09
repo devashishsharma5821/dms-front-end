@@ -18,7 +18,7 @@ const FileUploadComponent = () => {
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
 
     const handleFile = (files: any) => {
-        console.log('Files', files)
+        // console.log('Files', files)
         const uploadCSVVariables = {
             file: files[0],
             projectId: '41',

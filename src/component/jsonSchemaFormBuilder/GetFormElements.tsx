@@ -2,7 +2,6 @@ import { TextField, SelectField, FieldSwitch } from './Elements/FormElements';
 import { FormSchemaType, GetFormElementsPropType } from '../.././models/formBuilder';
 
 function GetFormElements(props: GetFormElementsPropType) {
-    console.log('props ===>', props);
     const getFormElement = (elementName: string, elementSchema: FormSchemaType) => {
         const fieldProps = {
             name: elementName,

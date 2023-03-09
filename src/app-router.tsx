@@ -11,17 +11,16 @@ import { ToastProvider } from '@chakra-ui/react';
 
 export const AppRouter = (props: any) => {
     const user = props.user as User;
-    console.log(user);
     return (
         <>
             <Router basename="/v3-dms">
                 <Suspense fallback={<div>Loading...</div>}>
                     <Header firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
-                    <Box height = {'100vh'} width = {'100vw'} overflow={'hidden'} flexDirection="column">
+                    <Box flexDirection="column">
                         <SideBarMenu />
                         <SocketWrapper>
                             <ContextCompute>
-                                <Box overflow={'hidden'}>
+                                <Box>
                                     <ToastProvider />
                                     <Routes>
                                         <Route path="/" element={<Navigate to="/compute" />}>
