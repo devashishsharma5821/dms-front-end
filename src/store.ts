@@ -27,7 +27,7 @@ const useAppStore = create<AppState>((set) => ({
     computeState: '',
     dbSettingsData: [],
     toastMessage: {},
-    SpinnerInfo: { loading: false, to: 'none' }
+    spinnerInfo: false
 }));
 
 export default useAppStore;

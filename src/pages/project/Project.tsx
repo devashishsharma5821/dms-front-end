@@ -12,6 +12,10 @@ import ProjectsViews from './projectsViews';
 import { projectsSearch } from '../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import { createStandaloneToast } from '@chakra-ui/react';
+const { toast } = createStandaloneToast();
+
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
     const textColor = useColorModeValue('light.header', 'dark.white');
@@ -25,6 +29,15 @@ const Project = () => {
     useEffect(() => {
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
+
+            toast({
+                title: `Data is fetching`,
+                status: 'success',
+                isClosable: true,
+                duration: 5000,
+                position: 'top-right'
+            });
+
             getAndUpdateAllUsersData(variablesForAllUsers);
         }
     }, [AllUsersData]);
@@ -122,7 +135,9 @@ const Project = () => {
                         </Tab>
                     </TabList>
                     {AllUsersData && allProjectsData && (
-                        <TabPanels>
+
+                        <TabPanels ml={'44px'} mr={'10px'}>
+
                             <TabPanel>
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>
