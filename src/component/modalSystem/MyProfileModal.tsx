@@ -44,7 +44,7 @@ const MyProfileModal = (props: any) => {
                                 <Avatar
                                     fontWeight={700}
                                     borderRadius="full"
-                                    size={"full"}
+                                    size={'full'}
                                     boxSize="100px"
                                     name={`${props.userDetail?.firstName} ${props.userDetail?.lastName}`}
                                     color={'default.whiteText'}
