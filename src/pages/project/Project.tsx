@@ -15,6 +15,8 @@ import { GetAllUsersDataAppStoreState } from '../../models/profile';
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
     const textColor = useColorModeValue('light.header', 'dark.white');
+    const tabTextColor = useColorModeValue('default.darkGrayCreate', 'dark.white');
+    const textColorPage = useColorModeValue('default.blackText', 'dark.white');
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
     const [UserConfig] = useAppStore((state: any) => [state.UserConfig]);
     const [allProjectsData, setAllProjectsData] = React.useState<GetAllProjectsDetail[]>(AllProjectsData);
@@ -22,12 +24,12 @@ const Project = () => {
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     useEffect(() => {
         if (AllUsersData === null) {
-            const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
+            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
         }
     }, [AllUsersData]);
     const onSearchChange = async (searchValue: string) => {
-        if(searchValue.length > 0) {
+        if (searchValue.length > 0) {
             const search = await projectsSearch(AllProjectsData, searchValue, AllUsersData);
             setAllProjectsData(search);
         } else {
@@ -36,22 +38,22 @@ const Project = () => {
     };
     const handleTabsChange = (tabIndex: number) => {
         setTabIndex(tabIndex);
-        if(tabIndex === 0) {
+        if (tabIndex === 0) {
             setAllProjectsData(AllProjectsData);
-        } else if(tabIndex === 1) {
+        } else if (tabIndex === 1) {
             const userId = UserConfig.userConfiguration.user.userId;
             const userOnlyProjects = AllProjectsData.filter((project) => {
-               return project.created_by === userId;
+                return project.created_by === userId;
             });
             setAllProjectsData(userOnlyProjects);
-        } else if(tabIndex === 2) {
+        } else if (tabIndex === 2) {
             const userId = UserConfig.userConfiguration.user.userId;
             const userOnlyProjects = AllProjectsData.filter((project) => {
                 return project.created_by !== userId;
             });
             setAllProjectsData(userOnlyProjects);
         }
-    }
+    };
     useEffect(() => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
@@ -63,21 +65,21 @@ const Project = () => {
     const onCreateProjectSuccess = () => {
         getAndUpdateAllProjectsData();
         CreateProject.onClose();
-    }
+    };
     return (
         <>
-            <Box marginLeft={36}>
-                <Box fontSize={'24px'} fontWeight={700} ml={'24'} mt={'35'} mb={'24'}>
+            <Box className="project-page" marginLeft={50}>
+                <Box fontSize={'24px'} fontWeight={700} mt={'24'} mb={'8'} color={textColorPage}>
                     Projects
                 </Box>
-                <Stack spacing={4}>
-                    <Text fontSize="md" ml={'24'} noOfLines={[2]}>
+                <Stack spacing={4} mb={38}>
+                    <Text fontSize={14} noOfLines={[2]} color={textColorPage}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                         ullamco laboris nisi ut aliquip ex ea commodo consequat. <br />
                         Duis aute irure dolor in reprehenderit in voluptate velit
                     </Text>
                 </Stack>
-                <Center flex="3" mr={5} justifyContent={'flex-end'} ml={'17'} mb={'-56px'} mt={'30px'} zIndex={2}>
+                <Center flex="3" justifyContent={'flex-end'} zIndex={2}>
                     <Box>
                         <SearchComponent searchChange={onSearchChange} />
                     </Box>
@@ -94,26 +96,33 @@ const Project = () => {
                                 <DownArrow color={'white'} />
                             </Center>
                         </MenuButton>
-                        <MenuList borderRadius={'0'} width={'195px'} height={'72px'} color={textColor} ml={'-16'}>
-                            <MenuItem mt={'5px'} onClick={CreateProject.onOpen}>
-                                <Text ml={'12'}>Start from scratch</Text>
+                        <MenuList borderRadius={'0'} width={'165px'} height={'72px'} color={textColor} mt={'-8px'}>
+                            <MenuItem onClick={CreateProject.onOpen}>
+                                <Text mb={10} pt={6} lineHeight={'16px'}>
+                                    Start from scratch
+                                </Text>
                             </MenuItem>
                             <MenuItem>
-                                <Text ml={'12'}>Use a template</Text>
+                                <Text mb={4}>Use a template</Text>
                             </MenuItem>
-                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{status: false, data: {}, usersData: []}}  />
+                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
                         </MenuList>
                     </Menu>
                 </Center>
-                <Tabs index={tabIndex} onChange={handleTabsChange} width={'96%'} isLazy>
-                    <TabList ml={'44px'} mt={'34px'} width={'100%'}>
-                        <Tab>All Projects</Tab>
-                        <Tab ml={'26'}>My Projects</Tab>
-                        <Tab ml={'26'}>Shared With Me</Tab>
+                <Tabs index={tabIndex} onChange={handleTabsChange} width={'100%'} isLazy mt={-34} colorScheme={'messenger'}>
+                    <TabList width={'100%'} color={tabTextColor}>
+                        <Tab pb={'14px'} fontWeight={600} pl={10}>
+                            All Projects
+                        </Tab>
+                        <Tab pb={'14px'} ml={'26'} fontWeight={600}>
+                            My Projects
+                        </Tab>
+                        <Tab pb={'14px'} ml={'26'} fontWeight={600}>
+                            Shared With Me
+                        </Tab>
                     </TabList>
-                    {
-                        AllUsersData && allProjectsData &&
-                        <TabPanels ml={'44px'} mr={'10px'}>
+                    {AllUsersData && allProjectsData && (
+                        <TabPanels>
                             <TabPanel>
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>
@@ -124,8 +133,7 @@ const Project = () => {
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>
                         </TabPanels>
-                    }
-
+                    )}
                 </Tabs>
             </Box>
         </>
