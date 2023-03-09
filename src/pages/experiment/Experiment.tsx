@@ -41,7 +41,7 @@ const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
     let rappid: DmsCanvasService;
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState, SpinnerInfo] = useAppStore((state: ExperimentAppStoreState) => [
+    const [DmsComputeData, UserConfig, connectionState, SpinnerInfo] = useAppStore((state: any) => [
         state.DmsComputeData,
         state.UserConfig,
         state.connectionState,

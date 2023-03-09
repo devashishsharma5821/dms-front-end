@@ -40,7 +40,7 @@ const DeployPipelineModal = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
     const CreateModal = useDisclosure();
-    const [DmsComputeData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData]);
+    const [DmsComputeData] = useAppStore((state: any) => [state.DmsComputeData]);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     interface databricksSettings {
         pipeline: string;
@@ -135,7 +135,7 @@ const DeployPipelineModal = (props: any) => {
                                                                 return error;
                                                             }}
                                                         >
-                                                            {DmsComputeData.map((computeData) => (
+                                                            {DmsComputeData.map((computeData: any) => (
                                                                 <>
                                                                     <option>
                                                                         <>{newComputedata(computeData)}</>{' '}

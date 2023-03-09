@@ -12,7 +12,6 @@ import { GET_USERS_OF_ESP } from '../query';
 import { AllUsers, GetAllUsersType } from '../models/profile';
 
 export const getAndUpdateAllUsersData: updateAllUsersDataType = async (variables: any) => {
-    updateSpinnerInfo(true);
     const response = await client.query<GetAllUsersType<Array<AllUsers>>>({
         query: GET_USERS_OF_ESP(variables)
     });
@@ -22,7 +21,6 @@ export const getAndUpdateAllUsersData: updateAllUsersDataType = async (variables
         const applicationName = 'dms';
         const findUser = applicationNames.find((name) => name === applicationName);
         if (findUser) {
-            updateSpinnerInfo(false);
             return user;
         }
     });

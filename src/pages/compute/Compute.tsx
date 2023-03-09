@@ -45,7 +45,7 @@ import { convertTime } from '../../utils/common.utils';
 const { toast } = createStandaloneToast();
 
 const Compute = () => {
-    const [DmsComputeData, UserConfig, dbSettingsData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData]);
+    const [DmsComputeData, UserConfig, dbSettingsData] = useAppStore((state: any) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData]);
     const opid = v4();
     const textColor = useColorModeValue('light.header', 'dark.white');
     const textColorIcon = useColorModeValue('#666C80', 'white');
@@ -193,7 +193,7 @@ const Compute = () => {
                     position: 'top-right'
                 });
                 setTimeout(() => {
-                    const newData = DmsComputeData.map((computeData) => {
+                    const newData = DmsComputeData.map((computeData: any) => {
                         if (computeData.id === globalComputeId) {
                             computeData.status = 'STOPPED';
                             return computeData;
@@ -371,7 +371,7 @@ const Compute = () => {
             .then(() => {
                 alertConfirm.onClose();
 
-                const newData = DmsComputeData.map((computeData) => {
+                const newData = DmsComputeData.map((computeData: any) => {
                     if (globalComputeId === computeData.id) {
                         computeData.is_default = true;
                         return computeData;
