@@ -20,14 +20,11 @@ function UserConfiguration() {
     updateUserConfig(data);
 
     useEffect(() => {
-        console.log('Ram 2')
         if (data?.userConfiguration?.user?.espUserToken) {
-            console.log('Ram 3')
             localStorage['espUserToken'] = data.userConfiguration.user.espUserToken ?? '';
         }
 
         if (data?.userConfiguration?.user?.applications) {
-            console.log('Ram 4')
             const dmsApplicationConfiguration = data?.userConfiguration?.user?.applications.filter((app: any) => {
                 return app.applicationName === 'dms';
             });
@@ -42,7 +39,6 @@ function UserConfiguration() {
     }, [data]);
     if (isLoading) return <p>Loading...</p>;
     if (isError) {
-        console.log('Ram1 look at this');
         return <p>Error : `${isError.toString()}`</p>;
     }
 

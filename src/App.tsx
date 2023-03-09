@@ -62,7 +62,7 @@ const App = () => {
     }, [instance]);
 
     return (
-        <Box height={'100vh'} width={'100vw'} overflow={'hidden'}>
+        <Box overflow={'hidden'}>
             {isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span>}
         </Box>
     );
