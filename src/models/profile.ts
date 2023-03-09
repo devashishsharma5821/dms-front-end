@@ -46,3 +46,9 @@ export interface Data {
 export interface UserConfigurationResponse {
     data: Data;
 }
+
+export enum DMSAccessLevel {
+    VIEWER,
+    EDITOR,
+    OWNER,
+}

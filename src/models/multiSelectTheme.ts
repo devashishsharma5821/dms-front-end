@@ -23,7 +23,7 @@ function baseStyleList(props: Record<string, any>) {
         w: 'full',
         py: '2',
         zIndex: 1,
-        borderRadius: 'md',
+        borderRadius: '3px',
         borderWidth: '1px',
         maxH: '64',
         overflowY: 'auto',
@@ -39,12 +39,14 @@ const baseStyleSelectedList = {
 }
 
 const baseStyleLabel = {
-    fontSize: 'md',
+    fontSize: '16px',
     marginEnd: 3,
     mb: 2,
-    fontWeight: 'medium',
+    fontWeight: '400',
+    color: '#111111',
     transition: 'all 0.2s',
     opacity: 1,
+    marginLeft: '20px',
     _disabled: {
         opacity: 0.4,
     },
@@ -187,9 +189,14 @@ export const sizes = {
             minH: 10,
             px: 1,
             spacing: 1,
+            justifyContent: 'space-between',
+            marginLeft: '20px'
         },
         input: {
             m: '2px',
+            width: '510px',
+            height: '36px',
+            maxWidth: '510px'
         },
         actionGroup: {
             spacing: '0',

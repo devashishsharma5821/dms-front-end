@@ -17,8 +17,6 @@ const Header = (props: any) => {
     // const ViewDataModal = useDisclosure();
     // const notebookModal = useDisclosure();
     useEffect(() => {
-        console.log(window.location);
-        console.log(window.location.pathname.match('experiment'));
         const experimentRoute = window.location.pathname.match('experiment');
         if (experimentRoute === null) {
             setIsExperiment(false);

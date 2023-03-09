@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './project.scss';
-import { Avatar, Box, Center, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Avatar, Box, Center, Flex, Text, useColorModeValue, AvatarGroup } from '@chakra-ui/react';
 import { Documentation } from '../../assets/icons';
 import { GetAllProjectsDetail } from '../../models/project';
-import { getUserNameFromId, getTruncatedText } from '../../utils/common.utils';
+import { getUserNameFromId, getTruncatedText, convertTime } from '../../utils/common.utils';
 
 const ProjectsViews = (props: any) => {
     const textColor = useColorModeValue('light.header', 'dark.white');
@@ -59,32 +59,31 @@ const ProjectsViews = (props: any) => {
 
 
                                                         <Text ml={10} color={'#B3B3B3'} fontWeight={700}>
-                                                            {project.created_at.replace('T', ' ')}
-                                                        </Text>
-                                                        <Text ml={10} fontWeight={700} color={'#B3B3B3'}>
-                                                            Last Edited 10 min ago
+                                                            {convertTime(project.created_at)}
                                                         </Text>
                                                     </Box>
                                                 </Center>
                                             </Flex>
                                         </Box>
-                                        <Flex>
-                                            <Flex>
+                                        <Flex width={'280px'}>
+                                            <Flex width={'280px'}>
                                                 <Center ml={20} mt={16}>
-                                                    {project && project.tags !== null &&  project.tags.map((tag, tagIndex) => {
-                                                        return (
-                                                            <Box key={tagIndex} mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
-                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                    {tag}
-                                                                </Text>
-                                                            </Box>
-                                                        )
+                                                    {project && (project.tags !== null) &&  project.tags.map((tag, tagIndex) => {
+                                                        if(tagIndex < 3) {
+                                                            return (
+                                                                <Box key={tagIndex} mr={10} bg={'#F2F4F8'} height={'24px'} borderRadius={3} width={'auto'} pr={'5px'}>
+                                                                    <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600} mt={'2px'} ml={6}>
+                                                                        {tagIndex > 1 ? `+ ${project.tags.length  - 2} more`: tag}
+                                                                    </Text>
+                                                                </Box>
+                                                            )
+                                                        }
                                                     })}
-                                                    {project && project.tags === null &&
+                                                    {project && (project.tags === null || project.tags.length === 0) &&
                                                     <Box mr={10} bg={'#F2F4F8'}
                                                          height={'24px'} borderRadius={3} width={'auto'}
                                                          pr={'5px'}>
-                                                        <Text color={'#1A3F59'} fontSize={'14px'}
+                                                        <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600}
                                                               mt={'2px'} ml={6}>
                                                             No Tags Available
                                                         </Text>
@@ -93,21 +92,36 @@ const ProjectsViews = (props: any) => {
                                                 </Center>
                                             </Flex>
                                         </Flex>
-                                        <Box ml={'20px'} m={'18px'}>
-                                            <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Shah zubin'} color={'default.whiteText'} />
-                                            <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'Goel jalaj'} color={'default.whiteText'} />
-                                            <Avatar
-                                                mr={'6'}
-                                                p={'5px'}
-                                                borderRadius="full"
-                                                boxSize="32px"
-                                                name={'+ 1'}
-                                                color={'#111111'}
-                                                bg={'white'}
-                                                border={'1px'}
-                                                borderColor={'#B3B3B3'}
-                                            />
-                                        </Box>
+                                        {
+                                            project.project_access && project.project_access.length > 0 &&
+                                            <Box ml={'20px'} m={'18px'}>
+                                                <AvatarGroup size={'md'} max={4} spacing={1}>
+                                                    {
+                                                        project.project_access.map((access, accessIndex) => {
+                                                            return (
+                                                                <Avatar name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />
+                                                            );
+                                                        })
+                                                    }
+                                                </AvatarGroup>
+                                            </Box>
+                                        }
+                                        {
+                                            project.project_access && project.project_access.length === 0 &&
+                                            <Box ml={'20px'} m={'18px'}>
+                                                <Avatar
+                                                    mr={'6'}
+                                                    p={'5px'}
+                                                    borderRadius="full"
+                                                    boxSize="32px"
+                                                    name={'0'}
+                                                    color={'#111111'}
+                                                    bg={'white'}
+                                                    border={'1px'}
+                                                    borderColor={'#B3B3B3'}
+                                                />
+                                            </Box>
+                                        }
                                     </Box>
                                 </Box>
                             </div>

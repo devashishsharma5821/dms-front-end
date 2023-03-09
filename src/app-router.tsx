@@ -28,7 +28,7 @@ export const AppRouter = (props: any) => {
                         ;
                         <SocketWrapper>
                             <ContextCompute>
-                                <Box overflow={'hidden'}>
+                                <Box>
                                     <ToastProvider />
                                     <Routes>
                                         <Route path="/" element={<Navigate to="/compute" />}></Route>

@@ -27,7 +27,7 @@ import {
     Tag,
     TagLabel,
     TagCloseButton,
-    HStack, Toast
+    HStack, Toast, PopoverTrigger, PopoverContent, Stack, ButtonGroup, Popover
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
@@ -35,7 +35,7 @@ import { CreateProject, ProjectCreate, ProjectCreateDetail, ProjectEdit, Project
 import client from '../../apollo-client';
 import { createAccess, createProject, editProject } from '../../query';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
-import { AllUsers } from '../../models/profile';
+import { AllUsers, DMSAccessLevel } from '../../models/profile';
 import { ShareCreate, ShareCreateDetail } from '../../models/share';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
@@ -46,6 +46,7 @@ const CreateProjectModal = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [addTagClicked, setAddTagClicked] = useState(false);
     const addShareMemberModal = useDisclosure();
+    const tagPopOver = useDisclosure()
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
     const toast = useToast();
     const isEdit = props.isEdit.status;
@@ -57,10 +58,12 @@ const CreateProjectModal = (props: any) => {
         description: (isEdit) ? isEditData.basic.description : "",
         tags: (isEdit) ? (isEditData.basic.tags !== null && isEditData.basic.tags.length > 0) ? isEditData.basic.tags.join(','): "" : "",
         project_variables: "none",
+        project_access: (isEdit) ? isEditData.basic.project_access : ""
     } as CreateProject);
     const addTagHandler = (type: string, formikValues: any) => {
         if(type === 'trigger') {
             setAddTagClicked(!addTagClicked);
+            tagPopOver.onOpen();
         } else {
             setAddTagClicked(false);
         }
@@ -126,25 +129,29 @@ const CreateProjectModal = (props: any) => {
                 <Divider color={'default.dividerColor'} mt={'13px'} mb={'20px'} />
 
                 <ModalBody pb={6} mr={'20px'} ml={'21px'}>
-                    <Flex mb={'19px'}>
-                        <Center>
-                            <Text color={textColor}>Project ID:</Text>
+                    {
+                        isEdit &&
+                        <Flex mb={'19px'}>
                             <Center>
-                                <Box height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
-                                    <Flex>
-                                        <Center>
-                                            <Text color={projectId} fontSize={'16px'} fontWeight={400} ml={8}>
-                                                {(isEdit) ? data.id: 'Yet to be Assigned'}
-                                            </Text>
-                                            <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
-                                                <CopyIcon color={'default.darkGrayCreate'} />
-                                            </Box>
-                                        </Center>
-                                    </Flex>
-                                </Box>
+                                <Text color={textColor}>Project ID:</Text>
+                                <Center>
+                                    <Box height={'24px'} borderRadius={3} minWidth={'auto'} width={'auto'}>
+                                        <Flex>
+                                            <Center>
+                                                <Text color={projectId} fontSize={'16px'} fontWeight={400} ml={8}>
+                                                    {(isEdit) ? data.id: 'Yet to be Assigned'}
+                                                </Text>
+                                                <Box justifyContent={'flex-end'} ml={'10px'} mr={'6px'}>
+                                                    <CopyIcon color={'default.darkGrayCreate'} />
+                                                </Box>
+                                            </Center>
+                                        </Flex>
+                                    </Box>
+                                </Center>
                             </Center>
-                        </Center>
-                    </Flex>
+                        </Flex>
+                    }
+
                     <Formik
                         initialValues={
                             {
@@ -153,7 +160,8 @@ const CreateProjectModal = (props: any) => {
                                 name: data.name,
                                 description: data.description,
                                 tags: data.tags,
-                                project_variables: data.project_variables
+                                project_variables: data.project_variables,
+                                project_access: data.project_access
                             } as CreateProject
                         }
                         validateOnBlur={true}
@@ -197,12 +205,18 @@ const CreateProjectModal = (props: any) => {
                                         if(accessUserListCreateMode.length > 0) {
                                             accessUserListCreateMode.map((user: any, userIndex: any) => {
                                                 const mutationVariables = {
-                                                    userId: user.userId,
-                                                    projectId: response?.data?.dmsCreateProject
+                                                    access: [
+                                                        {
+                                                            user_id: user.userId,
+                                                            access_level: DMSAccessLevel[0]
+                                                        }
+                                                    ],
+                                                    project_id: response?.data?.dmsCreateProject
                                                 };
                                                 client
                                                     .mutate<ShareCreate<ShareCreateDetail>>({
-                                                        mutation: createAccess(mutationVariables)
+                                                        mutation: createAccess(),
+                                                        variables: {input: mutationVariables}
                                                     })
                                                     .then(() => {
                                                         if(accessUserListCreateMode.length === (userIndex + 1)) {
@@ -285,16 +299,39 @@ const CreateProjectModal = (props: any) => {
                                                     {
                                                         addTagClicked &&
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
-                                                            <Field
-                                                                borderRadius={3}
-                                                                border={'1px'}
-                                                                borderColor={'light.lighterGrayishBlue'}
-                                                                as={Input}
-                                                                id="tags"
-                                                                name="tags"
-                                                                variant="outline"
-                                                            />
-                                                            <FormErrorMessage>{errors.description}</FormErrorMessage>
+                                                            <Popover
+                                                                isOpen={tagPopOver.isOpen}
+                                                                onOpen={tagPopOver.onOpen}
+                                                                onClose={tagPopOver.onClose}
+                                                                placement='right'
+                                                                closeOnBlur={false}
+                                                            >
+                                                                <PopoverContent p={5}>
+                                                                    <Stack spacing={4}>
+                                                                        <FormControl>
+                                                                            <Field
+                                                                                borderRadius={3}
+                                                                                border={'1px'}
+                                                                                borderColor={'light.lighterGrayishBlue'}
+                                                                                as={Input}
+                                                                                id="tags"
+                                                                                name="tags"
+                                                                                variant="outline"
+                                                                                placeholder="Type here"
+                                                                            />
+                                                                            <FormErrorMessage>{errors.description}</FormErrorMessage>
+                                                                        </FormControl>
+                                                                        <ButtonGroup display='flex' justifyContent='flex-end'>
+                                                                            <Button variant='outline' onClick={tagPopOver.onClose}>
+                                                                                Cancel
+                                                                            </Button>
+                                                                            <Button onClick={() => addTagHandler('add', values)} colorScheme='teal'>
+                                                                                Add Tag
+                                                                            </Button>
+                                                                        </ButtonGroup>
+                                                                    </Stack>
+                                                                </PopoverContent>
+                                                            </Popover>
                                                         </Box>
 
                                                     }
