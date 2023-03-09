@@ -38,7 +38,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
-import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
+import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import client from '../../../apollo-client';
@@ -80,14 +80,13 @@ const ProjectDetails = (props: any) => {
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
-
             setInlineDescription((SingleProjectData.basic.description === null) ? "" : SingleProjectData.basic.description);
                 if(AllUsersData && SingleProjectData) {
                     setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
                 }
 
         }
-    }, [SingleProjectData]);
+    }, [SingleProjectData, AllUsersData]);
     useEffect(() => {
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
@@ -168,7 +167,6 @@ const ProjectDetails = (props: any) => {
             });
     }
     const handleAddTag = () => {
-        console.log('PopTag', popOverTag);
         tagPopOver.onClose();
         setPopOverTag('');
         SingleProjectData.basic.tags.push(popOverTag);
@@ -288,14 +286,6 @@ const ProjectDetails = (props: any) => {
                                                     </Text>
                                                     <Text ml={12} color={accesstextColor} fontWeight={700}>
                                                         {SingleProjectData && SingleProjectData.basic.created_at.replace('T', ' ')}
-                                                    </Text>
-                                                </Box>
-                                                <Box ml={'40px'}>
-                                                    <Text ml={12} color={textColor2} mt={'12px'} fontWeight={400}>
-                                                        Last Modified
-                                                    </Text>
-                                                    <Text ml={12} color={accesstextColor} fontWeight={700}>
-                                                        10 Mins ago
                                                     </Text>
                                                 </Box>
                                             </Flex>

@@ -3,6 +3,8 @@ import { useQuery } from '@apollo/client';
 import { getUserConfig } from './query';
 import { AppRouter } from './app-router';
 import { updateI18N, updateAppConfig, updateUserConfig } from './zustandActions/commonActions';
+import { PublicClientApplication } from '@azure/msal-browser';
+import { msalConfig } from './authConfig';
 
 function UserConfiguration() {
     const { GET_USER_CONFIGURATION } = getUserConfig();
@@ -18,11 +20,14 @@ function UserConfiguration() {
     updateUserConfig(data);
 
     useEffect(() => {
+        console.log('Ram 2')
         if (data?.userConfiguration?.user?.espUserToken) {
+            console.log('Ram 3')
             localStorage['espUserToken'] = data.userConfiguration.user.espUserToken ?? '';
         }
 
         if (data?.userConfiguration?.user?.applications) {
+            console.log('Ram 4')
             const dmsApplicationConfiguration = data?.userConfiguration?.user?.applications.filter((app: any) => {
                 return app.applicationName === 'dms';
             });
@@ -36,7 +41,10 @@ function UserConfiguration() {
         }
     }, [data]);
     if (isLoading) return <p>Loading...</p>;
-    if (isError) return <p>Error : `${isError.toString()}`</p>;
+    if (isError) {
+        console.log('Ram1 look at this');
+        return <p>Error : `${isError.toString()}`</p>;
+    }
 
     return <>{isConfigAvailable ? <AppRouter user={data?.userConfiguration?.user}></AppRouter> : <span className="fail"> Configuration access Failed... </span>}</>;
 }

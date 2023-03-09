@@ -27,7 +27,7 @@ import {
     Tag,
     TagLabel,
     TagCloseButton,
-    HStack, Toast
+    HStack, Toast, PopoverTrigger, PopoverContent, Stack, ButtonGroup, Popover
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
@@ -46,6 +46,7 @@ const CreateProjectModal = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [addTagClicked, setAddTagClicked] = useState(false);
     const addShareMemberModal = useDisclosure();
+    const tagPopOver = useDisclosure()
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
     const toast = useToast();
     const isEdit = props.isEdit.status;
@@ -62,6 +63,7 @@ const CreateProjectModal = (props: any) => {
     const addTagHandler = (type: string, formikValues: any) => {
         if(type === 'trigger') {
             setAddTagClicked(!addTagClicked);
+            tagPopOver.onOpen();
         } else {
             setAddTagClicked(false);
         }
@@ -297,16 +299,39 @@ const CreateProjectModal = (props: any) => {
                                                     {
                                                         addTagClicked &&
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
-                                                            <Field
-                                                                borderRadius={3}
-                                                                border={'1px'}
-                                                                borderColor={'light.lighterGrayishBlue'}
-                                                                as={Input}
-                                                                id="tags"
-                                                                name="tags"
-                                                                variant="outline"
-                                                            />
-                                                            <FormErrorMessage>{errors.description}</FormErrorMessage>
+                                                            <Popover
+                                                                isOpen={tagPopOver.isOpen}
+                                                                onOpen={tagPopOver.onOpen}
+                                                                onClose={tagPopOver.onClose}
+                                                                placement='right'
+                                                                closeOnBlur={false}
+                                                            >
+                                                                <PopoverContent p={5}>
+                                                                    <Stack spacing={4}>
+                                                                        <FormControl>
+                                                                            <Field
+                                                                                borderRadius={3}
+                                                                                border={'1px'}
+                                                                                borderColor={'light.lighterGrayishBlue'}
+                                                                                as={Input}
+                                                                                id="tags"
+                                                                                name="tags"
+                                                                                variant="outline"
+                                                                                placeholder="Type here"
+                                                                            />
+                                                                            <FormErrorMessage>{errors.description}</FormErrorMessage>
+                                                                        </FormControl>
+                                                                        <ButtonGroup display='flex' justifyContent='flex-end'>
+                                                                            <Button variant='outline' onClick={tagPopOver.onClose}>
+                                                                                Cancel
+                                                                            </Button>
+                                                                            <Button onClick={() => addTagHandler('add', values)} colorScheme='teal'>
+                                                                                Add Tag
+                                                                            </Button>
+                                                                        </ButtonGroup>
+                                                                    </Stack>
+                                                                </PopoverContent>
+                                                            </Popover>
                                                         </Box>
 
                                                     }

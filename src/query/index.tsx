@@ -408,7 +408,6 @@ export const createProject = (variables: any) => {
 };
 
 export const editProject = (variables: any) => {
-    console.log('v', variables)
     return gql`mutation {
                 dmsEditProject(
                     id: "${variables.id}",

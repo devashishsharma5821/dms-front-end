@@ -24,6 +24,12 @@ function getSize(size: any) {
                 fontSize: `16px`,
             },
         })
+    } else if(size === '100%') {
+        return definePartsStyle({
+            label: {
+                fontSize: `32px`,
+            },
+        })
     } else {
         return definePartsStyle({})
     }

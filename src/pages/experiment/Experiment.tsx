@@ -722,8 +722,6 @@ const ExperimentsPage = () => {
         } else transformerMenuDrawer.onClose();
     }, [leftMenuOpen]);
 
-    console.log('SpinnerInfo', SpinnerInfo);
-
     return (
         <>
             <Box ref={elementRef} width={'100%'}>

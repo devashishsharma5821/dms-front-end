@@ -166,8 +166,8 @@ const Share = (props: any) => {
                      finalFocusRef={finalRef}
                      isOpen={props.isOpen}
                      onClose={props.onClose}
+                       closeOnOverlayClick={false}
                      isCentered
-                    
                      >        
                     <ModalOverlay />
                     <ModalContent width={'713px'} borderRadius={'2'} maxHeight={'734px'}>
@@ -181,22 +181,24 @@ const Share = (props: any) => {
                                     Sharing project will give access to entire experiment inside the project.
                                 </Box>
                                 <FormControl>
-                                    <FormLabel  color={textColor2} mt={'20'} ml={20} mb={10}>Send to</FormLabel>
                                     <Flex>
-                                        {/*<MultiSelect*/}
-                                        {/*    value={userValue}*/}
-                                        {/*    options={userOptions}*/}
-                                        {/*    label='Type name or email to begin searching'*/}
-                                        {/*    onChange={handleUserChange!}*/}
-                                        {/*/>*/}
-                                        <Select onChange={handleUserChange} color={defaultInBoxTextColor} borderRadius={'2'} width={'581px'} ml={20} height={'36px'} placeholder='Type name or email with comma seperated'>
-                                            {AllUsersData.map((user, userIndex) => {
-                                                return(
-                                                    <option key={userIndex} value={user.userId}>{user.firstName} {user.lastName}</option>
-                                                )
-                                            })}
-                                        </Select>
-                                        <Button onClick={handleShare} bg={'default.shareModalButton'} mr={3} borderRadius={'2'}  ml={22} width={'66px'} height={'36px'}>
+                                        <MultiSelect
+                                            value={userValue}
+                                            options={userOptions}
+                                            color={defaultInBoxTextColor}
+                                            label="Send to"
+                                            placeholder='Type name or email with comma seperated'
+                                            onChange={handleUserChange!}
+
+                                        />
+                                        {/*<Select onChange={handleUserChange} color={defaultInBoxTextColor} borderRadius={'2'} width={'581px'} ml={20} height={'36px'} placeholder='Type name or email with comma seperated'>*/}
+                                        {/*    {AllUsersData.map((user, userIndex) => {*/}
+                                        {/*        return(*/}
+                                        {/*            <option key={userIndex} value={user.userId}>{user.firstName} {user.lastName}</option>*/}
+                                        {/*        )*/}
+                                        {/*    })}*/}
+                                        {/*</Select>*/}
+                                        <Button onClick={handleShare} bg={'default.shareModalButton'} mr={3} borderRadius={'2'} mt={'28px'} ml={40} width={'66px'} height={'36px'}>
                                             Share
                                         </Button>
                                     </Flex>
