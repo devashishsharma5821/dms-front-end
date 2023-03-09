@@ -24,14 +24,15 @@ export const getTruncatedText = (name: string) => {
 };
 
 export const getFormattedUserData = (allUserData: AllUsers[], projectData: GetSingleProjectDetail) => {
-    const reformattedProjectAccessData = projectData.project_access.map((singleProjectAccess) => {
+    const reformattedProjectAccessData = projectData.project_access.map((singleProjectAccess, projectAccessIndex) => {
         const sharedUser = allUserData?.filter((singleUser) => {
             return singleUser.userId === singleProjectAccess.user_id
         });
         return {
             firstName: (sharedUser?.length > 0) ? sharedUser[0].firstName : '',
             lastName: (sharedUser?.length > 0) ? sharedUser[0].lastName: '',
-            email: (sharedUser?.length > 0) ? sharedUser[0].email: ''
+            email: (sharedUser?.length > 0) ? sharedUser[0].email: '',
+            accessLevel: (sharedUser?.length > 0) ? projectData.project_access[projectAccessIndex].access_level: ''
         }
     });
 
