@@ -15,7 +15,7 @@ import {  DownArrowShare, LinkChain } from '../../assets/icons';
 import { ShareCreate, ShareCreateDetail, ShareDelete, ShareDeleteDetail } from '../../models/share';
 import useAppStore from '../../store';
 import { DMSAccessLevel, GetAllUsersDataAppStoreState } from '../../models/profile';
-import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
+import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { createAccess, deleteAccess } from '../../query';
 import { useParams } from 'react-router-dom';
@@ -50,11 +50,13 @@ const Share = (props: any) => {
             if (SingleProjectData === null) {
                 getAndUpdateSingleProjectData(params.projectId as string);
             } else {
-                if(SingleProjectData.project_access === null) {
+                if(SingleProjectData.project_access === null || SingleProjectData.project_access.length === 0 ) {
                     setAccessUserList([]);
+                    setUserValue([]);
                 } else {
                     if(AllUsersData && SingleProjectData) {
-                        setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+                        const userList = getFormattedUserData(AllUsersData, SingleProjectData);
+                        setAccessUserList(userList);
                     }
                 }
             }
@@ -71,50 +73,90 @@ const Share = (props: any) => {
 
     const handleUserChange = (ev: any) => {
         setUserValue(ev);
-        setSelectedUser(ev.target.value);
     };
-    const accessMenuChanged = (access: any) => {
-        const removedUser = AllUsersData?.filter((singleUser) => {
+    const accessMenuChanged = (access: any, type: string) => {
+        const user = AllUsersData?.filter((singleUser) => {
             return singleUser.email === access.email;
         });
-        const removeVariable = {
-            userId: removedUser[0].userId,
-            projectId: params.projectId
-        };
-        client
-            .mutate<ShareDelete<ShareDeleteDetail>>({
-                mutation: deleteAccess(removeVariable)
-            })
-            .then(() => {
-                Toast({
-                    title: `Access removed Successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
+        updateSpinnerInfo(true);
+        if(type === 'delete') {
+            const removeVariable = {
+                userId: user[0].userId,
+                projectId: params.projectId
+            };
+            client
+                .mutate<ShareDelete<ShareDeleteDetail>>({
+                    mutation: deleteAccess(removeVariable)
+                })
+                .then(() => {
+                    Toast({
+                        title: `Access removed Successfully`,
+                        status: 'success',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                    getAndUpdateSingleProjectData(params.projectId as string);
+                    updateSpinnerInfo(false);
+                })
+                .catch(() => {
+                    Toast({
+                        title: `Access failed to be removed`,
+                        status: 'error',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
                 });
-                getAndUpdateSingleProjectData(params.projectId as string);
-            })
-            .catch(() => {
-                Toast({
-                    title: `Access failed to be removed`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
+        } else if(type === 'canEdit') {
+            const mutationVariable = {
+                access: [{
+                        user_id: user[0].userId,
+                        access_level: DMSAccessLevel[1]
+                    }],
+                project_id: params.projectId
+            };
+            client
+                .mutate<ShareCreate<ShareCreateDetail>>({
+                    mutation: createAccess(),
+                    variables: {input: mutationVariable}
+                })
+                .then(() => {
+                    Toast({
+                        title: `Project Permission Changed Successfully`,
+                        status: 'success',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
+                    getAndUpdateSingleProjectData(params.projectId as string);
+                    updateSpinnerInfo(false);
+                })
+                .catch(() => {
+                    Toast({
+                        title: `Project Permission Did not change, or you do not have the right permission`,
+                        status: 'error',
+                        isClosable: true,
+                        duration: 5000,
+                        position: 'top-right'
+                    });
                 });
-            });
+        }
     }
 
     const handleShare = () => {
         if(props.isEdit) {
+            updateSpinnerInfo(true);
             const mutationVariable = {
-                access: [
-                    {
-                        user_id: selectedUser,
+                access: userValue.map((selUserEmail) => {
+                    const sharedUser = AllUsersData?.filter((singleUser) => {
+                        return singleUser.email === selUserEmail;
+                    });
+                    return {
+                        user_id: sharedUser[0].userId,
                         access_level: DMSAccessLevel[0]
                     }
-                ],
+                }),
                 project_id: params.projectId
             };
             client
@@ -131,7 +173,8 @@ const Share = (props: any) => {
                         position: 'top-right'
                     });
                     getAndUpdateSingleProjectData(params.projectId as string);
-                    setSelectedUser('');
+                    setUserValue([]);
+                    updateSpinnerInfo(false);
                 })
                 .catch(() => {
                     Toast({
@@ -143,11 +186,13 @@ const Share = (props: any) => {
                     });
                 });
         } else {
-            const sharedUser = AllUsersData?.filter((singleUser) => {
-                return singleUser.userId === selectedUser;
-            });
             let newAccessList = [...accessUserList];
-            newAccessList.push(sharedUser[0]);
+            userValue.forEach((selUserEmail) => {
+                const sharedUser = AllUsersData?.filter((singleUser) => {
+                    return singleUser.email === selUserEmail;
+                });
+                newAccessList.push(sharedUser[0]);
+            });
             setAccessUserList(newAccessList);
         }
     };
@@ -224,13 +269,13 @@ const Share = (props: any) => {
                                                         </Center><Center mr={'36px'}>
                                                             <Menu>
                                                                 <MenuButton>
-                                                                    <Text mr={'9px'} color={textColor2}>Can View</Text>
+                                                                    <Text mr={'9px'} color={textColor2}>{icons.accessLevel}</Text>
                                                                 </MenuButton>
                                                                 <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
-                                                                    <MenuItem>Can View</MenuItem>
-                                                                    <MenuItem>Can Edits</MenuItem>
+                                                                    <MenuItem onClick={()=> {accessMenuChanged(icons, 'canView')}}>Can View</MenuItem>
+                                                                    <MenuItem onClick={()=> {accessMenuChanged(icons, 'canEdit')}}>Can Edit</MenuItem>
                                                                     <Divider />
-                                                                    <MenuItem onClick={()=> {accessMenuChanged(icons)}}>Remove</MenuItem>
+                                                                    <MenuItem onClick={()=> {accessMenuChanged(icons, 'delete')}}>Remove</MenuItem>
                                                                 </MenuList>
                                                             </Menu>
                                                             <DownArrowShare />

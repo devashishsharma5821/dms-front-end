@@ -37,6 +37,7 @@ import { createAccess, createProject, editProject } from '../../query';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { AllUsers, DMSAccessLevel } from '../../models/profile';
 import { ShareCreate, ShareCreateDetail } from '../../models/share';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -168,6 +169,7 @@ const CreateProjectModal = (props: any) => {
                         validateOnChange={true}
                         onSubmit={(values) => {
                             setLoading(true);
+                            updateSpinnerInfo(true);
                             if(isEdit) {
                                 client
                                     .mutate<ProjectEdit<ProjectEditDetail>>({
@@ -184,6 +186,7 @@ const CreateProjectModal = (props: any) => {
                                         });
                                         getAndUpdateAllProjectsData();
                                         props.onSuccess();
+                                        updateSpinnerInfo(false);
                                     })
                                     .catch((err: any) => {
                                         setLoading(false);
@@ -203,14 +206,14 @@ const CreateProjectModal = (props: any) => {
                                     .then((response) => {
                                         // Here we are checking if any of the users have given access if they have, execute apis to give user access to that project.
                                         if(accessUserListCreateMode.length > 0) {
-                                            accessUserListCreateMode.map((user: any, userIndex: any) => {
-                                                const mutationVariables = {
-                                                    access: [
-                                                        {
+                                            let mutationVariables = {};
+                                                mutationVariables = {
+                                                    access: accessUserListCreateMode.map((user: any, userIndex: any) => {
+                                                        return {
                                                             user_id: user.userId,
                                                             access_level: DMSAccessLevel[0]
                                                         }
-                                                    ],
+                                                    }),
                                                     project_id: response?.data?.dmsCreateProject
                                                 };
                                                 client
@@ -219,9 +222,16 @@ const CreateProjectModal = (props: any) => {
                                                         variables: {input: mutationVariables}
                                                     })
                                                     .then(() => {
-                                                        if(accessUserListCreateMode.length === (userIndex + 1)) {
+                                                        Toast({
+                                                            title: `Project Was created Successfully.`,
+                                                            status: 'error',
+                                                            isClosable: true,
+                                                            duration: 5000,
+                                                            position: 'top-right'
+                                                        });
                                                             setCreateProjectSuccess();
-                                                        }
+                                                            setAccessUserListCreateMode([]);
+                                                            updateSpinnerInfo(false);
                                                     })
                                                     .catch(() => {
                                                         Toast({
@@ -232,8 +242,8 @@ const CreateProjectModal = (props: any) => {
                                                             position: 'top-right'
                                                         });
                                                     });
-                                            });
                                         } else {
+                                            updateSpinnerInfo(false);
                                             setCreateProjectSuccess();
                                         }
                                     })

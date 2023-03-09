@@ -136,9 +136,7 @@ const Project = () => {
                         </Tab>
                     </TabList>
                     {AllUsersData && allProjectsData && (
-
-                        <TabPanels ml={'44px'} mr={'10px'}>
-
+                        <TabPanels  mr={'10px'}>
                             <TabPanel>
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>
