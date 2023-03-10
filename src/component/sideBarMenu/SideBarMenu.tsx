@@ -65,7 +65,7 @@ const SideBarMenu = () => {
         setActivateThirdSubMenu(true);
     };
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
-        if(!data.disabled) {
+        if (!data.disabled) {
             if (data.route) {
                 sideBarMenuIcons[0].section[currentIndex].isClicked = false;
                 navigate(data.route);
@@ -77,7 +77,7 @@ const SideBarMenu = () => {
                 sideBarMenuIcons[0].section[index].isClicked = true;
                 setActivateSubMenu(true);
             }
-        };
+        }
     };
 
     const triggerCreateModal = (type: string) => {
@@ -102,7 +102,7 @@ const SideBarMenu = () => {
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '445px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
-                        <Box width={'254px'} pl={'0px'} mt="17">
+                        <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
                             <h3>
                                 <Experiment />
                             </h3>
@@ -118,7 +118,7 @@ const SideBarMenu = () => {
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         {sideBarMenuIcons[0].section[currentIndex].isClicked && (
-                            <Box width={'254px'} pl={'0px'} mt="17">
+                            <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' && (
                                     <h3>
                                         <CreateNew openCreateModal={(type: string) => triggerCreateModal(type)} />
@@ -171,7 +171,7 @@ const SideBarMenu = () => {
                                         const listSections = sections.section.map((icons, iconIndex) => {
                                             if (icons.iconName === 'Create') {
                                                 return (
-                                                    <Box key={iconIndex} width={'38px'} height={'40px'}>
+                                                    <Box key={iconIndex} width={'38px'} height={'40px'} cursor={'pointer'}>
                                                         <Square>
                                                             <CreateIcon />
                                                         </Square>
@@ -181,7 +181,7 @@ const SideBarMenu = () => {
                                             if (lastItemLength === iconIndex) {
                                                 return (
                                                     <div key={iconIndex}>
-                                                        <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'}>
+                                                        <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'} cursor={'pointer'}>
                                                             <Square>{icons.icon}</Square>
                                                         </Box>
                                                         <Center>
@@ -191,7 +191,7 @@ const SideBarMenu = () => {
                                                 );
                                             } else {
                                                 return (
-                                                    <Box key={iconIndex} m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'}>
+                                                    <Box key={iconIndex} m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'} cursor={'pointer'}>
                                                         <Square>{icons.icon}</Square>
                                                     </Box>
                                                 );

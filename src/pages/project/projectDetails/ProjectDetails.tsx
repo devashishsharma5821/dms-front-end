@@ -204,8 +204,9 @@ const ProjectDetails = (props: any) => {
                     </Box>
 
                     <Box ml={'24'} mt={'6px'} mb={'24'} color={'default.darkGrayCreate'}>
-                        <Flex flexDir={'row'}>
+                        <Flex flexDir={'row'} cursor={'pointer'}>
                             <Button
+                                cursor={'pointer'}
                                 mr={'8px'}
                                 color={'default.accessByNumber'}
                                 border={'1px'}
@@ -226,10 +227,11 @@ const ProjectDetails = (props: any) => {
                             {SingleProjectData && (
                                 <>
                                     <Flex mt={'8px'}>
-                                        <Box bg={'none'} color={'default.shareModalButton'} onClick={editProjectModal}>
+                                        <Box bg={'none'} color={'default.shareModalButton'} onClick={editProjectModal} cursor={'pointer'}>
                                             <PencilIcon color={'#666C80'} height={'20px'} Height={'20px'} />
                                         </Box>
                                         <Button
+                                            cursor={'pointer'}
                                             width={'71px'}
                                             height={'36px'}
                                             colorScheme="gray"
@@ -249,9 +251,9 @@ const ProjectDetails = (props: any) => {
                                 </>
                             )}
                         </Flex>
-                        <Box width={'883px'} height={'320px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'}>
+                        <Box width={'883px'} height={'320px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
                             <Center>
-                                <Flex ml={'24px'} width={'482px'} maxHeight={'320px'} mr={'48px'}>
+                                <Flex ml={'22px'} width={'482px'} maxHeight={'320px'} mr={'48px'}>
                                     <Avatar
                                         p={'5px'}
                                         borderRadius="full"
@@ -308,8 +310,10 @@ const ProjectDetails = (props: any) => {
                                                                 SingleProjectData.basic.tags !== null &&
                                                                 SingleProjectData.basic.tags.map((tag: string) => {
                                                                     return (
-                                                                        <Tag height={'24px'} variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'}>
-                                                                            <TagLabel>{tag}</TagLabel>
+                                                                        <Tag height={'24px'} variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
+                                                                            <TagLabel fontSize={'14px'} fontWeight={600} lineHeight={'16px'} pl={6} pt={4} pr={6}>
+                                                                                {tag}
+                                                                            </TagLabel>
                                                                             <TagCloseButton />
                                                                         </Tag>
                                                                     );
@@ -317,7 +321,7 @@ const ProjectDetails = (props: any) => {
                                                         </HStack>
                                                         <HStack spacing={4} borderRadius={3} ml={8}>
                                                             {SingleProjectData && SingleProjectData.basic.tags === null && (
-                                                                <Tag minHeight={'24px'} bg={'#F2F4F8'} color={'#1A3F59'}>
+                                                                <Tag minHeight={'24px'} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
                                                                     <TagLabel fontSize={'14px'} fontWeight={600} lineHeight={'16px'} pl={6} pt={4} pr={6}>
                                                                         No Tags available
                                                                     </TagLabel>
@@ -328,7 +332,7 @@ const ProjectDetails = (props: any) => {
                                                 </Center>
                                                 <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={false}>
                                                     <PopoverTrigger>
-                                                        <Text color={'default.textButton'} ml={8} fontWeight={600} minWidth={'76'}>
+                                                        <Text color={'default.textButton'} ml={8} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
                                                             + Add Tag
                                                         </Text>
                                                     </PopoverTrigger>
@@ -338,10 +342,10 @@ const ProjectDetails = (props: any) => {
                                                                 <Input onChange={(evt: any) => setPopOverTag(evt.target.value)} value={popOverTag} placeholder="Type Here" />
                                                             </FormControl>
                                                             <ButtonGroup display="flex" justifyContent="flex-end">
-                                                                <Button variant="outline" onClick={tagPopOver.onClose}>
+                                                                <Button variant="outline" onClick={tagPopOver.onClose} cursor={'pointer'}>
                                                                     Cancel
                                                                 </Button>
-                                                                <Button onClick={handleAddTag} colorScheme="teal">
+                                                                <Button onClick={handleAddTag} colorScheme="teal" cursor={'pointer'}>
                                                                     Add Tag
                                                                 </Button>
                                                             </ButtonGroup>
@@ -367,7 +371,7 @@ const ProjectDetails = (props: any) => {
                                                         <EditableControls />
                                                     </Center>
                                                 </Flex>
-                                                <Box maxHeight={'40px'} maxWidth={'425px'}>
+                                                <Box maxWidth={'425px'}>
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>
@@ -375,31 +379,31 @@ const ProjectDetails = (props: any) => {
                                         </Box>
                                     </Center>
                                 </Flex>
-                                <Flex minWidth={'312px'} maxHeight={'320px'}>
+                                <Flex minWidth={'312px'} maxHeight={'267px'} mt={'10px'}>
                                     <Box>
                                         <Flex>
-                                            <Center flex="2" mt={'25px'}>
+                                            <Center flex="2" minHeight={'25px'} minWidth={'300px'}>
                                                 <Text color={textColor2} fontWeight={700}>
                                                     Access by
                                                 </Text>
                                                 <Box ml={8} bg={'default.tagBoxColor'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
-                                                    <Text color={'default.accessByNumber'} fontSize={'14px'} pt={4} fontWeight={600}>
+                                                    <Text color={'default.accessByNumber'} fontSize={'14px'} pt={4} fontWeight={600} cursor={'pointer'}>
                                                         10
                                                     </Text>
                                                 </Box>
                                                 <Center flex="2" justifyContent={'flex-end'}>
-                                                    <Text onClick={editAccessModal.onOpen} cursor={'pointer'} color={'default.toolbarButton'}>
+                                                    <Text onClick={editAccessModal.onOpen} fontWeight={600} cursor={'pointer'} color={'default.textButton'}>
                                                         {' '}
                                                         Edit
                                                     </Text>
-                                                    <Text color={'default.toolbarButton'} ml={16}>
+                                                    <Text color={'default.textButton'} fontWeight={600} ml={16} cursor={'pointer'}>
                                                         {' '}
                                                         Copy Link
                                                     </Text>
                                                 </Center>
                                             </Center>
                                         </Flex>
-                                        <Box overflowY="auto" maxHeight="224px" h="100%" whiteSpace="nowrap" color="white">
+                                        <Box overflowY="auto" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white">
                                             {accessUserList &&
                                                 accessUserList.map((icons: User, iconsIndex: number) => {
                                                     return (
@@ -407,16 +411,14 @@ const ProjectDetails = (props: any) => {
                                                             <Center>
                                                                 <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
                                                                 <Box width={'250px'}>
-                                                                    <Text ml={12} color={accesstextColor} fontWeight={600}>
+                                                                    <Text ml={12} color={accesstextColor} fontWeight={600} mt={'16px'} lineHeight={'22px'}>
                                                                         {icons?.firstName} {icons?.lastName}
                                                                     </Text>
-                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600}>
+                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600} lineHeight={'22px'}>
                                                                         {icons.email}{' '}
                                                                     </Text>
                                                                 </Box>
                                                             </Center>
-
-                                                            <Center mr={'36px'}></Center>
                                                         </div>
                                                     );
                                                 })}
