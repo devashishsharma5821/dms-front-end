@@ -31,7 +31,7 @@ WORKDIR /usr/share
 
 # USER nginx
 
-COPY --from=build /app/v3-dms /usr/share/nginx/html/v3-dms
+COPY --from=build /app/build /usr/share/nginx/html/v3-dms
 COPY ./docker/config.js /usr/share/nginx/html/v3-dms
 #COPY ./docker/nginx/custom_50x.html /html
 #COPY ./docker/nginx/custom_404.html /html
