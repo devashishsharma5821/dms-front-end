@@ -99,25 +99,27 @@ const Project = () => {
                     </Box>
                     <Stack direction="row" height={'30'} border={'3'}>
                         {' '}
-                        <Divider orientation="vertical" ml={'14'} mr={'14'} />
+                        <Divider orientation="vertical" ml={'20'} mr={'20'} />
                     </Stack>
                     <Menu>
-                        <MenuButton color={'white'} bg={'#2180C2'} width={'165px'} height={'36px'} borderRadius={'3'}>
+                        <MenuButton color={'white'} bg={'default.toolbarButton'} width={'166px'} height={'36px'} borderRadius={'3'}>
                             {' '}
                             <Center>
                                 <Text> Create Project</Text>
-                                <Divider orientation="vertical" ml={'12'} mr={'12'} colorScheme="black" size="4px" />
+                                <Divider orientation="vertical" ml={'12'} mr={'12'} />
                                 <DownArrow color={'white'} />
                             </Center>
                         </MenuButton>
                         <MenuList borderRadius={'0'} width={'165px'} height={'72px'} color={textColor} mt={'-8px'}>
                             <MenuItem onClick={CreateProject.onOpen}>
-                                <Text mb={10} pt={6} lineHeight={'16px'}>
+                                <Text mb={10} pt={4} lineHeight={'16px'}>
                                     Start from scratch
                                 </Text>
                             </MenuItem>
                             <MenuItem>
-                                <Text mb={4}>Use a template</Text>
+                                <Text mb={4} pt={2}>
+                                    Use a template
+                                </Text>
                             </MenuItem>
                             <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
                         </MenuList>
@@ -136,7 +138,7 @@ const Project = () => {
                         </Tab>
                     </TabList>
                     {AllUsersData && allProjectsData && (
-                        <TabPanels  mr={'10px'}>
+                        <TabPanels mr={'10px'}>
                             <TabPanel>
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>
