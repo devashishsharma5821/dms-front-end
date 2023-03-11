@@ -45,9 +45,11 @@ const Share = (props: any) => {
         }
         if(props.isEdit) {
             setAccessUserList([]);
+            updateSpinnerInfo(true);
             if (SingleProjectData === null) {
                 getAndUpdateSingleProjectData(params.projectId as string);
             } else {
+                updateSpinnerInfo(false);
                 if(SingleProjectData.project_access === null || SingleProjectData.project_access.length === 0 ) {
                     setAccessUserList([]);
                     setUserValue([]);
@@ -62,10 +64,13 @@ const Share = (props: any) => {
     }, [SingleProjectData]);
 
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
             getAndUpdateAllUsersData(variablesForAllUsers);
-        };
+        } else {
+            updateSpinnerInfo(false);
+        }
     }, [AllUsersData]);
 
 
@@ -79,7 +84,7 @@ const Share = (props: any) => {
         updateSpinnerInfo(true);
         if(type === 'delete') {
             const removeVariable = {
-                userId: user[0].userId,
+                userId: user![0].userId,
                 projectId: params.projectId
             };
             client
@@ -92,6 +97,7 @@ const Share = (props: any) => {
                     updateSpinnerInfo(false);
                 })
                 .catch((err) => {
+                    updateSpinnerInfo(false);
                     toast(getToastOptions(`${err}`, 'error'));
                 });
         } else if(type === 'canEdit') {
@@ -113,6 +119,7 @@ const Share = (props: any) => {
                     updateSpinnerInfo(false);
                 })
                 .catch((err) => {
+                    updateSpinnerInfo(false);
                     toast(getToastOptions(`${err}`, 'error'));
                 });
         }

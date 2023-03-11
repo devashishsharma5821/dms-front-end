@@ -76,6 +76,7 @@ const CreateProjectModal = (props: any) => {
         editProjectQuery(formikValues);
     };
     const editProjectQuery = (formikValues: any) => {
+        updateSpinnerInfo(true);
         client
             .mutate<ProjectEdit<ProjectEditDetail>>({
                 mutation: editProject(formikValues)
@@ -85,8 +86,10 @@ const CreateProjectModal = (props: any) => {
                 toast(getToastOptions(`Project Edited successfully`, 'success'));
                 getAndUpdateAllProjectsData();
                 getAndUpdateSingleProjectData(data.id);
+                updateSpinnerInfo(false);
             })
             .catch((err: any) => {
+                updateSpinnerInfo(false);
                 setLoading(false);
                 toast(getToastOptions(`${err}`, 'error'));
             });

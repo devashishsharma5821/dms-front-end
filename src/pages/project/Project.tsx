@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './project.scss';
 import { Box, Center, Divider, Menu, MenuButton, MenuItem, MenuList, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import useAppStore from '../../store';
@@ -13,8 +12,6 @@ import { projectsSearch } from '../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
-import { createStandaloneToast } from '@chakra-ui/react';
-const { toast } = createStandaloneToast();
 
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);

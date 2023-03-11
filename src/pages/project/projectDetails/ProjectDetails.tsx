@@ -32,7 +32,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
-import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
+import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import client from '../../../apollo-client';
@@ -74,9 +74,11 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
+            updateSpinnerInfo(false);
             setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
@@ -84,10 +86,12 @@ const ProjectDetails = (props: any) => {
         }
     }, [SingleProjectData, AllUsersData]);
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
         } else {
+            updateSpinnerInfo(false);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
@@ -108,6 +112,7 @@ const ProjectDetails = (props: any) => {
         setDeleteId(id);
     };
     const submitDeleteHandler = () => {
+        updateSpinnerInfo(true);
         client
             .mutate<ProjectDelete<DeleteProjectDetail>>({
                 mutation: deleteProject(deleteId)
@@ -117,8 +122,10 @@ const ProjectDetails = (props: any) => {
                 getAndUpdateAllProjectsData();
                 navigate('/project');
                 deleteConfirmationModal.onClose();
+                updateSpinnerInfo(false);
             })
             .catch((err) => {
+                updateSpinnerInfo(false);
                 toast(getToastOptions(`${err}`, 'error'));
             });
     };
@@ -126,6 +133,7 @@ const ProjectDetails = (props: any) => {
         setInlineDescription(editChangeValue);
     };
     const handleEditProject = (variables: any, toastMessages: any) => {
+        updateSpinnerInfo(true);
         client
             .mutate<ProjectEdit<ProjectEditDetail>>({
                 mutation: editProject(variables)
@@ -133,8 +141,10 @@ const ProjectDetails = (props: any) => {
             .then(() => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateAllProjectsData();
+                updateSpinnerInfo(false);
             })
             .catch((err) => {
+                updateSpinnerInfo(false);
                 toast(getToastOptions(`${err}`, 'error'));
             });
     };
