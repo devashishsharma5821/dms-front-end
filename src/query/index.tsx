@@ -444,12 +444,12 @@ export const deleteProject = (id: string) => {
 }
 
 // Dataset APIs start here
-export const uploadCSVDataset = (variables: any) => {
-    return gql `mutation {
+export const uploadCSVDataset = () => {
+    return gql `mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!) {
         dmsDatabricksUploadDBFS(
-        file: ${variables.file},
-        project_id: "${variables.projectId}",
-        dataset_name: "${variables.datasetName}"
+        file: $file,
+        project_id: "$projectId",
+        dataset_name: "$datasetName"
         )
     }`;
 }

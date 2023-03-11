@@ -1,7 +1,8 @@
 import { ApolloClient, InMemoryCache, createHttpLink, DefaultOptions } from '@apollo/client';
+
 import { setContext } from '@apollo/client/link/context';
 import { ENVIRONMENT } from './environments';
-
+import createUploadLink from 'apollo-upload-client/public/createUploadLink';
 declare var CONFIG: any;
 declare global {
     interface Window { CONFIG: any; }
@@ -25,6 +26,7 @@ const authLink = setContext((_, { headers }) => {
         }
     };
 });
+const uploadLink = createUploadLink({ uri: CONFIG.GRAPHQL_SERVER });
 
 const httpLink = createHttpLink({
     uri: CONFIG.GRAPHQL_SERVER
@@ -41,7 +43,7 @@ const defaultOptions: DefaultOptions = {
 };
 
 const client = new ApolloClient({
-    link: authLink.concat(httpLink),
+    link: authLink.concat(uploadLink).concat(httpLink),
     cache: new InMemoryCache(),
     defaultOptions: defaultOptions
 });
