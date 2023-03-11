@@ -164,6 +164,23 @@ const ProjectDetails = (props: any) => {
             errorMessage: 'Project Tags Failed To edit'
         });
     };
+    const handleRemoveTag = (tag: string) => {
+        SingleProjectData.basic.tags = SingleProjectData.basic.tags.filter(tagToKeep => {
+           return tagToKeep !== tag;
+        });
+        const variables = {
+            id: SingleProjectData.basic.id,
+            name: SingleProjectData.basic.name,
+            project_variables: SingleProjectData.basic.project_variables,
+            description: SingleProjectData.basic.description,
+            tags: [...SingleProjectData.basic.tags]
+        };
+        handleEditProject(variables, {
+            successMessage: 'Project Tags Edited Successfully',
+            errorMessage: 'Project Tags Failed To edit'
+        });
+
+    }
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== SingleProjectData.basic.description) {
             const variables = {
@@ -297,7 +314,7 @@ const ProjectDetails = (props: any) => {
                                                                     return (
                                                                         <Tag height={'24px'} variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'}>
                                                                             <TagLabel>{tag}</TagLabel>
-                                                                            <TagCloseButton />
+                                                                            <TagCloseButton onClick={() => handleRemoveTag(tag)} />
                                                                         </Tag>
                                                                     );
                                                                 })}
