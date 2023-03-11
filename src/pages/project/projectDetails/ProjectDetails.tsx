@@ -14,7 +14,6 @@ import {
     ButtonGroup,
     EditablePreview,
     EditableInput,
-    Toast,
     Tag,
     TagLabel,
     TagCloseButton,
@@ -24,7 +23,7 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    Textarea
+    Textarea, createStandaloneToast
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete, ProjectEdit, ProjectEditDetail } from '../../../models/project';
@@ -40,6 +39,7 @@ import client from '../../../apollo-client';
 import { deleteProject, editProject } from '../../../query';
 import Share from '../../../component/modalSystem/Share';
 import LeftArrow from '../../../assets/LeftArrow';
+import { getToastOptions } from '../../../models/toastMessages';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -56,6 +56,7 @@ const ProjectDetails = (props: any) => {
     const createProjectModal = useDisclosure();
     const tagPopOver = useDisclosure();
     const editAccessModal = useDisclosure();
+    const { toast } = createStandaloneToast();
     function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -112,25 +113,13 @@ const ProjectDetails = (props: any) => {
                 mutation: deleteProject(deleteId)
             })
             .then(() => {
-                Toast({
-                    title: `Project is deleted successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`Project is deleted successfully`, 'success'));
                 getAndUpdateAllProjectsData();
                 navigate('/project');
                 deleteConfirmationModal.onClose();
             })
-            .catch(() => {
-                Toast({
-                    title: `ProjectCannot be Deleted`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+            .catch((err) => {
+                toast(getToastOptions(`${err}`, 'error'));
             });
     };
     const handleEditDescriptionChange = (editChangeValue: string) => {
@@ -142,23 +131,11 @@ const ProjectDetails = (props: any) => {
                 mutation: editProject(variables)
             })
             .then(() => {
-                Toast({
-                    title: toastMessages.successMessage,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-left'
-                });
+                toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateAllProjectsData();
             })
-            .catch(() => {
-                Toast({
-                    title: toastMessages.errorMessage,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-left'
-                });
+            .catch((err) => {
+                toast(getToastOptions(`${err}`, 'error'));
             });
     };
     const handleAddTag = () => {

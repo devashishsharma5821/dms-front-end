@@ -30,13 +30,6 @@ const Project = () => {
         if (AllUsersData === null) {
             updateSpinnerInfo(true);
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
-            // toast({
-            //     title: `Data is fetching`,
-            //     status: 'success',
-            //     isClosable: true,
-            //     duration: 5000,
-            //     position: 'top-right'
-            // });
             getAndUpdateAllUsersData(variablesForAllUsers);
         } else {
             updateSpinnerInfo(false);
