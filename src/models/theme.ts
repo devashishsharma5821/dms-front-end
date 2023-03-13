@@ -77,16 +77,18 @@ export const colors = {
         lightGray: '#F2F4F5',
         darkGrayCreate: '#666C80',
         bgExclamationText: 'rgba(50, 150, 237, 0.2)',
-        bgExclamationIcon: '#BFE1FF',
         tagBoxColor: '#F2F4F8',
         textDeployPiplineButton: '#AEB1B8',
         accessByNumber: '#75858F',
         bgDatasetLevels: '#929AA9',
         titleForDropFile: ' #1D1E23',
-        textButton: '#0073E6'
+        textButton: '#0073E6',
+        bgExclamationIcon: '#BFE1FF',
+        headerTitleColor: '#929AA9'
     },
     light: {
-        header: '#1A3F59',
+        sideMenu: '#1A3F59',
+        header: '#151519',
         button: '#0387B0',
         blue: '#0387B0',
         lightGrayishBlue: '#F7FAFC',
@@ -96,10 +98,12 @@ export const colors = {
         slightlyDesaturatedBlue: '#9792C8',
         veryDarkBlue: '#08192E',
         grayishBlue: '#ECEAFD',
+        headerTitleLightColor: '#F3F6FA',
         badge: '#2E2E2E'
     },
     dark: {
         header: '#3D3D3F',
+        sideMenu: '#3D3D3F',
         button: '#3296ED',
         mediumDark: '#464648',
         gray: '#C9C9CA',

@@ -62,7 +62,7 @@ const App = () => {
     }, [instance]);
 
     return (
-        <Box overflow={'hidden'}>
+        <Box className={'mainPageWrapper'}>
             {isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span>}
         </Box>
     );

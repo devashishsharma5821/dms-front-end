@@ -21,7 +21,7 @@ root.render(
             <MsalProvider instance={msalInstance}>
                 <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>
                     <ChakraProvider theme={dmsTheme}>
-                        <App />
+                        <App/>
                     </ChakraProvider>
                 </MsalAuthenticationTemplate>
             </MsalProvider>
