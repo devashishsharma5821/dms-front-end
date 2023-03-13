@@ -18,15 +18,12 @@ const FileUploadComponent = () => {
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
 
     const handleFile = (files: any) => {
-        // console.log('Files', files)
-        const uploadCSVVariables = {
-            file: files[0],
-            projectId: '41',
-            datasetName: 'First-UI-Dataset-Upload'
-        };
+        console.log('FIles', files[0])
         client
             .mutate<UploadCSV<UploadCSVDetail>>({
-                mutation: uploadCSVDataset(uploadCSVVariables)
+                mutation: uploadCSVDataset(),
+                variables: {file: files[0], projectId: '41', datasetName: 'First-UI-Dataset-Upload'},
+                context: {useMultipart: true }
             })
             .then(() => {
                 Toast({

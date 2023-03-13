@@ -9,7 +9,7 @@ export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
     const currentUser = userData?.filter((user: AllUsers) => {
         return user.userId === userId;
     });
-    const fullName = `${currentUser[0].firstName} ${currentUser[0].lastName}`;
+    const fullName = `${currentUser![0].firstName} ${currentUser![0].lastName}`;
     return fullName;
 };
 
@@ -29,9 +29,9 @@ export const getFormattedUserData = (allUserData: AllUsers[], projectData: GetSi
             return singleUser.userId === singleProjectAccess.user_id
         });
         return {
-            firstName: (sharedUser?.length > 0) ? sharedUser[0].firstName : '',
-            lastName: (sharedUser?.length > 0) ? sharedUser[0].lastName: '',
-            email: (sharedUser?.length > 0) ? sharedUser[0].email: '',
+            firstName: (sharedUser?.length > 0) ? sharedUser![0].firstName : '',
+            lastName: (sharedUser?.length > 0) ? sharedUser![0].lastName: '',
+            email: (sharedUser?.length > 0) ? sharedUser![0].email: '',
             accessLevel: (sharedUser?.length > 0) ? projectData.project_access[projectAccessIndex].access_level: ''
         }
     });
