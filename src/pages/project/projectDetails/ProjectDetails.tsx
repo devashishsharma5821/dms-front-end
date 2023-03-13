@@ -403,7 +403,7 @@ const ProjectDetails = (props: any) => {
                                                 </Center>
                                             </Center>
                                         </Flex>
-                                        <Box overflowY="auto" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white">
+                                        <Box maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white">
                                             {accessUserList &&
                                                 accessUserList.map((icons: User, iconsIndex: number) => {
                                                     return (

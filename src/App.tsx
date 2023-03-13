@@ -62,7 +62,7 @@ const App = () => {
     }, [instance]);
 
     return (
-        <Box className={'mainPageWrapper'}>
+        <Box>
             {isAuthenticated ? <UserConfiguration></UserConfiguration> : <span className="fail"> Login Failed.. </span>}
         </Box>
     );

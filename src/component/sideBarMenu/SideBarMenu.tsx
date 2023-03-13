@@ -171,7 +171,7 @@ const SideBarMenu = () => {
                                         const listSections = sections.section.map((icons, iconIndex) => {
                                             if (icons.iconName === 'Create') {
                                                 return (
-                                                    <Box key={iconIndex} width={'38px'} height={'40px'} cursor={'pointer'}>
+                                                    <Box key={iconIndex} width={'38px'} height={'40px'} cursor='pointer'>
                                                         <Square>
                                                             <CreateIcon />
                                                         </Square>
@@ -181,7 +181,7 @@ const SideBarMenu = () => {
                                             if (lastItemLength === iconIndex) {
                                                 return (
                                                     <div key={iconIndex}>
-                                                        <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'} cursor={'pointer'}>
+                                                        <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'} cursor='pointer'>
                                                             <Square>{icons.icon}</Square>
                                                         </Box>
                                                         <Center>
@@ -191,7 +191,7 @@ const SideBarMenu = () => {
                                                 );
                                             } else {
                                                 return (
-                                                    <Box key={iconIndex} m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'} cursor={'pointer'}>
+                                                    <Box key={iconIndex} m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'} cursor='pointer'>
                                                         <Square>{icons.icon}</Square>
                                                     </Box>
                                                 );
@@ -224,6 +224,7 @@ const SideBarMenu = () => {
                                                         mr={'6px'}
                                                         height={'40px'}
                                                         mb={'9px'}
+                                                        cursor='pointer'
                                                     >
                                                         <Square>
                                                             <WideCreateIcon />
@@ -242,10 +243,10 @@ const SideBarMenu = () => {
                                                             }}
                                                             className={'sidebar'}
                                                         >
-                                                            <Box m={'8px 8px'} width={'30px'} height={'32px'}>
+                                                            <Box cursor='pointer' m={'8px 8px'} width={'30px'} height={'32px'}>
                                                                 <Square>{icons.icon}</Square>
                                                             </Box>
-                                                            <Box pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                            <Box cursor='pointer' pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
                                                                 <Square className="text">{icons.iconName}</Square>
                                                             </Box>
                                                         </Flex>
@@ -265,10 +266,10 @@ const SideBarMenu = () => {
                                                         className={'sidebar'}
                                                         key={iconIndex}
                                                     >
-                                                        <Box m={'8px 8px'} width={'30px'} height={'32px'}>
+                                                        <Box m={'8px 8px'} width={'30px'} height={'32px'} cursor='pointer'>
                                                             <Square>{icons.icon}</Square>
                                                         </Box>
-                                                        <Box pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                        <Box cursor='pointer' pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
                                                             <Square className="text">{icons.iconName}</Square>
                                                         </Box>
                                                     </Flex>

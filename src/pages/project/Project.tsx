@@ -83,7 +83,7 @@ const Project = () => {
                         Duis aute irure dolor in reprehenderit in voluptate velit
                     </Text>
                 </Stack>
-                <Center flex="3" justifyContent={'flex-end'} zIndex={2}>
+                <Center mt={-20} flex="3" justifyContent={'flex-end'} zIndex={2}>
                     <Box>
                         <SearchComponent searchChange={onSearchChange} />
                     </Box>
@@ -116,7 +116,7 @@ const Project = () => {
                         </MenuList>
                     </Menu>
                 </Center>
-                <Tabs index={tabIndex} onChange={handleTabsChange} width={'100%'} isLazy mt={-34} colorScheme={'tabsTheme'}>
+                <Tabs index={tabIndex} onChange={handleTabsChange} width={'100%'} isLazy mt={-30} colorScheme={'tabsTheme'}>
                     <TabList width={'100%'} color={tabTextColor}>
                         <Tab pb={'14px'} fontWeight={600} pl={10}>
                             All Projects
@@ -129,7 +129,7 @@ const Project = () => {
                         </Tab>
                     </TabList>
                     {AllUsersData && allProjectsData && (
-                        <TabPanels mr={'10px'} overflowY="auto" maxHeight="758px">
+                        <TabPanels mr={'10px'} maxHeight="758px">
                             <TabPanel>
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>

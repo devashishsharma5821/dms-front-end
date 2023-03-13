@@ -5,7 +5,10 @@ export const styles = {
         // styles for the `body`
         body: {
             fontFamily: 'ibm-plex-sans , Fallback, sans-serif',
-            fontWeight: 400
+            fontWeight: 400,
+            overflow: 'hidden',
+            width: '100vw',
+            height: '100vh'
         },
         // styles for the `a`
         a: {

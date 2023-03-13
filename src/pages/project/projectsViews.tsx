@@ -18,7 +18,7 @@ const ProjectsViews = (props: any) => {
     };
     return (
         <>
-            <Box border={'1px solid'} borderColor={'light.lighterGrayishBlue'} borderRadius={8} width={'100%'} height={'auto'} mt={'24'} mb={'24'} pb={'98'} pl={10}>
+            <Box border={'1px solid'} borderColor={'light.lighterGrayishBlue'} overflowY={'scroll'} borderRadius={8} width={'100%'} height={window.innerHeight - 270} mt={'16'} pb={'16'} pl={10}>
                 {' '}
                 <Flex ml={'24'} mt={'21'} mb={'3'}>
                     <Center>

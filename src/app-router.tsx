@@ -14,11 +14,11 @@ export const AppRouter = (props: any) => {
     const [spinnerInfo] = useAppStore((state: any) => [state.spinnerInfo]);
     const user = props.user as User;
     return (
-        <>
+        <Box className={'mainPageWrapper'}>
             <Router basename="/v3-dms">
                 <Suspense fallback={<div>Loading...</div>}>
                     <Header firstName={user?.firstName} lastName={user?.lastName} email={user?.email} />
-                    <Box overflow={'hidden'} flexDirection="column">
+                    <Box flexDirection="column">
                         <SideBarMenu />
                         {spinnerInfo && (
                             <div className="spinnerContainer">
@@ -27,7 +27,7 @@ export const AppRouter = (props: any) => {
                         )}
                         <SocketWrapper>
                             <ContextCompute>
-                                <Box overflow={'hidden'}>
+                                <Box>
                                     <ToastProvider />
                                     <Routes>
                                         <Route path="/" element={<Navigate to="/compute" />}></Route>
@@ -46,6 +46,6 @@ export const AppRouter = (props: any) => {
                     </Box>
                 </Suspense>
             </Router>
-        </>
+        </Box>
     );
 };
