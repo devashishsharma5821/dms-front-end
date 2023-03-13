@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Flex, Text, useColorModeValue, Editable, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList, useDisclosure, AvatarGroup } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../colorModeSwitcher/ColorModeSwitcher';
-import { DownArrow, PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
+import { PencilIcon, LogoLight, GridCanvas, LineCanvasLogo, NoneCanvasLogo } from '../../assets/icons';
+import HeaderDownArrow from '../../assets/icons/HeaderDownArrow';
 import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
 import MyProfileModal from '../modalSystem/MyProfileModal';
@@ -25,25 +26,25 @@ const Header = (props: any) => {
         }
     }, [window.location]);
     return (
-        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'44px'} pl={'4'} bg={themebg} color={'default.lightText'}>
+        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'64px'} pl={'4'} bg={themebg} color={'default.lightText'}>
             <Box flex="3" ml={'16px'} mt={'7px'} mb={'7px'}>
                 <LogoLight />
             </Box>
             {isExperiment && (
                 <Center flex="3">
-                    <Text color={'default.lightGrayHeader'} mr={'8px'} fontSize={'18'} fontWeight={'400'} fontStyle={'normal'}>
+                    <Text color={'default.headerTitleColor'} mr={'8px'} fontSize={'16'} fontWeight={'400'}>
                         Project Name
                     </Text>
                     <Text color={'default.lightGrayHeader'} pl={'2'}>
                         /
                     </Text>
-                    <Text color={'default.whiteText'} pl={'2'} fontSize={'18'} fontWeight={'700'} fontStyle={'normal'} ml={'8px'}>
+                    <Text color={'default.headerTitleLightColor'} pl={'2'} fontSize={'18'} fontWeight={'600'} ml={'8px'}>
                         {' '}
                         My New Experiment
                     </Text>
 
                     <Editable pl={'10'} defaultValue="Take some chakra" cursor={'pointer'}>
-                        <PencilIcon color={'#A3B4D1'} height={'18px'} width={'18px'} />
+                        <PencilIcon color={'#FFFFFF'} height={'18px'} Height={'18px'} />
                     </Editable>
                 </Center>
             )}
@@ -54,7 +55,7 @@ const Header = (props: any) => {
                             <Avatar borderRadius="full" name={`P G`} />
                             <Avatar borderRadius="full" name={`N l`} />
                         </AvatarGroup>
-                        <Box pl={'6'} pr={'6'}>
+                        <Box mr={'24px'}>
                             <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline" width={'62px'} height={'28px'} borderRadius={3}>
                                 Share
                             </Button>
@@ -69,13 +70,13 @@ const Header = (props: any) => {
                 {isExperiment && (
                     <>
                         <Box>
-                            <GridCanvas />
+                            <GridCanvas color={'#F3F6FA'} />
                         </Box>
 
                         <Menu>
                             <MenuButton>
                                 <Box mr={'34'} ml={'14'}>
-                                    <DownArrow color={'#A3B4D1'} />
+                                    <HeaderDownArrow />
                                 </Box>
                             </MenuButton>
                             <MenuList borderRadius={'0'} width={'110'} color={textColor} mt={'8'} ml={'-66px'}>
@@ -98,8 +99,8 @@ const Header = (props: any) => {
                 <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                 <Menu>
                     <MenuButton>
-                        <Box ml={'12'} mr={'23'}>
-                            <DownArrow color={'#A3B4D1'} />
+                        <Box width={'20px'} ml={'12'} mr={'23'}>
+                            <HeaderDownArrow />
                         </Box>
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mr={'18'} mt={'10'} color={textColor}>
