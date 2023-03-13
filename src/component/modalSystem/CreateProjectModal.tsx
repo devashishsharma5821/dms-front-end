@@ -23,11 +23,10 @@ import {
     Text,
     useDisclosure,
     Avatar,
-    useToast,
     Tag,
     TagLabel,
     TagCloseButton,
-    HStack, Toast, PopoverTrigger, PopoverContent, Stack, ButtonGroup, Popover
+    HStack, PopoverContent, Stack, ButtonGroup, Popover, createStandaloneToast
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
@@ -38,6 +37,7 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../.
 import { AllUsers, DMSAccessLevel } from '../../models/profile';
 import { ShareCreate, ShareCreateDetail } from '../../models/share';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import { getToastOptions } from '../../models/toastMessages';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -49,7 +49,7 @@ const CreateProjectModal = (props: any) => {
     const addShareMemberModal = useDisclosure();
     const tagPopOver = useDisclosure()
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
-    const toast = useToast();
+    const { toast } = createStandaloneToast();
     const isEdit = props.isEdit.status;
     const isEditData = props.isEdit.data;
     const isAllUsersData = props.isEdit.usersData;
@@ -76,31 +76,22 @@ const CreateProjectModal = (props: any) => {
         editProjectQuery(formikValues);
     };
     const editProjectQuery = (formikValues: any) => {
+        updateSpinnerInfo(true);
         client
             .mutate<ProjectEdit<ProjectEditDetail>>({
                 mutation: editProject(formikValues)
             })
             .then(() => {
                 setLoading(false);
-                toast({
-                    title: `Project Edited successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`Project Edited successfully`, 'success'));
                 getAndUpdateAllProjectsData();
                 getAndUpdateSingleProjectData(data.id);
+                updateSpinnerInfo(false);
             })
             .catch((err: any) => {
+                updateSpinnerInfo(false);
                 setLoading(false);
-                toast({
-                    title: `${err}`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`${err}`, 'error'));
             });
     }
     const createUserAccessForCreateProjectMode = (userList:AllUsers) => {
@@ -108,13 +99,7 @@ const CreateProjectModal = (props: any) => {
     }
     const setCreateProjectSuccess = () => {
         getAndUpdateAllProjectsData();
-        toast({
-            title: `Project has being created`,
-            status: 'success',
-            isClosable: true,
-            duration: 5000,
-            position: 'top-right'
-        });
+        toast(getToastOptions(`Project has being created`, 'success'));
         setLoading(false);
         props.onSuccess();
     };
@@ -177,26 +162,14 @@ const CreateProjectModal = (props: any) => {
                                     })
                                     .then(() => {
                                         setLoading(false);
-                                        toast({
-                                            title: `Project Edited successfully`,
-                                            status: 'success',
-                                            isClosable: true,
-                                            duration: 5000,
-                                            position: 'top-right'
-                                        });
+                                        toast(getToastOptions(`Project Edited successfully`, 'success'));
                                         getAndUpdateAllProjectsData();
                                         props.onSuccess();
                                         updateSpinnerInfo(false);
                                     })
                                     .catch((err: any) => {
                                         setLoading(false);
-                                        toast({
-                                            title: `${err}`,
-                                            status: 'error',
-                                            isClosable: true,
-                                            duration: 5000,
-                                            position: 'top-right'
-                                        });
+                                        toast(getToastOptions(`${err}`, 'error'));
                                     });
                             } else {
                                 client
@@ -222,25 +195,13 @@ const CreateProjectModal = (props: any) => {
                                                         variables: {input: mutationVariables}
                                                     })
                                                     .then(() => {
-                                                        Toast({
-                                                            title: `Project Was created Successfully.`,
-                                                            status: 'error',
-                                                            isClosable: true,
-                                                            duration: 5000,
-                                                            position: 'top-right'
-                                                        });
+                                                        toast(getToastOptions('Project Was created Successfully', 'success'));
                                                             setCreateProjectSuccess();
                                                             setAccessUserListCreateMode([]);
                                                             updateSpinnerInfo(false);
                                                     })
-                                                    .catch(() => {
-                                                        Toast({
-                                                            title: `Project Was not created as expected.`,
-                                                            status: 'error',
-                                                            isClosable: true,
-                                                            duration: 5000,
-                                                            position: 'top-right'
-                                                        });
+                                                    .catch((err) => {
+                                                        toast(getToastOptions(`${err}`, 'error'));
                                                     });
                                         } else {
                                             updateSpinnerInfo(false);
@@ -249,13 +210,7 @@ const CreateProjectModal = (props: any) => {
                                     })
                                     .catch((err: any) => {
                                         setLoading(false);
-                                        toast({
-                                            title: `${err}`,
-                                            status: 'error',
-                                            isClosable: true,
-                                            duration: 5000,
-                                            position: 'top-right'
-                                        });
+                                        toast(getToastOptions(`${err}`, 'error'));
                                     });
                             }
                         }}

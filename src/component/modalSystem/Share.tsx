@@ -2,14 +2,10 @@ import React, { useEffect, FC } from 'react';
 import {
     Box, Flex, Text, useColorModeValue, Button, Center, Avatar, Menu, MenuButton, MenuItem, MenuList,
     ModalOverlay, ModalContent, ModalHeader, FormControl, ModalBody,
-    ModalCloseButton, ModalFooter, Modal, FormLabel, Divider, Link, Select, Toast
+    ModalCloseButton, ModalFooter, Modal, Divider, Link, createStandaloneToast
 } from '@chakra-ui/react';
     import {
-        MultiSelect,
-        MultiSelectProps,
-        MultiSelectTheme,
-        SelectionVisibilityMode,
-        useMultiSelect,
+        MultiSelect
     } from 'chakra-multiselect';
 import {  DownArrowShare, LinkChain } from '../../assets/icons';
 import { ShareCreate, ShareCreateDetail, ShareDelete, ShareDeleteDetail } from '../../models/share';
@@ -22,6 +18,7 @@ import { useParams } from 'react-router-dom';
 import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
 import { getFormattedUserData } from '../../utils/common.utils';
+import { getToastOptions } from '../../models/toastMessages';
 
 const Share = (props: any) => {
   
@@ -41,15 +38,18 @@ const Share = (props: any) => {
     const params = useParams();
     const userOptions = AllUsersData.map((user) => ({ label: user.email, value: user.email }))
     const [userValue, setUserValue] = React.useState([]);
+    const { toast } = createStandaloneToast();
     useEffect(() => {
         if(props.retainData.length > 0) {
             setAccessUserList(props.retainData);
         }
         if(props.isEdit) {
             setAccessUserList([]);
+            updateSpinnerInfo(true);
             if (SingleProjectData === null) {
                 getAndUpdateSingleProjectData(params.projectId as string);
             } else {
+                updateSpinnerInfo(false);
                 if(SingleProjectData.project_access === null || SingleProjectData.project_access.length === 0 ) {
                     setAccessUserList([]);
                     setUserValue([]);
@@ -64,10 +64,13 @@ const Share = (props: any) => {
     }, [SingleProjectData]);
 
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = {isActive: true, pageNumber: 1, limit: 9999, searchText: ""};
             getAndUpdateAllUsersData(variablesForAllUsers);
-        };
+        } else {
+            updateSpinnerInfo(false);
+        }
     }, [AllUsersData]);
 
 
@@ -81,7 +84,7 @@ const Share = (props: any) => {
         updateSpinnerInfo(true);
         if(type === 'delete') {
             const removeVariable = {
-                userId: user[0].userId,
+                userId: user![0].userId,
                 projectId: params.projectId
             };
             client
@@ -89,29 +92,18 @@ const Share = (props: any) => {
                     mutation: deleteAccess(removeVariable)
                 })
                 .then(() => {
-                    Toast({
-                        title: `Access removed Successfully`,
-                        status: 'success',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
+                    toast(getToastOptions(`Access removed Successfully`, 'success'));
                     getAndUpdateSingleProjectData(params.projectId as string);
                     updateSpinnerInfo(false);
                 })
-                .catch(() => {
-                    Toast({
-                        title: `Access failed to be removed`,
-                        status: 'error',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
+                .catch((err) => {
+                    updateSpinnerInfo(false);
+                    toast(getToastOptions(`${err}`, 'error'));
                 });
         } else if(type === 'canEdit') {
             const mutationVariable = {
                 access: [{
-                        user_id: user[0].userId,
+                        user_id: user![0].userId,
                         access_level: DMSAccessLevel[1]
                     }],
                 project_id: params.projectId
@@ -122,24 +114,13 @@ const Share = (props: any) => {
                     variables: {input: mutationVariable}
                 })
                 .then(() => {
-                    Toast({
-                        title: `Project Permission Changed Successfully`,
-                        status: 'success',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
+                    toast(getToastOptions(`Project Permission Changed Successfully`, 'success'));
                     getAndUpdateSingleProjectData(params.projectId as string);
                     updateSpinnerInfo(false);
                 })
-                .catch(() => {
-                    Toast({
-                        title: `Project Permission Did not change, or you do not have the right permission`,
-                        status: 'error',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
+                .catch((err) => {
+                    updateSpinnerInfo(false);
+                    toast(getToastOptions(`${err}`, 'error'));
                 });
         }
     }
@@ -153,7 +134,7 @@ const Share = (props: any) => {
                         return singleUser.email === selUserEmail;
                     });
                     return {
-                        user_id: sharedUser[0].userId,
+                        user_id: sharedUser![0].userId,
                         access_level: DMSAccessLevel[0]
                     }
                 }),
@@ -165,25 +146,13 @@ const Share = (props: any) => {
                     variables: {input: mutationVariable}
                 })
                 .then(() => {
-                    Toast({
-                        title: `Project Shared Successfully`,
-                        status: 'success',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
+                    toast(getToastOptions(`Project Shared Successfully`, 'success'));
                     getAndUpdateSingleProjectData(params.projectId as string);
                     setUserValue([]);
                     updateSpinnerInfo(false);
                 })
-                .catch(() => {
-                    Toast({
-                        title: `Project will not be shared successfully`,
-                        status: 'error',
-                        isClosable: true,
-                        duration: 5000,
-                        position: 'top-right'
-                    });
+                .catch((err) => {
+                    toast(getToastOptions(`${err}`, 'error'));
                 });
         } else {
             let newAccessList = [...accessUserList];
@@ -191,7 +160,7 @@ const Share = (props: any) => {
                 const sharedUser = AllUsersData?.filter((singleUser) => {
                     return singleUser.email === selUserEmail;
                 });
-                newAccessList.push(sharedUser[0]);
+                newAccessList.push(sharedUser![0]);
             });
             setAccessUserList(newAccessList);
         }
