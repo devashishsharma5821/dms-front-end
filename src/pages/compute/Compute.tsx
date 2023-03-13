@@ -98,7 +98,9 @@ const Compute = () => {
                     gridRef?.current!?.api?.sizeColumnsToFit();
                     updateDmsComputeData(response.data.dmsComputes);
                 })
-                .catch((err: any) => console.error(err));
+                .catch((err: any) => {
+                    toast(getToastOptions(err, 'error'));
+                });
         } else if (DmsComputeData?.length > 0) {
             const newComputedataa = newComputeData(DmsComputeData);
             setRowData(newComputedataa);
@@ -166,19 +168,6 @@ const Compute = () => {
 
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
 
-    // const onComputeStarted = () => {
-    //     let currentValue = select(useAppStore.getState());
-    //     if (currentValue) {
-    //         console.log('current VLUE', currentValue);
-    //         // setComputeStats(currentValue);
-    //         // setConnected(true);
-    //     }
-    // };
-
-    // const select = (state: { lastAliveMessage: string }) => {
-    //     return state.lastAliveMessage;
-    // };
-
     const confirmAlertActionForStop = () => {
         client
             .mutate<ComputeStop<StopComputeDetail>>({
@@ -209,8 +198,8 @@ const Compute = () => {
                     setGlobalComputeId(null);
                 }, 10000);
             })
-            .catch(() => {
-                toast(getToastOptions(`Compute is not stopped`, 'error'));
+            .catch((err) => {
+                toast(getToastOptions(err || 'Something went wrong', 'error'));
                 setGlobalComputeId(null);
             });
     };
@@ -306,7 +295,7 @@ const Compute = () => {
                 setGlobalComputeId(null);
             })
             .catch((err: any) => {
-                toast(getToastOptions(`${err.message}`, 'error'));
+                toast(getToastOptions(err.message, 'error'));
                 deleteComputeModal.onClose();
             });
     };
@@ -359,11 +348,11 @@ const Compute = () => {
                 });
 
                 useAppStore.setState(() => ({ DmsComputeData: newData }));
-                toast(getToastOptions(`Your Default is changed`, 'success'));
+                toast(getToastOptions('Your Default is changed', 'success'));
                 setGlobalComputeId(null);
             })
             .catch((error: any) => {
-                toast(getToastOptions(`${error.message}`, 'error'));
+                toast(getToastOptions(error.message, 'error'));
                 setGlobalComputeId(null);
                 deleteComputeModal.onClose();
             });
@@ -423,7 +412,7 @@ const Compute = () => {
 
     const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData.id === globalComputeId);
     if (!computeData) {
-        return <div>loading...</div>;
+        return <div>Loading...</div>;
     }
 
     return (
