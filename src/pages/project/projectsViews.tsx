@@ -116,7 +116,7 @@ const ProjectsViews = (props: any) => {
                                                                     return (
                                                                         <Box key={tagIndex} bg={'#F2F4F8'} minHeight={'24px'} borderRadius={3} width={'auto'} mr={'14px'}>
                                                                             <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600} pl={'6px'} pr={'6px'} pt={'4px'} pb={'4px'}>
-                                                                                {tagIndex > 1 ? `+ ${project.tags.length - 2} more` : getTruncatedText(tag, 20)}
+                                                                                {tagIndex > 1 ? `+ ${project.tags.length - 2} more` : getTruncatedText(tag, 8)}
                                                                             </Text>
                                                                         </Box>
                                                                     );

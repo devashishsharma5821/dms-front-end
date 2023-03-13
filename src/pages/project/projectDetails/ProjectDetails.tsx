@@ -14,7 +14,6 @@ import {
     ButtonGroup,
     EditablePreview,
     EditableInput,
-    Toast,
     Tag,
     TagLabel,
     TagCloseButton,
@@ -24,7 +23,7 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    Textarea
+    Textarea, createStandaloneToast
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete, ProjectEdit, ProjectEditDetail } from '../../../models/project';
@@ -33,13 +32,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
-import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
+import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import client from '../../../apollo-client';
 import { deleteProject, editProject } from '../../../query';
 import Share from '../../../component/modalSystem/Share';
 import LeftArrow from '../../../assets/LeftArrow';
+import { getToastOptions } from '../../../models/toastMessages';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -56,6 +56,7 @@ const ProjectDetails = (props: any) => {
     const createProjectModal = useDisclosure();
     const tagPopOver = useDisclosure();
     const editAccessModal = useDisclosure();
+    const { toast } = createStandaloneToast();
     function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -73,9 +74,11 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
+            updateSpinnerInfo(false);
             setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
@@ -83,10 +86,12 @@ const ProjectDetails = (props: any) => {
         }
     }, [SingleProjectData, AllUsersData]);
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
         } else {
+            updateSpinnerInfo(false);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
@@ -107,58 +112,40 @@ const ProjectDetails = (props: any) => {
         setDeleteId(id);
     };
     const submitDeleteHandler = () => {
+        updateSpinnerInfo(true);
         client
             .mutate<ProjectDelete<DeleteProjectDetail>>({
                 mutation: deleteProject(deleteId)
             })
             .then(() => {
-                Toast({
-                    title: `Project is deleted successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`Project is deleted successfully`, 'success'));
                 getAndUpdateAllProjectsData();
                 navigate('/project');
                 deleteConfirmationModal.onClose();
+                updateSpinnerInfo(false);
             })
-            .catch(() => {
-                Toast({
-                    title: `ProjectCannot be Deleted`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+            .catch((err) => {
+                updateSpinnerInfo(false);
+                toast(getToastOptions(`${err}`, 'error'));
             });
     };
     const handleEditDescriptionChange = (editChangeValue: string) => {
         setInlineDescription(editChangeValue);
     };
     const handleEditProject = (variables: any, toastMessages: any) => {
+        updateSpinnerInfo(true);
         client
             .mutate<ProjectEdit<ProjectEditDetail>>({
                 mutation: editProject(variables)
             })
             .then(() => {
-                Toast({
-                    title: toastMessages.successMessage,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-left'
-                });
+                toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateAllProjectsData();
+                updateSpinnerInfo(false);
             })
-            .catch(() => {
-                Toast({
-                    title: toastMessages.errorMessage,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-left'
-                });
+            .catch((err) => {
+                updateSpinnerInfo(false);
+                toast(getToastOptions(`${err}`, 'error'));
             });
     };
     const handleAddTag = () => {
@@ -177,6 +164,23 @@ const ProjectDetails = (props: any) => {
             errorMessage: 'Project Tags Failed To edit'
         });
     };
+    const handleRemoveTag = (tag: string) => {
+        SingleProjectData.basic.tags = SingleProjectData.basic.tags.filter(tagToKeep => {
+            return tagToKeep !== tag;
+        });
+        const variables = {
+            id: SingleProjectData.basic.id,
+            name: SingleProjectData.basic.name,
+            project_variables: SingleProjectData.basic.project_variables,
+            description: SingleProjectData.basic.description,
+            tags: [...SingleProjectData.basic.tags]
+        };
+        handleEditProject(variables, {
+            successMessage: 'Project Tags Edited Successfully',
+            errorMessage: 'Project Tags Failed To edit'
+        });
+
+    }
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== SingleProjectData.basic.description) {
             const variables = {
@@ -303,33 +307,6 @@ const ProjectDetails = (props: any) => {
                                                 <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>
                                                     Tag:
                                                 </Text>
-                                                <Center borderRadius={3}>
-                                                    <>
-                                                        <HStack spacing={4}>
-                                                            {SingleProjectData &&
-                                                                SingleProjectData.basic.tags !== null &&
-                                                                SingleProjectData.basic.tags.map((tag: string) => {
-                                                                    return (
-                                                                        <Tag height={'24px'} variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
-                                                                            <TagLabel fontSize={'14px'} fontWeight={600} lineHeight={'16px'} pl={6} pt={4} pr={6}>
-                                                                                {tag}
-                                                                            </TagLabel>
-                                                                            <TagCloseButton />
-                                                                        </Tag>
-                                                                    );
-                                                                })}
-                                                        </HStack>
-                                                        <HStack spacing={4} borderRadius={3} ml={8}>
-                                                            {SingleProjectData && SingleProjectData.basic.tags === null && (
-                                                                <Tag minHeight={'24px'} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
-                                                                    <TagLabel fontSize={'14px'} fontWeight={600} lineHeight={'16px'} pl={6} pt={4} pr={6}>
-                                                                        No Tags available
-                                                                    </TagLabel>
-                                                                </Tag>
-                                                            )}
-                                                        </HStack>
-                                                    </>
-                                                </Center>
                                                 <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={false}>
                                                     <PopoverTrigger>
                                                         <Text color={'default.textButton'} ml={8} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
@@ -352,6 +329,34 @@ const ProjectDetails = (props: any) => {
                                                         </Stack>
                                                     </PopoverContent>
                                                 </Popover>
+                                                <Center borderRadius={3}>
+                                                    <>
+                                                        <HStack spacing={4}>
+                                                            {SingleProjectData &&
+                                                            SingleProjectData.basic.tags !== null &&
+                                                            SingleProjectData.basic.tags.map((tag: string, tagIndex: number) => {
+                                                                if(tagIndex > 1) {
+                                                                    return (
+                                                                        <Tag borderRadius={3} maxWidth={'125px'} height={'24px'}  variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
+                                                                            <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
+                                                                                + {SingleProjectData.basic.tags.length - 2} more
+                                                                            </TagLabel>
+                                                                        </Tag>
+                                                                    )
+                                                                } else {
+                                                                    return (
+                                                                        <Tag borderRadius={3} maxWidth={'125px'} height={'24px'}  variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
+                                                                            <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
+                                                                                {getTruncatedText(tag, 9)}
+                                                                            </TagLabel>
+                                                                            <TagCloseButton onClick={() => handleRemoveTag(tag)} />
+                                                                        </Tag>
+                                                                    );
+                                                                }
+                                                            })}
+                                                        </HStack>
+                                                    </>
+                                                </Center>
                                             </Flex>
 
                                             <Editable
@@ -403,25 +408,25 @@ const ProjectDetails = (props: any) => {
                                                 </Center>
                                             </Center>
                                         </Flex>
-                                        <Box maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white">
+                                        <Box overflowY="auto" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white">
                                             {accessUserList &&
-                                                accessUserList.map((icons: User, iconsIndex: number) => {
-                                                    return (
-                                                        <div key={iconsIndex}>
-                                                            <Center>
-                                                                <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
-                                                                <Box width={'250px'}>
-                                                                    <Text ml={12} color={accesstextColor} fontWeight={600} mt={'16px'} lineHeight={'22px'}>
-                                                                        {icons?.firstName} {icons?.lastName}
-                                                                    </Text>
-                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600} lineHeight={'22px'}>
-                                                                        {icons.email}{' '}
-                                                                    </Text>
-                                                                </Box>
-                                                            </Center>
-                                                        </div>
-                                                    );
-                                                })}
+                                            accessUserList.map((icons: User, iconsIndex: number) => {
+                                                return (
+                                                    <div key={iconsIndex}>
+                                                        <Center>
+                                                            <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
+                                                            <Box width={'250px'}>
+                                                                <Text ml={12} color={accesstextColor} fontWeight={600} mt={'16px'} lineHeight={'22px'}>
+                                                                    {icons?.firstName} {icons?.lastName}
+                                                                </Text>
+                                                                <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600} lineHeight={'22px'}>
+                                                                    {icons.email}{' '}
+                                                                </Text>
+                                                            </Box>
+                                                        </Center>
+                                                    </div>
+                                                );
+                                            })}
                                         </Box>
                                     </Box>
                                 </Flex>
