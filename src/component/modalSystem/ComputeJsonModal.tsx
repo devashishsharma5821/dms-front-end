@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useApolloClient, DocumentNode } from '@apollo/client';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useToast } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 import { COMPUTE_MODAL_PROPS } from '../../models/types';
 import '../../styles/FormBuilderClasses.scss';
 import FormBuilder from '../jsonSchemaFormBuilder/FormBuilder';
@@ -12,13 +12,15 @@ import { getAndUpdateDmsComputeData, onPlayClickHandler } from '../../zustandAct
 import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store';
 import { ComputeContext } from '../../context/computeContext';
+import { createStandaloneToast } from '@chakra-ui/react';
+import { getToastOptions } from '../../models/toastMessages';
+const { toast } = createStandaloneToast();
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
     const context = useContext(ComputeContext);
     const navigate = useNavigate();
     const client = useApolloClient();
-    const toast = useToast();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [isComputeCreated, setIsComputeCreated] = useState<boolean>(false);
     useEffect(() => {
@@ -69,26 +71,14 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
                     getAndUpdateDmsComputeData();
                 }
                 setIsDisabled(false);
-                toast({
-                    title: `Compute ${props?.isEdit ? 'edited' : 'created'} successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`Compute ${props?.isEdit ? 'edited' : 'created'} successfully`, 'success'));
                 setIsComputeCreated(true);
                 props.onClose();
                 navigate('/compute');
             })
             .catch((err) => {
                 setIsDisabled(false);
-                toast({
-                    title: `${err}`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`${err}`, 'error'));
             });
     };
 

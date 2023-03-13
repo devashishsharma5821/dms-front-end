@@ -2,11 +2,8 @@ import React from 'react';
 import './pagenotfound.scss';
 import { Box, Flex, Text, useColorModeValue, Button, Link, Square, Stack, Center, Spinner } from '@chakra-ui/react';
 import { PageNotFoundLogo } from '../../assets/icons';
-import useAppStore from '../../store';
 
 const PageNotFound = () => {
-    const [SpinnerInfo] = useAppStore((state: any) => [state.SpinnerInfo]);
-
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
     return (
         <Flex flex="1" minWidth="max-content">
@@ -15,7 +12,6 @@ const PageNotFound = () => {
                     <PageNotFoundLogo />
                 </Box>
 
-                {SpinnerInfo.loading && SpinnerInfo.to && <Spinner className="spinner" size="xl" thickness="4px" />}
                 <Text mt={'93px'} color={'default.redLigh'} fontSize={24} lineHeight={'33px'}>
                     404 Error
                 </Text>

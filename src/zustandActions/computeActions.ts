@@ -11,6 +11,7 @@ import {
 
 import { createStandaloneToast } from '@chakra-ui/react';
 import { updateSpinnerInfo } from './commonActions';
+import { getToastOptions } from '../models/toastMessages';
 const { toast } = createStandaloneToast();
 
 export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async () => {
@@ -32,21 +33,9 @@ export const onPlayClickHandler: agGridClickHandler = async (id) => {
         const response = await client.mutate<ComputeRun<RunComputeDetail>>({
             mutation: dmsRunCompute(runComputeId)
         });
-        toast({
-            title: 'Compute is starting',
-            status: 'success',
-            isClosable: true,
-            duration: 5000,
-            position: 'top-right'
-        });
+        toast(getToastOptions(`Compute is starting`, 'success'));
     } catch (error: any) {
-        toast({
-            title: error.message,
-            status: 'error',
-            isClosable: true,
-            duration: 5000,
-            position: 'top-right'
-        });
+        toast(getToastOptions(`${error.message}`, 'error'));
     }
     useAppStore.setState((state) => ({
         DmsComputeData: state.DmsComputeData.map((computeData: any) => {
@@ -70,13 +59,7 @@ export const getAndUpdateDbSettingsData: any = async () => {
         useAppStore.setState(() => ({ dbSettingsData: response.data.dmsDatabricksSettings.node_types }));
         return true;
     } catch (error: any) {
-        toast({
-            title: error.message,
-            status: 'error',
-            isClosable: true,
-            duration: 5000,
-            position: 'top-right'
-        });
+        toast(getToastOptions(`${error.message}`, 'error'));
         updateSpinnerInfo(false);
         return false;
     }

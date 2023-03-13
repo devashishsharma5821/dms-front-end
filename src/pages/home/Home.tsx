@@ -2,13 +2,11 @@ import { useState } from 'react';
 import './home.scss';
 import { Button, Wrap, WrapItem, Tooltip, useToast, useColorModeValue, Box } from '@chakra-ui/react';
 import ModalComponent from '../../component/modalSystem/modal';
-import {
-    MultiSelect,
-    MultiSelectProps,
-    MultiSelectTheme,
-    SelectionVisibilityMode,
-    useMultiSelect,
-} from 'chakra-multiselect';
+import { MultiSelect, MultiSelectProps, MultiSelectTheme, SelectionVisibilityMode, useMultiSelect } from 'chakra-multiselect';
+import { createStandaloneToast } from '@chakra-ui/react';
+import { getToastOptions } from '../../models/toastMessages';
+const { toast } = createStandaloneToast();
+
 const HomePage = () => {
     const [message, setMessage] = useState('Status');
     const toast = useToast();
@@ -43,32 +41,21 @@ const HomePage = () => {
         'Moscovium',
         'Livermorium',
         'Tennessine',
-        'Oganesson',
-    ]
+        'Oganesson'
+    ];
 
     const _options = items.map((label) => ({ label, value: label.toLowerCase() }));
 
     const onChange = (ev: any) => {
         setValue(ev);
-    }
+    };
     return (
         <>
             <div className="wrap">
                 <Wrap ml={54} mt={10}>
                     {statuses.map((status: any, i: number) => (
                         <WrapItem key={i}>
-                            <Button
-                                variant="solid"
-                                bg={'light.button'}
-                                onClick={() =>
-                                    toast({
-                                        title: `${status} toast`,
-                                        status: status,
-                                        isClosable: true,
-                                        position: 'top-right'
-                                    })
-                                }
-                            >
+                            <Button variant="solid" bg={'light.button'} onClick={() => toast(getToastOptions(`${status} toast`, `${status}`))}>
                                 Show {status} toast
                             </Button>
                         </WrapItem>
@@ -83,19 +70,11 @@ const HomePage = () => {
                             </Button>
                         </Tooltip>
                     </WrapItem>
-
                 </Wrap>
             </div>
             <Box h={'400px'} width={'500px'} ml={'350px'}>
-                <MultiSelect
-                    value={value}
-                    options={_options}
-                    label='Example of Tag Creation'
-                    onChange={onChange!}
-                    create
-                />
+                <MultiSelect value={value} options={_options} label="Example of Tag Creation" onChange={onChange!} create />
             </Box>
-
         </>
     );
 };

@@ -1,14 +1,13 @@
 import React from 'react';
 import './FileUploadComponent.scss';
-import {
-    Button,
-    useColorModeValue,
-    Text,
-    Toast
-} from '@chakra-ui/react';
+import { Button, useColorModeValue, Text, Toast } from '@chakra-ui/react';
 import client from '../../../apollo-client';
 import { UploadCSV, UploadCSVDetail } from '../../../models/dataset';
 import { uploadCSVDataset } from '../../../query';
+import { createStandaloneToast } from '@chakra-ui/react';
+import { getToastOptions } from '../../../models/toastMessages';
+const { toast } = createStandaloneToast();
+
 // drag drop file component
 const FileUploadComponent = () => {
     const [dragActive, setDragActive] = React.useState(false);
@@ -18,39 +17,27 @@ const FileUploadComponent = () => {
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
 
     const handleFile = (files: any) => {
-        console.log('FIles', files[0])
+        console.log('FIles', files[0]);
         client
             .mutate<UploadCSV<UploadCSVDetail>>({
                 mutation: uploadCSVDataset(),
-                variables: {file: files[0], projectId: '41', datasetName: 'First-UI-Dataset-Upload'},
-                context: {useMultipart: true }
+                variables: { file: files[0], projectId: '41', datasetName: 'First-UI-Dataset-Upload' },
+                context: { useMultipart: true }
             })
             .then(() => {
-                Toast({
-                    title: `File Uploaded Successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`File Uploaded Successfully`, 'success'));
             })
             .catch(() => {
-                Toast({
-                    title: `File cannot be uploaded`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`File cannot be uploaded`, 'error'));
             });
-    }
+    };
     // handle drag events
     const handleDrag = (evt: any) => {
         evt.preventDefault();
         evt.stopPropagation();
-        if (evt.type === "dragenter" || evt.type === "dragover") {
+        if (evt.type === 'dragenter' || evt.type === 'dragover') {
             setDragActive(true);
-        } else if (evt.type === "dragleave") {
+        } else if (evt.type === 'dragleave') {
             setDragActive(false);
         }
     };
@@ -66,7 +53,7 @@ const FileUploadComponent = () => {
     };
 
     // triggers when file is selected with click
-    const handleChange = (evt:any) => {
+    const handleChange = (evt: any) => {
         evt.preventDefault();
         if (evt.target.files && evt.target.files[0]) {
             handleFile(evt.target.files);
@@ -80,23 +67,9 @@ const FileUploadComponent = () => {
     };
 
     return (
-        <form
-            id="form-file-upload"
-            onDragEnter={handleDrag}
-            onSubmit={(e) => e.preventDefault()}
-        >
-            <input
-                ref={inputRef}
-                type="file"
-                id="input-file-upload"
-                multiple={true}
-                onChange={handleChange}
-            />
-            <label
-                id="label-file-upload"
-                htmlFor="input-file-upload"
-                className={dragActive ? "drag-active" : ""}
-            >
+        <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
+            <input ref={inputRef} type="file" id="input-file-upload" multiple={true} onChange={handleChange} />
+            <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? 'drag-active' : ''}>
                 <div>
                     <Text fontSize={'21px'} fontWeight={600} color={titleDarkCSV} mt={'86px'}>
                         Drop files here to upload
@@ -115,16 +88,8 @@ const FileUploadComponent = () => {
                     </Text>
                 </div>
             </label>
-            {dragActive && (
-                <div
-                    id="drag-file-element"
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                ></div>
-            )}
+            {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
         </form>
     );
-}
+};
 export default FileUploadComponent;
