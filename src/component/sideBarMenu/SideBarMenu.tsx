@@ -224,7 +224,7 @@ const SideBarMenu = () => {
                                                         mr={'6px'}
                                                         height={'40px'}
                                                         mb={'9px'}
-                                                        cursor='pointer'
+                                                        cursor={(icons.disabled) ? 'not-allowed': 'pointer'}
                                                     >
                                                         <Square>
                                                             <WideCreateIcon />
@@ -243,10 +243,10 @@ const SideBarMenu = () => {
                                                             }}
                                                             className={'sidebar'}
                                                         >
-                                                            <Box cursor='pointer' m={'8px 8px'} width={'30px'} height={'32px'}>
+                                                            <Box cursor={(icons.disabled) ? 'not-allowed': 'pointer'} m={'8px 8px'} width={'30px'} height={'32px'}>
                                                                 <Square>{icons.icon}</Square>
                                                             </Box>
-                                                            <Box cursor='pointer' pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                            <Box cursor={(icons.disabled) ? 'not-allowed': 'pointer'} pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
                                                                 <Square className="text">{icons.iconName}</Square>
                                                             </Box>
                                                         </Flex>
@@ -266,10 +266,10 @@ const SideBarMenu = () => {
                                                         className={'sidebar'}
                                                         key={iconIndex}
                                                     >
-                                                        <Box m={'8px 8px'} width={'30px'} height={'32px'} cursor='pointer'>
+                                                        <Box m={'8px 8px'} width={'30px'} height={'32px'} cursor={(icons.disabled) ? 'not-allowed': 'pointer'}>
                                                             <Square>{icons.icon}</Square>
                                                         </Box>
-                                                        <Box cursor='pointer' pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                        <Box cursor={(icons.disabled) ? 'not-allowed': 'pointer'} pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
                                                             <Square className="text">{icons.iconName}</Square>
                                                         </Box>
                                                     </Flex>
