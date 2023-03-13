@@ -381,6 +381,15 @@ export const GET_SINGLE_PROJECT = (id: string) => {
       created_by
       created_at
 }
+ datasources(type: FILE_UPLOAD) {
+      id
+      name
+      spec {
+        ... on DMSDatabricsFileUpload {
+          path
+        }
+      }
+    }
     experiments {
       id
       name
@@ -448,8 +457,8 @@ export const uploadCSVDataset = () => {
     return gql `mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!) {
         dmsDatabricksUploadDBFS(
         file: $file,
-        project_id: "$projectId",
-        dataset_name: "$datasetName"
+        project_id: $projectId,
+        dataset_name: $datasetName
         )
     }`;
 }

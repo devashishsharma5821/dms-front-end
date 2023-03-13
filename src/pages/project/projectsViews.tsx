@@ -5,20 +5,37 @@ import { Avatar, Box, Center, Flex, Text, useColorModeValue, AvatarGroup } from 
 import { Documentation } from '../../assets/icons';
 import { GetAllProjectsDetail } from '../../models/project';
 import { getUserNameFromId, getTruncatedText, convertTime } from '../../utils/common.utils';
+import useAppStore from '../../store';
+import { ComputeAppStoreState } from '../../models/computeDetails';
 
 const ProjectsViews = (props: any) => {
     const textColor = useColorModeValue('light.header', 'dark.white');
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
     const AllProjectsData = props.data as GetAllProjectsDetail[];
+    const [UserConfig] = useAppStore((state: ComputeAppStoreState) => [state.UserConfig]);
     const navigate = useNavigate();
     const AllUsersData = props.AllUsersData;
     const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const navigateToDetails = (id: string) => {
         navigate(`/projectDetails/${id}`);
     };
+    const [windowSize, setWindowSize] = React.useState([
+        window.innerWidth,
+        window.innerHeight,
+    ]);
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+        window.addEventListener('resize', handleWindowResize);
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    });
     return (
         <>
-            <Box border={'1px solid'} borderColor={'light.lighterGrayishBlue'} borderRadius={8} width={'100%'} height={'auto'} mt={'24'} mb={'24'} pb={'98'} pl={10}>
+            <Box border={'1px solid'} borderColor={'light.lighterGrayishBlue'} overflowX={'hidden'}  overflowY={'scroll'} borderRadius={8} width={'100%'} height={windowSize[1] - 270} mt={'16'} pb={'16'} pl={10}>
                 {' '}
                 <Flex ml={'24'} mt={'21'} mb={'3'}>
                     <Center>
@@ -57,11 +74,11 @@ const ProjectsViews = (props: any) => {
                                             <Center ml={'23px'} pt={'8px'} justifyContent={'flex-start'}>
                                                 <Documentation color={'#666C80'} />
                                                 <Text title={project.name} ml={'11px'} fontWeight={700} fontSize={20} mt={'2px'} color={'default.blackText'} height={'27px'}>
-                                                    {getTruncatedText(project && project.name)}
+                                                    {getTruncatedText(project && project.name, 20)}
                                                 </Text>
                                             </Center>
                                             <Text ml={'52px'} mb={'10px'} color={'default.containerAgGridRecords'} fontWeight={400} height={'22px'}>
-                                                ID: {getTruncatedText(project && project.id)}
+                                                ID: {getTruncatedText(project && project.id, 20)}
                                             </Text>
                                             <Box ml={'20px'} mr={'20px'} height={'112px'}>
                                                 <Flex>
@@ -97,27 +114,20 @@ const ProjectsViews = (props: any) => {
                                                             project.tags.map((tag, tagIndex) => {
                                                                 if (tagIndex < 3) {
                                                                     return (
-                                                                        <Box key={tagIndex} bg={'#F2F4F8'} minHeight={'24px'} borderRadius={3} width={'auto'}>
-                                                                            <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600} height={'16px'} pl={'6px'} pr={'6px'} pt={'4px'} pb={'4px'}>
-                                                                                {tagIndex > 1 ? `+ ${project.tags.length - 2} more` : tag}
+                                                                        <Box key={tagIndex} bg={'#F2F4F8'} minHeight={'24px'} borderRadius={3} width={'auto'} mr={'14px'}>
+                                                                            <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600} pl={'6px'} pr={'6px'} pt={'4px'} pb={'4px'}>
+                                                                                {tagIndex > 1 ? `+ ${project.tags.length - 2} more` : getTruncatedText(tag, 8)}
                                                                             </Text>
                                                                         </Box>
                                                                     );
                                                                 }
                                                             })}
-                                                        {project && (project.tags === null || project.tags.length === 0) && (
-                                                            <Box mr={14} bg={'#F2F4F8'} minHeight={'24px'} borderRadius={3} width={'auto'}>
-                                                                <Text color={'#1A3F59'} fontSize={'14px'} fontWeight={600} pl={'6px'} pr={'6px'} pt={'4px'} pb={'4px'}>
-                                                                    No Tags Available
-                                                                </Text>
-                                                            </Box>
-                                                        )}
                                                     </Center>
                                                 </Flex>
                                             </Flex>
                                             {project.project_access && project.project_access.length > 0 && (
                                                 <Box ml={'20px'} mt={'10px'} height={'62px'} mb={'10px'}>
-                                                    <AvatarGroup size={'md'} max={4} spacing={1}>
+                                                    <AvatarGroup size={'md'} max={3} spacing={1}>
                                                         {project.project_access.map((access, accessIndex) => {
                                                             return <Avatar name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
                                                         })}
@@ -126,7 +136,7 @@ const ProjectsViews = (props: any) => {
                                             )}
                                             {project.project_access && project.project_access.length === 0 && (
                                                 <Box ml={'20px'} mb={'10px'} mt={'10px'} height={'62px'}>
-                                                    <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={'0'} color={'#111111'} bg={'white'} border={'1px'} borderColor={'#B3B3B3'} />
+                                                    <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={`${UserConfig.userConfiguration.user.firstName} ${UserConfig.userConfiguration.user.lastName}`} color={'default.whiteText'} />
                                                 </Box>
                                             )}
                                         </Box>

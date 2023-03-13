@@ -417,7 +417,7 @@ const Compute = () => {
 
     return (
         <>
-            <Box marginLeft={36}>
+            <Box marginLeft={36} height={window.innerHeight - 270}>
                 <Box className="compute_page" color={textColor}>
                     Compute
                 </Box>
