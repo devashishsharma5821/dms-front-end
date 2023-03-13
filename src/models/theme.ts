@@ -84,7 +84,9 @@ export const colors = {
         titleForDropFile: ' #1D1E23',
         textButton: '#0073E6',
         bgExclamationIcon: '#BFE1FF',
-        headerTitleColor: '#929AA9'
+        headerTitleColor: '#AFB6C2',
+        headerButoonBorder: '#3C414B',
+        darkBlack: '#000000'
     },
     light: {
         sideMenu: '#1A3F59',

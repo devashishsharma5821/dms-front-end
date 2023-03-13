@@ -6,11 +6,14 @@ import HeaderDownArrow from '../../assets/icons/HeaderDownArrow';
 import Share from '../modalSystem/Share';
 import Settings from '../settings/Settings';
 import MyProfileModal from '../modalSystem/MyProfileModal';
+
+import DemandModelingStudio from '../../assets/icons/DemandModelingStudio';
 // import ViewData from '../modalSystem/ViewData';
 // import NotebookModal from '../modalSystem/NotebookModal';
 const Header = (props: any) => {
     const themebg = useColorModeValue('light.header', 'dark.header');
-    const textColor = useColorModeValue('light.header', 'default.whiteText');
+    const textColor = useColorModeValue('default.darkBlack', 'default.whiteText');
+    const textColor2 = useColorModeValue('default.BlackText', 'default.whiteText');
     const [isExperiment, setIsExperiment] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const settingsModal = useDisclosure();
@@ -27,24 +30,30 @@ const Header = (props: any) => {
     }, [window.location]);
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'64px'} pl={'4'} bg={themebg} color={'default.lightText'}>
-            <Box flex="3" ml={'16px'} mt={'7px'} mb={'7px'}>
-                <LogoLight />
-            </Box>
+            <Center ml={'16px'} mt={'7px'} mb={'7px'}>
+                <Box>
+                    <LogoLight />
+                </Box>
+                <Box>
+                    <DemandModelingStudio />
+                </Box>
+            </Center>
+
             {isExperiment && (
-                <Center flex="3">
-                    <Text color={'default.headerTitleColor'} mr={'8px'} fontSize={'16'} fontWeight={'400'}>
-                        Project Name
+                <Center width={'50%'}>
+                    <Text color={'default.headerTitleColor'} mr={'8px'} fontSize={'18'} fontWeight={'500'} line-height={'24px'}>
+                        My Project
                     </Text>
-                    <Text color={'default.lightGrayHeader'} pl={'2'}>
+                    <Text color={'default.headerTitleColor'} pl={'2'}>
                         /
                     </Text>
-                    <Text color={'default.headerTitleLightColor'} pl={'2'} fontSize={'18'} fontWeight={'600'} ml={'8px'}>
+                    <Text color={'default.headerTitleLightColor'} pl={'2'} fontSize={'18'} fontWeight={'500'} ml={'8px'} line-height={'24px'}>
                         {' '}
                         My New Experiment
                     </Text>
 
-                    <Editable pl={'10'} defaultValue="Take some chakra" cursor={'pointer'}>
-                        <PencilIcon color={'#FFFFFF'} height={'18px'} Height={'18px'} />
+                    <Editable cursor={'pointer'} ml={'8px'}>
+                        <PencilIcon color={'#AFB6C2'} height={'24px'} Height={'24px'} />
                     </Editable>
                 </Center>
             )}
@@ -52,11 +61,21 @@ const Header = (props: any) => {
                 {isExperiment && (
                     <>
                         <AvatarGroup size="sm" max={2}>
-                            <Avatar borderRadius="full" name={`P G`} />
-                            <Avatar borderRadius="full" name={`N l`} />
+                            <Avatar borderRadius="full" border={'none'} name={`P G`} />
+                            <Avatar borderRadius="full" border={'none'} name={`N l`} />
                         </AvatarGroup>
-                        <Box mr={'24px'}>
-                            <Button onClick={onOpen} colorScheme="default.lightGrayHeader" variant="outline" width={'62px'} height={'28px'} borderRadius={3}>
+                        <Box mr={'26px'} ml={'16px'}>
+                            <Button
+                                onClick={onOpen}
+                                color={'light.headerTitleLightColor'}
+                                border={'1px'}
+                                borderColor={'default.headerButoonBorder'}
+                                variant="unstyled"
+                                width={'62px'}
+                                height={'32px'}
+                                borderRadius={4}
+                                fontSize={'14px'}
+                            >
                                 Share
                             </Button>
                             {isOpen && <Share isOpen={isOpen} onClose={onClose}></Share>}
@@ -79,9 +98,9 @@ const Header = (props: any) => {
                                     <HeaderDownArrow />
                                 </Box>
                             </MenuButton>
-                            <MenuList borderRadius={'0'} width={'110'} color={textColor} mt={'8'} ml={'-66px'}>
-                                <MenuItem>
-                                    <GridCanvas />
+                            <MenuList borderRadius={'0'} minWidth={'110'} color={textColor} mt={'8'} ml={'-76px'} pt={'0px'} pb={'0px'}>
+                                <MenuItem pl={'9px'}>
+                                    <GridCanvas color={'#000000'} />
                                     <Text ml={'12'}>Dot</Text>
                                 </MenuItem>
                                 <MenuItem>
@@ -90,7 +109,7 @@ const Header = (props: any) => {
                                 </MenuItem>
                                 <MenuItem>
                                     <NoneCanvasLogo />
-                                    <Text ml={'12'}>None</Text>
+                                    <Text ml={'11'}>None</Text>
                                 </MenuItem>
                             </MenuList>
                         </Menu>
@@ -103,7 +122,7 @@ const Header = (props: any) => {
                             <HeaderDownArrow />
                         </Box>
                     </MenuButton>
-                    <MenuList width={127} borderRadius={'0'} mr={'18'} mt={'10'} color={textColor}>
+                    <MenuList width={127} borderRadius={'0'} mr={'28px'} mt={'10'} color={textColor2} pt={'0px'} pb={'0px'}>
                         <MenuItem onClick={myProfileModal.onOpen}>My Profile</MenuItem>
 
                         <MyProfileModal

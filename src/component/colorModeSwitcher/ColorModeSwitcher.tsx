@@ -21,7 +21,7 @@ export const ColorModeSwitcher = (props: Omit<IconButtonProps, 'aria-label'>) =>
                     size="md"
                     fontSize="lg"
                 />
-                <Text fontSize={16} color={'default.lightGrayHeader'} alignSelf="center">
+                <Text fontSize={16} color={'default.headerTitleColor'} alignSelf="center" fontWeight={400} line-height={'24px'}>
                     {text}
                 </Text>
             </Stack>
