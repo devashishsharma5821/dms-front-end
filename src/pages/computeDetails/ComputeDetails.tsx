@@ -16,6 +16,7 @@ import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { getUserNameFromId } from '../../utils/common.utils';
 import { createStandaloneToast } from '@chakra-ui/react';
+import { getToastOptions } from '../../models/toastMessages';
 const { toast } = createStandaloneToast();
 
 const ComputeDetails = () => {
@@ -55,25 +56,13 @@ const ComputeDetails = () => {
                 mutation: dmsDeleteCompute(deleteId)
             })
             .then(() => {
-                toast({
-                    title: `Compute is deleted successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`Compute is deleted successfully`, 'success'));
                 const newData = DmsComputeData.filter((computeData: any) => computeData.id !== deleteId);
                 useAppStore.setState(() => ({ DmsComputeData: newData }));
                 navigate('/compute');
             })
             .catch((err: any) => {
-                toast({
-                    title: err.message,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`${err.message}`, 'error'));
                 deleteComputeModal.onClose();
             });
     };

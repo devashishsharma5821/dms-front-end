@@ -38,14 +38,15 @@ import { Action } from '@antuit/web-sockets-gateway-client';
 import { newComputeData } from './generateNewComputeData';
 import { disperseMessage } from '../../models/messages';
 import { useNavigate } from 'react-router-dom';
-import { createStandaloneToast } from '@chakra-ui/react';
 import { DeleteConfirmationModal } from '../../component/modalSystem/deleteConfirmationModal';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { convertTime } from '../../utils/common.utils';
+import { getToastOptions } from '../../models/toastMessages';
+import { createStandaloneToast } from '@chakra-ui/react';
 const { toast } = createStandaloneToast();
 
 const Compute = () => {
-    const [DmsComputeData, UserConfig, dbSettingsData] = useAppStore((state: any) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData]);
+    const [DmsComputeData, UserConfig, dbSettingsData] = useAppStore((state: ComputeAppStoreState) => [state.DmsComputeData, state.UserConfig, state.dbSettingsData]);
     const opid = v4();
     const textColor = useColorModeValue('light.header', 'dark.white');
     const textColorIcon = useColorModeValue('#666C80', 'white');
@@ -97,7 +98,9 @@ const Compute = () => {
                     gridRef?.current!?.api?.sizeColumnsToFit();
                     updateDmsComputeData(response.data.dmsComputes);
                 })
-                .catch((err: any) => console.error(err));
+                .catch((err: any) => {
+                    toast(getToastOptions(err, 'error'));
+                });
         } else if (DmsComputeData?.length > 0) {
             const newComputedataa = newComputeData(DmsComputeData);
             setRowData(newComputedataa);
@@ -165,19 +168,6 @@ const Compute = () => {
 
     const gridStyle = useMemo(() => ({ height: '500px', width: '99%' }), []);
 
-    // const onComputeStarted = () => {
-    //     let currentValue = select(useAppStore.getState());
-    //     if (currentValue) {
-    //         console.log('current VLUE', currentValue);
-    //         // setComputeStats(currentValue);
-    //         // setConnected(true);
-    //     }
-    // };
-
-    // const select = (state: { lastAliveMessage: string }) => {
-    //     return state.lastAliveMessage;
-    // };
-
     const confirmAlertActionForStop = () => {
         client
             .mutate<ComputeStop<StopComputeDetail>>({
@@ -185,13 +175,7 @@ const Compute = () => {
             })
             .then(() => {
                 stopComputeRunning.onClose();
-                toast({
-                    title: `Compute will be stopped after 10 seconds`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`Compute will be stopped after 10 seconds`, 'success'));
                 setTimeout(() => {
                     const newData = DmsComputeData.map((computeData: any) => {
                         if (computeData.id === globalComputeId) {
@@ -214,14 +198,8 @@ const Compute = () => {
                     setGlobalComputeId(null);
                 }, 10000);
             })
-            .catch(() => {
-                toast({
-                    title: `Compute is not stopped`,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+            .catch((err) => {
+                toast(getToastOptions(err || 'Something went wrong', 'error'));
                 setGlobalComputeId(null);
             });
     };
@@ -310,26 +288,14 @@ const Compute = () => {
                 mutation: dmsDeleteCompute(globalComputeId)
             })
             .then(() => {
-                toast({
-                    title: `Compute is deleted successfully`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(`Compute is deleted successfully`, 'success'));
                 const newData = DmsComputeData.filter((computeData: any) => computeData.id !== globalComputeId);
                 useAppStore.setState(() => ({ DmsComputeData: newData }));
                 deleteComputeModal.onClose();
                 setGlobalComputeId(null);
             })
             .catch((err: any) => {
-                toast({
-                    title: err.message,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(err.message, 'error'));
                 deleteComputeModal.onClose();
             });
     };
@@ -345,13 +311,7 @@ const Compute = () => {
         messageQue.push({ content: aliveMessage });
         submitMessage(messageQue);
         setGlobalComputeId(null);
-        toast({
-            title: `Compute refreshed successfully`,
-            status: 'success',
-            isClosable: true,
-            duration: 5000,
-            position: 'top-right'
-        });
+        toast(getToastOptions(`Compute refreshed successfully`, 'success'));
         refreshCompute.onClose();
     };
 
@@ -388,23 +348,11 @@ const Compute = () => {
                 });
 
                 useAppStore.setState(() => ({ DmsComputeData: newData }));
-                toast({
-                    title: `Your Default is changed`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions('Your Default is changed', 'success'));
                 setGlobalComputeId(null);
             })
             .catch((error: any) => {
-                toast({
-                    title: error.message,
-                    status: 'error',
-                    isClosable: true,
-                    duration: 5000,
-                    position: 'top-right'
-                });
+                toast(getToastOptions(error.message, 'error'));
                 setGlobalComputeId(null);
                 deleteComputeModal.onClose();
             });
@@ -464,7 +412,7 @@ const Compute = () => {
 
     const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData.id === globalComputeId);
     if (!computeData) {
-        return <div>loading...</div>;
+        return <div>Loading...</div>;
     }
 
     return (

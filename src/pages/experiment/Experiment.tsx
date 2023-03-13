@@ -36,17 +36,13 @@ import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
 import ZoomComponent from '../../component/zoomer/Zoomer';
 import { newComputeData } from '../compute/generateNewComputeData';
+// import Details from '../../component/details/Details';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
     let rappid: DmsCanvasService;
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState, SpinnerInfo] = useAppStore((state: any) => [
-        state.DmsComputeData,
-        state.UserConfig,
-        state.connectionState,
-        state.SpinnerInfo
-    ]);
+    const [DmsComputeData, UserConfig, connectionState] = useAppStore((state: ExperimentAppStoreState) => [state.DmsComputeData, state.UserConfig, state.connectionState]);
     const [TransformersData] = useAppStore((state: TransformersAppStoreState) => [state.TransformersData]);
     const opid = v4();
     const computeRunningModal = useDisclosure();
@@ -129,6 +125,7 @@ const ExperimentsPage = () => {
             setNewComputedata(newGeneratedComputeData);
         }
     }, [DmsComputeData]);
+
     const createCanvasSchemaFromTransformersData = () => {
         let transformerData = cloneDeep(TransformersData);
         let transformersGroup: any = {};
@@ -488,6 +485,7 @@ const ExperimentsPage = () => {
         setTransformersGroup(transformersGroup);
         setTransformedNewDataForStencil(transformedNewDataForStencil);
     };
+
     useEffect(() => {
         if (TransformersData === null) {
             getAndUpdateTransformersData();
@@ -661,7 +659,7 @@ const ExperimentsPage = () => {
     // const [currentLang, setCurrentLang] = useState('en_US');
     // const [translationToUse, setTranslationToUse] = useState(i18n.translations);
     const btnRef: any = React.useRef();
-    const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
+    const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlu');
 
     // useEffect(() => {
     // wsconnect(setMessage);
@@ -710,9 +708,11 @@ const ExperimentsPage = () => {
     const transformerMenuDrawer = useDisclosure();
     const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+
     const toggleLeftMenu = () => {
         setLeftMenuOpen(!leftMenuOpen);
     };
+
     useEffect(() => {
         if (leftMenuOpen) {
             transformerMenuDrawer.onOpen();
@@ -774,7 +774,7 @@ const ExperimentsPage = () => {
                                         </Box>
                                     </DrawerCloseButton>
                                     <DrawerHeader mt="17" p="0" ml="15px">
-                                        Transformers
+                                        Transformer
                                     </DrawerHeader>
 
                                     <DrawerBody pl="0" pt="14" pr="17">
@@ -791,8 +791,8 @@ const ExperimentsPage = () => {
                         {/*    </div>*/}
                         {/*    <div className="toolbar-container" />*/}
                         {/*</div>*/}
+
                         <div className="app-body">
-                            {SpinnerInfo.loading && SpinnerInfo.to && <Spinner className="spinner" size="xl" thickness="4px" />}
                             {/*<div id="stencil-container" className="stencil-container" />*/}
                             <Box className="paper-container" />
                             {/*<div className="inspector-container" />*/}
@@ -807,7 +807,8 @@ const ExperimentsPage = () => {
                         {/* <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
                             Open
                         </Button> */}
-                        {/*<Details isOpen={isOpen} onClose={onClose}></Details>*/}
+
+                        {/* <Details isOpen={true} onClose={false}></Details> */}
                         {/*<Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>*/}
                         {/*    Change Translation*/}
                         {/*</Button>*/}
