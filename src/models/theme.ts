@@ -112,6 +112,9 @@ export const colors = {
     },
     brand: {
         500: '#0387B0'
+    },
+    tabsTheme: {
+        600: '#0073E6'
     }
 };
 

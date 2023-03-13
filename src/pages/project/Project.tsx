@@ -89,14 +89,15 @@ const Project = () => {
                     </Box>
                     <Stack direction="row" height={'30'} border={'3'}>
                         {' '}
-                        <Divider orientation="vertical" ml={'20'} mr={'20'} />
+                        <Divider orientation="vertical" ml={'20'} mr={'20'} className={'dividerCss'} />
                     </Stack>
                     <Menu>
                         <MenuButton color={'white'} bg={'default.toolbarButton'} width={'166px'} height={'36px'} borderRadius={'3'}>
                             {' '}
                             <Center>
                                 <Text> Create Project</Text>
-                                <Divider orientation="vertical" ml={'12'} mr={'12'} />
+                                <Divider className="insideButtonDivider" orientation="vertical" h="36px" ml={'12'} mr={'12'} />
+
                                 <DownArrow color={'white'} />
                             </Center>
                         </MenuButton>
@@ -115,7 +116,7 @@ const Project = () => {
                         </MenuList>
                     </Menu>
                 </Center>
-                <Tabs index={tabIndex} onChange={handleTabsChange} width={'100%'} isLazy mt={-34} colorScheme={'messenger'}>
+                <Tabs index={tabIndex} onChange={handleTabsChange} width={'100%'} isLazy mt={-34} colorScheme={'tabsTheme'}>
                     <TabList width={'100%'} color={tabTextColor}>
                         <Tab pb={'14px'} fontWeight={600} pl={10}>
                             All Projects
@@ -128,7 +129,7 @@ const Project = () => {
                         </Tab>
                     </TabList>
                     {AllUsersData && allProjectsData && (
-                        <TabPanels mr={'10px'}>
+                        <TabPanels mr={'10px'} overflowY="auto" maxHeight="758px">
                             <TabPanel>
                                 <ProjectsViews data={allProjectsData} AllUsersData={AllUsersData}></ProjectsViews>
                             </TabPanel>

@@ -2,7 +2,14 @@
     padding-left: 24px;
     padding-right: 24px;
     overflow-y: scroll;
-}
-.divider-color {
-    background-color: black;
+    .dividerCss {
+        border-color: #d8dcde;
+    }
+
+    .divider-color {
+        background-color: black;
+    }
+    .insideButtonDivider {
+        border-color: #186da9;
+    }
 }
