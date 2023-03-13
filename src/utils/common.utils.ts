@@ -13,10 +13,9 @@ export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
     return fullName;
 };
 
-export const getTruncatedText = (name: string) => {
-    const maxTextCharacters = 20;
+export const getTruncatedText = (name: string, size: number) => {
     if (name?.length >= 20) {
-        const newName = `${name.slice(0, maxTextCharacters)}...`;
+        const newName = `${name.slice(0, size)}...`;
         return newName;
     } else {
         return name;

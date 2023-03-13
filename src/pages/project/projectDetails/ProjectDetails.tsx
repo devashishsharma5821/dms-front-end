@@ -285,7 +285,7 @@ const ProjectDetails = (props: any) => {
                                                         Project Name
                                                     </Text>
                                                     <Text title={SingleProjectData && SingleProjectData.basic.name} ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {getTruncatedText(SingleProjectData && SingleProjectData.basic.name)}
+                                                        {getTruncatedText(SingleProjectData && SingleProjectData.basic.name, 20)}
                                                     </Text>
                                                 </Box>
                                             </Flex>
