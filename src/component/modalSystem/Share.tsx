@@ -15,7 +15,7 @@ import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandAction
 import client from '../../apollo-client';
 import { createAccess, deleteAccess } from '../../query';
 import { useParams } from 'react-router-dom';
-import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
 import { getFormattedUserData } from '../../utils/common.utils';
 import { getToastOptions } from '../../models/toastMessages';
@@ -148,6 +148,7 @@ const Share = (props: any) => {
                 .then(() => {
                     toast(getToastOptions(`Project Shared Successfully`, 'success'));
                     getAndUpdateSingleProjectData(params.projectId as string);
+                    getAndUpdateAllProjectsData();
                     setUserValue([]);
                     updateSpinnerInfo(false);
                 })

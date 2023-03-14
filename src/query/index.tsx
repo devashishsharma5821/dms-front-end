@@ -381,11 +381,11 @@ export const GET_SINGLE_PROJECT = (id: string) => {
       created_by
       created_at
 }
- datasources(type: FILE_UPLOAD) {
+  datasources(type: DBFS) {
       id
       name
       spec {
-        ... on DMSDatabricsFileUpload {
+        ... on DMSDatabricksFileUpload {
           path
         }
       }
