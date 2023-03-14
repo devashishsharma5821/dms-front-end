@@ -171,7 +171,7 @@ const SideBarMenu = () => {
                                         const listSections = sections.section.map((icons, iconIndex) => {
                                             if (icons.iconName === 'Create') {
                                                 return (
-                                                    <Box key={iconIndex} width={'38px'} height={'40px'} cursor='pointer'>
+                                                    <Box key={iconIndex} width={'38px'} height={'40px'} cursor="pointer">
                                                         <Square>
                                                             <CreateIcon />
                                                         </Square>
@@ -181,7 +181,7 @@ const SideBarMenu = () => {
                                             if (lastItemLength === iconIndex) {
                                                 return (
                                                     <div key={iconIndex}>
-                                                        <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'} cursor='pointer'>
+                                                        <Box m={'8px auto'} pt={'20%'} width={'38px'} height={'40px'} cursor="pointer">
                                                             <Square>{icons.icon}</Square>
                                                         </Box>
                                                         <Center>
@@ -191,7 +191,7 @@ const SideBarMenu = () => {
                                                 );
                                             } else {
                                                 return (
-                                                    <Box key={iconIndex} m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'} cursor='pointer'>
+                                                    <Box key={iconIndex} m={'8px auto'} width={'38px'} pt={'20%'} height={'40px'} cursor="pointer">
                                                         <Square>{icons.icon}</Square>
                                                     </Box>
                                                 );
@@ -224,7 +224,7 @@ const SideBarMenu = () => {
                                                         mr={'6px'}
                                                         height={'40px'}
                                                         mb={'9px'}
-                                                        cursor={(icons.disabled) ? 'not-allowed': 'pointer'}
+                                                        cursor={icons.disabled ? 'not-allowed' : 'pointer'}
                                                     >
                                                         <Square>
                                                             <WideCreateIcon />
@@ -236,40 +236,60 @@ const SideBarMenu = () => {
                                                 return (
                                                     <div key={iconIndex}>
                                                         <Flex
+                                                            _hover={{ bg: '#3C414B', mr: '6px', borderRadius: '2px' }}
                                                             align="center"
+                                                            ml={'6px'}
                                                             justify="left"
                                                             onClick={() => {
                                                                 checkForSubMenuOrNavigation(icons, iconIndex);
                                                             }}
                                                             className={'sidebar'}
                                                         >
-                                                            <Box cursor={(icons.disabled) ? 'not-allowed': 'pointer'} m={'8px 8px'} width={'30px'} height={'32px'}>
+                                                            <Box cursor={icons.disabled ? 'not-allowed' : 'pointer'} m={'8px 8px'} width={'30px'} height={'32px'}>
                                                                 <Square>{icons.icon}</Square>
                                                             </Box>
-                                                            <Box cursor={(icons.disabled) ? 'not-allowed': 'pointer'} pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                            <Box
+                                                                cursor={icons.disabled ? 'not-allowed' : 'pointer'}
+                                                                pl={'6px'}
+                                                                fontSize={'14px'}
+                                                                m={'8px 0px'}
+                                                                width={'30px'}
+                                                                height={'32px'}
+                                                                color-={'default.iconNameColor'}
+                                                            >
                                                                 <Square className="text">{icons.iconName}</Square>
                                                             </Box>
                                                         </Flex>
                                                         <Center>
-                                                            <Divider mb={'8px'} ml={'8px'} mr={'8px'} orientation="horizontal" bg={'dark.borderColor'} />
+                                                            <Divider mb={'8px'} ml={'8px'} mr={'8px'} mt={'8px'} orientation="horizontal" bg={'dark.borderColor'} />
                                                         </Center>
                                                     </div>
                                                 );
                                             } else {
                                                 return (
                                                     <Flex
+                                                        _hover={{ bg: '#3C414B', mr: '6px', borderRadius: '2px' }}
                                                         align="center"
                                                         justify="left"
+                                                        ml={'6px'}
                                                         onClick={() => {
                                                             checkForSubMenuOrNavigation(icons, iconIndex);
                                                         }}
                                                         className={'sidebar'}
                                                         key={iconIndex}
                                                     >
-                                                        <Box m={'8px 8px'} width={'30px'} height={'32px'} cursor={(icons.disabled) ? 'not-allowed': 'pointer'}>
+                                                        <Box m={'8px 8px'} width={'30px'} height={'32px'} cursor={icons.disabled ? 'not-allowed' : 'pointer'}>
                                                             <Square>{icons.icon}</Square>
                                                         </Box>
-                                                        <Box cursor={(icons.disabled) ? 'not-allowed': 'pointer'} pl={'6px'} fontSize={'14px'} m={'8px 0px'} width={'30px'} height={'32px'} color={'default.whiteText'}>
+                                                        <Box
+                                                            cursor={icons.disabled ? 'not-allowed' : 'pointer'}
+                                                            pl={'6px'}
+                                                            fontSize={'14px'}
+                                                            m={'8px 0px'}
+                                                            width={'30px'}
+                                                            height={'32px'}
+                                                            color-={'default.iconNameColor'}
+                                                        >
                                                             <Square className="text">{icons.iconName}</Square>
                                                         </Box>
                                                     </Flex>

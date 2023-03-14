@@ -101,13 +101,11 @@ const Project = () => {
                                 <DownArrow color={'white'} />
                             </Center>
                         </MenuButton>
-                        <MenuList borderRadius={'0'} width={'165px'} height={'72px'} color={textColor} mt={'-8px'}>
-                            <MenuItem onClick={CreateProject.onOpen}>
-                                <Text mb={10} pt={4} lineHeight={'16px'}>
-                                    Start from scratch
-                                </Text>
+                        <MenuList borderRadius={'0'} width={'165px'} maxHeight={'72px'} color={textColor} mt={'-8px'} pt={'0px'} pb={'0px'}>
+                            <MenuItem onClick={CreateProject.onOpen} pt={'0px'}>
+                                <Text>Start from scratch</Text>
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem pt={'0px'} pb={'0px'}>
                                 <Text mb={4} pt={2}>
                                     Use a template
                                 </Text>

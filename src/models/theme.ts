@@ -89,7 +89,8 @@ export const colors = {
         bgExclamationIcon: '#BFE1FF',
         headerTitleColor: '#AFB6C2',
         headerButoonBorder: '#3C414B',
-        darkBlack: '#000000'
+        darkBlack: '#000000',
+        iconNameColor: '#99A1B2'
     },
     light: {
         sideMenu: '#1A3F59',

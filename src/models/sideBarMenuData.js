@@ -14,9 +14,9 @@ import {
     WhiteSettingIcon,
     WhiteFluentIcon
 } from '../assets/icons';
+import ParametersIcon from '../assets/icons/ParametersIcon';
 
 const sideBarMenuIcons = [
-   
     {
         section: [
             {
@@ -27,38 +27,31 @@ const sideBarMenuIcons = [
                 disabled: false
             },
             {
-                icon: <WhiteHome />,
+                icon: <WhiteHome color="#99A1B2" />,
                 iconName: 'Home',
                 route: '/home',
                 disabled: true
             },
             {
-                icon: <WhiteRecentIcon color="white"/>,
+                icon: <WhiteRecentIcon color="#99A1B2" />,
                 iconName: 'Recent',
                 hasSubMenu: [],
                 isClicked: false,
                 disabled: true
             },
             {
-                icon: <WhiteExperiment color="white" />,
+                icon: <WhiteExperiment color="#99A1B2" />,
                 iconName: 'Explorer',
                 hasSubMenu: [],
                 isClicked: false,
                 disabled: true
-            },
-              { 
-                icon: <WhiteInfoIcon color="white"/>,
-                iconName: 'Help',
-                hasSubMenu: [],
-                isClicked: false,
-                  disabled: true
-            },
+            }
         ]
     },
     {
         section: [
             {
-                icon: <WhiteCollection color="white"/>,
+                icon: <WhiteCollection color="#99A1B2" />,
                 iconName: 'Projects',
                 route: '/project',
                 disabled: false
@@ -70,13 +63,13 @@ const sideBarMenuIcons = [
                 disabled: true
             },
             {
-                icon: <WhiteComputeIcon color="white"/>,
+                icon: <WhiteComputeIcon color="#99A1B2" />,
                 iconName: 'Compute',
                 route: '/compute',
                 disabled: false
             },
             {
-                icon: <WhiteDatasetIcon color="white"/>,
+                icon: <WhiteDatasetIcon color="#99A1B2" />,
                 iconName: 'Dataset',
                 route: '/notfound',
                 disabled: true
@@ -86,7 +79,7 @@ const sideBarMenuIcons = [
     {
         section: [
             {
-                icon: <WhiteNotebookIcon color="white"/>,
+                icon: <WhiteNotebookIcon color="#99A1B2" />,
                 iconName: 'Notebook',
                 route: '/notebook',
                 disabled: true
@@ -98,26 +91,29 @@ const sideBarMenuIcons = [
                 disabled: true
             },
             {
-                icon: <WhiteWorkflowsIcon color="white"/>,
+                icon: <WhiteWorkflowsIcon color="#99A1B2" />,
                 iconName: 'Workflows',
                 route: '/notfound',
                 disabled: true
-            }
-        ]
-    },
-    {
-        section: [
-          
+            },
             {
-                icon: <WhiteSettingIcon />,
-                iconName: 'Settings',
+                icon: <ParametersIcon color="#99A1B2" />,
+                iconName: 'Parameters',
                 route: '/notfound',
                 disabled: true
             }
         ]
     },
+
     {
         section: [
+            {
+                icon: <WhiteInfoIcon color="#99A1B2" />,
+                iconName: 'Help',
+                hasSubMenu: [],
+                isClicked: false,
+                disabled: true
+            },
             {
                 icon: <WhiteFluentIcon />,
                 iconName: 'Auto Expand',
@@ -125,7 +121,6 @@ const sideBarMenuIcons = [
                 disabled: true
             }
         ]
-    },
-
+    }
 ];
 export default sideBarMenuIcons;

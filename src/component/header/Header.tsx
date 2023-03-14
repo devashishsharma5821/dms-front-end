@@ -29,8 +29,8 @@ const Header = (props: any) => {
         }
     }, [window.location]);
     return (
-        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'64px'} pl={'4'} bg={themebg} color={'default.lightText'}>
-            <Center ml={'16px'} mt={'7px'} mb={'7px'}>
+        <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'64px'} pl={'4'} bg={themebg} color={'default.lightText'} width={'auto'}>
+            <Center ml={'16px'}>
                 <Box>
                     <LogoLight />
                 </Box>
@@ -40,7 +40,7 @@ const Header = (props: any) => {
             </Center>
 
             {isExperiment && (
-                <Center width={'50%'}>
+                <Center flex={3}>
                     <Text color={'default.headerTitleColor'} mr={'8px'} fontSize={'18'} fontWeight={'500'} line-height={'24px'}>
                         My Project
                     </Text>
@@ -118,11 +118,11 @@ const Header = (props: any) => {
                 <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                 <Menu>
                     <MenuButton>
-                        <Box width={'20px'} ml={'12'} mr={'23'}>
+                        <Box width={'20px'} ml={'12'}>
                             <HeaderDownArrow />
                         </Box>
                     </MenuButton>
-                    <MenuList width={127} borderRadius={'0'} mr={'28px'} mt={'10'} color={textColor2} pt={'0px'} pb={'0px'}>
+                    <MenuList width={127} borderRadius={'0'} mt={'10'} color={textColor2} pt={'0px'} pb={'0px'}>
                         <MenuItem onClick={myProfileModal.onOpen}>My Profile</MenuItem>
 
                         <MyProfileModal
