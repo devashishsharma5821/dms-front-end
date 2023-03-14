@@ -27,7 +27,7 @@ const Header = (props: any) => {
         } else {
             setIsExperiment(true);
         }
-    }, [window.location]);
+    }, [window.location.pathname]);
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'64px'} pl={'4'} bg={themebg} color={'default.lightText'} width={'auto'}>
             <Center ml={'16px'}>
