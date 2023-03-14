@@ -84,7 +84,7 @@ const CreateNew = (props: any) => {
                                             {section.type === 'icon' && (
                                                 <Box
                                                     key={section.name}
-                                                    _hover={{ bg: 'default.toolbarButton', color: 'white' }}
+                                                    _hover={{ bg: '#0073E6', color: 'white' }}
                                                     ml={'14px'}
                                                     bg="default.lightGray"
                                                     width={'106px'}
