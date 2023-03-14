@@ -63,7 +63,7 @@ export const colors = {
         gray: '#B8B8B8',
         containerAgGridRecords: ' #646A78',
         agGridBachground: '#EEEEEE',
-        toolbarButton: '#2180C2',
+        toolbarButton: '#0073E6',
         displayOffButton: '#EDEFF4',
         downArrowHeader: '#A3B4D1',
         mouseHOverForm: 'rgba(3, 135, 176, 0.1)',
