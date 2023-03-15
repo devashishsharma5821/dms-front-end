@@ -61,6 +61,13 @@ experiments: {
     id: string,
     name: string,
 } [],
+    datasources: {
+        id: string,
+        name:string,
+        spec: {
+            path: string
+        }
+    },
 project_access : {
     id: string,
     user_id: string,
