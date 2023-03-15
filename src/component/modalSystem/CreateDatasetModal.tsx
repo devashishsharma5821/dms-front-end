@@ -391,7 +391,7 @@ const CreateDataset = (props: any) => {
                             </Center>
                         </Flex>
                         </>
-                            }
+                }
                 <Divider color={'default.dividerColor'} mt={'70px'} width={'auto'} />
                 <ModalFooter mb={'18px'} mt={'21px'} mr={'20px'}>
                     <Button
