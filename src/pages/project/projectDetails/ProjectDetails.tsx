@@ -23,7 +23,8 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    Textarea, createStandaloneToast
+    Textarea,
+    createStandaloneToast
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
 import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete, ProjectEdit, ProjectEditDetail } from '../../../models/project';
@@ -200,7 +201,7 @@ const ProjectDetails = (props: any) => {
         });
     };
     const handleRemoveTag = (tag: string) => {
-        SingleProjectData.basic.tags = SingleProjectData.basic.tags.filter(tagToKeep => {
+        SingleProjectData.basic.tags = SingleProjectData.basic.tags.filter((tagToKeep) => {
             return tagToKeep !== tag;
         });
         const variables = {
@@ -230,6 +231,7 @@ const ProjectDetails = (props: any) => {
                 errorMessage: 'Project Name Failed To edit'
             });
         }
+
     };
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== SingleProjectData.basic.description) {
@@ -396,7 +398,7 @@ const ProjectDetails = (props: any) => {
                                                     <>
                                                         <HStack spacing={4}>
                                                             {SingleProjectData &&
-                                                            SingleProjectData.basic.tags !== null &&
+                                                 SingleProjectData.basic.tags !== null &&
                                                             SingleProjectData.basic.tags.map((tag: string, tagIndex: number) => {
                                                                 if(tagIndex === 2) {
                                                                     return (
@@ -417,6 +419,7 @@ const ProjectDetails = (props: any) => {
                                                                     );
                                                                 }
                                                             })}
+
                                                         </HStack>
                                                     </>
                                                 </Center>
@@ -474,23 +477,23 @@ const ProjectDetails = (props: any) => {
                                         </Flex>
                                         <Box overflowY="auto" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white">
                                             {accessUserList &&
-                                            accessUserList.map((icons: User, iconsIndex: number) => {
-                                                return (
-                                                    <div key={iconsIndex}>
-                                                        <Center>
-                                                            <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
-                                                            <Box width={'250px'}>
-                                                                <Text ml={12} color={accesstextColor} fontWeight={600} mt={'16px'} lineHeight={'22px'}>
-                                                                    {icons?.firstName} {icons?.lastName}
-                                                                </Text>
-                                                                <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600} lineHeight={'22px'}>
-                                                                    {icons.email}{' '}
-                                                                </Text>
-                                                            </Box>
-                                                        </Center>
-                                                    </div>
-                                                );
-                                            })}
+                                                accessUserList.map((icons: User, iconsIndex: number) => {
+                                                    return (
+                                                        <div key={iconsIndex}>
+                                                            <Center>
+                                                                <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
+                                                                <Box width={'250px'}>
+                                                                    <Text ml={12} color={accesstextColor} fontWeight={600} mt={'16px'} lineHeight={'22px'}>
+                                                                        {icons?.firstName} {icons?.lastName}
+                                                                    </Text>
+                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600} lineHeight={'22px'}>
+                                                                        {icons.email}{' '}
+                                                                    </Text>
+                                                                </Box>
+                                                            </Center>
+                                                        </div>
+                                                    );
+                                                })}
                                         </Box>
                                     </Box>
                                 </Flex>
