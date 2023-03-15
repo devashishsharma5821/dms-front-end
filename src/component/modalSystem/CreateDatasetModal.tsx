@@ -61,7 +61,7 @@ const CreateDataset = (props: any) => {
       setDatasetName(evt.target.value);
     };
     const createDataset = () => {
-        getAndUpdateSingleProjectData('41');
+        getAndUpdateSingleProjectData('19');
         props.onClose();
         toast(getToastOptions(`File Uploaded Successfully`, 'success'));
     };
@@ -363,7 +363,7 @@ const CreateDataset = (props: any) => {
                                         <Center>
                                             <Box>
                                                 <FileUploadComponent
-                                                    projectId={'41'}
+                                                    projectId={'19'}
                                                     datasetName={datasetName}
                                                     getResponseFromFileUpload={(fileUploadResponse: any) => getResponseFromFileUpload(fileUploadResponse)}
                                                 ></FileUploadComponent>
