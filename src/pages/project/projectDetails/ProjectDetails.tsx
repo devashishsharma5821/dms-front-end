@@ -275,7 +275,7 @@ const ProjectDetails = (props: any) => {
                         <Text>Projects / My Project</Text>
                     </Box>
 
-                    <Box ml={'24'} mt={'6px'} mb={'24'} color={'default.darkGrayCreate'}>
+                    <Box ml={'24'} mt={'16px'} mb={'24'} color={'default.darkGrayCreate'}>
                         <Flex flexDir={'row'} cursor={'pointer'}>
                             <Button
                                 cursor={'pointer'}
