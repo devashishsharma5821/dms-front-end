@@ -47,6 +47,8 @@ const ProjectDetails = (props: any) => {
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [deleteId, setDeleteId] = useState<string>('');
     const [inlineDescription, setInlineDescription] = useState<string>('');
+    const [inlineProjectName, setInlineProjectName] = useState<string>('');
+    const [inlineProjectField, setInlineProjectField] = useState<boolean>(false);
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const [popOverTag, setPopOverTag] = React.useState('');
     const deleteConfirmationModal = useDisclosure();
@@ -62,8 +64,8 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup justifyContent="center">
-                <PencilIcon {...getSubmitButtonProps()} />
-                <PencilIcon {...getCancelButtonProps()} />
+                <PencilIcon color={'#666C80'} height={'20px'} {...getSubmitButtonProps()} />
+                <PencilIcon color={'#666C80'} height={'20px'} {...getCancelButtonProps()} />
             </ButtonGroup>
         ) : (
             <Flex justifyContent="center">
@@ -73,6 +75,22 @@ const ProjectDetails = (props: any) => {
             </Flex>
         );
     }
+    function EditableControlsName() {
+        const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
+
+        return isEditing ? (
+            <ButtonGroup justifyContent="center">
+                <PencilIcon color={'#666C80'} height={'20px'} {...getSubmitButtonProps()} />
+                <PencilIcon color={'#666C80'} height={'20px'} {...getCancelButtonProps()} />
+            </ButtonGroup>
+        ) : (
+            <Flex>
+                <Button {...getEditButtonProps()} bg={'textColor'} mt={'10px'} ml={'12px'} width={'43px'} height={'43px'}>
+                    <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
+                </Button>
+            </Flex>
+        );
+    };
     useEffect(() => {
         updateSpinnerInfo(true);
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
@@ -80,11 +98,12 @@ const ProjectDetails = (props: any) => {
         } else {
             updateSpinnerInfo(false);
             setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
+            setInlineProjectName(SingleProjectData.basic.name === null ? '' : SingleProjectData.basic.name);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
         }
-    }, [SingleProjectData, AllUsersData]);
+    }, [SingleProjectData]);
     useEffect(() => {
         updateSpinnerInfo(true);
         if (AllUsersData === null) {
@@ -98,13 +117,14 @@ const ProjectDetails = (props: any) => {
         }
     }, [AllUsersData]);
     const editProjectModal = () => {
-        createProjectModal.onOpen();
+        setInlineProjectField(true);
+        //createProjectModal.onOpen();
     };
     const onCreateProjectSuccess = () => {
         getAndUpdateSingleProjectData(SingleProjectData.basic.id);
         createProjectModal.onClose();
     };
-    const navigateToDetails = () => {
+    const navigateToProjects = () => {
         navigate(`/project`);
     };
     const onDeleteHandler = (id: string) => {
@@ -132,6 +152,9 @@ const ProjectDetails = (props: any) => {
     const handleEditDescriptionChange = (editChangeValue: string) => {
         setInlineDescription(editChangeValue);
     };
+    const handleEditNameChange = (editChangeValue: string) => {
+        setInlineProjectName(editChangeValue);
+    };
     const handleEditProject = (variables: any, toastMessages: any) => {
         updateSpinnerInfo(true);
         client
@@ -141,10 +164,16 @@ const ProjectDetails = (props: any) => {
             .then(() => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateAllProjectsData();
+                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
                 updateSpinnerInfo(false);
+                setInlineProjectField(false);
+                setInlineProjectName('');
             })
             .catch((err) => {
                 updateSpinnerInfo(false);
+                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
+                setInlineProjectField(false);
+                setInlineProjectName('');
                 toast(getToastOptions(`${err}`, 'error'));
             });
     };
@@ -181,6 +210,21 @@ const ProjectDetails = (props: any) => {
         });
 
     }
+    const handleEditName = () => {
+        if (inlineProjectName !== SingleProjectData.basic.name) {
+            const variables = {
+                id: SingleProjectData.basic.id,
+                name: inlineProjectName,
+                project_variables: SingleProjectData.basic.project_variables,
+                description: SingleProjectData.basic.description,
+                tags: SingleProjectData.basic.tags === null ? [] : SingleProjectData.basic.tags
+            };
+            handleEditProject(variables, {
+                successMessage: 'Project Name Edited Successfully',
+                errorMessage: 'Project Name Failed To edit'
+            });
+        }
+    };
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== SingleProjectData.basic.description) {
             const variables = {
@@ -216,7 +260,7 @@ const ProjectDetails = (props: any) => {
                                 border={'1px'}
                                 borderColor={'light.lighterGrayishBlue'}
                                 bg={'white'}
-                                onClick={navigateToDetails}
+                                onClick={navigateToProjects}
                                 height={'30px'}
                                 width={'30px'}
                                 borderRadius={4}
@@ -224,16 +268,28 @@ const ProjectDetails = (props: any) => {
                                 {' '}
                                 <LeftArrow />
                             </Button>
-                            <Text fontSize={24} fontWeight={700} height={'30px'} color={accesstextColor} mr={'6px'}>
-                                {' '}
-                                {SingleProjectData && SingleProjectData.basic.name}
-                            </Text>
                             {SingleProjectData && (
                                 <>
                                     <Flex mt={'8px'}>
-                                        <Box bg={'none'} color={'default.shareModalButton'} onClick={editProjectModal} cursor={'pointer'}>
-                                            <PencilIcon color={'#666C80'} height={'20px'} Height={'20px'} />
-                                        </Box>
+                                        <Editable
+                                            maxWidth={'800px'}
+                                            textAlign="left"
+                                            fontWeight={400}
+                                            ml={16}
+                                            onSubmit={handleEditName}
+                                            onChange={handleEditNameChange}
+                                            value={inlineProjectName}
+                                        >
+                                            <Flex>
+                                                <Center>
+                                                    <EditableControlsName />
+                                                </Center>
+                                            </Flex>
+                                            <Box maxWidth={'425px'}>
+                                                <EditablePreview />
+                                                <Input as={EditableInput} />
+                                            </Box>
+                                        </Editable>
                                         <Button
                                             cursor={'pointer'}
                                             width={'71px'}
@@ -335,7 +391,7 @@ const ProjectDetails = (props: any) => {
                                                             {SingleProjectData &&
                                                             SingleProjectData.basic.tags !== null &&
                                                             SingleProjectData.basic.tags.map((tag: string, tagIndex: number) => {
-                                                                if(tagIndex > 1) {
+                                                                if(tagIndex === 2) {
                                                                     return (
                                                                         <Tag borderRadius={3} maxWidth={'125px'} height={'24px'}  variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
                                                                             <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
@@ -343,7 +399,7 @@ const ProjectDetails = (props: any) => {
                                                                             </TagLabel>
                                                                         </Tag>
                                                                     )
-                                                                } else {
+                                                                } else if (tagIndex < 2) {
                                                                     return (
                                                                         <Tag borderRadius={3} maxWidth={'125px'} height={'24px'}  variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
                                                                             <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
