@@ -20,7 +20,8 @@ import {
     Avatar,
     Input,
     VStack,
-    useDisclosure, createStandaloneToast
+    useDisclosure,
+    createStandaloneToast
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
@@ -50,9 +51,9 @@ const CreateDataset = (props: any) => {
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
     const { toast } = createStandaloneToast();
     const [screenState, setScreenState] = useState({
-       'screen1': true,
-       'screen2': false,
-       'screen3': false
+        screen1: true,
+        screen2: false,
+        screen3: false
     });
     const createDataset = () => {
         props.onClose();
@@ -64,9 +65,9 @@ const CreateDataset = (props: any) => {
     const triggerAction = (type: string) => {
         if (type === 'Upload CSV') {
             const newScreens = {
-                'screen1': false,
-                'screen2': true,
-                'screen3': false
+                screen1: false,
+                screen2: true,
+                screen3: false
             };
             setScreenState(newScreens);
         }
@@ -98,11 +99,11 @@ const CreateDataset = (props: any) => {
         }
     ];
     const navigateToNextScreen = () => {
-        if(screenState.screen1) {
+        if (screenState.screen1) {
             const newScreens = {
-                'screen1': false,
-                'screen2': true,
-                'screen3': false
+                screen1: false,
+                screen2: true,
+                screen3: false
             };
             setScreenState(newScreens);
         }
@@ -116,12 +117,12 @@ const CreateDataset = (props: any) => {
         setColumnDefs(colDef);
         setRowData(uploadResponse['sample_rows']);
         const newScreens = {
-            'screen1': false,
-            'screen2': false,
-            'screen3': true
+            screen1: false,
+            screen2: false,
+            screen3: true
         };
         setScreenState(newScreens);
-    }
+    };
     return (
         <Modal size={'lg'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
@@ -138,174 +139,187 @@ const CreateDataset = (props: any) => {
                     </Box>
                     <Divider borderColor={'default.toolbarButton'} borderWidth={'1px'} orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-22px'} />
                     <Box>
-                        <Avatar borderRadius="full" boxSize="32px" name={'2'} bg={(screenState.screen2 || screenState.screen3) ? 'default.toolbarButton' : 'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
+                        <Avatar
+                            borderRadius="full"
+                            boxSize="32px"
+                            name={'2'}
+                            bg={screenState.screen2 || screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'}
+                            color={'default.whiteText'}
+                            mb={'8px'}
+                        />
                         <Text ml={'-8px'}>Source</Text>
                     </Box>
-                    <Divider borderColor={(screenState.screen2 || screenState.screen3) ? 'default.toolbarButton' : 'default.bgDatasetLevels'} borderWidth={'1px'}  orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-22px'} />
+                    <Divider
+                        borderColor={screenState.screen2 || screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'}
+                        borderWidth={'1px'}
+                        orientation="horizontal"
+                        maxWidth={'96px'}
+                        mr={'16px'}
+                        mt={'-22px'}
+                    />
                     <Box>
-                        <Avatar borderRadius="full" boxSize="32px" name={'3'} bg={(screenState.screen3) ? 'default.toolbarButton' : 'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
+                        <Avatar borderRadius="full" boxSize="32px" name={'3'} bg={screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
                         <Text ml={'-8px'}> Preview</Text>
                     </Box>
                 </Center>
-                {
-                    screenState.screen1 &&
-                        <>
-                            <Flex>
-                                <Center width={'856px'} bg={boxColor} height={'92px'} mt={'10px'} mb={'21px'} ml={'21px'}>
-                                    <FormControl isRequired>
-                                        <Box>
-                                            <FormLabel htmlFor="existingCompute" color={datasetTitleColor} mt={14} ml={14} fontWeight={600}>
-                                                Project Name
-                                            </FormLabel>
-                                            <Select
-                                                icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}
-                                                borderRadius={3}
-                                                width={'381px'}
-                                                mb={14}
-                                                ml={14}
-                                                border={'1px'}
-                                                borderColor={'light.lighterGrayishBlue'}
-                                                as={Select}
-                                                id="existingCompute"
-                                                name="existingCompute"
-                                                variant="outline"
-                                                validate={(value: any) => {
-                                                    let error;
-                                                    if (value.length === 0) {
-                                                        error = ' Select From Existing Project is required';
-                                                    }
-                                                    return error;
-                                                }}
-                                            >
-                                                <>
-                                                    <option>Dataset 1</option>
-                                                    <option>Dataset 2</option>
-                                                </>
-                                            </Select>
-                                        </Box>
-                                    </FormControl>
-                                    <Box mr={'20px'} ml={'-20px'}>
-                                        {' '}
-                                        <OrIconSmall />
+                {screenState.screen1 && (
+                    <>
+                        <Flex>
+                            <Center width={'856px'} bg={boxColor} height={'92px'} mt={'10px'} mb={'21px'} ml={'21px'}>
+                                <FormControl isRequired>
+                                    <Box>
+                                        <FormLabel htmlFor="existingCompute" color={datasetTitleColor} mt={14} ml={14} fontWeight={600}>
+                                            Project Name
+                                        </FormLabel>
+                                        <Select
+                                            icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}
+                                            borderRadius={3}
+                                            width={'381px'}
+                                            mb={14}
+                                            ml={14}
+                                            border={'1px'}
+                                            borderColor={'light.lighterGrayishBlue'}
+                                            as={Select}
+                                            id="existingCompute"
+                                            name="existingCompute"
+                                            variant="outline"
+                                            validate={(value: any) => {
+                                                let error;
+                                                if (value.length === 0) {
+                                                    error = ' Select From Existing Project is required';
+                                                }
+                                                return error;
+                                            }}
+                                        >
+                                            <>
+                                                <option>Dataset 1</option>
+                                                <option>Dataset 2</option>
+                                            </>
+                                        </Select>
                                     </Box>
-                                    <Box width={'768px'}>
-                                        <Text color={datasetTitleColor} mb={'-14px'} fontWeight={600}>
-                                            Create New Project
+                                </FormControl>
+                                <Box mr={'20px'} ml={'-20px'}>
+                                    {' '}
+                                    <OrIconSmall />
+                                </Box>
+                                <Box width={'768px'}>
+                                    <Text color={datasetTitleColor} mb={'-14px'} fontWeight={600}>
+                                        Create New Project
+                                    </Text>
+
+                                    <Button width={'127px'} height={'36px'} mt={18} color={'default.toolbarButton'} bg={'white'} border={'1px'} borderColor={'default.toolbarButton'}>
+                                        Create Compute
+                                    </Button>
+                                </Box>
+                            </Center>
+                        </Flex>
+                        <Flex flexDirection={'row'}>
+                            <Box width={'55%'} ml={'21'}>
+                                <Flex>
+                                    <Formik
+                                        initialValues={{
+                                            validateOnMount: true,
+                                            notebookName: '',
+                                            defaultLanguage: ''
+                                        }}
+                                        validateOnBlur={true}
+                                        validateOnChange={true}
+                                        onSubmit={(values) => {}}
+                                    >
+                                        <VStack align="flex-start">
+                                            <FormControl isRequired>
+                                                <FormLabel htmlFor="datasetName" mb={6} color={datasetTitleColor} fontWeight={600}>
+                                                    Dataset Name
+                                                </FormLabel>
+                                                <Field
+                                                    width={484}
+                                                    height={34}
+                                                    borderRadius={3}
+                                                    border={'1px'}
+                                                    borderColor={'light.lighterGrayishBlue'}
+                                                    as={Input}
+                                                    id="datasetName"
+                                                    name="datasetName"
+                                                    variant="outline"
+                                                    validate={(value: any) => {
+                                                        let error;
+                                                        if (value.length === 0) {
+                                                            error = 'dataset Name is required';
+                                                        }
+
+                                                        return error;
+                                                    }}
+                                                />
+
+                                                <FormLabel htmlFor="Description" mt={20} mb={6} color={datasetTitleColor} fontWeight={600}>
+                                                    Description
+                                                </FormLabel>
+                                                <Field
+                                                    height={98}
+                                                    width={484}
+                                                    borderRadius={3}
+                                                    border={'1px'}
+                                                    borderColor={'light.lighterGrayishBlue'}
+                                                    as={Input}
+                                                    id="DescriptionDatasetName"
+                                                    name="Description"
+                                                />
+                                            </FormControl>
+                                        </VStack>
+                                    </Formik>
+                                </Flex>
+                                <Flex>
+                                    <Center>
+                                        <Text color={datasetTitleColor} mt={'20'} fontWeight={600}>
+                                            Tag:
+                                        </Text>
+                                        <Center>
+                                            <Box ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                <Flex>
+                                                    <Center>
+                                                        <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                            Demo
+                                                        </Text>
+                                                        <Box justifyContent={'flex-end'} ml={'14px'}>
+                                                            <CloseIcon color={'black'} />
+                                                        </Box>
+                                                    </Center>
+                                                </Flex>
+                                            </Box>
+                                        </Center>
+                                        <Text color={'default.toolbarButton'} mt={'20'} ml={20} fontWeight={600}>
+                                            + Add Tag
+                                        </Text>
+                                    </Center>
+                                </Flex>
+                                <Flex mb={'21px'}>
+                                    <Center>
+                                        <Text color={datasetTitleColor} mt={'20'} fontWeight={600}>
+                                            Shared with:
+                                        </Text>
+                                    </Center>
+                                </Flex>
+                                <Flex>
+                                    <Center>
+                                        <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'-14px'} />
+                                    </Center>
+                                </Flex>
+                            </Box>
+
+                            <Stack direction="row" h="338px" p={4}>
+                                <Divider orientation="vertical" />
+                            </Stack>
+                            <Flex mt={-86}>
+                                <Center>
+                                    <Box>
+                                        <Text ml={'20px'} color={datasetTitleColor} mt={'72px'} fontWeight={600}>
+                                            Select Source
                                         </Text>
 
-                                        <Button width={'127px'} height={'36px'} mt={18} color={'default.toolbarButton'} bg={'white'} border={'1px'} borderColor={'default.toolbarButton'}>
-                                            Create Compute
-                                        </Button>
-                                    </Box>
-                                </Center>
-                            </Flex>
-                            <Flex flexDirection={'row'}>
-                                <Box width={'55%'} ml={'21'}>
-                                    <Flex>
-                                        <Formik
-                                            initialValues={{
-                                                validateOnMount: true,
-                                                notebookName: '',
-                                                defaultLanguage: ''
-                                            }}
-                                            validateOnBlur={true}
-                                            validateOnChange={true}
-                                            onSubmit={(values) => {}}
-                                        >
-                                            <VStack align="flex-start">
-                                                <FormControl isRequired>
-                                                    <FormLabel htmlFor="datasetName" mb={6} color={datasetTitleColor} fontWeight={600}>
-                                                        Dataset Name
-                                                    </FormLabel>
-                                                    <Field
-                                                        width={484}
-                                                        height={34}
-                                                        borderRadius={3}
-                                                        border={'1px'}
-                                                        borderColor={'light.lighterGrayishBlue'}
-                                                        as={Input}
-                                                        id="datasetName"
-                                                        name="datasetName"
-                                                        variant="outline"
-                                                        validate={(value: any) => {
-                                                            let error;
-                                                            if (value.length === 0) {
-                                                                error = 'dataset Name is required';
-                                                            }
-
-                                                            return error;
-                                                        }}
-                                                    />
-
-                                                    <FormLabel htmlFor="Description" mt={20} mb={6} color={datasetTitleColor} fontWeight={600}>
-                                                        Description
-                                                    </FormLabel>
-                                                    <Field
-                                                        height={98}
-                                                        width={484}
-                                                        borderRadius={3}
-                                                        border={'1px'}
-                                                        borderColor={'light.lighterGrayishBlue'}
-                                                        as={Input}
-                                                        id="DescriptionDatasetName"
-                                                        name="Description"
-                                                    />
-                                                </FormControl>
-                                            </VStack>
-                                        </Formik>
-                                    </Flex>
-                                    <Flex>
-                                        <Center>
-                                            <Text color={datasetTitleColor} mt={'20'} fontWeight={600}>
-                                                Tag:
-                                            </Text>
-                                            <Center>
-                                                <Box ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                                    <Flex>
-                                                        <Center>
-                                                            <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                Demo
-                                                            </Text>
-                                                            <Box justifyContent={'flex-end'} ml={'14px'}>
-                                                                <CloseIcon color={'black'} />
-                                                            </Box>
-                                                        </Center>
-                                                    </Flex>
-                                                </Box>
-                                            </Center>
-                                            <Text color={'default.toolbarButton'} mt={'20'} ml={20} fontWeight={600}>
-                                                + Add Tag
-                                            </Text>
-                                        </Center>
-                                    </Flex>
-                                    <Flex mb={'21px'}>
-                                        <Center>
-                                            <Text color={datasetTitleColor} mt={'20'} fontWeight={600}>
-                                                Shared with:
-                                            </Text>
-                                        </Center>
-                                    </Flex>
-                                    <Flex>
-                                        <Center>
-                                            <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'-14px'} />
-                                        </Center>
-                                    </Flex>
-                                </Box>
-
-                                <Stack direction="row" h="338px" p={4}>
-                                    <Divider orientation="vertical" />
-                                </Stack>
-                                <Flex mt={-86}>
-                                    <Center>
-                                        <Box>
-                                            <Text ml={'20px'} color={datasetTitleColor} mt={'72px'} fontWeight={600}>
-                                                Select Source
-                                            </Text>
-
-                                            {sorceSelectDataset?.map((row, rowIndex) => {
-                                                return (
-                                                    <Flex flexDirection={'row'} key={rowIndex}>
-                                                        {row.sections &&
+                                        {sorceSelectDataset?.map((row, rowIndex) => {
+                                            return (
+                                                <Flex flexDirection={'row'} key={rowIndex}>
+                                                    {row.sections &&
                                                         row.sections.map((section) => {
                                                             return (
                                                                 <>
@@ -333,29 +347,22 @@ const CreateDataset = (props: any) => {
                                                                 </>
                                                             );
                                                         })}
-                                                    </Flex>
-                                                );
-                                            })}
-                                        </Box>
-                                    </Center>
-                                </Flex>
+                                                </Flex>
+                                            );
+                                        })}
+                                    </Box>
+                                </Center>
                             </Flex>
-                        </>
-                }
-                {
-                    screenState.screen2 &&
-                        <>
+                        </Flex>
+                    </>
+                )}
+                {screenState.screen2 && (
+                    <>
                         <Flex>
-                            <Center width={'856px'} height={'500px'}>
+                            <Center width={'901px'} pl={'-24px'}>
                                 <Box width={'100%'} ml={'21'} mt={'17'}>
                                     <Flex mb={'19px'} fontSize={'21px'}>
-                                        <Text color={datasetTitleColor}>Dataset ID:</Text>
-                                        <Text color={titleDarkCSV} ml={'8px'}>
-                                            f8iEY4
-                                        </Text>
-                                        <Text color={datasetTitleColor} ml={'20px'}>
-                                            Dataset Name:
-                                        </Text>
+                                        <Text color={datasetTitleColor}>Dataset Name:</Text>
                                         <Text color={titleDarkCSV} ml={'8px'}>
                                             My Dataset 1
                                         </Text>
@@ -369,17 +376,17 @@ const CreateDataset = (props: any) => {
                                                 <FileUploadComponent
                                                     projectId={'41'}
                                                     datasetName={'Test1'}
-                                                    getResponseFromFileUpload={(fileUploadResponse: any) => getResponseFromFileUpload(fileUploadResponse)}></FileUploadComponent>
+                                                    getResponseFromFileUpload={(fileUploadResponse: any) => getResponseFromFileUpload(fileUploadResponse)}
+                                                ></FileUploadComponent>
                                             </Box>
                                         </Center>
                                     </Box>
                                 </Box>
                             </Center>
                         </Flex>
-                        </>
-                }
-                {
-                    screenState.screen3 &&
+                    </>
+                )}
+                {screenState.screen3 && (
                     <>
                         <Flex>
                             <Center width={'856px'} height={'500px'}>
@@ -390,8 +397,8 @@ const CreateDataset = (props: any) => {
                                 </Box>
                             </Center>
                         </Flex>
-                        </>
-                            }
+                    </>
+                )}
                 <Divider color={'default.dividerColor'} mt={'70px'} width={'auto'} />
                 <ModalFooter mb={'18px'} mt={'21px'} mr={'20px'}>
                     <Button
@@ -408,26 +415,24 @@ const CreateDataset = (props: any) => {
                     >
                         Cancel
                     </Button>
-                    {
-                        !screenState.screen3 &&
+                    {!screenState.screen3 && (
                         <Button
-                        disabled={loading}
-                        onClick={navigateToNextScreen}
-                        colorScheme="gray"
-                        bg={'white'}
-                        color={'default.toolbarButton'}
-                        width={'81px'}
-                        border={'1px'}
-                        borderColor={'default.toolbarButton'}
-                        height={'40px'}
-                        borderRadius={4}
-                        ml={'20px'}
+                            disabled={loading}
+                            onClick={navigateToNextScreen}
+                            colorScheme="gray"
+                            bg={'white'}
+                            color={'default.toolbarButton'}
+                            width={'81px'}
+                            border={'1px'}
+                            borderColor={'default.toolbarButton'}
+                            height={'40px'}
+                            borderRadius={4}
+                            ml={'20px'}
                         >
-                        Next
+                            Next
                         </Button>
-                    }
-                    {
-                        screenState.screen3 &&
+                    )}
+                    {screenState.screen3 && (
                         <Button
                             disabled={loading}
                             onClick={createDataset}
@@ -443,8 +448,7 @@ const CreateDataset = (props: any) => {
                         >
                             Create Dataset
                         </Button>
-                    }
-
+                    )}
                 </ModalFooter>
             </ModalContent>
         </Modal>
