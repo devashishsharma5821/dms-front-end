@@ -112,7 +112,7 @@ const ProjectDetails = (props: any) => {
         } else {
             updateSpinnerInfo(false);
             setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
-            setInlineProjectName(SingleProjectData.basic.name === null ? '' : SingleProjectData.basic.name);
+            setInlineProjectName(SingleProjectData.basic.name);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
@@ -371,7 +371,7 @@ const ProjectDetails = (props: any) => {
                                                         Project Name
                                                     </Text>
                                                     <Text title={SingleProjectData && SingleProjectData.basic.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {getTruncatedText(SingleProjectData && SingleProjectData.basic.name, 20)}
+                                                        {getTruncatedText(SingleProjectData && SingleProjectData.basic.name, 50)}
                                                     </Text>
                                                 </Box>
                                             </Flex>
@@ -547,7 +547,7 @@ const ProjectDetails = (props: any) => {
                     isOpen={deleteConfirmationModal.isOpen}
                     onClose={deleteConfirmationModal.onClose}
                     submitDeleteHandler={submitDeleteHandler}
-                    options={{ name: SingleProjectData.basic.name, label: 'project', placeholder: 'My Project 00' }}
+                    options={{ name: SingleProjectData.basic.name, label: '', placeholder: 'My Project 00' }}
                 />
             )}
             {createProjectModal.isOpen && (
