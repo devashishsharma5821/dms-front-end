@@ -32,12 +32,7 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingl
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
-import {
-    getUserNameFromId,
-    getTruncatedText,
-    getFormattedUserData,
-    copyToClipBoard
-} from '../../../utils/common.utils';
+import { getUserNameFromId, getTruncatedText, getFormattedUserData, copyToClipBoard } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
@@ -53,6 +48,7 @@ import ProjectDetailsGrid from './detailsGridComponent';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
+    const projectDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [deleteId, setDeleteId] = useState<string>('');
@@ -103,7 +99,7 @@ const ProjectDetails = (props: any) => {
             </ButtonGroup>
         ) : (
             <Flex>
-                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'30px'} width={'43px'} height={'43px'}>
+                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
                     <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
                 </Button>
             </Flex>
@@ -232,8 +228,7 @@ const ProjectDetails = (props: any) => {
             successMessage: 'Project Tags Edited Successfully',
             errorMessage: 'Project Tags Failed To edit'
         });
-
-    }
+    };
     const handleEditName = () => {
         if (inlineProjectName !== SingleProjectData.basic.name) {
             const variables = {
@@ -248,7 +243,6 @@ const ProjectDetails = (props: any) => {
                 errorMessage: 'Project Name Failed To edit'
             });
         }
-
     };
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== SingleProjectData.basic.description) {
@@ -277,7 +271,7 @@ const ProjectDetails = (props: any) => {
         <>
             {AllUsersData && SingleProjectData && (
                 <Box marginLeft={'50px'}>
-                    <Box fontSize={16} fontWeight={600} ml={'24'} mt={'24'} color={'default.darkGrayCreate'}>
+                    <Box fontSize={16} fontWeight={600} ml={'24'} mt={'24'} color={projectDetailTitle}>
                         <Text>Projects / My Project</Text>
                     </Box>
 
@@ -372,11 +366,11 @@ const ProjectDetails = (props: any) => {
                                                         {SingleProjectData && SingleProjectData.basic.id}
                                                     </Text>
                                                 </Box>
-                                                <Box ml={'115px'}>
-                                                    <Text ml={16} color={textColor2} mt={'12px'} fontWeight={600} lineHeight={'22px'}>
+                                                <Box ml={'145px'}>
+                                                    <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Project Name
                                                     </Text>
-                                                    <Text title={SingleProjectData && SingleProjectData.basic.name} ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                    <Text title={SingleProjectData && SingleProjectData.basic.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
                                                         {getTruncatedText(SingleProjectData && SingleProjectData.basic.name, 20)}
                                                     </Text>
                                                 </Box>
@@ -421,28 +415,47 @@ const ProjectDetails = (props: any) => {
                                                     <>
                                                         <HStack spacing={4}>
                                                             {SingleProjectData &&
-                                                 SingleProjectData.basic.tags !== null &&
-                                                            SingleProjectData.basic.tags.map((tag: string, tagIndex: number) => {
-                                                                if(tagIndex === 2) {
-                                                                    return (
-                                                                        <Tag borderRadius={3} maxWidth={'125px'} height={'24px'}  variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
-                                                                            <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
-                                                                                + {SingleProjectData.basic.tags.length - 2} more
-                                                                            </TagLabel>
-                                                                        </Tag>
-                                                                    )
-                                                                } else if (tagIndex < 2) {
-                                                                    return (
-                                                                        <Tag borderRadius={3} maxWidth={'125px'} height={'24px'}  variant="solid" key={tag} bg={'#F2F4F8'} color={'#1A3F59'} ml={8} pr={'5px'}>
-                                                                            <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
-                                                                                {getTruncatedText(tag, 9)}
-                                                                            </TagLabel>
-                                                                            <TagCloseButton onClick={() => handleRemoveTag(tag)} />
-                                                                        </Tag>
-                                                                    );
-                                                                }
-                                                            })}
-
+                                                                SingleProjectData.basic.tags !== null &&
+                                                                SingleProjectData.basic.tags.map((tag: string, tagIndex: number) => {
+                                                                    if (tagIndex === 2) {
+                                                                        return (
+                                                                            <Tag
+                                                                                borderRadius={3}
+                                                                                maxWidth={'125px'}
+                                                                                height={'24px'}
+                                                                                variant="solid"
+                                                                                key={tag}
+                                                                                bg={'#F2F4F8'}
+                                                                                color={'#1A3F59'}
+                                                                                ml={8}
+                                                                                pr={'5px'}
+                                                                            >
+                                                                                <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
+                                                                                    + {SingleProjectData.basic.tags.length - 2} more
+                                                                                </TagLabel>
+                                                                            </Tag>
+                                                                        );
+                                                                    } else if (tagIndex < 2) {
+                                                                        return (
+                                                                            <Tag
+                                                                                borderRadius={3}
+                                                                                maxWidth={'125px'}
+                                                                                height={'24px'}
+                                                                                variant="solid"
+                                                                                key={tag}
+                                                                                bg={'#F2F4F8'}
+                                                                                color={'#1A3F59'}
+                                                                                ml={8}
+                                                                                pr={'5px'}
+                                                                            >
+                                                                                <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
+                                                                                    {getTruncatedText(tag, 9)}
+                                                                                </TagLabel>
+                                                                                <TagCloseButton onClick={() => handleRemoveTag(tag)} />
+                                                                            </Tag>
+                                                                        );
+                                                                    }
+                                                                })}
                                                         </HStack>
                                                     </>
                                                 </Center>
@@ -467,7 +480,7 @@ const ProjectDetails = (props: any) => {
                                                         <EditableControls />
                                                     </Center>
                                                 </Flex>
-                                                <Box maxWidth={'425px'} maxHeight={'120px'} overflowY={'auto'}>
+                                                <Box maxWidth={'425px'} maxHeight={'120px'} overflowY={'auto'} color={accesstextColor}>
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>
@@ -488,23 +501,23 @@ const ProjectDetails = (props: any) => {
                                                     </Text>
                                                 </Box>
                                             </Center>
-                                                <Center ml={"20px"}>
-                                                    <Text onClick={editAccessModal.onOpen} fontWeight={600} cursor={'pointer'} color={'default.textButton'}>
-                                                        {' '}
-                                                        Edit
-                                                    </Text>
-                                                    <Text onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} color={'default.textButton'} fontWeight={600} ml={16} cursor={'pointer'}>
-                                                        {' '}
-                                                        Copy Link
-                                                    </Text>
-                                                </Center>
+                                            <Center ml={'84px'}>
+                                                <Text onClick={editAccessModal.onOpen} fontWeight={600} cursor={'pointer'} color={'default.textButton'}>
+                                                    {' '}
+                                                    Edit
+                                                </Text>
+                                                <Text onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} color={'default.textButton'} fontWeight={600} ml={16} cursor={'pointer'}>
+                                                    {' '}
+                                                    Copy Link
+                                                </Text>
+                                            </Center>
                                         </Flex>
-                                        <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={"20px"}>
+                                        <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={'20px'}>
                                             {accessUserList &&
                                                 accessUserList.map((icons: User, iconsIndex: number) => {
                                                     return (
-                                                        <div key={iconsIndex} style={{'marginBottom': '16px'}}>
-                                                            <Flex justifyContent={"start"}>
+                                                        <div key={iconsIndex} style={{ marginBottom: '16px' }}>
+                                                            <Flex justifyContent={'start'}>
                                                                 <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
                                                                 <Box width={'250px'}>
                                                                     <Text ml={12} color={accesstextColor} fontWeight={600}>
