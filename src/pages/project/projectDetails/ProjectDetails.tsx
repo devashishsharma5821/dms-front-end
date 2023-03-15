@@ -63,9 +63,9 @@ const ProjectDetails = (props: any) => {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
-            <ButtonGroup justifyContent="center">
-                <PencilIcon color={'#666C80'} height={'20px'} {...getSubmitButtonProps()} />
-                <PencilIcon color={'#666C80'} height={'20px'} {...getCancelButtonProps()} />
+            <ButtonGroup ml={'20px'} mt={'15px'} justifyContent="center">
+                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getSubmitButtonProps()}>Save</Text>
+                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getCancelButtonProps()}>Cancel</Text>
             </ButtonGroup>
         ) : (
             <Flex justifyContent="center">
@@ -79,9 +79,9 @@ const ProjectDetails = (props: any) => {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
-            <ButtonGroup justifyContent="center">
-                <PencilIcon color={'#666C80'} height={'20px'} {...getSubmitButtonProps()} />
-                <PencilIcon color={'#666C80'} height={'20px'} {...getCancelButtonProps()} />
+            <ButtonGroup ml={'20px'} justifyContent="center">
+                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getSubmitButtonProps()}>Save</Text>
+                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getCancelButtonProps()}>Cancel</Text>
             </ButtonGroup>
         ) : (
             <Flex>
@@ -152,8 +152,14 @@ const ProjectDetails = (props: any) => {
     const handleEditDescriptionChange = (editChangeValue: string) => {
         setInlineDescription(editChangeValue);
     };
+    const handleEditDescriptionChangeCancel = () => {
+        setInlineDescription(SingleProjectData.basic.description);
+    };
     const handleEditNameChange = (editChangeValue: string) => {
         setInlineProjectName(editChangeValue);
+    };
+    const handleEditNameChangeCancel = () => {
+        setInlineDescription(SingleProjectData.basic.name);
     };
     const handleEditProject = (variables: any, toastMessages: any) => {
         updateSpinnerInfo(true);
@@ -278,6 +284,7 @@ const ProjectDetails = (props: any) => {
                                             ml={16}
                                             onSubmit={handleEditName}
                                             onChange={handleEditNameChange}
+                                            onCancel={handleEditNameChangeCancel}
                                             value={inlineProjectName}
                                         >
                                             <Flex>
@@ -422,6 +429,7 @@ const ProjectDetails = (props: any) => {
                                                 ml={16}
                                                 onSubmit={handleEditDescription}
                                                 onChange={handleEditDescriptionChange}
+                                                onCancel={handleEditDescriptionChangeCancel}
                                                 value={inlineDescription}
                                             >
                                                 <Flex>
