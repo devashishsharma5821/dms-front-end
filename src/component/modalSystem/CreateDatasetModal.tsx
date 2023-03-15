@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     Button,
     Divider,
@@ -29,13 +29,14 @@ import SourceDBFS from '../../assets/icons/SourceDBFS';
 import SourceCSV from '../../assets/icons/SourceCSV';
 import SourceAzure from '../../assets/icons/SourceAzure';
 import SourceDatabricks from '../../assets/icons/SourceDatabricks';
-import { Field, Formik } from 'formik';
 import FileUploadComponent from '../../pages/dataset/fileUpload/FileUploadComponent';
 import { AgGridReact } from 'ag-grid-react';
 import { OutputDetail } from '../../models/outputDetail';
 import { ColDef } from 'ag-grid-community';
 import { keys, startCase } from 'lodash';
 import { getToastOptions } from '../../models/toastMessages';
+import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { useParams } from 'react-router-dom';
 
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
@@ -49,13 +50,18 @@ const CreateDataset = (props: any) => {
     const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
+    const [datasetName, setDatasetName] = useState('');
     const { toast } = createStandaloneToast();
     const [screenState, setScreenState] = useState({
         screen1: true,
         screen2: false,
         screen3: false
     });
+    const handleDataSetNameChange = (evt: any) => {
+      setDatasetName(evt.target.value);
+    };
     const createDataset = () => {
+        getAndUpdateSingleProjectData('41');
         props.onClose();
         toast(getToastOptions(`File Uploaded Successfully`, 'success'));
     };
@@ -208,7 +214,7 @@ const CreateDataset = (props: any) => {
                                     </Text>
 
                                     <Button width={'127px'} height={'36px'} mt={18} color={'default.toolbarButton'} bg={'white'} border={'1px'} borderColor={'default.toolbarButton'}>
-                                        Create Compute
+                                        Create Project
                                     </Button>
                                 </Box>
                             </Center>
@@ -216,45 +222,29 @@ const CreateDataset = (props: any) => {
                         <Flex flexDirection={'row'}>
                             <Box width={'55%'} ml={'21'}>
                                 <Flex>
-                                    <Formik
-                                        initialValues={{
-                                            validateOnMount: true,
-                                            notebookName: '',
-                                            defaultLanguage: ''
-                                        }}
-                                        validateOnBlur={true}
-                                        validateOnChange={true}
-                                        onSubmit={(values) => {}}
-                                    >
                                         <VStack align="flex-start">
                                             <FormControl isRequired>
                                                 <FormLabel htmlFor="datasetName" mb={6} color={datasetTitleColor} fontWeight={600}>
                                                     Dataset Name
                                                 </FormLabel>
-                                                <Field
+                                                <Input
                                                     width={484}
                                                     height={34}
                                                     borderRadius={3}
                                                     border={'1px'}
                                                     borderColor={'light.lighterGrayishBlue'}
+                                                    value={datasetName}
+                                                    onChange={handleDataSetNameChange}
                                                     as={Input}
                                                     id="datasetName"
                                                     name="datasetName"
                                                     variant="outline"
-                                                    validate={(value: any) => {
-                                                        let error;
-                                                        if (value.length === 0) {
-                                                            error = 'dataset Name is required';
-                                                        }
-
-                                                        return error;
-                                                    }}
                                                 />
 
                                                 <FormLabel htmlFor="Description" mt={20} mb={6} color={datasetTitleColor} fontWeight={600}>
                                                     Description
                                                 </FormLabel>
-                                                <Field
+                                                <Input
                                                     height={98}
                                                     width={484}
                                                     borderRadius={3}
@@ -266,7 +256,6 @@ const CreateDataset = (props: any) => {
                                                 />
                                             </FormControl>
                                         </VStack>
-                                    </Formik>
                                 </Flex>
                                 <Flex>
                                     <Center>
@@ -375,7 +364,7 @@ const CreateDataset = (props: any) => {
                                             <Box>
                                                 <FileUploadComponent
                                                     projectId={'41'}
-                                                    datasetName={'Test1'}
+                                                    datasetName={datasetName}
                                                     getResponseFromFileUpload={(fileUploadResponse: any) => getResponseFromFileUpload(fileUploadResponse)}
                                                 ></FileUploadComponent>
                                             </Box>

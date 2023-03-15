@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     Box,
     Text,
@@ -32,7 +32,12 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingl
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
-import { getUserNameFromId, getTruncatedText, getFormattedUserData } from '../../../utils/common.utils';
+import {
+    getUserNameFromId,
+    getTruncatedText,
+    getFormattedUserData,
+    copyToClipBoard
+} from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
@@ -41,6 +46,10 @@ import { deleteProject, editProject } from '../../../query';
 import Share from '../../../component/modalSystem/Share';
 import LeftArrow from '../../../assets/LeftArrow';
 import { getToastOptions } from '../../../models/toastMessages';
+import { OutputDetail } from '../../../models/outputDetail';
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
+import ProjectDetailsGrid from './detailsGridComponent';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -65,8 +74,12 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} mt={'15px'} justifyContent="center">
-                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getSubmitButtonProps()}>Save</Text>
-                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getCancelButtonProps()}>Cancel</Text>
+                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+                    Save
+                </Text>
+                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                    Cancel
+                </Text>
             </ButtonGroup>
         ) : (
             <Flex justifyContent="center">
@@ -80,18 +93,22 @@ const ProjectDetails = (props: any) => {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
-            <ButtonGroup ml={'20px'} justifyContent="center">
-                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getSubmitButtonProps()}>Save</Text>
-                <Text cursor={"pointer"} color={'default.toolbarButton'} {...getCancelButtonProps()}>Cancel</Text>
+            <ButtonGroup ml={'20px'} justifyContent="center" mt={'40px'}>
+                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+                    Save
+                </Text>
+                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                    Cancel
+                </Text>
             </ButtonGroup>
         ) : (
             <Flex>
-                <Button {...getEditButtonProps()} bg={'textColor'} mt={'10px'} ml={'12px'} width={'43px'} height={'43px'}>
+                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'30px'} width={'43px'} height={'43px'}>
                     <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
                 </Button>
             </Flex>
         );
-    };
+    }
     useEffect(() => {
         updateSpinnerInfo(true);
         if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
@@ -251,6 +268,11 @@ const ProjectDetails = (props: any) => {
     const createUserAccessForCreateProjectMode = (userList: AllUsers) => {
         setAccessUserListCreateMode(userList);
     };
+
+    const clipBoardSuccess = () => {
+        toast(getToastOptions(`Location Copied To Clipboard`, 'success'));
+    };
+
     return (
         <>
             {AllUsersData && SingleProjectData && (
@@ -278,26 +300,27 @@ const ProjectDetails = (props: any) => {
                             </Button>
                             {SingleProjectData && (
                                 <>
-                                    <Flex mt={'8px'}>
+                                    <Flex>
                                         <Editable
                                             maxWidth={'800px'}
                                             textAlign="left"
                                             fontWeight={400}
-                                            ml={16}
                                             onSubmit={handleEditName}
                                             onChange={handleEditNameChange}
                                             onCancel={handleEditNameChangeCancel}
                                             value={inlineProjectName}
                                         >
                                             <Flex>
-                                                <Center>
-                                                    <EditableControlsName />
+                                                <Center mt={'-10'}>
+                                                    <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                                        <EditablePreview />
+                                                        <Input as={EditableInput} height={'30px'} mt={'-10px'} />
+                                                    </Box>
                                                 </Center>
+                                                <Box mt={'-40px'}>
+                                                    <EditableControlsName />
+                                                </Box>
                                             </Flex>
-                                            <Box maxWidth={'425px'}>
-                                                <EditablePreview />
-                                                <Input as={EditableInput} />
-                                            </Box>
                                         </Editable>
                                         <Button
                                             cursor={'pointer'}
@@ -320,9 +343,9 @@ const ProjectDetails = (props: any) => {
                                 </>
                             )}
                         </Flex>
-                        <Box width={'883px'} height={'320px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
-                            <Center>
-                                <Flex ml={'22px'} width={'482px'} maxHeight={'320px'} mr={'48px'}>
+                        <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
+                            <Flex>
+                                <Flex width={'50%'} ml={'22px'} maxHeight={'320px'} mr={'48px'}>
                                     <Avatar
                                         p={'5px'}
                                         borderRadius="full"
@@ -383,11 +406,11 @@ const ProjectDetails = (props: any) => {
                                                             <FormControl>
                                                                 <Input onChange={(evt: any) => setPopOverTag(evt.target.value)} value={popOverTag} placeholder="Type Here" />
                                                             </FormControl>
-                                                            <ButtonGroup display="flex" justifyContent="flex-end">
+                                                            <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-end">
                                                                 <Button variant="outline" onClick={tagPopOver.onClose} cursor={'pointer'}>
                                                                     Cancel
                                                                 </Button>
-                                                                <Button onClick={handleAddTag} colorScheme="teal" cursor={'pointer'}>
+                                                                <Button onClick={handleAddTag} bg={'default.textButton'} cursor={'pointer'}>
                                                                     Add Tag
                                                                 </Button>
                                                             </ButtonGroup>
@@ -426,6 +449,7 @@ const ProjectDetails = (props: any) => {
                                             </Flex>
 
                                             <Editable
+                                                height={'120px'}
                                                 maxWidth={'400px'}
                                                 textAlign="left"
                                                 fontWeight={400}
@@ -443,7 +467,7 @@ const ProjectDetails = (props: any) => {
                                                         <EditableControls />
                                                     </Center>
                                                 </Flex>
-                                                <Box maxWidth={'425px'}>
+                                                <Box maxWidth={'425px'} maxHeight={'120px'} overflowY={'auto'}>
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>
@@ -451,10 +475,10 @@ const ProjectDetails = (props: any) => {
                                         </Box>
                                     </Center>
                                 </Flex>
-                                <Flex minWidth={'312px'} maxHeight={'267px'} mt={'10px'}>
-                                    <Box>
-                                        <Flex>
-                                            <Center flex="2" minHeight={'25px'} minWidth={'300px'}>
+                                <Flex width={'50%'} maxHeight={'267px'} mt={'10px'}>
+                                    <Box width={'100%'}>
+                                        <Flex justifyContent={'start'}>
+                                            <Center>
                                                 <Text color={textColor2} fontWeight={700}>
                                                     Access by
                                                 </Text>
@@ -463,41 +487,44 @@ const ProjectDetails = (props: any) => {
                                                         10
                                                     </Text>
                                                 </Box>
-                                                <Center flex="2" justifyContent={'flex-end'}>
+                                            </Center>
+                                                <Center ml={"20px"}>
                                                     <Text onClick={editAccessModal.onOpen} fontWeight={600} cursor={'pointer'} color={'default.textButton'}>
                                                         {' '}
                                                         Edit
                                                     </Text>
-                                                    <Text color={'default.textButton'} fontWeight={600} ml={16} cursor={'pointer'}>
+                                                    <Text onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} color={'default.textButton'} fontWeight={600} ml={16} cursor={'pointer'}>
                                                         {' '}
                                                         Copy Link
                                                     </Text>
                                                 </Center>
-                                            </Center>
                                         </Flex>
-                                        <Box overflowY="auto" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white">
+                                        <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={"20px"}>
                                             {accessUserList &&
                                                 accessUserList.map((icons: User, iconsIndex: number) => {
                                                     return (
-                                                        <div key={iconsIndex}>
-                                                            <Center>
+                                                        <div key={iconsIndex} style={{'marginBottom': '16px'}}>
+                                                            <Flex justifyContent={"start"}>
                                                                 <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`${icons.firstName} ${icons.lastName}`} color={'default.whiteText'} />
                                                                 <Box width={'250px'}>
-                                                                    <Text ml={12} color={accesstextColor} fontWeight={600} mt={'16px'} lineHeight={'22px'}>
+                                                                    <Text ml={12} color={accesstextColor} fontWeight={600}>
                                                                         {icons?.firstName} {icons?.lastName}
                                                                     </Text>
-                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600} lineHeight={'22px'}>
+                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600}>
                                                                         {icons.email}{' '}
                                                                     </Text>
                                                                 </Box>
-                                                            </Center>
+                                                            </Flex>
                                                         </div>
                                                     );
                                                 })}
                                         </Box>
                                     </Box>
                                 </Flex>
-                            </Center>
+                            </Flex>
+                        </Box>
+                        <Box mt={'20px'}>
+                            <ProjectDetailsGrid gridData={SingleProjectData.datasources} projectId={SingleProjectData.basic.id}></ProjectDetailsGrid>
                         </Box>
                     </Box>
                 </Box>

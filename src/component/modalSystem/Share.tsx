@@ -312,7 +312,7 @@ const Share = (props: any) => {
                                             );
                                         })}
                                     {accessUserList.length === 0 && (
-                                        <Box>
+                                        <Box ml={'15px'}>
                                             <Text color={accesstextColor}>This Project Is not Shared with Any Users</Text>
                                         </Box>
                                     )}
@@ -323,15 +323,15 @@ const Share = (props: any) => {
                 )}
                 <Divider color={'default.dividerColor'} />
                 <ModalFooter minHeight={'80px'}>
-                    <Box width={'100%'} ml={20}>
-                        <Flex>
-                            <LinkChain />
-                            <Link mt={-2} ml={8} color={'light.button'} href="https://chakra-ui.com" isExternal>
-                                {' '}
-                                Copy Link{' '}
-                            </Link>
-                        </Flex>
-                    </Box>
+                    {/*<Box width={'100%'} ml={20}>*/}
+                    {/*    <Flex>*/}
+                    {/*        <LinkChain />*/}
+                    {/*        <Link mt={-2} ml={8} color={'light.button'} href="https://chakra-ui.com" isExternal>*/}
+                    {/*            {' '}*/}
+                    {/*            Copy Link{' '}*/}
+                    {/*        </Link>*/}
+                    {/*    </Flex>*/}
+                    {/*</Box>*/}
                     <Button onClick={closeShareModal} bg={'default.textButton'} borderRadius={'3'} mb={19} mr={20} mt={'22'} width={'72px'} height={'40px'}>
                         Close
                     </Button>

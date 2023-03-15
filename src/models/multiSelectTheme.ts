@@ -22,7 +22,7 @@ function baseStyleList(props: Record<string, any>) {
         color: 'inherit',
         w: 'full',
         py: '2',
-        zIndex: 1,
+        zIndex: 9999,
         borderRadius: '3px',
         borderWidth: '1px',
         maxH: '64',
@@ -37,6 +37,8 @@ const baseStyleSelectedList = {
     flex: 1,
     flexWrap: 'wrap',
     alignItems: 'center',
+    bg: mode(`#fff`, `gray.700`),
+    zIndex: 9999
 }
 
 const baseStyleLabel = {
@@ -110,6 +112,8 @@ function baseStyleButton(props: Record<string, any>) {
 const baseStyleControl = {
     h: 'auto',
     minW: 72,
+    bg: mode(`#fff`, `gray.700`),
+    zIndex: 9999
 }
 
 // eslint-disable-next-line
