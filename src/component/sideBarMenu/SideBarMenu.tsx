@@ -17,6 +17,7 @@ import useAppStore from '../../store';
 import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
 import CreateDatasetModal from '../modalSystem/CreateDatasetModal';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import ExperimentModal from '../modalSystem/ExperimentModal';
 
 const SideBarMenu = () => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
@@ -31,6 +32,7 @@ const SideBarMenu = () => {
     const createProjectFromModal = useDisclosure();
     const createProjectModal = useDisclosure();
     const createDatasetModal = useDisclosure();
+    const createExperimentModal = useDisclosure();
     const navigate = useNavigate();
     const hoverIn = () => {
         setIsHovering(true);
@@ -95,6 +97,8 @@ const SideBarMenu = () => {
             createProjectFromModal.onOpen();
         } else if (type === 'dataset') {
             createDatasetModal.onOpen();
+        } else if (type === 'experiment') {
+            createExperimentModal.onOpen();
         }
     };
     const thirdLevelMenu = () => {
@@ -306,10 +310,11 @@ const SideBarMenu = () => {
                                     })}
                                 </Box>
                             )}
-                        </VStack>
+                        </VStack>{' '}
                     </Flex>
                     {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
                     {createDatasetModal.isOpen && <CreateDatasetModal isOpen={createDatasetModal.isOpen} onClose={createDatasetModal.onClose} />}
+                    {createExperimentModal.isOpen && <ExperimentModal isOpen={createExperimentModal.isOpen} onClose={createExperimentModal.onClose} />}
                     {createProjectFromModal.isOpen && (
                         <LeftSideBarMenuCreateProjectModal
                             isOpen={createProjectFromModal.isOpen}
