@@ -129,7 +129,7 @@ const ProjectsViews = (props: any) => {
                                                 <Box ml={'20px'} mt={'10px'} height={'62px'} mb={'10px'}>
                                                     <AvatarGroup size={'md'} max={3} spacing={1}>
                                                         {project.project_access.map((access, accessIndex) => {
-                                                            return <Avatar name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
+                                                            return <Avatar key={accessIndex} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
                                                         })}
                                                     </AvatarGroup>
                                                 </Box>
