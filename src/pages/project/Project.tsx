@@ -7,7 +7,7 @@ import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions
 import SearchComponent from '../../component/search/SearchComponent';
 import { DownArrow } from '../../assets/icons';
 import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
-import ProjectsViews from './projectsViews';
+import ProjectsViews from './projectDetails/projectsViews';
 import { projectsSearch } from '../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';

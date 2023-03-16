@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './project.scss';
+import '../project.scss';
 import { Avatar, Box, Center, Flex, Text, useColorModeValue, AvatarGroup } from '@chakra-ui/react';
-import { Documentation } from '../../assets/icons';
-import { GetAllProjectsDetail } from '../../models/project';
-import { getUserNameFromId, getTruncatedText, convertTime } from '../../utils/common.utils';
-import useAppStore from '../../store';
-import { ComputeAppStoreState } from '../../models/computeDetails';
+import { Documentation } from '../../../assets/icons';
+import { GetAllProjectsDetail } from '../../../models/project';
+import { getUserNameFromId, getTruncatedText, convertTime } from '../../../utils/common.utils';
+import useAppStore from '../../../store';
+import { ComputeAppStoreState } from '../../../models/computeDetails';
 
 const ProjectsViews = (props: any) => {
     const textColor = useColorModeValue('light.header', 'dark.white');
