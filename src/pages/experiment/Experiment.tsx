@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData } from '../../query';
 import { startCase } from 'lodash';
-import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Spinner } from '@chakra-ui/react';
+import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from '@chakra-ui/react';
 import { useApolloClient } from '@apollo/client';
 import { ComputeDetailListResponse, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { GET_DATABRICKS_CREDS } from '../../query/index';
@@ -13,7 +13,7 @@ import useAppStore from '../../store';
 import { BusHelper } from '../../helpers/BusHelper';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
-import { getAndUpdateTransformersData } from '../../zustandActions/transformersActions';
+import { getAndUpdateTransformersData, updateSelectedStageId } from '../../zustandActions/transformersActions';
 import '@antuit/rappid-v1/build/package/rappid.css';
 import './canvasStyles/style.css';
 import './canvasStyles/style.modern.css';
@@ -36,19 +36,24 @@ import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
 import ZoomComponent from '../../component/zoomer/Zoomer';
 import { newComputeData } from '../compute/generateNewComputeData';
-// import Details from '../../component/details/Details';
+import Details from '../../component/details/Details';
 
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
-    let rappid: DmsCanvasService;
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState] = useAppStore((state: ExperimentAppStoreState) => [state.DmsComputeData, state.UserConfig, state.connectionState]);
+    const [DmsComputeData, UserConfig, connectionState, selectedStageId] = useAppStore((state: ExperimentAppStoreState) => [
+        state.DmsComputeData,
+        state.UserConfig,
+        state.connectionState,
+        state.selectedStageId
+    ]);
     const [TransformersData] = useAppStore((state: TransformersAppStoreState) => [state.TransformersData]);
     const opid = v4();
     const computeRunningModal = useDisclosure();
     const computeModal = useDisclosure();
     const client = useApolloClient();
     const settingsModal = useDisclosure();
+    const detailsDrawer = useDisclosure();
     const [computeId, setComputeId] = useState<string>();
     const [loadingMessage, setLoadingMessage] = useState<string | undefined>();
     const [loaderOpen, setLoaderOpen] = useState<boolean | undefined>();
@@ -62,6 +67,16 @@ const ExperimentsPage = () => {
     const { colorMode } = useColorMode();
     const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
     const [newComputedata, setNewComputedata] = useState<DmsComputeData[]>([]);
+
+    // React Hook
+    const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+    const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
+    const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
+
+    // DATA: Drawer related code
+    const transformerMenuDrawer = useDisclosure();
+    const [rappidData, setRappidData] = React.useState<DmsCanvasService>();
+    const [drawerInitialized, setDrawerInitialzed] = React.useState<boolean>(false);
 
     let dmsComputeRunningStatusIsDefaultOne;
 
@@ -106,18 +121,6 @@ const ExperimentsPage = () => {
         }
     };
 
-    const initializeAndStartRapid = (stencil: any, group: any) => {
-        if (!rappid) {
-            rappid = new DmsCanvasService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
-            setTimeout(() => {
-                setPaperScrollerState(rappid.getPaperScroller());
-            }, 500);
-
-            rappid.startRappid(stencil, group);
-            // Use below to load a sample Ready to go JSON
-            // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
-        }
-    };
     useEffect(() => {
         if (DmsComputeData !== null) {
             checkComputeStatus(DmsComputeData);
@@ -550,9 +553,7 @@ const ExperimentsPage = () => {
             // Clear any timeouts if set.
             setClearTimeouts({ clear: true });
             setLoaderOpen(false);
-            // if (modalSettings.openModal) {
             setComputeStatus({ started: true });
-            // }
         }
     }, [connected]);
 
@@ -620,24 +621,6 @@ const ExperimentsPage = () => {
         waitForCompute(3000);
     };
 
-    const onComputeStop = () => {
-        if (UserConfig && computeId) {
-            const shutDownRequest = BusHelper.GetShutdownRequestMessage({
-                experimentId: parseInt(UserConfig.userConfiguration.user.userId),
-                opId: opid,
-                userId: computeId,
-                //TODO Below are added just for fixing errors
-                project_id: 12,
-                get_datatables: undefined,
-                az_blob_get_containers: undefined,
-                az_blob_browse_container: undefined
-            });
-            // submitMessage({
-            //     content: shutDownRequest
-            // });
-        }
-    };
-
     const select = (state: any) => {
         return state.lastAliveMessage;
     };
@@ -655,72 +638,63 @@ const ExperimentsPage = () => {
             .catch((err) => console.error(err));
     }, []);
 
-    // const {i18n,  config } = useAppStore();
-    // const [currentLang, setCurrentLang] = useState('en_US');
-    // const [translationToUse, setTranslationToUse] = useState(i18n.translations);
-    const btnRef: any = React.useRef();
     const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlu');
 
-    // useEffect(() => {
-    // wsconnect(setMessage);
-    // console.log('Message From Websockets', message);
-    // eslint-disable-next-line
-    // }, []);
-
-    // const changeTranslation = () => {
-    //
-    //     let language = (currentLang === 'en_US') ?  'en_SP' :  'en_US';
-    //    setCurrentLang(language);
-    // };
-    // useEffect(() => {
-    //     setTranslationToUse(i18n.translations);
-    // }, [currentLang]);
-    // const computeData = [
-    //     {
-    //         active: true,
-    //         name: 'my-compute1',
-    //         memory: '8 GB',
-    //         cpu: '3 Cores'
-    //     },
-    //     {
-    //         active: false,
-    //         name: 'my-compute1',
-    //         memory: '8 GB',
-    //         cpu: '3 Cores'
-    //     },
-    //     {
-    //         active: false,
-    //         name: 'my-compute1',
-    //         memory: '8 GB',
-    //         cpu: '3 Cores'
-    //     },
-    //     {
-    //         active: false,
-    //         name: 'my-compute1',
-    //         memory: '8 GB',
-    //         cpu: '3 Cores'
-    //     }
-    // ];
-    // const computeDataEmpty: any = [];
-    // React Hook
-    const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
-    const [leftMenuOpen, setLeftMenuOpen] = useState(false);
-    const transformerMenuDrawer = useDisclosure();
-    const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
-    const panelCloseBtnBg = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
-
-    const toggleLeftMenu = () => {
-        setLeftMenuOpen(!leftMenuOpen);
+    const handleDrawerOpen = () => {
+        setDrawerInitialzed(true);
+        transformerMenuDrawer.onOpen();
     };
 
+    //Method to initialize DMS and stencil services
+    const initializeAndStartRapid = async (stencil: any, group: any) => {
+        try {
+            if (!rappidData) {
+                const rappid = await new DmsCanvasService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+                setRappidData(rappid);
+
+                // Use below to load a sample Ready to go JSON
+                // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
+            }
+        } catch (err) {
+            console.log('lets check error', err);
+        }
+    };
+
+    //Side effect to call DMS canvas and stencil services
     useEffect(() => {
-        if (leftMenuOpen) {
-            transformerMenuDrawer.onOpen();
+        if (transformerMenuDrawer.isOpen && drawerInitialized) {
             setTimeout(() => {
                 initializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
             }, 10);
         } else transformerMenuDrawer.onClose();
-    }, [leftMenuOpen]);
+    }, [drawerInitialized]);
+
+    //SideEffect to handle all canvas services call
+    useEffect(() => {
+        if (rappidData) {
+            setPaperScrollerState(rappidData.getPaperScroller());
+            rappidData.startRappid(transformedNewDataForStencil, transformersGroup);
+        }
+    }, [rappidData]);
+
+    useEffect(() => {
+        if (rappidData && drawerInitialized && transformerMenuDrawer.isOpen) {
+            setTimeout(() => {
+                rappidData.initializeStencil(transformedNewDataForStencil, transformersGroup);
+            }, 200);
+        }
+    }, [transformerMenuDrawer.isOpen]);
+
+    const onCloseEventHandler = () => {
+        updateSelectedStageId(null);
+        detailsDrawer.onClose();
+    };
+
+    useEffect(() => {
+        if (selectedStageId) {
+            detailsDrawer.onOpen();
+        }
+    }, [selectedStageId]);
 
     return (
         <>
@@ -745,7 +719,7 @@ const ExperimentsPage = () => {
                                 icon={<DoubleAngleRightIcon />}
                                 mt={-85}
                                 mr={18}
-                                onClick={toggleLeftMenu}
+                                onClick={handleDrawerOpen}
                             />
                         </Box>
                         <Box position="relative" width="104px" transform="rotate(270deg)" left={-16} mt={30} textAlign="right">
@@ -755,7 +729,7 @@ const ExperimentsPage = () => {
                         </Box>
 
                         <Box>
-                            <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={toggleLeftMenu} finalFocusRef={btnRef} id="left-overlay-menu" colorScheme={themeBg}>
+                            <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={transformerMenuDrawer.onClose} id="left-overlay-menu" colorScheme={themeBg}>
                                 <DrawerOverlay bg="transparent" />
                                 <DrawerContent bg={themeBg} mt="44" ml="54" w="350px" maxWidth="292px">
                                     <DrawerCloseButton
@@ -769,7 +743,7 @@ const ExperimentsPage = () => {
                                         borderColor={useColorModeValue('light.lighterGrayishBlue', 'dark.veryLightDarkGrayishBlue')}
                                         color={useColorModeValue('light.lightestDarkGray', 'dark.Gray')}
                                     >
-                                        <Box onClick={toggleLeftMenu}>
+                                        <Box onClick={transformerMenuDrawer.onClose}>
                                             <DoubleAngleLeftIcon></DoubleAngleLeftIcon>
                                         </Box>
                                     </DrawerCloseButton>
@@ -807,8 +781,18 @@ const ExperimentsPage = () => {
                         {/* <Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={onOpen}>
                             Open
                         </Button> */}
+                        {detailsDrawer.isOpen && (
+                            <Details
+                                isOpen={detailsDrawer.isOpen}
+                                onClose={() => {
+                                    updateSelectedStageId(null);
+                                    detailsDrawer.onClose();
+                                }}
+                                onCloseEventHandler={onCloseEventHandler}
+                                selectedStageId={selectedStageId}
+                            />
+                        )}
 
-                        {/* <Details isOpen={true} onClose={false}></Details> */}
                         {/*<Button ref={btnRef} variant="solid" bg={useColorModeValue('light.button', 'dark.button')} onClick={changeTranslation}>*/}
                         {/*    Change Translation*/}
                         {/*</Button>*/}

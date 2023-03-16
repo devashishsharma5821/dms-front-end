@@ -114,7 +114,12 @@ const SideBarMenu = () => {
     };
     const secondLevelMenu = () => {
         return (
-            <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '212px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInSubMenu} onMouseOut={hoverOutSubMenu}>
+            <div
+                style={{ ...zIndexStyle, position: 'absolute', zIndex: '100', marginLeft: '212px', border: ' 1px solid #D8DCDE' }}
+                id="mySidebar"
+                onMouseOver={hoverInSubMenu}
+                onMouseOut={hoverOutSubMenu}
+            >
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         {sideBarMenuIcons[0].section[currentIndex].isClicked && (

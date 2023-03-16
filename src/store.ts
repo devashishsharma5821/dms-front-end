@@ -27,7 +27,8 @@ const useAppStore = create<AppState>((set) => ({
     computeState: '',
     dbSettingsData: [],
     toastMessage: {},
-    spinnerInfo: false
+    spinnerInfo: false,
+    selectedStageId: null
 }));
 
 export default useAppStore;

@@ -43,6 +43,7 @@ export interface AppState {
     computeState: string;
     dbSettingsData: any;
     spinnerInfo: boolean;
+    selectedStageId: any;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -70,3 +71,4 @@ export type getAndUpdateSingleProjectData = (id: string) => void;
 export type submitMessage = (content: any) => void;
 export type dmsRunCompute = (id: string) => void;
 export type updateSpinnerInfo = (spinnerInfo: boolean) => void;
+export type updateSelectedStageId = (stageId: any) => void;
