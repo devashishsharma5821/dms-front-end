@@ -1,20 +1,17 @@
 import React from 'react';
 import './details.scss';
-import {
-    Button,
-    DrawerBody,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    useColorModeValue,
-    Drawer
-} from '@chakra-ui/react';
+import { Button, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useColorModeValue, Drawer } from '@chakra-ui/react';
 import Form from '@rjsf/chakra-ui';
 import validator from '@rjsf/validator-ajv6';
 import type { JSONSchema7 } from 'json-schema';
+import useAppStore from '../../store';
+
 const Details = (props: any) => {
+    const [TransformersData, updateSelectedStageId] = useAppStore((state: any) => [state.TransformersData, state.updateSelectedStageId]);
+
+    // state.pipeline.stages?.find((stage) => stage.id === props.selectedStageId);
+    const transformer = TransformersData.find((transformer: any) => transformer.id === props.selectedStageId);
+
     const [schema] = React.useState<JSONSchema7>({
         title: 'Widgets',
         type: 'object',
@@ -190,28 +187,30 @@ const Details = (props: any) => {
             }
         }
     };
+
+    // const onCloseEventHandler = () => {
+    //     updateSelectedStageId(null);
+    // };
+
     return (
         <>
             <Drawer isOpen={props.isOpen} placement="right" onClose={props.onClose} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                 <DrawerOverlay />
-                <DrawerContent mt="44px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+                <DrawerContent mt="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
-                    <DrawerHeader>Example React Schema Form</DrawerHeader>
-
-                    <DrawerBody>
-                        <Form schema={schema} formData={formData} uiSchema={layout} validator={validator} liveValidate />
+                    <DrawerBody mt="30px">
+                        <Form schema={JSON.parse(transformer.schema.jsonSchema)} formData={{ name: 'spark' }} omitExtraData={true} validator={validator} />
                     </DrawerBody>
-
+                    {/* 
                     <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={props.onClose}>
+                        <Button variant="outline" mr={3} onClick={props.onCloseEventHandler}>
                             Cancel
                         </Button>
                         <Button colorScheme="blue">Save</Button>
-                    </DrawerFooter>
+                    </DrawerFooter> */}
                 </DrawerContent>
             </Drawer>
         </>
-
     );
 };
 

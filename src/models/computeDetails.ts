@@ -146,6 +146,7 @@ export interface ExperimentAppStoreState {
     DmsComputeData: DmsComputeData[];
     UserConfig: any;
     connectionState: { connected: boolean; subscribed: boolean };
+    selectedStageId: null | string;
 }
 
 export interface SocketWrapperAppStoreState {

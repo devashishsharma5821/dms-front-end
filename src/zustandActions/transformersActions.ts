@@ -3,7 +3,8 @@ import { getTransformersData } from '../query';
 import useAppStore from '../store';
 import {
     getAndUpdateTransformersData as getAndUpdateTransformersDataType,
-    updateTransformersData as updateTransformersDataType
+    updateTransformersData as updateTransformersDataType,
+    updateSelectedStageId as updateSelectedStageIdType
 } from '../models/zustandStore';
 import { TransformerListResponse } from '../models/transformerListResponse';
 import { TransformerDetail } from '../models/transformerDetail';
@@ -17,3 +18,5 @@ export const getAndUpdateTransformersData: getAndUpdateTransformersDataType = as
     useAppStore.setState(() => ({ TransformersData: response.data.dmsTransformers }));
 };
 export const updateTransformersData: updateTransformersDataType = (TransformersData) => useAppStore.setState(() => ({ TransformersData: TransformersData }));
+
+export const updateSelectedStageId: updateSelectedStageIdType = (stageId: any) => useAppStore.setState(() => ({ selectedStageId: stageId }));

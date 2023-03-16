@@ -1,13 +1,14 @@
 import * as joint from '@antuit/rappid-v1';
-import {StencilService} from './stencil-service';
-import {ToolbarService} from './toolbar-service';
-import {InspectorService} from './inspector-service';
-import {HaloService} from './halo-service';
-import {KeyboardService} from './keyboard-service';
+import { StencilService } from './stencil-service';
+import { ToolbarService } from './toolbar-service';
+import { InspectorService } from './inspector-service';
+import { HaloService } from './halo-service';
+import { KeyboardService } from './keyboard-service';
 import * as appShapes from './app-shapes';
+import TransformerModel from '../../../models/transformerModal';
+import { updateSelectedStageId } from '../../../zustandActions/transformersActions';
 
 class DmsCanvasService {
-
     el: HTMLElement;
     graph: joint.dia.Graph | any;
     paper: joint.dia.Paper | any;
@@ -24,14 +25,7 @@ class DmsCanvasService {
     haloService: HaloService;
     keyboardService: KeyboardService;
 
-    constructor(
-        el: any,
-        stencilService: StencilService,
-        toolbarService: ToolbarService,
-        inspectorService: InspectorService,
-        haloService: HaloService,
-        keyboardService: KeyboardService
-    ) {
+    constructor(el: any, stencilService: StencilService, toolbarService: ToolbarService, inspectorService: InspectorService, haloService: HaloService, keyboardService: KeyboardService) {
         this.el = el;
 
         // apply current joint js theme
@@ -59,26 +53,29 @@ class DmsCanvasService {
         this.initializeKeyboardShortcuts();
         this.initializeTooltips();
     }
+
     getPaperScroller() {
         return this.paperScroller;
     }
 
     initializePaper() {
-
-        const graph = this.graph = new joint.dia.Graph({}, {
-            cellNamespace: appShapes
-        });
+        const graph = (this.graph = new joint.dia.Graph(
+            {},
+            {
+                cellNamespace: appShapes
+            }
+        ));
 
         this.commandManager = new joint.dia.CommandManager({ graph: graph });
 
-        const paper = this.paper = new joint.dia.Paper({
+        const paper = (this.paper = new joint.dia.Paper({
             width: '100vw',
             height: '100vh',
             gridSize: 10,
             drawGrid: true,
             model: graph,
             cellViewNamespace: appShapes,
-            background: {color: 'white'},
+            background: { color: 'white' },
             defaultLink: <joint.dia.Link>new appShapes.app.Link(),
             defaultConnectionPoint: appShapes.app.Link.connectionPoint,
             interactive: { linkMove: false },
@@ -88,24 +85,24 @@ class DmsCanvasService {
             markAvailable: true,
 
             highlighting: {
-                'magnetAvailability': {
+                magnetAvailability: {
                     name: 'addClass',
                     options: {
                         className: 'available-magnet'
                     }
                 },
-                'elementAvailability': {
+                elementAvailability: {
                     name: 'stroke',
                     options: {
                         padding: 20,
                         attrs: {
                             'stroke-width': 3,
-                            'stroke': '#ED6A5A'
+                            stroke: '#ED6A5A'
                         }
                     }
                 }
             },
-            validateConnection: function(cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+            validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
                 // Prevent linking from input ports
                 if (magnetS && magnetS.getAttribute('port-group') === 'in') return false;
                 // Prevent linking from output ports to input ports within one element
@@ -113,25 +110,32 @@ class DmsCanvasService {
                 // Prevent linking to output ports
                 return magnetT && magnetT.getAttribute('port-group') === 'in';
             },
-            validateMagnet: function(cellView, magnet) {
+            validateMagnet: function (cellView, magnet) {
                 // Note that this is the default behaviour. It is shown for reference purposes.
                 // Disable linking interaction for magnets marked as passive
                 return magnet.getAttribute('magnet') !== 'passive';
             }
-        });
+        }));
 
         // paper.on('blank:mousewheel', _.partial(this.onMousewheel, null), this);
         paper.on('cell:mousewheel', this.onMousewheel.bind(this));
 
+        paper.on('cell:pointerdown', function (cellView, evt, x, y) {});
+
+        graph.on('add', function (cell, collection, opt) {
+            updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
+        });
+
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
 
-        const paperScroller = this.paperScroller = new joint.ui.PaperScroller({
+        const paperScroller = (this.paperScroller = new joint.ui.PaperScroller({
             paper,
             autoResizePaper: false,
             scrollWhileDragging: true,
             cursor: 'grab',
             padding: 0
-        });
+        }));
+
         this.renderPlugin('.paper-container', paperScroller);
         paperScroller.render().center();
     }
@@ -141,7 +145,9 @@ class DmsCanvasService {
         stencilService.create(paperScroller, snaplines, group);
 
         this.renderPlugin('stencil-container', stencilService.stencil);
+
         stencilService.setShapes(stencil);
+
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
             // Add the ports coming from backend transformers Api and bind it to paper canvas on drop event
             const portsToAdd = elementView.model.attributes.CombinedPorts;
@@ -151,7 +157,6 @@ class DmsCanvasService {
     }
 
     initializeSelection() {
-
         this.clipboard = new joint.ui.Clipboard();
         this.selection = new joint.ui.Selection({ paper: this.paper, useModelGeometry: true });
         this.selection.collection.on('reset add remove', this.onSelectionChange.bind(this));
@@ -175,7 +180,6 @@ class DmsCanvasService {
             if (keyboard.isActive('ctrl meta', evt)) {
                 this.selection.collection.add(elementView.model);
             }
-
         });
 
         this.graph.on('remove', (cell: joint.dia.Cell) => {
@@ -183,7 +187,6 @@ class DmsCanvasService {
             if (this.selection.collection.has(cell)) {
                 this.selection.collection.reset(this.selection.collection.models.filter((c: any) => c !== cell));
             }
-
         });
 
         this.selection.on('selection-box:pointerdown', (elementView: joint.dia.ElementView, evt: joint.dia.Event) => {
@@ -191,8 +194,7 @@ class DmsCanvasService {
             if (keyboard.isActive('ctrl meta', evt)) {
                 this.selection.collection.remove(elementView.model);
             }
-
-        }, this);
+        });
     }
 
     onSelectionChange() {
@@ -208,7 +210,7 @@ class DmsCanvasService {
             selection.destroySelectionBox(primaryCell);
             this.selectPrimaryCell(primaryCellView);
         } else if (collection.length === 2) {
-            collection.each(function(cell: joint.dia.Cell) {
+            collection.each(function (cell: joint.dia.Cell) {
                 selection.createSelectionBox(cell);
             });
         }
@@ -257,49 +259,46 @@ class DmsCanvasService {
     }
 
     initializeToolsAndInspector() {
-
         this.paper.on('cell:pointerup', (cellView: joint.dia.CellView) => {
             const cell = cellView.model;
             const { collection } = this.selection;
-            if (collection.includes(cell)) { return; }
+            if (collection.includes(cell)) {
+                return;
+            }
             collection.reset([cell]);
         });
 
         this.paper.on('link:mouseenter', (linkView: joint.dia.LinkView) => {
-
             // Open tool only if there is none yet
-            if (linkView.hasTools()) { return; }
+            if (linkView.hasTools()) {
+                return;
+            }
 
             const ns = joint.linkTools;
             const toolsView = new joint.dia.ToolsView({
                 name: 'link-hover',
-                tools: [
-                    new ns.Vertices({ vertexAdding: false }),
-                    new ns.SourceArrowhead(),
-                    new ns.TargetArrowhead()
-                ]
+                tools: [new ns.Vertices({ vertexAdding: false }), new ns.SourceArrowhead(), new ns.TargetArrowhead()]
             });
 
             linkView.addTools(toolsView);
         });
 
         this.paper.on('link:mouseleave', (linkView: joint.dia.LinkView) => {
-
             // Remove only the hover tool, not the pointerdown tool
             if (linkView.hasTools('link-hover')) {
                 linkView.removeTools();
             }
         });
 
-        this.graph.on('change', (cell: joint.dia.Cell, opt: any ) => {
-            if (!cell.isLink() || !opt.inspector) { return; }
+        this.graph.on('change', (cell: joint.dia.Cell, opt: any) => {
+            if (!cell.isLink() || !opt.inspector) {
+                return;
+            }
 
             const ns = joint.linkTools;
             const toolsView = new joint.dia.ToolsView({
                 name: 'link-inspected',
-                tools: [
-                    new ns.Boundary({ padding: 15 }),
-                ]
+                tools: [new ns.Boundary({ padding: 15 })]
             });
 
             cell.findView(this.paper).addTools(toolsView);
@@ -307,8 +306,7 @@ class DmsCanvasService {
     }
 
     initializeNavigator() {
-
-        const navigator = this.navigator = new joint.ui.Navigator({
+        const navigator = (this.navigator = new joint.ui.Navigator({
             width: 191,
             height: 125,
             paperScroller: this.paperScroller,
@@ -318,15 +316,16 @@ class DmsCanvasService {
                 sorting: joint.dia.Paper.sorting.NONE,
                 elementView: appShapes.NavigatorElementView,
                 linkView: appShapes.NavigatorLinkView,
-                cellViewNamespace: { /* no other views are accessible in the navigator */ }
+                cellViewNamespace: {
+                    /* no other views are accessible in the navigator */
+                }
             }
-        });
+        }));
 
         this.renderPlugin('.navigator-container', navigator);
     }
 
     initializeToolbar() {
-
         this.toolbarService.create(this.commandManager, this.paperScroller);
 
         this.toolbarService.toolbar.on({
@@ -346,12 +345,13 @@ class DmsCanvasService {
 
     applyOnSelection(method: string) {
         this.graph.startBatch('selection');
-        this.selection.collection.models.forEach((model: any) => { model[method](); });
+        this.selection.collection.models.forEach((model: any) => {
+            model[method]();
+        });
         this.graph.stopBatch('selection');
     }
 
     changeSnapLines(checked: boolean) {
-
         if (checked) {
             this.snaplines.startListening();
             this.stencilService.stencil.options.snaplines = this.snaplines;
@@ -363,13 +363,10 @@ class DmsCanvasService {
     }
 
     initializeKeyboardShortcuts() {
-
-        this.keyboardService.create(
-            this.graph, this.clipboard, this.selection, this.paperScroller, this.commandManager);
+        this.keyboardService.create(this.graph, this.clipboard, this.selection, this.paperScroller, this.commandManager);
     }
 
     initializeTooltips(): joint.ui.Tooltip {
-
         return new joint.ui.Tooltip({
             rootTarget: document.body,
             target: '[data-tooltip]',
@@ -382,40 +379,43 @@ class DmsCanvasService {
     exportStylesheet = '.scalable * { vector-effect: non-scaling-stroke }';
 
     openAsSVG() {
-
-        this.paper.hideTools().toSVG((svg: string) => {
-            new joint.ui.Lightbox({
-                image: 'data:image/svg+xml,' + encodeURIComponent(svg),
-                downloadable: true,
-                fileName: 'Rappid'
-            }).open();
-            this.paper.showTools();
-        }, {
-            preserveDimensions: true,
-            convertImagesToDataUris: true,
-            useComputedStyles: false,
-            stylesheet: this.exportStylesheet
-        });
+        this.paper.hideTools().toSVG(
+            (svg: string) => {
+                new joint.ui.Lightbox({
+                    image: 'data:image/svg+xml,' + encodeURIComponent(svg),
+                    downloadable: true,
+                    fileName: 'Rappid'
+                }).open();
+                this.paper.showTools();
+            },
+            {
+                preserveDimensions: true,
+                convertImagesToDataUris: true,
+                useComputedStyles: false,
+                stylesheet: this.exportStylesheet
+            }
+        );
     }
 
     openAsPNG() {
-
-        this.paper.hideTools().toPNG((dataURL: string) => {
-            new joint.ui.Lightbox({
-                image: dataURL,
-                downloadable: true,
-                fileName: 'Rappid'
-            }).open();
-            this.paper.showTools();
-        }, {
-            padding: 10,
-            useComputedStyles: false,
-            stylesheet: this.exportStylesheet
-        });
+        this.paper.hideTools().toPNG(
+            (dataURL: string) => {
+                new joint.ui.Lightbox({
+                    image: dataURL,
+                    downloadable: true,
+                    fileName: 'Rappid'
+                }).open();
+                this.paper.showTools();
+            },
+            {
+                padding: 10,
+                useComputedStyles: false,
+                stylesheet: this.exportStylesheet
+            }
+        );
     }
 
     onMousewheel(cellView: joint.dia.CellView, evt: joint.dia.Event, ox: number, oy: number, delta: number) {
-
         if (this.keyboardService.keyboard.isActive('alt', evt)) {
             evt.preventDefault();
             this.paperScroller.zoom(delta * 0.2, { min: 0.2, max: 5, grid: 0.2, ox, oy });
@@ -440,27 +440,37 @@ class DmsCanvasService {
     // You need to make sure, the Chakra components you use document.getElementsByClassName to find the dom association
     // Because Chakra components are Javascript by design and not HTML ELEMENTS.
     renderPlugin(selector: string, plugin: any): void {
-        if(selector === 'stencil-container') {
+        if (selector === 'stencil-container') {
             document.getElementsByClassName(selector)[0].appendChild(plugin.el);
             plugin.render();
-                const stencilElement = document.getElementsByClassName(selector)[0];
-                const toggleElement = stencilElement?.getElementsByClassName('groups-toggle')[0];
-                toggleElement?.parentNode?.removeChild(toggleElement);
-                const searchElement = stencilElement?.getElementsByClassName("search-wrap")[0];
-                const toggleElement1 = toggleElement || "";
-                searchElement?.after(toggleElement1);
-                const groupLabel = stencilElement?.getElementsByClassName("group-label")[0];
-                groupLabel?.parentNode?.removeChild(groupLabel);
-                const expandBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn btn-expand')[0] as HTMLButtonElement;
-                expandBtn.innerHTML = (`<div>Expand All<span class='v-line-new'></span></div>`);
-                const collapseBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn btn-collapse')[0] as HTMLButtonElement;
-                collapseBtn.innerHTML = (`<div class="collapseButtonReSpace">Collapse All</div>`);
-
+            const stencilElement = document.getElementsByClassName(selector)[0];
+            const toggleElement = stencilElement?.getElementsByClassName('groups-toggle')[0];
+            toggleElement?.parentNode?.removeChild(toggleElement);
+            const searchElement = stencilElement?.getElementsByClassName('search-wrap')[0];
+            const toggleElement1 = toggleElement || '';
+            searchElement?.after(toggleElement1);
+            const groupLabel = stencilElement?.getElementsByClassName('group-label')[0];
+            groupLabel?.parentNode?.removeChild(groupLabel);
+            const expandBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn btn-expand')[0] as HTMLButtonElement;
+            expandBtn.innerHTML = `<div>Expand All<span class='v-line-new'></span></div>`;
+            const collapseBtn: HTMLButtonElement = stencilElement?.getElementsByClassName('btn btn-collapse')[0] as HTMLButtonElement;
+            collapseBtn.innerHTML = `<div class="collapseButtonReSpace">Collapse All</div>`;
+        } else if (selector === '.navigator-container') {
+            const totalElements: any = this.el.querySelector(selector)?.childElementCount;
+            if (totalElements < 1) {
+                this.el.querySelector(selector)?.appendChild(plugin.el);
+                plugin.render();
+            }
+        } else if (selector === '.paper-container') {
+            const totalElements: any = this.el.querySelector(selector)?.childElementCount;
+            if (totalElements < 1) {
+                this.el.querySelector(selector)?.appendChild(plugin.el);
+                plugin.render();
+            }
         } else {
             this.el.querySelector(selector)?.appendChild(plugin.el);
             plugin.render();
         }
-
     }
 }
 
