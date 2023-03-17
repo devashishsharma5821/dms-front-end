@@ -52,7 +52,7 @@ const ProjectDetailsGrid = (props: any) => {
         navigate(`/experiment/${id}`);
     }
     const navigateToDataset = (id: any) => {
-        navigate(`/dataset/${id}`);
+        navigate(`/datasetDetails/${id}`);
     }
     const renderExperimentId = (params: any) => {
         return (

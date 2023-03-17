@@ -71,8 +71,8 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteDatasetIcon color="#99A1B2" />,
                 iconName: 'Dataset',
-                route: '/notfound',
-                disabled: true
+                route: '/dataset',
+                disabled: false
             }
         ]
     },
