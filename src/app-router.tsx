@@ -32,7 +32,7 @@ export const AppRouter = (props: any) => {
                                     <Routes>
                                         <Route path="/" element={<Navigate to="/compute" />}></Route>
                                         <Route path="/home" element={<HomePage />} />
-                                        <Route path="/experiment" element={<ExperimentsPage />} />
+                                        <Route path="/experiment/:experimentId" element={<ExperimentsPage />} />
                                         <Route path="/notfound" element={<PageNotFound />} />
                                         <Route path="/notebook" element={<Notebook />} />
                                         <Route path="/compute" element={<Compute />} />

@@ -1,5 +1,3 @@
-import { TransformerDetail } from './transformerDetail';
-
 export interface CreateProject {
     id: string;
     name: string;

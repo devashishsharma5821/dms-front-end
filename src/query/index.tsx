@@ -465,5 +465,37 @@ export const uploadCSVDataset = () => {
 // Dataset APIs End Here
 
 // Experiment APIs Start here
-        // PUt experiment in here
+export const createExperiment = (variables: any) => {
+    return gql `mutation {
+  dmsCreateExperiment(
+    project_id: "${variables.projectSelected}"
+    name: "${variables.experimentName}"
+  )
+}`;
+}
+export const GET_EXPERIMENT = (experiment_id: string) => {
+    return gql`
+  query {
+  dmsExperiment(experiment_id: ${experiment_id}) {
+    id
+    name
+    description
+    tags
+    core
+    display
+    outputs {
+      name
+      type
+    }
+    status
+    created_by
+    created_at
+    modified_at
+    is_deployed
+    related_experiment_id
+    related_experiment_name
+  }
+}
+`;
+};
 // Experiment APIs End here
