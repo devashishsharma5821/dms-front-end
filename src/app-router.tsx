@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense } from 'react';
 import Header from '../src/component/header/Header';
-import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage, ProjectDetails, ComputeDetails } from './pages';
+import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage, ProjectDetails, ComputeDetails, Dataset } from './pages';
 import { Box, Spinner } from '@chakra-ui/react';
 import SideBarMenu from './component/sideBarMenu/SideBarMenu';
 import { User } from './models/profile';
@@ -39,6 +39,7 @@ export const AppRouter = (props: any) => {
                                         <Route path="/project" element={<Project />} />
                                         <Route path="/projectDetails/:projectId" element={<ProjectDetails />} />
                                         <Route path="/computedetails/:computeId" element={<ComputeDetails />} />
+                                        <Route path="/dataset" element={<Dataset />} />
                                     </Routes>
                                 </Box>
                             </ContextCompute>
