@@ -25,6 +25,7 @@ import SourceCSV from '../../../assets/icons/SourceCSV';
 import useAppStore from '../../../store';
 import { GetAllProjectsAppStoreState } from '../../../models/project';
 import { getAndUpdateAllProjectsData } from '../../../zustandActions/projectActions';
+import { getProjectNameAndLabelsForSelect } from '../../../utils/common.utils';
 
 const CreateDatasetFormScreen = (props: any) => {
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -92,13 +93,7 @@ const CreateDatasetFormScreen = (props: any) => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
-            const projectsName = AllProjectsData.map(project => {
-                return {
-                    name: project.name,
-                    id: project.id
-                }
-            })
-            setProjectNames(projectsName);
+            setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
         }
     }, [AllProjectsData]);
     return (

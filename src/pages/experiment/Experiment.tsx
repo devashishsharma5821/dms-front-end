@@ -30,16 +30,22 @@ import { TransformersAppStoreState } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
 import { shapes } from '@antuit/rappid-v1';
 import { updateDmsComputeData } from '../../zustandActions/computeActions';
-import { updateDmsDatabricksCredentialsValidToken } from '../../zustandActions/commonActions';
+import { updateDmsDatabricksCredentialsValidToken, updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { hasSubscribed, submitMessage } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
 import ZoomComponent from '../../component/zoomer/Zoomer';
 import { newComputeData } from '../compute/generateNewComputeData';
 import Details from '../../component/details/Details';
-
+import { useParams } from 'react-router-dom';
+import { GetSingleProjectAppStoreState } from '../../models/project';
+import { GetExperimentAppStoreState } from '../../models/experimentModel';
+import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { getFormattedUserData } from '../../utils/common.utils';
+import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 const ExperimentsPage = () => {
     // New Consts For the new Experiment Page I am designing.
+    const params = useParams();
     const elementRef = React.useRef<HTMLDivElement>(null);
     const [DmsComputeData, UserConfig, connectionState, selectedStageId] = useAppStore((state: ExperimentAppStoreState) => [
         state.DmsComputeData,
@@ -77,6 +83,9 @@ const ExperimentsPage = () => {
     const transformerMenuDrawer = useDisclosure();
     const [rappidData, setRappidData] = React.useState<DmsCanvasService>();
     const [drawerInitialized, setDrawerInitialzed] = React.useState<boolean>(false);
+
+
+    const [ExperimentData] = useAppStore((state: GetExperimentAppStoreState) => [state.ExperimentData]);
 
     let dmsComputeRunningStatusIsDefaultOne;
 
@@ -129,6 +138,15 @@ const ExperimentsPage = () => {
         }
     }, [DmsComputeData]);
 
+    useEffect(() => {
+        updateSpinnerInfo(true);
+        if (ExperimentData === null || params.experimentId !== ExperimentData.id) {
+            getAndUpdateExperimentData(params.experimentId as string);
+        } else {
+            updateSpinnerInfo(false);
+            console.log('Experiment Data is avaiable',ExperimentData);
+        }
+    }, [ExperimentData]);
     const createCanvasSchemaFromTransformersData = () => {
         let transformerData = cloneDeep(TransformersData);
         let transformersGroup: any = {};

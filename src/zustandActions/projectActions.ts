@@ -13,7 +13,6 @@ export const getAndUpdateAllProjectsData: getAndUpdateAllProjectsDataType = asyn
     const response = await client.query<GetAllProjects<Array<GetAllProjectsDetail>>>({
         query: GET_ALL_PROJECTS
     });
-    const allProjectsData = response.data.dmsProjects;
     useAppStore.setState(() => ({ AllProjectsData: response.data.dmsProjects }));
 };
 export const updateAllProjectsData: updateAllProjectsDataType = (AllProjectsData) => useAppStore.setState(() => ({ AllProjectsData: AllProjectsData }));

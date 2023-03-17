@@ -1,6 +1,15 @@
 import { AllUsers } from '../models/profile';
-import { GetSingleProjectDetail } from '../models/project';
+import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project';
 
+export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDetail[] ) => {
+    const projectsName = projectList.map(project => {
+        return {
+            name: project.name,
+            id: project.id
+        }
+    });
+    return projectsName;
+};
 export const copyToClipBoard = (copyMessage: string, callBack: any) => {
     navigator.clipboard.writeText(copyMessage).then(() => {
             callBack();

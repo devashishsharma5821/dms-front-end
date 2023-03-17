@@ -16,11 +16,13 @@ import { TransformerInfo } from './transformer';
 import { GetAllProjectsDetail, GetSingleProjectDetail } from './project';
 import { AllUsers } from './profile';
 import { AnyRecord } from 'dns';
+import { Experiment } from './experimentModel';
 
 export interface AppState {
     i18n: any;
     config: any;
     AllUsersData: any;
+    ExperimentData: any;
     DmsDatabricksCredentialsValidToken: boolean;
     DmsComputeData: any;
     TransformersData: any;
@@ -49,6 +51,7 @@ export interface AppState {
 export type updateI18N = (translation: {}) => void;
 export type updateAppConfig = (config: {}) => void;
 export type updateAllUsersData = (allUsersData: AllUsers[]) => void;
+export type updateExperimentData = (experimentData: Experiment) => void;
 export type updateDmsDatabricksCredentialsValidToken = (token: boolean) => void;
 export type updateDmsComputeData = (computeData: DmsComputeData[]) => void;
 export type updateTransformersData = (transformersData: TransformerInfo[]) => void;
@@ -62,6 +65,7 @@ export type hasSubscribed = () => void;
 export type disconnected = () => void;
 export type startConnecting = () => void;
 export type getAndUpdateAllUsersData = (variables: any) => void;
+export type getAndUpdateExperimentData = (experiment_id: string) => void;
 export type setComputeState = (value: string) => void;
 export type getAndUpdateDmsComputeData = () => void;
 export type getAndUpdateDbSettingsData = () => void;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Divider,
@@ -18,10 +18,20 @@ import {
     Select,
     Avatar,
     Input,
-    VStack
+    VStack, createStandaloneToast
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
+import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
+import { getProjectNameAndLabelsForSelect } from '../../utils/common.utils';
+import useAppStore from '../../store';
+import {  GetAllProjectsAppStoreState } from '../../models/project';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import client from '../../apollo-client';
+import { createExperiment } from '../../query';
+import { getToastOptions } from '../../models/toastMessages';
+import { ExperimentCreate, ExperimentCreateDetail } from '../../models/experimentModel';
+import { useNavigate } from 'react-router-dom';
 // import CreateProjectModal from './CreateProjectModal';
 
 const ExperimentModal = (props: any) => {
@@ -30,7 +40,55 @@ const ExperimentModal = (props: any) => {
     const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
-
+    const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
+    const [formFields, setFormFields] = useState({});
+    const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
+    const [projectSelected, setProjectSelected] = useState('');
+    const [experimentName, setExperimentName] = useState('');
+    const { toast } = createStandaloneToast();
+    const navigate = useNavigate();
+    const handleProjectChange = (evt: any) => {
+        setProjectSelected(evt.target.value);
+        const formFields = {
+            experimentName,
+            projectSelected: evt.target.value
+        };
+        setFormFields(formFields);
+    };
+    const handleExperimentNameChange = (evt: any) => {
+        setExperimentName(evt.target.value);
+        const formFields = {
+            experimentName: evt.target.value,
+            projectSelected: projectSelected
+        };
+        setFormFields(formFields);
+    };
+    const handleExperimentCreate = () => {
+        updateSpinnerInfo(true);
+        client
+            .mutate<ExperimentCreate<ExperimentCreateDetail>>({
+                mutation: createExperiment(formFields)
+            })
+            .then(() => {
+                toast(getToastOptions(`Experiment has being successfully created`, 'success'));
+                getAndUpdateAllProjectsData();
+                updateSpinnerInfo(false);
+                navigate(`/project`);
+                setFormFields({});
+                props.onClose();
+            })
+            .catch((err) => {
+                updateSpinnerInfo(false);
+                toast(getToastOptions(`${err}`, 'error'));
+            });
+    };
+    useEffect(() => {
+        if (AllProjectsData === null) {
+            getAndUpdateAllProjectsData();
+        } else {
+            setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
+        }
+    }, [AllProjectsData]);
     return (
         <Modal size={'md'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
@@ -60,17 +118,12 @@ const ExperimentModal = (props: any) => {
                                     id="existingProject"
                                     name="existingProject"
                                     variant="outline"
-                                    validate={(value: any) => {
-                                        let error;
-                                        if (value.length === 0) {
-                                            error = ' Select here';
-                                        }
-                                        return error;
-                                    }}
+                                    onChange={handleProjectChange}
                                 >
                                     <>
-                                        <option>Project 1</option>
-                                        <option>Project 2</option>
+                                        {projectNames.map((project, projectIndex) => {
+                                            return <option key={projectIndex} value={project.id}>{project.name}</option>
+                                        })}
                                     </>
                                 </Select>
                             </Box>
@@ -120,6 +173,8 @@ const ExperimentModal = (props: any) => {
                                         id="projectName"
                                         name="projectName"
                                         variant="outline"
+                                        value={experimentName}
+                                        onChange={handleExperimentNameChange}
                                     />{' '}
                                 </FormControl>
                                 <Flex>
@@ -144,36 +199,28 @@ const ExperimentModal = (props: any) => {
                                         </Center>
                                     </Flex>
                                 </Box>
-
-                                <FormControl isRequired>
-                                    <FormLabel htmlFor="existingCompute" color={projectTitleColor} mt={12} fontWeight={600}>
-                                        Link To
-                                    </FormLabel>
-                                    <Select
-                                        icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}
-                                        borderRadius={3}
-                                        width={612}
-                                        height={'36px'}
-                                        border={'1px'}
-                                        borderColor={'light.lighterGrayishBlue'}
-                                        as={Select}
-                                        id="existingProject"
-                                        name="existingProject"
-                                        variant="outline"
-                                        validate={(value: any) => {
-                                            let error;
-                                            if (value.length === 0) {
-                                                error = ' Select here';
-                                            }
-                                            return error;
-                                        }}
-                                    >
-                                        <>
-                                            <option>Link 1</option>
-                                            <option>Link 2</option>
-                                        </>
-                                    </Select>
-                                </FormControl>
+                                {/*<FormControl isRequired>*/}
+                                {/*    <FormLabel htmlFor="existingCompute" color={projectTitleColor} mt={12} fontWeight={600}>*/}
+                                {/*        Link To*/}
+                                {/*    </FormLabel>*/}
+                                {/*    <Select*/}
+                                {/*        icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}*/}
+                                {/*        borderRadius={3}*/}
+                                {/*        width={612}*/}
+                                {/*        height={'36px'}*/}
+                                {/*        border={'1px'}*/}
+                                {/*        borderColor={'light.lighterGrayishBlue'}*/}
+                                {/*        as={Select}*/}
+                                {/*        id="existingProject"*/}
+                                {/*        name="existingProject"*/}
+                                {/*        variant="outline"*/}
+                                {/*    >*/}
+                                {/*        <>*/}
+                                {/*            <option>Link 1</option>*/}
+                                {/*            <option>Link 2</option>*/}
+                                {/*        </>*/}
+                                {/*    </Select>*/}
+                                {/*</FormControl>*/}
                                 <FormControl>
                                     <FormLabel htmlFor="Description" mt={12} mb={6} color={projectTitleColor} fontWeight={600}>
                                         Description
@@ -228,6 +275,7 @@ const ExperimentModal = (props: any) => {
                         height={'40px'}
                         borderRadius={4}
                         ml={'20px'}
+                        onClick={handleExperimentCreate}
                     >
                         Create
                     </Button>

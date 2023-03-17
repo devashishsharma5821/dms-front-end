@@ -7,6 +7,7 @@ const useAppStore = create<AppState>((set) => ({
     DmsDatabricksCredentialsValidToken: false,
     AllUsersData: null,
     DmsComputeData: null,
+    ExperimentData: null,
     TransformersData: null,
     AllProjectsData: null,
     SingleProjectData: null,

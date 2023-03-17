@@ -41,9 +41,6 @@ import { deleteProject, editProject } from '../../../query';
 import Share from '../../../component/modalSystem/Share';
 import LeftArrow from '../../../assets/LeftArrow';
 import { getToastOptions } from '../../../models/toastMessages';
-import { OutputDetail } from '../../../models/outputDetail';
-import { AgGridReact } from 'ag-grid-react';
-import { ColDef } from 'ag-grid-community';
 import ProjectDetailsGrid from './detailsGridComponent';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -537,7 +534,7 @@ const ProjectDetails = (props: any) => {
                             </Flex>
                         </Box>
                         <Box mt={'20px'}>
-                            <ProjectDetailsGrid gridData={SingleProjectData.datasources} projectId={SingleProjectData.basic.id}></ProjectDetailsGrid>
+                            <ProjectDetailsGrid gridData={SingleProjectData} projectId={SingleProjectData.basic.id}></ProjectDetailsGrid>
                         </Box>
                     </Box>
                 </Box>
