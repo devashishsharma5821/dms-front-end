@@ -19,10 +19,7 @@ const ProjectsViews = (props: any) => {
     const navigateToDetails = (id: string) => {
         navigate(`/projectDetails/${id}`);
     };
-    const [windowSize, setWindowSize] = React.useState([
-        window.innerWidth,
-        window.innerHeight,
-    ]);
+    const [windowSize, setWindowSize] = React.useState([window.innerWidth, window.innerHeight]);
 
     useEffect(() => {
         const handleWindowResize = () => {
@@ -35,7 +32,18 @@ const ProjectsViews = (props: any) => {
     });
     return (
         <>
-            <Box border={'1px solid'} borderColor={'light.lighterGrayishBlue'} overflowX={'hidden'}  overflowY={'scroll'} borderRadius={8} width={'100%'} height={windowSize[1] - 270} mt={'16'} pb={'16'} pl={10}>
+            <Box
+                border={'1px solid'}
+                borderColor={'light.lighterGrayishBlue'}
+                overflowX={'hidden'}
+                overflowY={'scroll'}
+                borderRadius={8}
+                width={'100%'}
+                height={windowSize[1] - 270}
+                mt={'16'}
+                pb={'16'}
+                pl={10}
+            >
                 {' '}
                 <Flex ml={'24'} mt={'21'} mb={'3'}>
                     <Center>
@@ -136,7 +144,14 @@ const ProjectsViews = (props: any) => {
                                             )}
                                             {project.project_access && project.project_access.length === 0 && (
                                                 <Box ml={'20px'} mb={'10px'} mt={'10px'} height={'62px'}>
-                                                    <Avatar mr={'6'} p={'5px'} borderRadius="full" boxSize="32px" name={getUserNameFromId(AllUsersData, project.created_by)} color={'default.whiteText'} />
+                                                    <Avatar
+                                                        mr={'6'}
+                                                        p={'5px'}
+                                                        borderRadius="full"
+                                                        boxSize="32px"
+                                                        name={getUserNameFromId(AllUsersData, project.created_by)}
+                                                        color={'default.whiteText'}
+                                                    />
                                                 </Box>
                                             )}
                                         </Box>
