@@ -534,7 +534,7 @@ const ProjectDetails = (props: any) => {
                             </Flex>
                         </Box>
                         <Box mt={'20px'}>
-                            <ProjectDetailsGrid gridData={SingleProjectData.datasources} projectId={SingleProjectData.basic.id}></ProjectDetailsGrid>
+                            <ProjectDetailsGrid gridData={SingleProjectData} projectId={SingleProjectData.basic.id}></ProjectDetailsGrid>
                         </Box>
                     </Box>
                 </Box>
