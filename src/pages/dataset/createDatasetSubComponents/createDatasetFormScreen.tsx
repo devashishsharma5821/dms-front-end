@@ -103,6 +103,8 @@ const CreateDatasetFormScreen = (props: any) => {
             getAndUpdateAllProjectsData();
         } else {
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
+            setProjectAccess(getProjectAccessList(AllProjectsData, projectSelected));
+
 
         }
     }, [AllProjectsData]);
@@ -240,7 +242,7 @@ const CreateDatasetFormScreen = (props: any) => {
                         </Center>
                     </Flex>
                     {
-                        AllUsersData &&
+                        AllUsersData && AllProjectsData &&
                         <Flex>
                             <Center>
                                 <AvatarGroup size={'md'} max={3} spacing={1}>
