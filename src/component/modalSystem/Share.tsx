@@ -52,11 +52,11 @@ const Share = (props: any) => {
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const params = useParams();
-    const userOptions = AllUsersData.map((user) => ({ label: user.email, value: user.email }));
+    const userOptions = AllUsersData?.map((user) => ({ label: user.email, value: user.email }));
     const [userValue, setUserValue] = React.useState([]);
     const { toast } = createStandaloneToast();
     useEffect(() => {
-        if (props.retainData.length > 0) {
+        if (props.retainData?.length > 0) {
             setAccessUserList(props.retainData);
         }
         if (props.isEdit) {
@@ -188,7 +188,9 @@ const Share = (props: any) => {
         if (props.isEdit) {
             props.onClose();
         } else {
-            props.onCreateUserAccess(accessUserList);
+            if(accessUserList?.length > 0) {
+                props.onCreateUserAccess(accessUserList);
+            }
             props.onClose();
         }
     };
