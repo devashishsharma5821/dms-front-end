@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Avatar,
+    Avatar, AvatarGroup,
     Box,
     Button,
     Center,
@@ -25,8 +25,9 @@ import SourceCSV from '../../../assets/icons/SourceCSV';
 import useAppStore from '../../../store';
 import { GetAllProjectsAppStoreState } from '../../../models/project';
 import { getAndUpdateAllProjectsData } from '../../../zustandActions/projectActions';
-import { getProjectNameAndLabelsForSelect } from '../../../utils/common.utils';
+import { getProjectAccessList, getProjectNameAndLabelsForSelect, getUserNameFromId } from '../../../utils/common.utils';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
+import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
 
 const CreateDatasetFormScreen = (props: any) => {
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -35,7 +36,9 @@ const CreateDatasetFormScreen = (props: any) => {
     const [projectSelected, setProjectSelected] = useState('');
     const [formFields, setFormFields] = useState({});
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
+    const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
     const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
+    const [projectAccess, setProjectAccess] = React.useState<any>([]);
     const projectModal = useDisclosure();
     const handleDataSetNameChange = (evt: any) => {
         setDatasetName(evt.target.value);
@@ -53,6 +56,7 @@ const CreateDatasetFormScreen = (props: any) => {
             projectSelected: evt.target.value
         };
         setFormFields(formFields);
+        setProjectAccess(getProjectAccessList(AllProjectsData, evt.target.value));
         props.handleFormFields(formFields);
     };
     const triggerAction = (type: string) => {
@@ -99,8 +103,16 @@ const CreateDatasetFormScreen = (props: any) => {
             getAndUpdateAllProjectsData();
         } else {
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
+
         }
     }, [AllProjectsData]);
+
+    useEffect(() => {
+        if (AllUsersData === null) {
+            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
+            getAndUpdateAllUsersData(variablesForAllUsers);
+        }
+    }, [AllUsersData]);
 
     const handleProjectCreate = () => {
         projectModal.onOpen();
@@ -227,11 +239,19 @@ const CreateDatasetFormScreen = (props: any) => {
                             </Text>
                         </Center>
                     </Flex>
-                    <Flex>
-                        <Center>
-                            <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`Shirin Bampoori`} color={'default.whiteText'} mt={'-14px'} />
-                        </Center>
-                    </Flex>
+                    {
+                        AllUsersData &&
+                        <Flex>
+                            <Center>
+                                <AvatarGroup size={'md'} max={3} spacing={1}>
+                                    {projectAccess.map((access: any, accessIndex: any) => {
+                                        return <Avatar key={accessIndex} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
+                                    })}
+                                </AvatarGroup>
+                            </Center>
+                        </Flex>
+                    }
+
                 </Box>
 
                 <Stack direction="row" h="338px" p={4}>
