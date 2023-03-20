@@ -462,6 +462,12 @@ export const uploadCSVDataset = () => {
         )
     }`;
 }
+
+export const deleteDataset = (variables: any) => {
+    return gql `mutation {
+        dmsDeleteDatabricksDBFS(project_id: ${variables.projectId}, dataset_name: ${variables.datasetName})
+    }`;
+}
 // Dataset APIs End Here
 
 // Experiment APIs Start here

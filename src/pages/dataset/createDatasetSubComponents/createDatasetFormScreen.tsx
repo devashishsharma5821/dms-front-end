@@ -12,7 +12,7 @@ import {
     Select,
     Stack,
     Text,
-    useColorModeValue,
+    useColorModeValue, useDisclosure,
     VStack
 } from '@chakra-ui/react';
 import { DownArrowShare } from '../../../assets/icons/DownArrowShare';
@@ -26,6 +26,7 @@ import useAppStore from '../../../store';
 import { GetAllProjectsAppStoreState } from '../../../models/project';
 import { getAndUpdateAllProjectsData } from '../../../zustandActions/projectActions';
 import { getProjectNameAndLabelsForSelect } from '../../../utils/common.utils';
+import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 
 const CreateDatasetFormScreen = (props: any) => {
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -35,6 +36,7 @@ const CreateDatasetFormScreen = (props: any) => {
     const [formFields, setFormFields] = useState({});
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
     const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
+    const projectModal = useDisclosure();
     const handleDataSetNameChange = (evt: any) => {
         setDatasetName(evt.target.value);
         const formFields = {
@@ -69,9 +71,10 @@ const CreateDatasetFormScreen = (props: any) => {
                 {
                     name: 'Databricks Tables',
                     icon: <SourceDatabricks color={'#666C80'} />,
-                    type: 'icon'
+                    type: 'icon',
+                    disable: true,
                 },
-                { name: 'Azure Blob Storage', icon: <SourceAzure color={'#666C80'} />, type: 'icon' }
+                { name: 'Azure Blob Storage', icon: <SourceAzure color={'#666C80'} />, type: 'icon',  disable: true, }
             ]
         },
         {
@@ -79,12 +82,14 @@ const CreateDatasetFormScreen = (props: any) => {
                 {
                     name: 'DBFS',
                     icon: <SourceDBFS color={'#666C80'} />,
-                    type: 'icon'
+                    type: 'icon',
+                    disable: true,
                 },
                 {
-                    name: 'Upload CSV',
+                    name: 'Upload CSV OR PARQUET',
                     icon: <SourceCSV color={'#666C80'} />,
-                    type: 'icon'
+                    type: 'icon',
+                    disable: false,
                 }
             ]
         }
@@ -96,6 +101,16 @@ const CreateDatasetFormScreen = (props: any) => {
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
         }
     }, [AllProjectsData]);
+
+    const handleProjectCreate = () => {
+        projectModal.onOpen();
+    };
+
+    const onCreateProjectSuccess = (projectName: any, projectId: any) => {
+        setProjectSelected(projectId);
+        projectModal.onClose();
+    };
+
     return (
         <>
             <Flex>
@@ -118,6 +133,7 @@ const CreateDatasetFormScreen = (props: any) => {
                                 name="existingCompute"
                                 variant="outline"
                                 onChange={handleProjectChange}
+                                value={projectSelected}
                             >
                                 <>
                                     {projectNames.map((project, projectIndex) => {
@@ -136,7 +152,7 @@ const CreateDatasetFormScreen = (props: any) => {
                             Create New Project
                         </Text>
 
-                        <Button width={'127px'} height={'36px'} mt={18} color={'default.toolbarButton'} bg={'white'} border={'1px'} borderColor={'default.toolbarButton'}>
+                        <Button onClick={handleProjectCreate} width={'127px'} height={'36px'} mt={18} color={'default.toolbarButton'} bg={'white'} border={'1px'} borderColor={'default.toolbarButton'}>
                             Create Project
                         </Button>
                     </Box>
@@ -239,6 +255,7 @@ const CreateDatasetFormScreen = (props: any) => {
                                                         <Box
                                                             key={section.name}
                                                             _hover={{ bg: 'default.toolbarButton', color: 'white' }}
+                                                            cursor={(section.disable) ? 'not-allowed': 'pointer'}
                                                             ml={'20px'}
                                                             bg="default.lightGray"
                                                             width={'155px'}
@@ -248,9 +265,9 @@ const CreateDatasetFormScreen = (props: any) => {
                                                             borderRadius={'4'}
                                                             onClick={() => triggerAction(section.name)}
                                                         >
-                                                            <Center mt={'35px'}>{section.icon}</Center>
+                                                            <Center cursor={(section.disable) ? 'not-allowed': 'pointer'} mt={'35px'}>{section.icon}</Center>
 
-                                                            <Box textAlign={'center'} mt={'4px'} color={'black'} fontWeight={400}>
+                                                            <Box cursor={(section.disable) ? 'not-allowed': 'pointer'} textAlign={'center'} mt={'4px'} color={'black'} fontWeight={400}>
                                                                 {' '}
                                                                 {section.name}{' '}
                                                             </Box>
@@ -265,6 +282,14 @@ const CreateDatasetFormScreen = (props: any) => {
                         </Box>
                     </Center>
                 </Flex>
+                {projectModal.isOpen && (
+                    <CreateProjectModal
+                        isOpen={projectModal.isOpen}
+                        onClose={projectModal.onClose}
+                        onSuccess={onCreateProjectSuccess}
+                        isEdit={{ status: false, data: {}, usersData: [] }}
+                    />
+                )}
             </Flex>
         </>
     );
