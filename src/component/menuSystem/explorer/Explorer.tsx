@@ -65,7 +65,7 @@ const Explorer = (props: any) => {
                         subMenuForExplorer.map((section: any, sectionIndex: number) => {
                             return (
                                 <Box>
-                                    <Accordion defaultIndex={[0]} allowMultiple>
+                                    <Accordion allowMultiple>
                                         <AccordionItem>
                                             <h2>
                                                 <AccordionButton>

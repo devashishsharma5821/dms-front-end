@@ -59,7 +59,7 @@ const ProjectDetailsMenu = (props: any) => {
                         { menuForProjectDetails && menuForProjectDetails.map((section: any, sectionIndex: any) => {
                             return (
                                 <Box>
-                                    <Accordion defaultIndex={[0]} allowMultiple>
+                                    <Accordion allowMultiple>
                                         <AccordionItem>
                                             <h2>
                                                 <AccordionButton>
