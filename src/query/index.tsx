@@ -351,11 +351,11 @@ export const GET_ALL_PROJECTS = gql`
             project_variables
             tags
             description
-             project_access {
-            id
-            user_id
-            access_level
-          }
+            project_access {
+                id
+                user_id
+                access_level
+            }
         }
     }
 `;
@@ -405,7 +405,7 @@ export const GET_SINGLE_PROJECT = (id: string) => {
 };
 
 export const createProject = (variables: any) => {
-    const tags = (variables.tags !== null && variables.tags !== "") ? variables.tags.split(',') : [];
+    const tags = variables.tags !== null && variables.tags !== '' ? variables.tags.split(',') : [];
     return gql`mutation {
                 dmsCreateProject(
                     name: "${variables.name}",
@@ -429,14 +429,15 @@ export const editProject = (variables: any) => {
 };
 
 export const createAccess = () => {
-    return gql `
-    mutation dmsCreateAccess($input: DMSProjecAccessMutationInput!) {
-        dmsCreateOrUpdateProjectAccess(input: $input)
-}`;
+    return gql`
+        mutation dmsCreateAccess($input: DMSProjecAccessMutationInput!) {
+            dmsCreateOrUpdateProjectAccess(input: $input)
+        }
+    `;
 };
 
 export const deleteAccess = (variables: any) => {
-    return gql `
+    return gql`
     mutation {
     dmsDeleteProjectAccess
     (
@@ -447,32 +448,30 @@ export const deleteAccess = (variables: any) => {
 };
 
 export const deleteProject = (id: string) => {
-    return gql `mutation {
+    return gql`mutation {
         dmsDeleteProject(id: "${id}")
     }`;
-}
+};
 // Project APIs end here
 // Dataset APIs start here
 export const uploadCSVDataset = () => {
-    return gql `mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!) {
-        dmsDatabricksUploadDBFS(
-        file: $file,
-        project_id: $projectId,
-        dataset_name: $datasetName
-        )
-    }`;
-}
+    return gql`
+        mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!) {
+            dmsDatabricksUploadDBFS(file: $file, project_id: $projectId, dataset_name: $datasetName)
+        }
+    `;
+};
 // Dataset APIs End Here
 
 // Experiment APIs Start here
 export const createExperiment = (variables: any) => {
-    return gql `mutation {
+    return gql`mutation {
   dmsCreateExperiment(
     project_id: "${variables.projectSelected}"
     name: "${variables.experimentName}"
   )
 }`;
-}
+};
 export const GET_EXPERIMENT = (experiment_id: string) => {
     return gql`
   query {

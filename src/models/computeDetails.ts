@@ -1,3 +1,7 @@
+import { Experiment } from './experimentModel';
+import { SingleProjectData } from './transformer';
+import { TransformerDetail } from './transformerDetail';
+
 export class ComputeDetail {
     id!: string;
     name!: string;
@@ -147,6 +151,9 @@ export interface ExperimentAppStoreState {
     UserConfig: any;
     connectionState: { connected: boolean; subscribed: boolean };
     selectedStageId: null | string;
+    SingleProjectData: SingleProjectData;
+    ExperimentData: Experiment;
+    TransformersData: TransformerDetail[];
 }
 
 export interface SocketWrapperAppStoreState {

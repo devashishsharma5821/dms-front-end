@@ -1,11 +1,6 @@
 .spinner {
-    left: 47%;
     position: absolute;
-    text-align: center;
     z-index: 9999999;
-    top: 40%;
-    position: fixed;
-    z-index: 999;
     height: 2em;
     width: 2em;
     overflow: hidden;
@@ -23,7 +18,7 @@
 }
 
 .dividerStepsUI {
-    border-color: #2180C2;
+    border-color: #2180c2;
 }
 
 .computeIdCell {

@@ -120,7 +120,9 @@ class DmsCanvasService {
         // paper.on('blank:mousewheel', _.partial(this.onMousewheel, null), this);
         paper.on('cell:mousewheel', this.onMousewheel.bind(this));
 
-        paper.on('cell:pointerdown', function (cellView, evt, x, y) {});
+        paper.on('cell:pointerdown', function (cellView, evt, x, y) {
+            updateSelectedStageId(cellView?.model?.attributes?.attrs?.idOfTransformer);
+        });
 
         graph.on('add', function (cell, collection, opt) {
             updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
