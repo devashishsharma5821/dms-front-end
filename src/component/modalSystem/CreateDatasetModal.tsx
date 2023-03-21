@@ -18,13 +18,19 @@ import {
 } from '@chakra-ui/react';
 import FileUploadComponent from '../../pages/dataset/fileUpload/FileUploadComponent';
 import { AgGridReact } from 'ag-grid-react';
-import { OutputDetail } from '../../models/outputDetail';
 import { ColDef } from 'ag-grid-community';
 import { keys, startCase } from 'lodash';
 import { getToastOptions } from '../../models/toastMessages';
-import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import CreateDatasetFormScreen from '../../pages/dataset/createDatasetSubComponents/createDatasetFormScreen';
-
+import {
+    datasetPreviewSchema,
+    DeleteDataset,
+    DeleteDatasetDetail,
+} from '../../models/dataset';
+import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import client from '../../apollo-client';
+import { deleteDataset } from '../../query';
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
@@ -34,9 +40,13 @@ const CreateDataset = (props: any) => {
     const [datasetName, setDatasetName] = useState('');
     const [selectedProjectId, setSelectedProjectId] = useState('');
     const gridRef = useRef<AgGridReact<any>>(null);
-    const gridStyle = useMemo(() => ({ height: '500px', width: '100%' }), []);
+    const gridStyle = useMemo(() => ({ height: '300px', width: '856px' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
+    const gridRefSchema = useRef<AgGridReact<any>>(null);
+    const gridStyleSchema = useMemo(() => ({ height: '270px', width: '511px' }), []);
+    const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
+    const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
     const { toast } = createStandaloneToast();
     const [screenState, setScreenState] = useState({
         screen1: true,
@@ -44,11 +54,39 @@ const CreateDataset = (props: any) => {
         screen3: false
     });
 
-    const deleteDataset = () => {
-        toast(getToastOptions(`File Upload Cancelled`, 'error'));
+    const handleDeleteDataset = () => {
+        // TODO After backend adds the delete dataset Id as a input add the delete dataset mutation
+        if(screenState.screen3){
+            updateSpinnerInfo(true);
+            const deleteVariables = {
+                projectId: selectedProjectId,
+                datasetName: datasetName
+            };
+            client.mutate<DeleteDataset<DeleteDatasetDetail>>({
+                mutation: deleteDataset(deleteVariables)
+            }).then(() => {
+                toast(getToastOptions(`Dataset Delete Successfully`, 'success'));
+                getAndUpdateAllProjectsData();
+                getAndUpdateSingleProjectData(selectedProjectId);
+                setSelectedProjectId('');
+                setDatasetName('');
+                updateSpinnerInfo(false);
+                props.onClose();
+            })
+                .catch((err: any) => {
+                    updateSpinnerInfo(false);
+                    props.onClose();
+                    toast(getToastOptions(`${err}`, 'error'));
+                });
+        } else {
+            updateSpinnerInfo(false);
+            props.onClose();
+        }
     };
     const createDataset = () => {
-        getAndUpdateSingleProjectData('70');
+        getAndUpdateSingleProjectData(selectedProjectId);
+        setSelectedProjectId('');
+        setDatasetName('');
         props.onClose();
         toast(getToastOptions(`File Uploaded Successfully`, 'success'));
     };
@@ -66,6 +104,29 @@ const CreateDataset = (props: any) => {
         if(!uploadResponse) {
             toast(getToastOptions(`File Upload Failed, contact support`, 'error'));
         } else {
+            const colDefKeysSchema = [
+                {
+                    field: 'col_name',
+                    headerName: 'Col_name'
+                },
+                {
+                    field: 'data_type',
+                    headerName: 'Data_type'
+                },
+                {
+                    field: 'comment',
+                    headerName: 'Comment'
+                },
+
+            ];
+            setColumnDefsSchema(colDefKeysSchema);
+            setRowDataSchema(uploadResponse['schema'].map((row: any) => {
+                return {
+                    'col_name': row[0] ,
+                    'data_type': row[1] ,
+                    'comment': row[2]
+                }
+            }));
             const colDefKeys = keys(uploadResponse['sample_rows'][0]);
             const colDef = colDefKeys.map((headerKeys: string) => {
                 return { headerName: startCase(headerKeys), field: headerKeys } as ColDef;
@@ -161,14 +222,19 @@ const CreateDataset = (props: any) => {
                 )}
                 {screenState.screen3 && (
                     <>
-                        <Flex>
-                            <Center width={'856px'} height={'500px'}>
+                        <Flex flexDirection={'column'}>
                                 <Box ml={'23'} mr={'12'} borderColor={'light.lighterGrayishBlue'} width={'1400px'} mt={'18'}>
-                                    <Box style={gridStyle} className="ag-theme-alpine">
-                                        <AgGridReact<OutputDetail> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                                    <Text fontWeight={700} fontSize={'16px'} color={textColor}>Schema</Text>
+                                    <Box style={gridStyleSchema} className="ag-theme-alpine">
+                                        <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
                                     </Box>
                                 </Box>
-                            </Center>
+                                <Box ml={'23'} mr={'12'} borderColor={'light.lighterGrayishBlue'} width={'1400px'} mt={'18'}>
+                                    <Text fontWeight={700} fontSize={'16px'} color={textColor}>Sample Data</Text>
+                                    <Box style={gridStyle} className="ag-theme-alpine">
+                                        <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                                    </Box>
+                                </Box>
                         </Flex>
 
                     </>
@@ -179,7 +245,7 @@ const CreateDataset = (props: any) => {
                 <ModalFooter mb={'18px'} mt={'21px'} mr={'20px'}>
                     <Button
                         disabled={loading}
-                        onClick={props.onClose}
+                        onClick={handleDeleteDataset}
                         colorScheme="gray"
                         bg={'white'}
                         color={'default.toolbarButton'}

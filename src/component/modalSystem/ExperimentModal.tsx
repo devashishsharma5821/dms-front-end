@@ -18,15 +18,15 @@ import {
     Select,
     Avatar,
     Input,
-    VStack, createStandaloneToast
+    VStack, createStandaloneToast, AvatarGroup
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
-import { getProjectNameAndLabelsForSelect } from '../../utils/common.utils';
+import { getProjectAccessList, getProjectNameAndLabelsForSelect, getUserNameFromId } from '../../utils/common.utils';
 import useAppStore from '../../store';
 import {  GetAllProjectsAppStoreState } from '../../models/project';
-import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { createExperiment } from '../../query';
 import { getToastOptions } from '../../models/toastMessages';
@@ -40,9 +40,11 @@ const ExperimentModal = (props: any) => {
     const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
+    const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
     const [formFields, setFormFields] = useState({});
     const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
+    const [projectAccess, setProjectAccess] = React.useState<any>([]);
     const [projectSelected, setProjectSelected] = useState('');
     const [experimentName, setExperimentName] = useState('');
     const { toast } = createStandaloneToast();
@@ -54,6 +56,8 @@ const ExperimentModal = (props: any) => {
             projectSelected: evt.target.value
         };
         setFormFields(formFields);
+        setProjectAccess(getProjectAccessList(AllProjectsData, evt.target.value));
+        console.log('Q!', projectAccess)
     };
     const handleExperimentNameChange = (evt: any) => {
         setExperimentName(evt.target.value);
@@ -87,8 +91,17 @@ const ExperimentModal = (props: any) => {
             getAndUpdateAllProjectsData();
         } else {
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
+            setProjectAccess(getProjectAccessList(AllProjectsData, projectSelected));
         }
     }, [AllProjectsData]);
+
+    useEffect(() => {
+        if (AllUsersData === null) {
+            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
+            getAndUpdateAllUsersData(variablesForAllUsers);
+        }
+    }, [AllUsersData]);
+
     return (
         <Modal size={'md'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
@@ -234,16 +247,20 @@ const ExperimentModal = (props: any) => {
                                 <Text color={projectTitleColor} mt={'46'} fontWeight={600}>
                                     Shared with:
                                 </Text>
-                                <Text color={'default.toolbarButton'} mt={'46'} ml={20} fontWeight={600}>
-                                    + Add Member(s)
-                                </Text>
                             </Center>
                         </Flex>
-                        <Flex>
-                            <Center>
-                                <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={`Shirin Bampoori`} color={'default.whiteText'} />
-                            </Center>
-                        </Flex>
+                        {
+                            AllUsersData &&
+                            <Flex>
+                                <Center>
+                                    <AvatarGroup size={'md'} max={3} spacing={1}>
+                                        {projectAccess.map((access: any, accessIndex: any) => {
+                                            return <Avatar key={accessIndex} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
+                                        })}
+                                    </AvatarGroup>
+                                </Center>
+                            </Flex>
+                        }
                     </Box>
                 </Flex>
 
