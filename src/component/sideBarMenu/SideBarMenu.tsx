@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { Box, Flex, Divider, useColorModeValue, Center, VStack, Square, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,6 @@ import Recent from '../menuSystem/recent/Recent';
 import Help from '../menuSystem/help/Help';
 import Explorer from '../menuSystem/explorer/Explorer';
 import ComputeJsonModal from '../modalSystem/ComputeJsonModal';
-import Experiment from '../menuSystem/experiment/Experiment';
 import LeftSideBarMenuCreateProjectModal from '../modalSystem/LeftSideBarMenuCreateProjectModal';
 import CreateProjectModal from '../modalSystem/CreateProjectModal';
 import useAppStore from '../../store';
@@ -18,6 +17,10 @@ import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions'
 import CreateDatasetModal from '../modalSystem/CreateDatasetModal';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import ExperimentModal from '../modalSystem/ExperimentModal';
+import { GetSingleProjectAppStoreState } from '../../models/project';
+import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { getFormattedUserData } from '../../utils/common.utils';
+import ProjectDetailsMenu from '../menuSystem/explorer/projectDetailsMenu/projectDetailsMenu';
 
 const SideBarMenu = () => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
@@ -63,7 +66,9 @@ const SideBarMenu = () => {
         setActivateSubMenu(false);
         setIsHovering(false);
     };
-    const hasThirdLevelMenu = (data: string) => {
+    const hasThirdLevelMenu = (projectId: string) => {
+        updateSpinnerInfo(true);
+        getAndUpdateSingleProjectData(projectId as string);
         setActivateThirdSubMenu(true);
     };
     const checkForSubMenuOrNavigation = (data: any, index: any) => {
@@ -108,7 +113,7 @@ const SideBarMenu = () => {
                     <VStack>
                         <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
                             <h3>
-                                <Experiment />
+                               <ProjectDetailsMenu></ProjectDetailsMenu>
                             </h3>
                         </Box>
                     </VStack>

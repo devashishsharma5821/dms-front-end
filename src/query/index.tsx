@@ -471,7 +471,7 @@ export const deleteDataset = (variables: any) => {
 }
 // Dataset APIs End Here
 
-// Experiment APIs Start here
+// ProjectDetailsMenu APIs Start here
 export const createExperiment = (variables: any) => {
     return gql`mutation {
   dmsCreateExperiment(
@@ -507,4 +507,4 @@ export const GET_EXPERIMENT = (experiment_id: string) => {
 }
 `;
 };
-// Experiment APIs End here
+// ProjectDetailsMenu APIs End here

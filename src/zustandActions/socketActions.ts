@@ -27,7 +27,7 @@ export const receiveMessage: receiveMessageType = (action) =>
             }
             // Below is the new code for Experiments from event payload.
             else if (event.payload.experiment) {
-                console.log('Experiment New');
+                console.log('ProjectDetailsMenu New');
                 console.log(event.payload.experiment);
                 if (event.payload.experiment.infer_stage_completed) {
                     console.log('completed:');

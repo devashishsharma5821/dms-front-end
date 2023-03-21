@@ -18,7 +18,7 @@ import './canvasStyles/style.css';
 import './canvasStyles/style.modern.css';
 import './canvasStyles/theme-picker.css';
 import './experiment.scss';
-// All this are new imports for the new Experiment Page I am trying to Design
+// All this are new imports for the new ProjectDetailsMenu Page I am trying to Design
 import { StencilService } from './services/stencil-service';
 import { ToolbarService } from './services/toolbar-service';
 import { InspectorService } from './services/inspector-service';
@@ -49,7 +49,7 @@ const { toast } = createStandaloneToast();
 const ExperimentsPage = () => {
     const { projectId } = useParams();
 
-    // New Consts For the new Experiment Page I am designing.
+    // New Consts For the new ProjectDetailsMenu Page I am designing.
     const params = useParams();
     const elementRef = React.useRef<HTMLDivElement>(null);
     const [DmsComputeData, UserConfig, connectionState, selectedStageId, ExperimentData, TransformersData] = useAppStore((state: ExperimentAppStoreState) => [

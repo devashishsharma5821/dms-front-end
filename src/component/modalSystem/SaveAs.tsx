@@ -99,7 +99,7 @@ const SaveAs = (props: any) => {
                             validate={(value: any) => {
                               let error;
                               if (value.length === 0) {
-                                error = "Experiment Name is required";
+                                error = "ProjectDetailsMenu Name is required";
                               }
 
                               return error;

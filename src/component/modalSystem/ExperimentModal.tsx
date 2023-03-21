@@ -128,18 +128,23 @@ const ExperimentModal = (props: any) => {
         projectModal.onClose();
     };
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
+            updateSpinnerInfo(false);
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
             setProjectAccess(getProjectAccessList(AllProjectsData, projectSelected));
         }
     }, [AllProjectsData]);
 
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
+        } else {
+            updateSpinnerInfo(false);
         }
     }, [AllUsersData]);
 

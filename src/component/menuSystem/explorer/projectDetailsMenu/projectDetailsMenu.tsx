@@ -1,9 +1,14 @@
-import React, { useMemo } from 'react';
-import './Experiment.scss';
+import React, { useEffect } from 'react';
+import './projectDetailsMenu.scss';
 import { Box, Divider, Flex,Text, useColorModeValue } from '@chakra-ui/react';
+import { updateSpinnerInfo } from '../../../../zustandActions/commonActions';
+import useAppStore from '../../../../store';
+import { GetSingleProjectAppStoreState } from '../../../../models/project';
 
-const Experiment = (props: any) => {
+const ProjectDetailsMenu = (props: any) => {
     const textColor = useColorModeValue( 'dark.header','default.whiteText');
+    const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
+
     const subMenuForExperiment = [
         {
             name: 'My New Experiment',
@@ -22,6 +27,12 @@ const Experiment = (props: any) => {
             props.hasThirdLevelMenu(data.name);
         }
     };
+    useEffect(() => {
+        if(SingleProjectData !== null) {
+            console.log('ChangedProjectData', SingleProjectData)
+            updateSpinnerInfo(false);
+        }
+    }, [SingleProjectData]);
     return (
         <>
   
@@ -46,4 +57,4 @@ const Experiment = (props: any) => {
         </>
     );
 };
-export default Experiment;
+export default ProjectDetailsMenu;
