@@ -1,6 +1,15 @@
 import { AllUsers } from '../models/profile';
 import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project';
 
+export const getProjectAccessList = (projectList: any, selectedProject: string) => {
+    if(selectedProject === "") {
+        return projectList[0].project_access;
+    } else {
+        return projectList.filter((project: any) => {
+            return project.id.toString() === selectedProject;
+        })[0].project_access;
+    }
+};
 export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDetail[] ) => {
     const projectsName = projectList.map(project => {
         return {

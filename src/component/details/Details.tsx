@@ -5,12 +5,12 @@ import Form from '@rjsf/chakra-ui';
 import validator from '@rjsf/validator-ajv6';
 import type { JSONSchema7 } from 'json-schema';
 import useAppStore from '../../store';
+import { DetailsAppStoreState, DetailsPropsType } from '../../models/transformer';
 
-const Details = (props: any) => {
-    const [TransformersData, updateSelectedStageId] = useAppStore((state: any) => [state.TransformersData, state.updateSelectedStageId]);
+const Details = (props: DetailsPropsType) => {
+    const [TransformersData, SingleProjectData] = useAppStore((state: DetailsAppStoreState) => [state.TransformersData, state.SingleProjectData]);
 
-    // state.pipeline.stages?.find((stage) => stage.id === props.selectedStageId);
-    const transformer = TransformersData.find((transformer: any) => transformer.id === props.selectedStageId);
+    const transformer = TransformersData.find((transformer: any) => transformer?.id === props?.selectedStageId);
 
     const [schema] = React.useState<JSONSchema7>({
         title: 'Widgets',
@@ -192,14 +192,37 @@ const Details = (props: any) => {
     //     updateSelectedStageId(null);
     // };
 
+    let newParseSchemaData;
+    if (transformer?.name === 'LoadingSparkDataframe') {
+        let newArr: any = [];
+        SingleProjectData?.datasources.map((csvData: any) => newArr.push(csvData.name));
+        newParseSchemaData = JSON.parse(transformer?.schema?.jsonSchema);
+        newParseSchemaData.properties['files'] = {
+            type: 'string',
+            enum: newArr
+        };
+        delete newParseSchemaData.properties.input_name;
+        newParseSchemaData.required.pop();
+        newParseSchemaData.required.push('files');
+    }
+
+    const onSubmitHandler = (e: any) => {
+        console.log('onSubmitHandler ===>', e);
+    };
+
     return (
         <>
-            <Drawer isOpen={props.isOpen} placement="right" onClose={props.onClose} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+            <Drawer isOpen={props?.isOpen} placement="right" onClose={props?.onClose} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                 <DrawerOverlay />
-                <DrawerContent mt="60px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+                <DrawerContent mt="64px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
                     <DrawerBody mt="30px">
-                        <Form schema={JSON.parse(transformer.schema.jsonSchema)} formData={{ name: 'spark' }} omitExtraData={true} validator={validator} />
+                        <Form
+                            schema={transformer?.name === 'LoadingSparkDataframe' ? newParseSchemaData : JSON.parse(transformer?.schema?.jsonSchema)}
+                            onSubmit={onSubmitHandler}
+                            omitExtraData={true}
+                            validator={validator}
+                        />
                     </DrawerBody>
                     {/* 
                     <DrawerFooter>

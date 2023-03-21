@@ -97,11 +97,11 @@ const CreateProjectModal = (props: any) => {
     const createUserAccessForCreateProjectMode = (userList:AllUsers) => {
         setAccessUserListCreateMode(userList);
     }
-    const setCreateProjectSuccess = () => {
+    const setCreateProjectSuccess = (projectName: any, projectId: any) => {
         getAndUpdateAllProjectsData();
         toast(getToastOptions(`Project has being created`, 'success'));
         setLoading(false);
-        props.onSuccess();
+        props.onSuccess(projectName, projectId);
     };
     return (
         <Modal closeOnOverlayClick={false} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -196,7 +196,7 @@ const CreateProjectModal = (props: any) => {
                                                     })
                                                     .then(() => {
                                                         toast(getToastOptions('Project Was created Successfully', 'success'));
-                                                            setCreateProjectSuccess();
+                                                            setCreateProjectSuccess(values['name'], response?.data?.dmsCreateProject);
                                                             setAccessUserListCreateMode([]);
                                                             updateSpinnerInfo(false);
                                                     })
@@ -205,7 +205,7 @@ const CreateProjectModal = (props: any) => {
                                                     });
                                         } else {
                                             updateSpinnerInfo(false);
-                                            setCreateProjectSuccess();
+                                            setCreateProjectSuccess(values['name'], response?.data?.dmsCreateProject);
                                         }
                                     })
                                     .catch((err: any) => {

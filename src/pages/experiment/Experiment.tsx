@@ -10,7 +10,6 @@ import { DataBricksTokenDetails } from '../../models/types';
 import Toolbar from '../../component/toolbar/Toolbar';
 import { cloneDeep } from 'lodash';
 import useAppStore from '../../store';
-import { BusHelper } from '../../helpers/BusHelper';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
 import { getAndUpdateTransformersData, updateSelectedStageId } from '../../zustandActions/transformersActions';
@@ -31,7 +30,7 @@ import transformerMenuConf from '../../models/transformersConfig';
 import { shapes } from '@antuit/rappid-v1';
 import { updateDmsComputeData } from '../../zustandActions/computeActions';
 import { updateDmsDatabricksCredentialsValidToken, updateSpinnerInfo } from '../../zustandActions/commonActions';
-import { hasSubscribed, submitMessage } from '../../zustandActions/socketActions';
+import { hasSubscribed } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
 import ZoomComponent from '../../component/zoomer/Zoomer';
@@ -43,17 +42,24 @@ import { GetExperimentAppStoreState } from '../../models/experimentModel';
 import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { getFormattedUserData } from '../../utils/common.utils';
 import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
+import { getToastOptions } from '../../models/toastMessages';
+import { createStandaloneToast } from '@chakra-ui/react';
+const { toast } = createStandaloneToast();
+
 const ExperimentsPage = () => {
+    const { projectId } = useParams();
+
     // New Consts For the new Experiment Page I am designing.
     const params = useParams();
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState, selectedStageId] = useAppStore((state: ExperimentAppStoreState) => [
+    const [DmsComputeData, UserConfig, connectionState, selectedStageId, ExperimentData, TransformersData] = useAppStore((state: ExperimentAppStoreState) => [
         state.DmsComputeData,
         state.UserConfig,
         state.connectionState,
-        state.selectedStageId
+        state.selectedStageId,
+        state.ExperimentData,
+        state.TransformersData
     ]);
-    const [TransformersData] = useAppStore((state: TransformersAppStoreState) => [state.TransformersData]);
     const opid = v4();
     const computeRunningModal = useDisclosure();
     const computeModal = useDisclosure();
@@ -84,18 +90,20 @@ const ExperimentsPage = () => {
     const [rappidData, setRappidData] = React.useState<DmsCanvasService>();
     const [drawerInitialized, setDrawerInitialzed] = React.useState<boolean>(false);
 
-
-    const [ExperimentData] = useAppStore((state: GetExperimentAppStoreState) => [state.ExperimentData]);
-
     let dmsComputeRunningStatusIsDefaultOne;
+
+    // This useEffect will need to remove after implementation of child routing.
+    useEffect(() => {
+        getAndUpdateSingleProjectData(projectId as string);
+    }, []);
 
     let unsubscribe: any = null;
     const checkComputeStatus = (dmsComputes: DmsComputeData[]) => {
-        if (dmsComputes.length === 0) {
+        if (dmsComputes?.length === 0) {
             computeModal.onOpen();
         } else {
             //Checking if compute is already in running condition.
-            const computeRunningStatus = dmsComputes.filter((compute: DmsComputeData) => compute.status === 'RUNNING' || 'STARTING');
+            const computeRunningStatus = dmsComputes.filter((compute: DmsComputeData) => compute?.status === 'RUNNING' || 'STARTING');
             if (computeRunningStatus.length === 0) {
                 // unsubscribe = useAppStore.subscribe(onComputeStarted);
                 setLoadingMessage('Checking session status....');
@@ -104,11 +112,11 @@ const ExperimentsPage = () => {
             } else {
                 //Checking isdefualt condition
                 const defaultCompute = computeRunningStatus.filter((runningCompute: DmsComputeData) => runningCompute?.is_default === true);
-                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0].id);
-                else setComputeId(computeRunningStatus[0].id);
+                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0]?.id);
+                else setComputeId(computeRunningStatus[0]?.id);
                 //TODO:- Compute socket connect
                 computeRunningStatus.map((compute: DmsComputeData) => {
-                    if (compute.status && compute.id) {
+                    if (compute?.status && compute?.id) {
                         onComputeStart();
                         // submitMessage({
                         //     content: BusHelper.GetKeepAliveRequestMessage({
@@ -144,27 +152,27 @@ const ExperimentsPage = () => {
             getAndUpdateExperimentData(params.experimentId as string);
         } else {
             updateSpinnerInfo(false);
-            console.log('Experiment Data is avaiable',ExperimentData);
         }
     }, [ExperimentData]);
+
     const createCanvasSchemaFromTransformersData = () => {
         let transformerData = cloneDeep(TransformersData);
         let transformersGroup: any = {};
         let transformedNewDataForStencil: any;
         if (transformerData && transformerData.length > 0) {
             transformedNewDataForStencil = transformerData.reduce((transformersList: any = [], currentObj: any) => {
-                let stencilBg = colorMode === 'dark' ? transformerMenuConf[currentObj['category']].backgroundDark : transformerMenuConf[currentObj['category']].backgroundLight;
-                let stencilStroke = colorMode === 'dark' ? transformerMenuConf[currentObj['category']].backgroundDarkStroke : transformerMenuConf[currentObj['category']].backgroundLightStroke;
-                let icon = colorMode === 'dark' ? transformerMenuConf[currentObj['category']].iconDark : transformerMenuConf[currentObj['category']].iconLight;
+                let stencilBg = colorMode === 'dark' ? transformerMenuConf[currentObj['category']]?.backgroundDark : transformerMenuConf[currentObj['category']]?.backgroundLight;
+                let stencilStroke = colorMode === 'dark' ? transformerMenuConf[currentObj['category']]?.backgroundDarkStroke : transformerMenuConf[currentObj['category']]?.backgroundLightStroke;
+                let icon = colorMode === 'dark' ? transformerMenuConf[currentObj['category']]?.iconDark : transformerMenuConf[currentObj['category']]?.iconLight;
                 if (!transformersGroup[currentObj['category']])
-                    transformersGroup[currentObj['category']] = { index: transformerMenuConf[currentObj['category']].order, label: transformerMenuConf[currentObj['category']].category };
-                currentObj.name = startCase(currentObj.name ? currentObj.name : currentObj.id.split('.').pop());
+                    transformersGroup[currentObj['category']] = { index: transformerMenuConf[currentObj['category']]?.order, label: transformerMenuConf[currentObj['category']]?.category };
+                currentObj.name = startCase(currentObj.name ? currentObj?.name : currentObj?.id?.split('.').pop());
                 const stencilMarkup = new shapes.standard.EmbeddedImage({
                     size: { width: 257, height: 52 },
                     attrs: {
-                        idOfTransformer: currentObj.id,
+                        idOfTransformer: currentObj?.id,
                         root: {
-                            dataTooltip: currentObj.name,
+                            dataTooltip: currentObj?.name,
                             dataTooltipPosition: 'left',
                             dataTooltipPositionSelector: '.joint-stencil'
                         },
@@ -177,7 +185,7 @@ const ExperimentsPage = () => {
                             strokeDasharray: '0'
                         },
                         label: {
-                            text: currentObj.name,
+                            text: currentObj?.name,
                             fill: '#08192E',
                             fontFamily: 'ibm-plex-sans',
                             fontWeight: '600',
@@ -441,57 +449,57 @@ const ExperimentsPage = () => {
                 });
                 let inputPorts = [];
                 let outputPorts = [];
-                if (currentObj.inputs.length > 0) {
-                    inputPorts = currentObj.inputs.map((input: any) => {
+                if (currentObj?.inputs?.length > 0) {
+                    inputPorts = currentObj?.inputs.map((input: any) => {
                         let typeOfPort = 'in';
-                        if (input.type === 'DATAFRAME') {
+                        if (input?.type === 'DATAFRAME') {
                             typeOfPort = 'inRect';
-                        } else if (input.type === 'DATASET') {
+                        } else if (input?.type === 'DATASET') {
                             typeOfPort = 'in';
-                        } else if (input.type === 'MODEL') {
+                        } else if (input?.type === 'MODEL') {
                             typeOfPort = 'inPoly';
-                        } else if (input.type === 'METADATA') {
+                        } else if (input?.type === 'METADATA') {
                             typeOfPort = 'inPoly2';
                         } else {
                             typeOfPort = 'in';
                         }
                         return {
                             group: typeOfPort,
-                            id: input.id,
-                            isRequired: input.isRequired || null,
-                            isExported: input.isExported || null,
-                            type: input.type || null,
+                            id: input?.id,
+                            isRequired: input?.isRequired || null,
+                            isExported: input?.isExported || null,
+                            type: input?.type || null,
                             attrs: {
                                 label: {
-                                    text: input.name
+                                    text: input?.name
                                 }
                             }
                         };
                     });
                 }
-                if (currentObj.outputs.length > 0) {
-                    outputPorts = currentObj.outputs.map((output: any) => {
+                if (currentObj?.outputs?.length > 0) {
+                    outputPorts = currentObj?.outputs.map((output: any) => {
                         let typeOfPort = 'out';
-                        if (output.type === 'DATAFRAME') {
+                        if (output?.type === 'DATAFRAME') {
                             typeOfPort = 'outRect';
-                        } else if (output.type === 'DATASET') {
+                        } else if (output?.type === 'DATASET') {
                             typeOfPort = 'out';
-                        } else if (output.type === 'MODEL') {
+                        } else if (output?.type === 'MODEL') {
                             typeOfPort = 'outPoly';
-                        } else if (output.type === 'METADATA') {
+                        } else if (output?.type === 'METADATA') {
                             typeOfPort = 'outPoly2';
                         } else {
                             typeOfPort = 'out';
                         }
                         return {
                             group: typeOfPort,
-                            id: output.id,
-                            isRequired: output.isRequired || null,
-                            isExported: output.isExported || null,
-                            type: output.type || null,
+                            id: output?.id,
+                            isRequired: output?.isRequired || null,
+                            isExported: output?.isExported || null,
+                            type: output?.type || null,
                             attrs: {
                                 label: {
-                                    text: output.name
+                                    text: output?.name
                                 }
                             }
                         };
@@ -523,16 +531,17 @@ const ExperimentsPage = () => {
             return `/assets/icon/transformersIcons/${icon}`;
         }
     };
+
     useEffect(() => {
         client
             .query<DataBricksTokenResponse<DataBricksTokenDetails>>({
                 query: GET_DATABRICKS_CREDS
             })
             .then((response) => {
-                updateDmsDatabricksCredentialsValidToken(response.data.dmsCheckDatabricksCredentials.valid);
+                updateDmsDatabricksCredentialsValidToken(response?.data.dmsCheckDatabricksCredentials?.valid);
                 const { GET_COMPUTELIST } = getComputeListData();
 
-                if (response.data.dmsCheckDatabricksCredentials.valid) {
+                if (response?.data?.dmsCheckDatabricksCredentials?.valid) {
                     if (DmsComputeData?.length === 0) {
                         client
                             .query<ComputeDetailListResponse<Array<DmsComputeData>>>({
@@ -545,12 +554,12 @@ const ExperimentsPage = () => {
                         if (DmsComputeData?.length === 0) {
                             computeModal.onOpen();
                         } else {
-                            const dmsComputeRunningStatus = DmsComputeData?.filter((compute: DmsComputeData) => compute.status === 'RUNNING');
+                            const dmsComputeRunningStatus = DmsComputeData?.filter((compute: DmsComputeData) => compute?.status === 'RUNNING');
                             if (!(dmsComputeRunningStatus?.length === 0)) {
                                 computeRunningModal.onOpen();
                             } else {
                                 const dmsComputeRunningStatusIsDefault = dmsComputeRunningStatus.filter((compute: DmsComputeData) => compute?.is_default === true);
-                                if (dmsComputeRunningStatusIsDefault.length === 0) {
+                                if (dmsComputeRunningStatusIsDefault?.length === 0) {
                                     DmsComputeData[0].is_default = true;
                                     dmsComputeRunningStatusIsDefaultOne = DmsComputeData[0];
                                 } else {
@@ -640,7 +649,7 @@ const ExperimentsPage = () => {
     };
 
     const select = (state: any) => {
-        return state.lastAliveMessage;
+        return state?.lastAliveMessage;
     };
 
     useEffect(() => {
@@ -653,7 +662,7 @@ const ExperimentsPage = () => {
                 let computedata = [...response.data.dmsComputes];
                 updateDmsComputeData(computedata);
             })
-            .catch((err) => console.error(err));
+            .catch((err) => toast(getToastOptions(err?.message, 'error')));
     }, []);
 
     const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlu');
@@ -663,18 +672,22 @@ const ExperimentsPage = () => {
         transformerMenuDrawer.onOpen();
     };
 
+    useEffect(() => {
+        const rappidd = new DmsCanvasService(elementRef?.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+    }, []);
+
     //Method to initialize DMS and stencil services
-    const initializeAndStartRapid = async (stencil: any, group: any) => {
+    const initializeAndStartRapid = async (stencil?: any, group?: any) => {
         try {
             if (!rappidData) {
-                const rappid = await new DmsCanvasService(elementRef.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+                const rappid = await new DmsCanvasService(elementRef?.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
                 setRappidData(rappid);
 
                 // Use below to load a sample Ready to go JSON
                 // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
             }
         } catch (err) {
-            console.log('lets check error', err);
+            toast(getToastOptions('Something went wrong', 'error'));
         }
     };
 
@@ -749,7 +762,7 @@ const ExperimentsPage = () => {
                         <Box>
                             <Drawer isOpen={transformerMenuDrawer.isOpen} placement="left" onClose={transformerMenuDrawer.onClose} id="left-overlay-menu" colorScheme={themeBg}>
                                 <DrawerOverlay bg="transparent" />
-                                <DrawerContent bg={themeBg} mt="44" ml="54" w="350px" maxWidth="292px">
+                                <DrawerContent bg={themeBg} className="leftStencilsDrawer">
                                     <DrawerCloseButton
                                         bg={panelCloseBtnBg}
                                         _hover={{ background: panelCloseBtnBg }}

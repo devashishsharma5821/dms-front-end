@@ -78,10 +78,14 @@ div.joint-paper.joint-theme-modern {
     background: transparent;
     margin-left: 8px;
 }
-.spinner {
-    left: 47%;
-    position: absolute;
-    text-align: center;
-    z-index: 1000000;
-    top: 40%;
+
+.leftStencilsDrawer {
+    top: 64px !important;
+    left: 50px !important;
+    max-width: 292px !important;
+    height: calc(100vh - 64px) !important;
+}
+
+.joint-stencil.joint-theme-modern.searchable.collapsible > .content {
+    height: calc(100vh - 210px);
 }
