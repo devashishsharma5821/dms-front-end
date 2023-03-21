@@ -476,7 +476,9 @@ export const createExperiment = (variables: any) => {
     return gql`mutation {
   dmsCreateExperiment(
     project_id: "${variables.projectSelected}"
-    name: "${variables.experimentName}"
+    name: "${variables.experimentName}",
+    tags: ${JSON.stringify(variables.tags)},
+    description: "${variables.description}"
   )
 }`;
 };
