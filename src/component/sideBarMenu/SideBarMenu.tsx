@@ -17,9 +17,7 @@ import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions'
 import CreateDatasetModal from '../modalSystem/CreateDatasetModal';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import ExperimentModal from '../modalSystem/ExperimentModal';
-import { GetSingleProjectAppStoreState } from '../../models/project';
 import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
-import { getFormattedUserData } from '../../utils/common.utils';
 import ProjectDetailsMenu from '../menuSystem/explorer/projectDetailsMenu/projectDetailsMenu';
 
 const SideBarMenu = () => {
