@@ -36,6 +36,14 @@ export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
     return fullName;
 };
 
+export const getUserNameFromIdInitials = (userData: AllUsers[], userId: string) => {
+    const currentUser = userData?.filter((user: AllUsers) => {
+        return user.userId === userId;
+    });
+    const initials = `${currentUser![0].firstName[0]}${currentUser![0].lastName[0]}`;
+    return initials;
+};
+
 export const getTruncatedText = (name: string, size: number) => {
     if (name?.length >= size) {
         const newName = `${name.slice(0, size)}...`;
@@ -66,6 +74,10 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
     return projectData.filter((project: any) => {
         const user = getUserNameFromId(AllUsersData, project.created_by);
         return project.name.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
-               user.toLowerCase().match(new RegExp(searchTerm, 'g'));
+               user.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
+            (project.project_access.filter((access: any) => {
+                   const userFilteredProjectAccess = getUserNameFromIdInitials(AllUsersData, access.user_id);
+                   return userFilteredProjectAccess.toLowerCase().match(new RegExp(searchTerm, 'g'))
+               }).length > 0) ? true: false
     })
 }
