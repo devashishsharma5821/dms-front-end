@@ -78,9 +78,9 @@ const Compute = () => {
         { headerName: 'Workers', field: 'resources.num_workers' },
         { headerName: 'Total Cores', field: 'totalCores' },
         { headerName: 'Total Memory', field: 'totalMemory' },
-        { headerName: 'Status', field: 'status', pinned: 'right' },
-        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow, pinned: 'right' },
-        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow, pinned: 'right' }
+        { headerName: 'Status', field: 'status'},
+        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
+        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
     ]);
 
     useEffect(() => {

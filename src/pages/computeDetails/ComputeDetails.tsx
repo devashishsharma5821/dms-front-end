@@ -14,7 +14,7 @@ import { ComputeDelete, DeleteComputeDetail } from '../../models/computeDetails'
 import { dmsDeleteCompute } from '../../query';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
-import { getUserNameFromId } from '../../utils/common.utils';
+import { convertTime, getUserNameFromId } from '../../utils/common.utils';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../models/toastMessages';
 const { toast } = createStandaloneToast();
@@ -148,18 +148,15 @@ const ComputeDetails = () => {
                                 <Box>
                                     <Text fontSize={14}>Created On</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        10/05/2022 10:20 AM
+                                        {convertTime(computeData[0].created_at)}
                                     </Text>
                                 </Box>
-                                <Box>
-                                    <Text fontSize={14}>Last Modified</Text>
-                                    <Text fontSize={14} fontWeight={600}>
-                                        10 Minutes ago
-                                    </Text>
-                                </Box>
-                            </Box>
-                            <Box ml={15} className="computedetailsContainer-2subsub-2sub-4">
-                                <Text>Tag:</Text>
+                                {/*<Box>*/}
+                                {/*    <Text fontSize={14}>Last Modified</Text>*/}
+                                {/*    <Text fontSize={14} fontWeight={600}>*/}
+                                {/*        10 Minutes ago*/}
+                                {/*    </Text>*/}
+                                {/*</Box>*/}
                             </Box>
                         </Box>
                     </Box>
@@ -196,19 +193,19 @@ const ComputeDetails = () => {
                                 <Box>
                                     <Text fontSize={14}>Total Cores</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].resources.node_type.driver_num_cores + computeData[0].resources.node_type.worker_num_cores}
+                                        {computeData[0].resources.node_type.total_num_cores}
                                     </Text>
                                 </Box>
                                 <Box>
                                     <Text fontSize={14}>Total Memory</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].resources.node_type.driver_num_cores + computeData[0].resources.node_type.worker_num_cores} GB
+                                        {Math.round((computeData[0].resources.node_type.total_memory_mb) / 1024)} GB
                                     </Text>
                                 </Box>
                                 <Box>
                                     <Text fontSize={14}>Total Runtime</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        8h 20min
+                                        N/A
                                     </Text>
                                 </Box>
                             </Box>
