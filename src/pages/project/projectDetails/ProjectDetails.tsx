@@ -67,10 +67,10 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} mt={'15px'} justifyContent="center">
-                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
                 </Button>
-                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getCancelButtonProps()}>
                     Cancel
                 </Button>
             </ButtonGroup>
@@ -86,11 +86,11 @@ const ProjectDetails = (props: any) => {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
-            <ButtonGroup ml={'20px'} justifyContent="center" mt={'40px'}>
-                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+            <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getSubmitButtonProps()}>
                     Save
                 </Button>
-                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getCancelButtonProps()}>
                     Cancel
                 </Button>
             </ButtonGroup>
@@ -170,7 +170,7 @@ const ProjectDetails = (props: any) => {
         setInlineProjectName(editChangeValue);
     };
     const handleEditNameChangeCancel = () => {
-        setInlineDescription(SingleProjectData.basic.name);
+        setInlineProjectName(SingleProjectData.basic.name);
     };
     const handleEditProject = (variables: any, toastMessages: any) => {
         updateSpinnerInfo(true);
@@ -459,7 +459,7 @@ const ProjectDetails = (props: any) => {
                                             </Flex>
 
                                             <Editable
-                                                height={'120px'}
+                                                height={'80px'}
                                                 maxWidth={'400px'}
                                                 textAlign="left"
                                                 fontWeight={400}
@@ -477,7 +477,7 @@ const ProjectDetails = (props: any) => {
                                                         <EditableControls />
                                                     </Center>
                                                 </Flex>
-                                                <Box maxWidth={'425px'} maxHeight={'120px'} overflowY={'auto'} color={accesstextColor}>
+                                                <Box maxWidth={'425px'} maxHeight={'80px'} overflowY={'auto'} color={accesstextColor}>
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>
