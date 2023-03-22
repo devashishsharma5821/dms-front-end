@@ -447,7 +447,7 @@ const Compute = () => {
                                 </Stack>
 
                                 <Box>
-                                    <Button color={'default.whiteText'} bg={'default.hoverSideBarMenu'} variant="outline" onClick={triggerCreateModal}>
+                                    <Button onClick={triggerCreateModal} color={'white'} bg={'default.toolbarButton'} width={'128px'} height={'36px'} borderRadius={'3'}>
                                         Create Compute
                                     </Button>
                                 </Box>
