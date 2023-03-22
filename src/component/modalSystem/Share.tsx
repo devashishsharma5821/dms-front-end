@@ -178,11 +178,13 @@ const Share = (props: any) => {
                 const sharedUser = AllUsersData?.filter((singleUser) => {
                     return singleUser.email === selUserEmail;
                 });
+                const accessLevel = DMSAccessLevel[0];
+                const userToAdd = {accessLevel, ...sharedUser![0]};
                 const checkIfUserAlreadyExists = newAccessList.filter((user) => {
                    return user.userId === sharedUser![0].userId;
                 });
                 if(checkIfUserAlreadyExists.length === 0) {
-                    newAccessList.push(sharedUser![0]);
+                    newAccessList.push(userToAdd);
                 };
             });
             setAccessUserList(newAccessList);
@@ -268,21 +270,20 @@ const Share = (props: any) => {
                                                             </Text>
                                                         </Box>
                                                     </Center>
-                                                    <Center mr={'36px'}>
+                                                    <Center mr={'20px'}>
                                                         <Menu>
                                                             <MenuButton>
-                                                                <Text mr={'-18px'} color={textColor2}>
                                                                     <Center>
-                                                                        {icons.accessLevel}
+                                                                        <Text fontSize={'16px'} fontWeight={400} color={textColor}>{icons.accessLevel}</Text>
+
                                                                         <Box ml={'12px'}>
-                                                                            {' '}
                                                                             <DownArrowShare color={'#666C80'} />
                                                                         </Box>
                                                                     </Center>
-                                                                </Text>
                                                             </MenuButton>
                                                             <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
                                                                 <MenuItem
+                                                                    isDisabled={!props.isEdit}
                                                                     onClick={() => {
                                                                         accessMenuChanged(icons, 'canView');
                                                                     }}
@@ -290,6 +291,7 @@ const Share = (props: any) => {
                                                                     Can View
                                                                 </MenuItem>
                                                                 <MenuItem
+                                                                    isDisabled={!props.isEdit}
                                                                     onClick={() => {
                                                                         accessMenuChanged(icons, 'canEdit');
                                                                     }}
@@ -298,6 +300,7 @@ const Share = (props: any) => {
                                                                 </MenuItem>
                                                                 <Divider />
                                                                 <MenuItem
+                                                                    isDisabled={!props.isEdit}
                                                                     onClick={() => {
                                                                         accessMenuChanged(icons, 'delete');
                                                                     }}
