@@ -67,12 +67,12 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} mt={'15px'} justifyContent="center">
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
                     Save
-                </Text>
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                </Button>
+                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
                     Cancel
-                </Text>
+                </Button>
             </ButtonGroup>
         ) : (
             <Flex justifyContent="center">
@@ -87,12 +87,12 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} justifyContent="center" mt={'40px'}>
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
                     Save
-                </Text>
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                </Button>
+                <Button cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
                     Cancel
-                </Text>
+                </Button>
             </ButtonGroup>
         ) : (
             <Flex>
