@@ -493,8 +493,8 @@ const ProjectDetails = (props: any) => {
                                                     Access by
                                                 </Text>
                                                 <Box ml={8} bg={'default.tagBoxColor'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
-                                                    <Text color={'default.accessByNumber'} fontSize={'14px'} pt={4} fontWeight={600} cursor={'pointer'}>
-                                                        10
+                                                    <Text color={'default.accessByNumber'} fontSize={'14px'} pt={2} fontWeight={600} cursor={'pointer'}>
+                                                        {accessUserList.length}
                                                     </Text>
                                                 </Box>
                                             </Center>
