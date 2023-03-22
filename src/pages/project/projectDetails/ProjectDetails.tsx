@@ -544,7 +544,7 @@ const ProjectDetails = (props: any) => {
                     isOpen={deleteConfirmationModal.isOpen}
                     onClose={deleteConfirmationModal.onClose}
                     submitDeleteHandler={submitDeleteHandler}
-                    options={{ name: SingleProjectData.basic.name, label: '', placeholder: 'My Project 00' }}
+                    options={{ name: SingleProjectData.basic.name, label: 'project', placeholder: 'My Project 00' }}
                 />
             )}
             {createProjectModal.isOpen && (

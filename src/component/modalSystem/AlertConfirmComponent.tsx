@@ -15,9 +15,12 @@ const AlertConfirmComponent: any = (props: any) => {
                         <AlertDialogBody>{props.options.description}</AlertDialogBody>
 
                         <AlertDialogFooter>
-                            <Button type="button" variant="outline" colorScheme="blue" ref={cancelRef} onClick={props.onClose}>
-                                {props.options.cancelButtonTitle}
-                            </Button>
+                            {
+                                props.options.cancelButtonTitle !== '' &&
+                                <Button type="button" variant="outline" colorScheme="blue" ref={cancelRef} onClick={props.onClose}>
+                                    {props.options.cancelButtonTitle}
+                                </Button>
+                            }
                             <Button type="submit" variant="solid" colorScheme="blue" onClick={props.confirm} ml={3}>
                                 {props.options.confirmButtonTitle}
                             </Button>
