@@ -8,7 +8,7 @@ export const ColorModeSwitcher = (props: Omit<IconButtonProps, 'aria-label'>) =>
     const SwitchIcon: any = useColorModeValue(SwitchOff, SwitchOn);
 
     return (
-        <Flex>
+        <Flex onClick={toggleColorMode} cursor={"pointer"}>
             <Stack spacing={8} direction="row">
                 <IconButton
                     _active={{ bg: 'none' }}
@@ -16,7 +16,6 @@ export const ColorModeSwitcher = (props: Omit<IconButtonProps, 'aria-label'>) =>
                     {...props}
                     aria-label={`Switch to ${text} mode`}
                     variant="ghost"
-                    onClick={toggleColorMode}
                     icon={<SwitchIcon />}
                     size="md"
                     fontSize="lg"
