@@ -21,7 +21,6 @@ const Explorer = (props: any) => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
-            console.log('All Projects Data', AllProjectsData);
             const userId = UserConfig.userConfiguration.user.userId;
             const userOnlyProjects = AllProjectsData.filter((project) => {
                 return project.created_by === userId;
@@ -29,8 +28,6 @@ const Explorer = (props: any) => {
             const sharedWithMe = AllProjectsData.filter((project) => {
                 return project.created_by !== userId;
             });
-            console.log("1",userOnlyProjects )
-            console.log("1",sharedWithMe )
             const explorerState = [
                 {
                     name: 'My Projects',

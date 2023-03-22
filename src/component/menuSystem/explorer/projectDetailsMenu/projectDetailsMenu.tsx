@@ -14,22 +14,25 @@ import { updateSpinnerInfo } from '../../../../zustandActions/commonActions';
 import useAppStore from '../../../../store';
 import { GetSingleProjectAppStoreState } from '../../../../models/project';
 import { RightArrow } from '../../../../assets/icons/RightArrow';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectDetailsMenu = (props: any) => {
     const iconsColor = useColorModeValue(' #666C80', 'white');
     const textColor = useColorModeValue( 'dark.header','default.whiteText');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [menuForProjectDetails, setMenuForProjectDetails] = React.useState<any>([]);
-    const checkForSubMenuOrNavigation = (subSectionId: string, type: string) => {
+    const navigate = useNavigate();
+    const checkForSubMenuOrNavigation = (projectId:string, subSectionId: any, type: string) => {
         if(type === 'Dataset') {
             // TODO Navigate to Dataset
+            navigate(`/datasetDetails/${subSectionId.id}`);
         } else if (type === 'Experiment') {
             // TODO Navigate to Experiment
+            navigate(`/projectDetails/${projectId}/experiment/${subSectionId.id}`);
         }
     };
     useEffect(() => {
         if(SingleProjectData !== null) {
-            console.log('ChangedProjectData', SingleProjectData);
             const accordionMenuForProjects = [
                 {
                     name: 'Dataset',
@@ -79,7 +82,7 @@ const ProjectDetailsMenu = (props: any) => {
                                                             <Box
                                                                 key={subSection.id}
                                                                 onClick={() => {
-                                                                    checkForSubMenuOrNavigation(subSection, section.name);
+                                                                    checkForSubMenuOrNavigation(SingleProjectData.basic.id, subSection, section.name);
                                                                 }}
                                                                 className="sidebar-box-recent"
                                                             >
