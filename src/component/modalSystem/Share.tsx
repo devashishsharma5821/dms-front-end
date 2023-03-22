@@ -178,7 +178,12 @@ const Share = (props: any) => {
                 const sharedUser = AllUsersData?.filter((singleUser) => {
                     return singleUser.email === selUserEmail;
                 });
-                newAccessList.push(sharedUser![0]);
+                const checkIfUserAlreadyExists = newAccessList.filter((user) => {
+                   return user.userId === sharedUser![0].userId;
+                });
+                if(checkIfUserAlreadyExists.length === 0) {
+                    newAccessList.push(sharedUser![0]);
+                };
             });
             setAccessUserList(newAccessList);
         }
