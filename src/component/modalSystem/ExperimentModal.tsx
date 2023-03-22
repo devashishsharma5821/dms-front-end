@@ -18,11 +18,11 @@ import {
     Select,
     Avatar,
     Input,
-    VStack, createStandaloneToast, AvatarGroup
+    VStack, createStandaloneToast, AvatarGroup, useDisclosure
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
-import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { getProjectAccessList, getProjectNameAndLabelsForSelect, getUserNameFromId } from '../../utils/common.utils';
 import useAppStore from '../../store';
 import {  GetAllProjectsAppStoreState } from '../../models/project';
@@ -32,11 +32,14 @@ import { createExperiment } from '../../query';
 import { getToastOptions } from '../../models/toastMessages';
 import { ExperimentCreate, ExperimentCreateDetail } from '../../models/experimentModel';
 import { useNavigate } from 'react-router-dom';
+import CreateProjectModal from './CreateProjectModal';
+import { MultiSelect } from 'chakra-multiselect';
 // import CreateProjectModal from './CreateProjectModal';
 
 const ExperimentModal = (props: any) => {
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
     const projectTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
+    const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
     const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
@@ -46,24 +49,51 @@ const ExperimentModal = (props: any) => {
     const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
     const [projectAccess, setProjectAccess] = React.useState<any>([]);
     const [projectSelected, setProjectSelected] = useState('');
+    const [experimentDescription, setExperimentDescription] = useState('');
     const [experimentName, setExperimentName] = useState('');
+    const tagOptions: any = [];
+    const [tagValue, setTagValue] = React.useState([]);
     const { toast } = createStandaloneToast();
     const navigate = useNavigate();
+    const projectModal = useDisclosure();
     const handleProjectChange = (evt: any) => {
         setProjectSelected(evt.target.value);
         const formFields = {
             experimentName,
-            projectSelected: evt.target.value
+            projectSelected: evt.target.value,
+            tags: tagValue,
+            description: experimentDescription
         };
         setFormFields(formFields);
         setProjectAccess(getProjectAccessList(AllProjectsData, evt.target.value));
-        console.log('Q!', projectAccess)
+    };
+    const handleExperimentDescriptionChange = (evt: any) => {
+        setExperimentDescription(evt.target.value);
+        const formFields = {
+            experimentName: experimentName,
+            projectSelected: projectSelected,
+            tags: tagValue,
+            description: evt.target.value
+        };
+        setFormFields(formFields);
     };
     const handleExperimentNameChange = (evt: any) => {
         setExperimentName(evt.target.value);
         const formFields = {
             experimentName: evt.target.value,
-            projectSelected: projectSelected
+            projectSelected: projectSelected,
+            tags: tagValue,
+            description: experimentDescription
+        };
+        setFormFields(formFields);
+    };
+    const handleTagChange = (ev: any) => {
+        setTagValue(ev);
+        const formFields = {
+            experimentName: experimentName,
+            projectSelected: projectSelected,
+            tags: ev,
+            description: experimentDescription
         };
         setFormFields(formFields);
     };
@@ -75,30 +105,46 @@ const ExperimentModal = (props: any) => {
             })
             .then(() => {
                 toast(getToastOptions(`Experiment has being successfully created`, 'success'));
-                getAndUpdateAllProjectsData();
+                getAndUpdateSingleProjectData(projectSelected);
                 updateSpinnerInfo(false);
-                navigate(`/project`);
+                navigate(`/projectDetails/${projectSelected}`);
                 setFormFields({});
+                setProjectSelected('');
+                setExperimentName('');
+                setTagValue([]);
                 props.onClose();
             })
             .catch((err) => {
                 updateSpinnerInfo(false);
                 toast(getToastOptions(`${err}`, 'error'));
+                props.onClose();
             });
     };
+    const handleProjectCreate = () => {
+        projectModal.onOpen();
+    };
+    const onCreateProjectSuccess = (projectName: any, projectId: any) => {
+        setProjectSelected(projectId);
+        projectModal.onClose();
+    };
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
+            updateSpinnerInfo(false);
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
             setProjectAccess(getProjectAccessList(AllProjectsData, projectSelected));
         }
     }, [AllProjectsData]);
 
     useEffect(() => {
+        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
+        } else {
+            updateSpinnerInfo(false);
         }
     }, [AllUsersData]);
 
@@ -132,6 +178,7 @@ const ExperimentModal = (props: any) => {
                                     name="existingProject"
                                     variant="outline"
                                     onChange={handleProjectChange}
+                                    value={projectSelected}
                                 >
                                     <>
                                         {projectNames.map((project, projectIndex) => {
@@ -151,7 +198,7 @@ const ExperimentModal = (props: any) => {
                             </Text>
 
                             <Button
-                                //onClick={openCreateProjectModal.onOpen}
+                                onClick={handleProjectCreate}
                                 width={'127px'}
                                 height={'36px'}
                                 mt={18}
@@ -163,9 +210,15 @@ const ExperimentModal = (props: any) => {
                             >
                                 Create Project
                             </Button>
-
-                            {/* <CreateProjectModal isOpen={openCreateProjectModal.isOpen} onClose={openCreateProjectModal.onClose} /> */}
                         </Box>
+                        {projectModal.isOpen && (
+                            <CreateProjectModal
+                                isOpen={projectModal.isOpen}
+                                onClose={projectModal.onClose}
+                                onSuccess={onCreateProjectSuccess}
+                                isEdit={{ status: false, data: {}, usersData: [] }}
+                            />
+                        )}
                     </Center>
                 </Flex>
                 <Flex flexDirection={'row'}>
@@ -195,23 +248,23 @@ const ExperimentModal = (props: any) => {
                                         <Text color={projectTitleColor} mt={'14'} fontWeight={600}>
                                             Tag:
                                         </Text>
-                                        <Text color={'default.toolbarButton'} mt={'20'} ml={20} fontWeight={600}>
-                                            + Add Tag
-                                        </Text>
                                     </Center>
                                 </Flex>
-                                <Box ml={14} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                    <Flex>
-                                        <Center>
-                                            <Text color={'default.userCircleHeaderFont'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                Demo
-                                            </Text>
-                                            <Box justifyContent={'flex-end'} ml={'14px'}>
-                                                <CloseIcon color={'black'} />
-                                            </Box>
-                                        </Center>
-                                    </Flex>
-                                </Box>
+                                <Flex>
+                                    <Box width={'592px'} mr={'20px'} pl={'-50px'} height={'36px'}>
+                                        <MultiSelect
+                                            value={tagValue}
+                                            options={tagOptions}
+                                            mr={'200px'}
+                                            color={defaultInBoxTextColor}
+                                            label=""
+                                            onChange={handleTagChange!}
+                                            create
+                                            bg={'black'}
+                                            marginInlineStart={'-4px'}
+                                        />
+                                    </Box>
+                                </Flex>
                                 {/*<FormControl isRequired>*/}
                                 {/*    <FormLabel htmlFor="existingCompute" color={projectTitleColor} mt={12} fontWeight={600}>*/}
                                 {/*        Link To*/}
@@ -238,7 +291,7 @@ const ExperimentModal = (props: any) => {
                                     <FormLabel htmlFor="Description" mt={12} mb={6} color={projectTitleColor} fontWeight={600}>
                                         Description
                                     </FormLabel>
-                                    <Input height={97} width={612} borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="DescriptionProjectName" name="Description" />
+                                    <Input value={experimentDescription} onChange={handleExperimentDescriptionChange} height={97} width={612} borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="DescriptionProjectName" name="Description" />
                                 </FormControl>
                             </VStack>
                         </Flex>

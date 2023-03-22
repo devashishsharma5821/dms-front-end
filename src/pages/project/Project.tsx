@@ -42,20 +42,19 @@ const Project = () => {
     };
     const handleTabsChange = (tabIndex: number) => {
         setTabIndex(tabIndex);
+        const userId = UserConfig.userConfiguration.user.userId;
         if (tabIndex === 0) {
             setAllProjectsData(AllProjectsData);
         } else if (tabIndex === 1) {
-            const userId = UserConfig.userConfiguration.user.userId;
             const userOnlyProjects = AllProjectsData.filter((project) => {
                 return project.created_by === userId;
             });
             setAllProjectsData(userOnlyProjects);
         } else if (tabIndex === 2) {
-            const userId = UserConfig.userConfiguration.user.userId;
-            const userOnlyProjects = AllProjectsData.filter((project) => {
+            const sharedWithMe = AllProjectsData.filter((project) => {
                 return project.created_by !== userId;
             });
-            setAllProjectsData(userOnlyProjects);
+            setAllProjectsData(sharedWithMe);
         }
     };
     useEffect(() => {

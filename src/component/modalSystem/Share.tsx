@@ -221,13 +221,6 @@ const Share = (props: any) => {
                                         marginInlineStart={'-4px'}
                                     />
                                 </Box>
-                                {/*<Select onChange={handleUserChange} color={defaultInBoxTextColor} borderRadius={'2'} width={'581px'} ml={20} height={'36px'} placeholder='Type name or email with comma seperated'>*/}
-                                {/*    {AllUsersData.map((user, userIndex) => {*/}
-                                {/*        return(*/}
-                                {/*            <option key={userIndex} value={user.userId}>{user.firstName} {user.lastName}</option>*/}
-                                {/*        )*/}
-                                {/*    })}*/}
-                                {/*</Select>*/}
                                 <Box maxWidth={'79px'}>
                                     <Button onClick={handleShare} bg={'default.textButton'} borderRadius={'4'} mt={'28px'} minWidth={'66px'} height={'36px'} ml={'10px'} mr={'15px'}>
                                         Share

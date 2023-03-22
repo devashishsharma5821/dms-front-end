@@ -44,7 +44,7 @@ const sideBarMenuIcons = [
                 iconName: 'Explorer',
                 hasSubMenu: [],
                 isClicked: false,
-                disabled: true
+                disabled: false
             }
         ]
     },

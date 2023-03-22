@@ -41,7 +41,7 @@ export class BusHelper {
     //         op_id: request.opId,
     //         keep_alive: undefined,
     //         shutdown: undefined,
-    //         experiment: {
+    //         projectDetailsMenu: {
     //             experiment_id: request.experimentId,
     //             infer_output: isInfer ? inferOrRunRequest : undefined,
     //             // TODO start_run and inferOrRunRequest both type are defined in package file, which are giving conflicts.
