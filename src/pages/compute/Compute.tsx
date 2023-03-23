@@ -78,9 +78,9 @@ const Compute = () => {
         { headerName: 'Workers', field: 'resources.num_workers' },
         { headerName: 'Total Cores', field: 'totalCores' },
         { headerName: 'Total Memory', field: 'totalMemory' },
-        { headerName: 'Status', field: 'status', pinned: 'right' },
-        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow, pinned: 'right' },
-        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow, pinned: 'right' }
+        { headerName: 'Status', field: 'status'},
+        { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
+        { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
     ]);
 
     useEffect(() => {
@@ -139,17 +139,17 @@ const Compute = () => {
     };
 
     const stopSettingIsDefault = {
-        title: 'Not Possible',
+        title: 'Warning!',
         description: 'You must have at least 1 default compute',
-        cancelButtonTitle: 'Cancel',
-        confirmButtonTitle: 'Confirm'
+        cancelButtonTitle: '',
+        confirmButtonTitle: 'Continue'
     };
 
     const stopDeletingIsSettingDefault = {
-        title: 'Not Possible',
+        title: 'Warning!',
         description: 'Please set a new default for compute before deleting.',
-        cancelButtonTitle: 'Cancel',
-        confirmButtonTitle: 'Confirm'
+        cancelButtonTitle: '',
+        confirmButtonTitle: 'Continue'
     };
 
     // TODO Convert the below and wrap it in a  lifecycle hook
@@ -447,7 +447,7 @@ const Compute = () => {
                                 </Stack>
 
                                 <Box>
-                                    <Button color={'default.whiteText'} bg={'default.hoverSideBarMenu'} variant="outline" onClick={triggerCreateModal}>
+                                    <Button onClick={triggerCreateModal} color={'white'} bg={'default.toolbarButton'} width={'128px'} height={'36px'} borderRadius={'3'}>
                                         Create Compute
                                     </Button>
                                 </Box>

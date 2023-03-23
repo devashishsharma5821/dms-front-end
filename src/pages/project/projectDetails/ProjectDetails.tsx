@@ -67,12 +67,12 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} mt={'15px'} justifyContent="center">
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
-                </Text>
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                </Button>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getCancelButtonProps()}>
                     Cancel
-                </Text>
+                </Button>
             </ButtonGroup>
         ) : (
             <Flex justifyContent="center">
@@ -86,13 +86,13 @@ const ProjectDetails = (props: any) => {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
-            <ButtonGroup ml={'20px'} justifyContent="center" mt={'40px'}>
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getSubmitButtonProps()}>
+            <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getSubmitButtonProps()}>
                     Save
-                </Text>
-                <Text cursor={'pointer'} color={'default.toolbarButton'} {...getCancelButtonProps()}>
+                </Button>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getCancelButtonProps()}>
                     Cancel
-                </Text>
+                </Button>
             </ButtonGroup>
         ) : (
             <Flex>
@@ -170,7 +170,7 @@ const ProjectDetails = (props: any) => {
         setInlineProjectName(editChangeValue);
     };
     const handleEditNameChangeCancel = () => {
-        setInlineDescription(SingleProjectData.basic.name);
+        setInlineProjectName(SingleProjectData.basic.name);
     };
     const handleEditProject = (variables: any, toastMessages: any) => {
         updateSpinnerInfo(true);
@@ -459,7 +459,7 @@ const ProjectDetails = (props: any) => {
                                             </Flex>
 
                                             <Editable
-                                                height={'120px'}
+                                                height={'80px'}
                                                 maxWidth={'400px'}
                                                 textAlign="left"
                                                 fontWeight={400}
@@ -477,7 +477,7 @@ const ProjectDetails = (props: any) => {
                                                         <EditableControls />
                                                     </Center>
                                                 </Flex>
-                                                <Box maxWidth={'425px'} maxHeight={'120px'} overflowY={'auto'} color={accesstextColor}>
+                                                <Box maxWidth={'425px'} maxHeight={'80px'} overflowY={'auto'} color={accesstextColor}>
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>
@@ -493,8 +493,8 @@ const ProjectDetails = (props: any) => {
                                                     Access by
                                                 </Text>
                                                 <Box ml={8} bg={'default.tagBoxColor'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
-                                                    <Text color={'default.accessByNumber'} fontSize={'14px'} pt={4} fontWeight={600} cursor={'pointer'}>
-                                                        10
+                                                    <Text color={'default.accessByNumber'} fontSize={'14px'} pt={2} fontWeight={600} cursor={'pointer'}>
+                                                        {accessUserList.length}
                                                     </Text>
                                                 </Box>
                                             </Center>
@@ -544,7 +544,7 @@ const ProjectDetails = (props: any) => {
                     isOpen={deleteConfirmationModal.isOpen}
                     onClose={deleteConfirmationModal.onClose}
                     submitDeleteHandler={submitDeleteHandler}
-                    options={{ name: SingleProjectData.basic.name, label: '', placeholder: 'My Project 00' }}
+                    options={{ name: SingleProjectData.basic.name, label: 'project', placeholder: 'My Project 00' }}
                 />
             )}
             {createProjectModal.isOpen && (

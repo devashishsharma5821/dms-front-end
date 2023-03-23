@@ -88,17 +88,19 @@ const Header = (props: any) => {
                 </Box>
                 {isExperiment && (
                     <>
-                        <Box>
-                            <GridCanvas color={'#F3F6FA'} />
-                        </Box>
-
                         <Menu>
                             <MenuButton>
-                                <Box mr={'34'} ml={'14'}>
-                                    <HeaderDownArrow />
-                                </Box>
+                                <Flex>
+                                    <Box>
+                                        <GridCanvas color={'#F3F6FA'} />
+                                    </Box>
+                                    <Box mr={'14px'} ml={'10px'} mt={'10px'}>
+                                        <HeaderDownArrow />
+                                    </Box>
+                                </Flex>
+
                             </MenuButton>
-                            <MenuList borderRadius={'0'} minWidth={'110'} color={textColor} mt={'8'} ml={'-76px'} pt={'0px'} pb={'0px'}>
+                            <MenuList borderRadius={'0'} minWidth={'110'} color={textColor} mt={'8'} ml={'-45px'} pt={'0px'} pb={'0px'}>
                                 <MenuItem pl={'9px'}>
                                     <GridCanvas color={'#000000'} />
                                     <Text ml={'12'}>Dot</Text>
@@ -115,14 +117,19 @@ const Header = (props: any) => {
                         </Menu>
                     </>
                 )}
-                <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
                 <Menu>
                     <MenuButton>
-                        <Box width={'20px'} ml={'12'}>
-                            <HeaderDownArrow />
-                        </Box>
+                        <Flex>
+                            <Box width={'20px'} ml={'12'}>
+                                <Avatar borderRadius="full" boxSize="32px" name={`${props.firstName} ${props.lastName}`} bg={'default.userCircleHeaderBg'} color={'default.userCircleHeaderFont'} />
+                            </Box>
+                            <Box width={'20px'} ml={'22px'} mt={'15px'}>
+                                <HeaderDownArrow />
+                            </Box>
+                        </Flex>
+
                     </MenuButton>
-                    <MenuList width={127} borderRadius={'0'} mt={'10'} color={textColor2} pt={'0px'} pb={'0px'}>
+                    <MenuList width={127} borderRadius={'0'} mt={'10'} ml={'30px'} color={textColor2} pt={'0px'} pb={'0px'}>
                         <MenuItem onClick={myProfileModal.onOpen}>My Profile</MenuItem>
 
                         <MyProfileModal

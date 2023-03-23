@@ -42,7 +42,7 @@ export const DeleteConfirmationModal = ({ isOpen, onClose, submitDeleteHandler, 
                 <ModalOverlay />
                 <ModalContent justifyContent="center" maxWidth={600} borderRadius="3px">
                     <ModalHeader fontSize="15px" padding="15px" borderBottom="1px solid rgb(234,234,234)">
-                        Delete {options.label.toUpperCase()}
+                        Delete
                     </ModalHeader>
                     <ModalCloseButton padding="24px" />
                     <Box display="flex" flexDirection="column" alignItems="center" className="alertBoxContainer">
@@ -67,7 +67,7 @@ export const DeleteConfirmationModal = ({ isOpen, onClose, submitDeleteHandler, 
 
                         <FormControl isRequired width="93%" fontSize="15px" marginTop="12px">
                             <FormLabel fontSize="15px" paddingBottom="5px">
-                                Type compute name to confirm.
+                                Type {options.label} name to confirm.
                             </FormLabel>
                             <Input type="text" borderRadius="2px" height="35px" value={inputedText} onChange={onChangeHandler} border="1px solid rgb(204,204,204)" placeholder={options.placeholder} />
                         </FormControl>

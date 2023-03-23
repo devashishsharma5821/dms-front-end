@@ -1,6 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import './project.scss';
-import { Box, Center, Divider, Menu, MenuButton, MenuItem, MenuList, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Center,
+    Divider,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
+    Stack,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
+    Text,
+    useColorModeValue,
+    useDisclosure
+} from '@chakra-ui/react';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetAllProjectsDetail } from '../../models/project';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
@@ -90,28 +108,35 @@ const Project = () => {
                         {' '}
                         <Divider orientation="vertical" ml={'20'} mr={'20'} className={'dividerCss'} />
                     </Stack>
-                    <Menu>
-                        <MenuButton color={'white'} bg={'default.toolbarButton'} width={'166px'} height={'36px'} borderRadius={'3'}>
-                            {' '}
-                            <Center>
-                                <Text> Create Project</Text>
-                                <Divider className="insideButtonDivider" orientation="vertical" h="36px" ml={'12'} mr={'12'} />
+                    <Button onClick={CreateProject.onOpen} color={'white'} bg={'default.toolbarButton'} width={'128px'} height={'36px'} borderRadius={'3'}>
+                        Create Project
+                    </Button>
+                    {/*<Menu>*/}
+                    {/*    <MenuButton color={'white'} bg={'default.toolbarButton'} width={'166px'} height={'36px'} borderRadius={'3'}>*/}
+                    {/*        {' '}*/}
+                    {/*        <Center>*/}
+                    {/*            <Text> Create Project</Text>*/}
+                    {/*            <Divider className="insideButtonDivider" orientation="vertical" h="36px" ml={'12'} mr={'12'} />*/}
 
-                                <DownArrow color={'white'} />
-                            </Center>
-                        </MenuButton>
-                        <MenuList borderRadius={'0'} width={'165px'} maxHeight={'72px'} color={textColor} mt={'-8px'} pt={'0px'} pb={'0px'}>
-                            <MenuItem onClick={CreateProject.onOpen} pt={'0px'}>
-                                <Text>Start from scratch</Text>
-                            </MenuItem>
-                            <MenuItem pt={'0px'} pb={'0px'}>
-                                <Text mb={4} pt={2}>
-                                    Use a template
-                                </Text>
-                            </MenuItem>
-                            <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
-                        </MenuList>
-                    </Menu>
+                    {/*            <DownArrow color={'white'} />*/}
+                    {/*        </Center>*/}
+                    {/*    </MenuButton>*/}
+                    {/*    <MenuList borderRadius={'0'} width={'165px'} maxHeight={'72px'} color={textColor} mt={'-8px'} pt={'0px'} pb={'0px'}>*/}
+                    {/*        <MenuItem onClick={CreateProject.onOpen} pt={'0px'}>*/}
+                    {/*            <Text>Start from scratch</Text>*/}
+                    {/*        </MenuItem>*/}
+                    {/*        <MenuItem pt={'0px'} pb={'0px'}>*/}
+                    {/*            <Text mb={4} pt={2}>*/}
+                    {/*                Use a template*/}
+                    {/*            </Text>*/}
+                    {/*        </MenuItem>*/}
+                    {/*        <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />*/}
+                    {/*    </MenuList>*/}
+                    {/*</Menu>*/}
+                    { CreateProject.isOpen &&
+                    <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
+                    }
+
                 </Center>
                 <Tabs index={tabIndex} onChange={handleTabsChange} width={'100%'} isLazy mt={-30} colorScheme={'tabsTheme'}>
                     <TabList width={'100%'} color={tabTextColor}>
