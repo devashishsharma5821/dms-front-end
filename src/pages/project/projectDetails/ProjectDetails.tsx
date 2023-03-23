@@ -32,7 +32,13 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingl
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
-import { getUserNameFromId, getTruncatedText, getFormattedUserData, copyToClipBoard } from '../../../utils/common.utils';
+import {
+    getUserNameFromId,
+    getTruncatedText,
+    getFormattedUserData,
+    copyToClipBoard,
+    convertTime
+} from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
@@ -42,6 +48,7 @@ import Share from '../../../component/modalSystem/Share';
 import LeftArrow from '../../../assets/LeftArrow';
 import { getToastOptions } from '../../../models/toastMessages';
 import ProjectDetailsGrid from './detailsGridComponent';
+import moment from 'moment';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -379,7 +386,17 @@ const ProjectDetails = (props: any) => {
                                                         Created On
                                                     </Text>
                                                     <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData && SingleProjectData.basic.created_at.replace('T', ' ')}
+                                                        {SingleProjectData && convertTime(SingleProjectData.basic.created_at, false)}
+                                                    </Text>
+                                                </Box>
+                                                <Box ml={'51px'}>
+                                                    <Text ml={16} color={textColor2} mt={'12px'} fontWeight={600} lineHeight={'22px'}>
+                                                        Last Modified
+                                                    </Text>
+                                                    <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                        {SingleProjectData &&
+                                                            convertTime(SingleProjectData.basic.updated_at, true)
+                                                        }
                                                     </Text>
                                                 </Box>
                                             </Flex>

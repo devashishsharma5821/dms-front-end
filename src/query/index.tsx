@@ -317,6 +317,7 @@ export const getComputeListData = () => {
                 status
                 created_by
                 created_at
+                updated_at
             }
         }
     `;
@@ -348,6 +349,7 @@ export const GET_ALL_PROJECTS = gql`
             name
             created_by
             created_at
+            updated_at
             project_variables
             tags
             description
@@ -369,6 +371,7 @@ export const GET_SINGLE_PROJECT = (id: string) => {
       name
       created_by
       created_at
+      updated_at
       project_variables
       tags
       description

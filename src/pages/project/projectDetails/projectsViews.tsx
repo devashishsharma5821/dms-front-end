@@ -111,7 +111,10 @@ const ProjectsViews = (props: any) => {
                                                             </Text>
 
                                                             <Text ml={10} color={'default.veryLightGrayTextColor'} fontWeight={600} height={'20px'}>
-                                                                {convertTime(project.created_at)}
+                                                                {convertTime(project.created_at, false)}
+                                                            </Text>
+                                                            <Text ml={10} color={'default.veryLightGrayTextColor'} fontWeight={600} height={'20px'}>
+                                                                Last Edited {convertTime(project.updated_at, true)}
                                                             </Text>
                                                         </Box>
                                                     </Center>

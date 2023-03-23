@@ -72,7 +72,7 @@ const Compute = () => {
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
         { headerName: 'Compute Name', field: 'name' },
-        { headerName: 'Created On', field: 'created_at', valueFormatter: (params: any) => convertTime(params.value) },
+        { headerName: 'Created On', field: 'created_at', valueFormatter: (params: any) => convertTime(params.value, false) },
         { headerName: 'Worker Type', field: 'resources.node_type.worker_type_id' },
         { headerName: 'Driver Type', field: 'resources.node_type.driver_type_id' },
         { headerName: 'Workers', field: 'resources.num_workers' },
