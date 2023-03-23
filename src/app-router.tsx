@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import Header from '../src/component/header/Header';
 import { HomePage, PageNotFound, Notebook, Compute, Project, ExperimentsPage, ProjectDetails, ComputeDetails, Dataset } from './pages';
 import { Box, Spinner } from '@chakra-ui/react';
@@ -9,7 +9,6 @@ import { ContextCompute } from './context/computeContext';
 import SocketWrapper from './component/SocketWrapper';
 import { ToastProvider } from '@chakra-ui/react';
 import useAppStore from './store';
-import { ProjectRouter } from './pages/ProjectRouter';
 
 export const AppRouter = (props: any) => {
     const [spinnerInfo] = useAppStore((state: any) => [state.spinnerInfo]);
@@ -32,7 +31,10 @@ export const AppRouter = (props: any) => {
                                     <ToastProvider />
                                     <Routes>
                                         <Route path="/" element={<Navigate to="/compute" />}></Route>
-                                        <Route path="/*" element={<ProjectRouter />} />
+                                        <Route path="*" element={<Navigate to="/"/>} />
+                                        <Route path="projects" element={<Project />} />
+                                        <Route path="projectDetails/:projectId" element={<ProjectDetails />} />
+                                        <Route path="projectDetails/:projectId/experiment/:experimentId" element={<ExperimentsPage />} />
                                         <Route path="/home" element={<HomePage />} />
                                         <Route path="/notfound" element={<PageNotFound />} />
                                         <Route path="/notebook" element={<Notebook />} />

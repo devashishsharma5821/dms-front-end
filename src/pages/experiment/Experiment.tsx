@@ -36,7 +36,7 @@ import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
 import ZoomComponent from '../../component/zoomer/Zoomer';
 import { newComputeData } from '../compute/generateNewComputeData';
 import Details from '../../component/details/Details';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GetSingleProjectAppStoreState } from '../../models/project';
 import { GetExperimentAppStoreState } from '../../models/experimentModel';
 import { getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
@@ -60,6 +60,7 @@ const ExperimentsPage = () => {
         state.ExperimentData,
         state.TransformersData
     ]);
+    const navigate = useNavigate();
     const opid = v4();
     const computeRunningModal = useDisclosure();
     const computeModal = useDisclosure();
@@ -148,11 +149,11 @@ const ExperimentsPage = () => {
 
     useEffect(() => {
         updateSpinnerInfo(true);
-        if (ExperimentData === null || params.experimentId !== ExperimentData.id) {
-            getAndUpdateExperimentData(params.experimentId as string);
-        } else {
-            updateSpinnerInfo(false);
-        }
+            if (ExperimentData === null || params.experimentId !== ExperimentData.id) {
+                getAndUpdateExperimentData(params.experimentId as string);
+            } else {
+                updateSpinnerInfo(false);
+            }
     }, [ExperimentData]);
 
     const createCanvasSchemaFromTransformersData = () => {

@@ -53,7 +53,7 @@ const sideBarMenuIcons = [
             {
                 icon: <WhiteCollection color="#99A1B2" />,
                 iconName: 'Projects',
-                route: '/project',
+                route: '/projects',
                 disabled: false
             },
             {

@@ -104,16 +104,17 @@ const ProjectDetails = (props: any) => {
     }
     useEffect(() => {
         updateSpinnerInfo(true);
-        if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
-            getAndUpdateSingleProjectData(params.projectId as string);
-        } else {
-            updateSpinnerInfo(false);
-            setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
-            setInlineProjectName(SingleProjectData.basic.name);
-            if (AllUsersData && SingleProjectData) {
-                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+            if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
+                getAndUpdateSingleProjectData(params.projectId as string);
+            } else {
+                updateSpinnerInfo(false);
+                setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
+                setInlineProjectName(SingleProjectData.basic.name);
+                if (AllUsersData && SingleProjectData) {
+                    setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+                }
             }
-        }
+
     }, [SingleProjectData]);
     useEffect(() => {
         updateSpinnerInfo(true);
@@ -136,7 +137,7 @@ const ProjectDetails = (props: any) => {
         createProjectModal.onClose();
     };
     const navigateToProjects = () => {
-        navigate(`/project`);
+        navigate(`/projects`);
     };
     const onDeleteHandler = (id: string) => {
         deleteConfirmationModal.onOpen();
@@ -151,7 +152,7 @@ const ProjectDetails = (props: any) => {
             .then(() => {
                 toast(getToastOptions(`Project is deleted successfully`, 'success'));
                 getAndUpdateAllProjectsData();
-                navigate('/project');
+                navigate('/projects');
                 deleteConfirmationModal.onClose();
                 updateSpinnerInfo(false);
             })
