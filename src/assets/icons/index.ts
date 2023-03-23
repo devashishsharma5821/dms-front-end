@@ -28,6 +28,7 @@ export { WideCreateIcon } from './WideCreateIcon';
 export { DeployedNotRunningIcon } from './DeployNotRunning';
 export { PlusIcont } from './PlusIcont';
 export { Documentation } from './Documentation';
+export { People } from './People';
 export { StopCompute } from './StopComputeIcon';
 export { RightArrow } from './RightArrow';
 export { CloseIcon } from './CloseIcon';

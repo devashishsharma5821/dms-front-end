@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../project.scss';
 import { Avatar, Box, Center, Flex, Text, useColorModeValue, AvatarGroup } from '@chakra-ui/react';
-import { Documentation } from '../../../assets/icons';
+import { Documentation, People } from '../../../assets/icons';
 import { GetAllProjectsDetail } from '../../../models/project';
 import { getUserNameFromId, getTruncatedText, convertTime } from '../../../utils/common.utils';
 import useAppStore from '../../../store';
@@ -80,7 +80,10 @@ const ProjectsViews = (props: any) => {
                                     >
                                         <Box key={project.id} maxHeight={'69px'} bg={'light.lightGrayishBlue'} borderTopRadius={8}>
                                             <Center ml={'23px'} pt={'8px'} justifyContent={'flex-start'}>
-                                                <Documentation color={'#666C80'} />
+                                                {
+                                                    (UserConfig.userConfiguration.user.userId !== project.created_by) ? <People color={'#666C80'} /> : <Documentation color={'#666C80'} />
+                                                }
+
                                                 <Text title={project.name} ml={'11px'} fontWeight={700} fontSize={20} mt={'2px'} color={'default.blackText'} height={'27px'}>
                                                     {getTruncatedText(project && project.name, 20)}
                                                 </Text>
