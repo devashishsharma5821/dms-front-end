@@ -74,6 +74,7 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
     return projectData.filter((project: any) => {
         const user = getUserNameFromId(AllUsersData, project.created_by);
         return project.name.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
+                project.id.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
                user.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
             (project.project_access.filter((access: any) => {
                    const userFilteredProjectAccess = getUserNameFromIdInitials(AllUsersData, access.user_id);
