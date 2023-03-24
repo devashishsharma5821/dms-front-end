@@ -106,12 +106,12 @@ const SideBarMenu = () => {
     };
     const thirdLevelMenu = () => {
         return (
-            <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '445px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
+            <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '464px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
                             <h3>
-                               <ProjectDetailsMenu></ProjectDetailsMenu>
+                                <ProjectDetailsMenu></ProjectDetailsMenu>
                             </h3>
                         </Box>
                     </VStack>
@@ -122,7 +122,7 @@ const SideBarMenu = () => {
     const secondLevelMenu = () => {
         return (
             <div
-                style={{ ...zIndexStyle, position: 'absolute', zIndex: '100', marginLeft: '212px', border: ' 1px solid #D8DCDE' }}
+                style={{ ...zIndexStyle, position: 'absolute', zIndex: '100', marginLeft: '208px', border: ' 1px solid #D8DCDE' }}
                 id="mySidebar"
                 onMouseOver={hoverInSubMenu}
                 onMouseOut={hoverOutSubMenu}
