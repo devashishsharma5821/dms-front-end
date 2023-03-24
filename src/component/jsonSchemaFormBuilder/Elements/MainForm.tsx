@@ -25,12 +25,24 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
         }
         if (values?.terminate_after === false || values?.terminate_after === undefined) {
             formSchema['max_inactivity_min'].disable = true;
+            formSchema['max_inactivity_min'].required = false;
         } else {
             formSchema['max_inactivity_min'].disable = false;
+            formSchema['max_inactivity_min'].required = true;
         }
 
         if (values?.computeId) {
             formSchema['default'].value = values.computeId;
+        }
+
+        if (values?.workers) {
+            formSchema['workers'].defaultValue = values.workers;
+        }
+        if (values?.max_workers) {
+            formSchema['max_workers'].defaultValue = values.max_workers;
+        }
+        if (values?.min_workers) {
+            formSchema['min_workers'].defaultValue = values.min_workers;
         }
 
         initForm(formSchema, values);
@@ -39,7 +51,7 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
     return (
         <form className="needs-validation" onSubmit={handleSubmit}>
             {Object.keys(formSchema).map((key, idx) => {
-                return <GetFormElements uniqueKey={`${key}_${idx}`} elementName={key} formSchemaKey={formSchema[key]} defaultValue={formSchema[key].defaultValue} isEdit={isEdit} />;
+                return <GetFormElements uniqueKey={`${key}_${idx}`} elementName={key} formSchemaKey={formSchema[key]} defaultValue={formSchema[key].defaultValue} isEdit={isEdit} min={''} />;
             })}
             <Box borderTop={'1px solid #EAEAEA'} pt={'10px'} className="main-container">
                 <Button type="button" variant="outline" colorScheme="blue" className="cancel-button" onClick={onClose}>

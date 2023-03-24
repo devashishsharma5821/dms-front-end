@@ -4,7 +4,8 @@ export const newComputeData = (computedata: DmsComputeData[]) => {
     return computedata.map((compute: DmsComputeData) => {
         return {
             ...compute,
-            totalMemory: Math.round((compute.resources.node_type.total_memory_mb) / 1024) + '  GB',
+            status: compute.status === 'STARTING' ? 'SUCCEEDED' : compute.status,
+            totalMemory: Math.round(compute.resources.node_type.total_memory_mb / 1024) + '  GB',
             totalCores: compute.resources.node_type.total_num_cores
         };
     });

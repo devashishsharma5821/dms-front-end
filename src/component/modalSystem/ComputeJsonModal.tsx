@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApolloClient, DocumentNode } from '@apollo/client';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 import { COMPUTE_MODAL_PROPS } from '../../models/types';
@@ -11,14 +11,12 @@ import { createCompute, CreateComputeSubmitHandlerValues } from '../../models/co
 import { getAndUpdateDmsComputeData, onPlayClickHandler } from '../../zustandActions/computeActions';
 import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store';
-import { ComputeContext } from '../../context/computeContext';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../models/toastMessages';
 const { toast } = createStandaloneToast();
 
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
-    const context = useContext(ComputeContext);
     const navigate = useNavigate();
     const client = useApolloClient();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
@@ -26,7 +24,6 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     useEffect(() => {
         formSchema.worker_type_id.options = dbSettingsData;
         formSchema.driver_type_id.options = dbSettingsData;
-        // formSchema.Compute_id.value = context.id;
     }, [dbSettingsData]);
 
     useEffect(() => {
@@ -78,7 +75,8 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             })
             .catch((err) => {
                 setIsDisabled(false);
-                toast(getToastOptions(`${err}`, 'error'));
+                toast(getToastOptions(err, 'error'));
+                props.onClose();
             });
     };
 
