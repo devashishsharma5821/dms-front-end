@@ -475,6 +475,17 @@ export const deleteDataset = (variables: any) => {
 // Dataset APIs End Here
 
 // ProjectDetailsMenu APIs Start here
+export const dmsEditExperiment = (variables: any) => {
+    return gql`mutation {
+  dmsEditExperiment(
+    id: "${variables.id}"
+    name: "${variables.name}",
+    tags: ${JSON.stringify(variables.tags)},
+    description: "${variables.description}"
+  )
+}`;
+};
+
 export const createExperiment = (variables: any) => {
     return gql`mutation {
   dmsCreateExperiment(

@@ -240,7 +240,7 @@ const Toolbar = (props: toolbarPropsType) => {
                 )}
             </Box>
             <Comments isOpen={commentModal.isOpen} onClose={commentModal.onClose} commentClosed={commentModalClosed}></Comments>
-            {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} />}
+            {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} data={props.experimentData} projectData={props.projectData} userData={props.usersData} userAccessList={props.userAccessList} />}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
             {VariablesModal.isOpen && <Variables isOpen={VariablesModal.isOpen} onClose={VariablesModal.onClose} />}
             {OutputModal.isOpen && <Output isOpen={OutputModal.isOpen} onClose={OutputModal.onClose} />}

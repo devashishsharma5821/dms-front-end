@@ -29,7 +29,11 @@ import { TransformersAppStoreState } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
 import { shapes } from '@antuit/rappid-v1';
 import { updateDmsComputeData } from '../../zustandActions/computeActions';
-import { updateDmsDatabricksCredentialsValidToken, updateSpinnerInfo } from '../../zustandActions/commonActions';
+import {
+    getAndUpdateAllUsersData,
+    updateDmsDatabricksCredentialsValidToken,
+    updateSpinnerInfo
+} from '../../zustandActions/commonActions';
 import { hasSubscribed } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
@@ -80,7 +84,9 @@ const ExperimentsPage = () => {
     const { colorMode } = useColorMode();
     const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
     const [newComputedata, setNewComputedata] = useState<DmsComputeData[]>([]);
-
+    const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
+    const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
+    const [accessUserList, setAccessUserList] = React.useState<any>([]);
     // React Hook
     const bgColor = useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
@@ -96,7 +102,22 @@ const ExperimentsPage = () => {
     // This useEffect will need to remove after implementation of child routing.
     useEffect(() => {
         getAndUpdateSingleProjectData(projectId as string);
+        if (AllUsersData && SingleProjectData) {
+            setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+        }
+
     }, []);
+
+    useEffect(() => {
+        if(AllUsersData === null) {
+            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
+            getAndUpdateAllUsersData(variablesForAllUsers);
+        } else {
+            if (AllUsersData && SingleProjectData) {
+                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+            }
+        }
+    }, [AllUsersData]);
 
     let unsubscribe: any = null;
     const checkComputeStatus = (dmsComputes: DmsComputeData[]) => {
@@ -732,7 +753,13 @@ const ExperimentsPage = () => {
         <>
             <Box ref={elementRef} width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar computeData={newComputedata} is_default={dmsComputeRunningStatusIsDefaultOne} />
+                    <Toolbar computeData={newComputedata}
+                             is_default={dmsComputeRunningStatusIsDefaultOne}
+                             experimentData={ExperimentData}
+                             projectData={SingleProjectData}
+                             usersData={AllUsersData}
+                             userAccessList={accessUserList}
+                    />
                 </Box>
 
                 <Flex>
