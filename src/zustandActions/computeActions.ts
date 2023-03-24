@@ -33,21 +33,21 @@ export const onPlayClickHandler: agGridClickHandler = async (id) => {
         const response = await client.mutate<ComputeRun<RunComputeDetail>>({
             mutation: dmsRunCompute(runComputeId)
         });
-        toast(getToastOptions(`Compute is starting`, 'success'));
+        response && toast(getToastOptions(`Compute is succeeded`, 'success'));
+        useAppStore.setState((state) => ({
+            DmsComputeData: state.DmsComputeData.map((computeData: any) => {
+                if (runComputeId === computeData.id) {
+                    computeData.status = 'SUCCEEDED';
+                    return computeData;
+                }
+                if (!(runComputeId === computeData.id)) {
+                    return computeData;
+                }
+            })
+        }));
     } catch (error: any) {
         toast(getToastOptions(`${error.message}`, 'error'));
     }
-    useAppStore.setState((state) => ({
-        DmsComputeData: state.DmsComputeData.map((computeData: any) => {
-            if (runComputeId === computeData.id) {
-                computeData.status = 'STARTING';
-                return computeData;
-            }
-            if (!(runComputeId === computeData.id)) {
-                return computeData;
-            }
-        })
-    }));
 };
 
 export const getAndUpdateDbSettingsData: any = async () => {
@@ -66,7 +66,7 @@ export const getAndUpdateDbSettingsData: any = async () => {
 };
 
 export const DmsRunCompute: dmsRunComputesType = async (id: string) => {
-    const response = await client.mutate<ComputeRun<RunComputeDetail>>({ mutation: dmsRunCompute(id) });
+    await client.mutate<ComputeRun<RunComputeDetail>>({ mutation: dmsRunCompute(id) });
 };
 export const updateDmsComputeData: updateDmsComputeDataType = (ComputeData) => useAppStore.setState(() => ({ DmsComputeData: ComputeData }));
 export const setComputeState: setComputeStateType = (value) => useAppStore.setState({ computeState: value });

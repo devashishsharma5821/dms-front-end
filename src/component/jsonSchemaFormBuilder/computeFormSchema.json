@@ -154,11 +154,11 @@
         "show": true,
         "disable": true,
         "conditionalRender": true,
+        "required": false,
         "isDefaultValue": true,
         "defaultValue": 60,
-        "errormessage": "minutes of inactivity",
         "className": "minutesOfInactivity",
-        "min": "0",
+        "min": "1",
         "extraStyles": {
             "inputWidth": "50px"
         },

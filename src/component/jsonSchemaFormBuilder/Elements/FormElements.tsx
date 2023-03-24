@@ -2,6 +2,7 @@ import { ErrorMessage } from 'formik';
 import { FormControl, FormLabel } from '@chakra-ui/react';
 import InputField from './InputField';
 import SwitchField from './SwitchField';
+import Numbers from './NumberField';
 import { FieldPropsType } from '../../../models/formBuilder';
 import { options } from '../../../models/formBuilder';
 
@@ -9,7 +10,6 @@ export function TextField(props: FieldPropsType) {
     if (!props.show) {
         return <></>;
     }
-
     return (
         <FormControl isRequired className={props?.className && props.className} style={props.uiSchema} key={props?.uniqueKey}>
             <FormLabel htmlFor={props.name} style={props?.uiSchemaOptions?.label ? props.uiSchemaOptions.label : {}} className={props.className + '_' + props.label}>
@@ -52,6 +52,21 @@ export const FieldSwitch = (props: FieldPropsType) => {
         <FormControl className={props?.className && props.className} style={props.uiSchema}>
             {props.label && <FormLabel style={props?.uiSchemaOptions?.label && props.uiSchemaOptions.label}>{props.label}</FormLabel>}
             <SwitchField {...props} />
+        </FormControl>
+    );
+};
+
+export const NumberField = (props: FieldPropsType) => {
+    if (!props.show) {
+        return <></>;
+    }
+    return (
+        <FormControl isRequired className={props?.className && props.className} style={props.uiSchema} key={props?.uniqueKey}>
+            <FormLabel htmlFor={props.name} style={props?.uiSchemaOptions?.label ? props.uiSchemaOptions.label : {}} className={props.className + '_' + props.label}>
+                {props.label}
+            </FormLabel>
+            <Numbers {...props} />
+            <ErrorMessage name={props.name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
         </FormControl>
     );
 };

@@ -1,4 +1,4 @@
-import { TextField, SelectField, FieldSwitch } from './Elements/FormElements';
+import { TextField, SelectField, FieldSwitch, NumberField } from './Elements/FormElements';
 import { FormSchemaType, GetFormElementsPropType } from '../.././models/formBuilder';
 
 function GetFormElements(props: GetFormElementsPropType) {
@@ -17,7 +17,8 @@ function GetFormElements(props: GetFormElementsPropType) {
             extraStyles: elementSchema.extraStyles,
             uiSchemaOptions: elementSchema.uiSchemaOptions,
             uniqueKey: props.uniqueKey,
-            defaultValue: props.defaultValue
+            defaultValue: props.defaultValue,
+            min: elementSchema.min
         };
 
         if (props.isEdit === true && elementSchema.isDefault === true) {
@@ -28,8 +29,12 @@ function GetFormElements(props: GetFormElementsPropType) {
             );
         }
 
-        if (elementSchema.type === 'text' || elementSchema.type === 'email' || elementSchema.type === 'number') {
+        if (elementSchema.type === 'text' || elementSchema.type === 'email') {
             return <TextField {...fieldProps} />;
+        }
+
+        if (elementSchema.type === 'number') {
+            return <NumberField {...fieldProps} />;
         }
 
         if (elementSchema.type === 'select') {

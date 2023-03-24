@@ -67,8 +67,8 @@ const ComputeDetails = () => {
             });
     };
 
-    const onEditClickHandler = (data: any) => {
-        getAndUpdateDbSettingsData();
+    const onEditClickHandler = async (data: any) => {
+        await getAndUpdateDbSettingsData();
         context.updateFormData({
             id: data.id,
             max_inactivity_min: data?.max_inactivity_min,
@@ -104,7 +104,7 @@ const ComputeDetails = () => {
                     <Text fontSize="18px" fontWeight="700">
                         {computeData[0].name}
                     </Text>
-                    <Box cursor={'pointer'} ml={10} onClick={() => onEditClickHandler(computeData[0])}>
+                    <Box cursor={'pointer'} ml={10}>
                         <EditIcon />
                     </Box>
                     <Button variant="outline" className="delete-button" fontWeight={100} onClick={() => onDeleteHandler(computeData[0].id)}>
@@ -199,7 +199,7 @@ const ComputeDetails = () => {
                                 <Box>
                                     <Text fontSize={14}>Total Memory</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {Math.round((computeData[0].resources.node_type.total_memory_mb) / 1024)} GB
+                                        {Math.round(computeData[0].resources.node_type.total_memory_mb / 1024)} GB
                                     </Text>
                                 </Box>
                                 <Box>
