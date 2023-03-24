@@ -25,8 +25,10 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
         }
         if (values?.terminate_after === false || values?.terminate_after === undefined) {
             formSchema['max_inactivity_min'].disable = true;
+            formSchema['max_inactivity_min'].required = false;
         } else {
             formSchema['max_inactivity_min'].disable = false;
+            formSchema['max_inactivity_min'].required = true;
         }
 
         if (values?.computeId) {

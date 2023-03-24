@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
-import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure, Spinner } from '@chakra-ui/react';
+import { Box, Button, Center, Divider, Flex, Stack, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
@@ -69,7 +69,7 @@ const Compute = () => {
     const defaultColDef = {
         resizable: true
     };
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    const [columnDefs] = useState<ColDef[]>([
         { headerName: 'Compute Id', field: 'id', cellRenderer: computeIdHandler },
         { headerName: 'Compute Name', field: 'name' },
         { headerName: 'Created On', field: 'created_at', valueFormatter: (params: any) => convertTime(params.value) },
@@ -91,15 +91,15 @@ const Compute = () => {
                     query: GET_COMPUTELIST
                 })
                 .then((response: getComputeListQueryData) => {
-                    let computedata = [...response.data.dmsComputes];
+                    let computedata = [...response?.data?.dmsComputes];
                     const newComputedataa = newComputeData(computedata);
                     setRowData(newComputedataa);
                     setRowCount(newComputedataa.length);
                     gridRef?.current!?.api?.sizeColumnsToFit();
-                    updateDmsComputeData(response.data.dmsComputes);
+                    updateDmsComputeData(response?.data?.dmsComputes);
                 })
                 .catch((err: any) => {
-                    toast(getToastOptions(err, 'error'));
+                    toast(getToastOptions(err.message, 'error'));
                 });
         } else if (DmsComputeData?.length > 0) {
             const newComputedataa = newComputeData(DmsComputeData);
@@ -177,8 +177,8 @@ const Compute = () => {
                 stopComputeRunning.onClose();
                 toast(getToastOptions(`Compute will be stopped after 10 seconds`, 'success'));
                 setTimeout(() => {
-                    const newData = DmsComputeData.map((computeData: any) => {
-                        if (computeData.id === globalComputeId) {
+                    const newData = DmsComputeData?.map((computeData: any) => {
+                        if (computeData?.id === globalComputeId) {
                             computeData.status = 'STOPPED';
                             return computeData;
                         } else {
@@ -193,14 +193,15 @@ const Compute = () => {
                             userId: globalComputeId
                         });
 
-                        submitMessage([{ content: { action: Action.Unsubscribe, subject: `dms_pid.out.${globalComputeId}` } }, { content: shutDownRequest }]);
+                        submitMessage([{ content: { action: Action?.Unsubscribe, subject: `dms_pid.out.${globalComputeId}` } }, { content: shutDownRequest }]);
                     }
                     setGlobalComputeId(null);
                 }, 10000);
             })
             .catch((err) => {
-                toast(getToastOptions(err || 'Something went wrong', 'error'));
+                toast(getToastOptions(err.message || 'Something went wrong', 'error'));
                 setGlobalComputeId(null);
+                stopComputeRunning.onClose();
             });
     };
 
@@ -225,24 +226,26 @@ const Compute = () => {
 
     const onEditClickHandler: agGridClickHandler = (data) => {
         context.updateFormData({
-            id: data.id,
+            id: data?.id,
             max_inactivity_min: data?.max_inactivity_min,
-            compute_name: data.name,
-            autoscale: data.resources.autoscale,
-            workers: data.resources.num_workers ? data.resources.num_workers : '0',
-            spot_instances: data.resources.spot_instances,
-            worker_type_id: data.resources.node_type.worker_type_id,
-            driver_type_id: data.resources.node_type.driver_type_id,
-            min_workers: data.resources?.autoscale?.min_workers,
-            max_workers: data.resources?.autoscale?.max_workers,
-            enable_autoscaling: data.resources.autoscale ? true : false,
+            compute_name: data?.name,
+            autoscale: data?.resources?.autoscale,
+            workers: data?.resources?.num_workers ? data?.resources?.num_workers : '0',
+            spot_instances: data?.resources?.spot_instances,
+            worker_type_id: data?.resources?.node_type?.worker_type_id,
+            driver_type_id: data?.resources?.node_type?.driver_type_id,
+            min_workers: data?.resources?.autoscale?.min_workers,
+            max_workers: data?.resources?.autoscale?.max_workers,
+            enable_autoscaling: data?.resources?.autoscale ? true : false,
             terminate_after: data?.max_inactivity_min ? true : false,
-            computeId: data.id
+            computeId: data?.id
         });
         setIsEdit(true);
         if (!dbSettingsData.length) {
             const check = getAndUpdateDbSettingsData();
-            check && createModal.onOpen();
+            check.then((res: any) => {
+                res ? createModal.onOpen() : toast(getToastOptions('Unable to open edit modal', 'error'));
+            });
         } else {
             createModal.onOpen();
         }
@@ -252,21 +255,21 @@ const Compute = () => {
         return (
             <Flex height={'inherit'} justifyContent="space-between" alignItems={'center'}>
                 {params?.data?.status === 'STOPPED' ? (
-                    <div className="icons" onClick={() => onPlayClickHandler(params.data.id)}>
+                    <div className="icons" onClick={() => onPlayClickHandler(params?.data.id)}>
                         <PlayIcon />
                     </div>
                 ) : (
-                    <div className="icons" onClick={() => onStopClickHandler(params.data)}>
+                    <div className="icons" onClick={() => onStopClickHandler(params?.data)}>
                         <StopCompute />
                     </div>
                 )}
-                <div className="icons" onClick={() => onEditClickHandler(params.data)}>
+                <div className="icons" onClick={() => onEditClickHandler(params?.data)}>
                     <EditIcon />
                 </div>
-                <div className="icons" onClick={() => onDeleteClickHandler(params.data)} style={{ cursor: 'pointer' }}>
+                <div className="icons" onClick={() => onDeleteClickHandler(params?.data)} style={{ cursor: 'pointer' }}>
                     <DeleteIcon color={textColorIcon} height={'18px'} width={'16px'} />
                 </div>
-                <div className="icons" onClick={() => onRefreshClickHandler(params.data)}>
+                <div className="icons" onClick={() => onRefreshClickHandler(params?.data)}>
                     <ReStartIcon />
                 </div>
             </Flex>
@@ -274,8 +277,8 @@ const Compute = () => {
     }
 
     const defaultRowOnChange = (data: any) => {
-        if (!data.is_default) {
-            setGlobalComputeId(data.id);
+        if (!data?.is_default) {
+            setGlobalComputeId(data?.id);
             alertConfirm.onOpen();
         } else {
             stopSettingDefault.onOpen();
@@ -289,13 +292,13 @@ const Compute = () => {
             })
             .then(() => {
                 toast(getToastOptions(`Compute is deleted successfully`, 'success'));
-                const newData = DmsComputeData.filter((computeData: any) => computeData.id !== globalComputeId);
+                const newData = DmsComputeData.filter((computeData: any) => computeData?.id !== globalComputeId);
                 useAppStore.setState(() => ({ DmsComputeData: newData }));
                 deleteComputeModal.onClose();
                 setGlobalComputeId(null);
             })
             .catch((err: any) => {
-                toast(getToastOptions(err.message, 'error'));
+                toast(getToastOptions(err?.message, 'error'));
                 deleteComputeModal.onClose();
             });
     };
@@ -307,7 +310,7 @@ const Compute = () => {
             opId: opid,
             userId: globalComputeId
         });
-        messageQue.push({ content: { action: Action.Subscribe, subject: `dms_pid.out.${globalComputeId}` } });
+        messageQue.push({ content: { action: Action?.Subscribe, subject: `dms_pid.out.${globalComputeId}` } });
         messageQue.push({ content: aliveMessage });
         submitMessage(messageQue);
         setGlobalComputeId(null);
@@ -330,19 +333,18 @@ const Compute = () => {
             })
             .then(() => {
                 alertConfirm.onClose();
-
-                const newData = DmsComputeData.map((computeData: any) => {
-                    if (globalComputeId === computeData.id) {
+                const newData = DmsComputeData?.map((computeData: any) => {
+                    if (globalComputeId === computeData?.id) {
                         computeData.is_default = true;
                         return computeData;
                     }
 
-                    if (computeData.is_default) {
+                    if (computeData?.is_default) {
                         computeData.is_default = false;
                         return computeData;
                     }
 
-                    if (!(globalComputeId === computeData.id) && !computeData.is_default) {
+                    if (!(globalComputeId === computeData?.id) && !computeData?.is_default) {
                         return computeData;
                     }
                 });
@@ -352,14 +354,15 @@ const Compute = () => {
                 setGlobalComputeId(null);
             })
             .catch((error: any) => {
-                toast(getToastOptions(error.message, 'error'));
+                toast(getToastOptions(error?.message, 'error'));
                 setGlobalComputeId(null);
+                alertConfirm.onClose();
                 deleteComputeModal.onClose();
             });
     };
 
     function defaultRow(params: any) {
-        return <SwitchComponent params={params} gridRef={gridRef} defaultRowOnChange={() => defaultRowOnChange(params.data)} />;
+        return <SwitchComponent params={params} gridRef={gridRef} defaultRowOnChange={() => defaultRowOnChange(params?.data)} />;
     }
 
     const navigateToComputeDetails = (id: string) => {
@@ -368,14 +371,14 @@ const Compute = () => {
 
     function computeIdHandler(params: any) {
         return (
-            <div className="computeIdCell" onClick={() => navigateToComputeDetails(params.data.id)}>
-                {params.data.id}
+            <div className="computeIdCell" onClick={() => navigateToComputeDetails(params?.data?.id)}>
+                {params?.data?.id}
             </div>
         );
     }
 
     const onCellClicked = (params: any) => {
-        actionsRow(params.data);
+        actionsRow(params?.data);
     };
 
     const triggerCreateModal = () => {
@@ -406,11 +409,11 @@ const Compute = () => {
     };
 
     const onSearchChange = (searchValue: string) => {
-        gridRef.current!.api.setQuickFilter(searchValue);
-        setRowCount(gridRef.current!.api.getModel().getRowCount());
+        gridRef?.current!.api.setQuickFilter(searchValue);
+        setRowCount(gridRef?.current!.api.getModel().getRowCount());
     };
 
-    const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData.id === globalComputeId);
+    const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData?.id === globalComputeId);
     if (!computeData) {
         return <div>Loading...</div>;
     }
