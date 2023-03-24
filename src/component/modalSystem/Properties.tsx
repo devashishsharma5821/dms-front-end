@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/react';
 import { CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
 import { ShareData } from '../../models/share';
-import { convertTime, copyToClipBoard, getUserNameFromId } from '../../utils/common.utils';
+import { convertTime, copyToClipBoard, getTruncatedText, getUserNameFromId } from '../../utils/common.utils';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { ProjectEdit, ProjectEditDetail } from '../../models/project';
@@ -46,6 +46,7 @@ const Properties = (props: any) => {
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
+    const closeButton = useColorModeValue('#666C80', '#ffffff');
     const { onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
@@ -57,10 +58,6 @@ const Properties = (props: any) => {
     const tagPopOver = useDisclosure();
     const tagOptions: any = [];
     const [tagValue, setTagValue] = React.useState([]);
-    console.log('Project', props.projectData);
-    console.log('Ex', props.data);
-    console.log('all user', props.userData);
-    console.log('user', props.userAccessList)
     function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -111,6 +108,9 @@ const Properties = (props: any) => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateExperimentData(props.data.id);
                 updateSpinnerInfo(false);
+                setInlineDescription('');
+                setInlineExperimentName('');
+                setTagValue([]);
             })
             .catch((err) => {
                 updateSpinnerInfo(false);
@@ -168,6 +168,35 @@ const Properties = (props: any) => {
     };
     const handleTagChange = (ev: any) => {
         setTagValue(ev);
+    };
+    const handleTagSubmit = () => {
+            const variables = {
+                id: props.data.id,
+                name: props.data.name,
+                description: props.data.description,
+                tags: [...props.data.tags, ...tagValue]
+            };
+            handleEditExperiment(variables, {
+                successMessage: 'Experiment Tags Edited Successfully',
+                errorMessage: 'Experiment Tags Failed To edit'
+            });
+            tagPopOver.onClose();
+    };
+
+    const handleRemoveTag = (tag: string) => {
+        props.data.tags = props.data.tags.filter((tagToKeep: any) => {
+            return tagToKeep !== tag;
+        });
+            const variables = {
+                id: props.data.id,
+                name: props.data.name,
+                description: props.data.description,
+                tags: [...props.data.tags]
+            };
+        handleEditExperiment(variables, {
+            successMessage: 'Project Tags Edited Successfully',
+            errorMessage: 'Project Tags Failed To edit'
+        });
     };
     return (
         <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -251,20 +280,34 @@ const Properties = (props: any) => {
                                     <Center>
                                         {
                                             props.data.tags?.map((tag: any, tagIndex: number) => {
-                                                return (
-                                                    <Box key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                                        <Flex>
-                                                            <Center>
-                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                    {tag}
-                                                                </Text>
-                                                                <Box justifyContent={'flex-end'} ml={'14px'}>
-                                                                    <CloseIcon color={'default.darkGrayCreate'} />
-                                                                </Box>
-                                                            </Center>
-                                                        </Flex>
-                                                    </Box>
-                                                )
+                                                if(tagIndex === 2) {
+                                                    return (
+                                                        <Box key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                            <Flex>
+                                                                <Center>
+                                                                    <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                        + {props.data.tags.length - 2} more
+                                                                    </Text>
+                                                                </Center>
+                                                            </Flex>
+                                                        </Box>
+                                                    )
+                                                } else if (tagIndex < 2) {
+                                                    return (
+                                                        <Box cursor={"pointer"} key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                            <Flex cursor={"pointer"}>
+                                                                <Center cursor={"pointer"}>
+                                                                    <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                        {getTruncatedText(tag, 9)}
+                                                                    </Text>
+                                                                    <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'14px'} cursor={"pointer"}>
+                                                                        <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={"pointer"} color={closeButton}/>
+                                                                    </Box>
+                                                                </Center>
+                                                            </Flex>
+                                                        </Box>
+                                                    )
+                                                }
                                             })
                                         }
                                     </Center>
@@ -274,12 +317,12 @@ const Properties = (props: any) => {
                                                 + Add Tag
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent p={5} w={"320px"}>
+                                        <PopoverContent p={5} w={"520px"} h={"200px"}>
                                             <Stack spacing={4}>
                                                 <MultiSelect
                                                     value={tagValue}
                                                     options={tagOptions}
-                                                    mr={'200px'}
+                                                    mr={'500px'}
                                                     color={defaultInBoxTextColor}
                                                     label=""
                                                     onChange={handleTagChange!}
@@ -288,11 +331,8 @@ const Properties = (props: any) => {
                                                     marginInlineStart={'-4px'}
                                                 />
                                                 <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-end">
-                                                    <Button variant="outline" onClick={tagPopOver.onClose} cursor={'pointer'}>
-                                                        Cancel
-                                                    </Button>
-                                                    <Button bg={'default.textButton'} cursor={'pointer'}>
-                                                        Add Tags
+                                                    <Button onClick={handleTagSubmit} bg={'default.textButton'} cursor={'pointer'}>
+                                                        Add Tag(s)
                                                     </Button>
                                                 </ButtonGroup>
                                             </Stack>
@@ -443,7 +483,7 @@ const Properties = (props: any) => {
 
                 <Divider color={'default.dividerColor'} />
                 <ModalFooter>
-                    <Button onClick={onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'19'} width={'72px'} height={'40px'}>
+                    <Button onClick={props.onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'19'} width={'72px'} height={'40px'}>
                         Close
                     </Button>
                 </ModalFooter>
