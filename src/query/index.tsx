@@ -487,12 +487,14 @@ export const dmsEditExperiment = (variables: any) => {
 };
 
 export const createExperiment = (variables: any) => {
+    // TODO replace transformer_libary_version to unhardcode.
     return gql`mutation {
   dmsCreateExperiment(
     project_id: "${variables.projectSelected}"
     name: "${variables.experimentName}",
     tags: ${JSON.stringify(variables.tags)},
-    description: "${variables.description}"
+    description: "${variables.description}",
+    transformer_library_version: "adf_library-1.3.0+gce603324a-cp38-cp38-linux_x86_64.whl"
   )
 }`;
 };

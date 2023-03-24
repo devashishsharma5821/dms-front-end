@@ -23,7 +23,7 @@ import {
     ButtonGroup,
     useEditableControls,
     EditablePreview,
-    EditableInput, Textarea, createStandaloneToast
+    EditableInput, Textarea, createStandaloneToast, Popover, PopoverTrigger, PopoverContent, Stack
 } from '@chakra-ui/react';
 import { CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
 import { ShareData } from '../../models/share';
@@ -38,12 +38,14 @@ import { ExperimentEdit, ExperimentEditDetail } from '../../models/experimentMod
 import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 import Share from './Share';
 import { AllUsers } from '../../models/profile';
+import { MultiSelect } from 'chakra-multiselect';
 
 const Properties = (props: any) => {
     const textColorIcon = useColorModeValue('#666C80', 'white');
     const textColor2 = useColorModeValue('default.blackText', 'default.whiteText');
     const shretextColor = useColorModeValue('default.modalShareText', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
+    const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
     const { onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
@@ -52,7 +54,9 @@ const Properties = (props: any) => {
     const { toast } = createStandaloneToast();
     const editAccessModal = useDisclosure();
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
-
+    const tagPopOver = useDisclosure();
+    const tagOptions: any = [];
+    const [tagValue, setTagValue] = React.useState([]);
     console.log('Project', props.projectData);
     console.log('Ex', props.data);
     console.log('all user', props.userData);
@@ -162,6 +166,9 @@ const Properties = (props: any) => {
     const createUserAccessForCreateProjectMode = (userList: AllUsers) => {
         setAccessUserListCreateMode(userList);
     };
+    const handleTagChange = (ev: any) => {
+        setTagValue(ev);
+    };
     return (
         <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
@@ -261,9 +268,37 @@ const Properties = (props: any) => {
                                             })
                                         }
                                     </Center>
-                                    <Text color={'#2180C2'} mt={'20'} ml={20}>
-                                        + Add Tag
-                                    </Text>
+                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={false}>
+                                        <PopoverTrigger>
+                                            <Button variant="link" color={'#2180C2'} mt={'20'} ml={20}>
+                                                + Add Tag
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent p={5} w={"320px"}>
+                                            <Stack spacing={4}>
+                                                <MultiSelect
+                                                    value={tagValue}
+                                                    options={tagOptions}
+                                                    mr={'200px'}
+                                                    color={defaultInBoxTextColor}
+                                                    label=""
+                                                    onChange={handleTagChange!}
+                                                    create
+                                                    bg={'black'}
+                                                    marginInlineStart={'-4px'}
+                                                />
+                                                <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-end">
+                                                    <Button variant="outline" onClick={tagPopOver.onClose} cursor={'pointer'}>
+                                                        Cancel
+                                                    </Button>
+                                                    <Button bg={'default.textButton'} cursor={'pointer'}>
+                                                        Add Tags
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </Stack>
+                                        </PopoverContent>
+                                    </Popover>
+
                                 </Center>
                             </Flex>
 

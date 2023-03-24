@@ -3,8 +3,6 @@ import { useQuery } from '@apollo/client';
 import { getUserConfig } from './query';
 import { AppRouter } from './app-router';
 import { updateI18N, updateAppConfig, updateUserConfig } from './zustandActions/commonActions';
-import { PublicClientApplication } from '@azure/msal-browser';
-import { msalConfig } from './authConfig';
 
 function UserConfiguration() {
     const { GET_USER_CONFIGURATION } = getUserConfig();
