@@ -463,7 +463,7 @@ const ProjectDetails = (props: any) => {
                                                                                 ml={8}
                                                                                 pr={'5px'}
                                                                             >
-                                                                                <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
+                                                                                <TagLabel title={tag} fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
                                                                                     {getTruncatedText(tag, 9)}
                                                                                 </TagLabel>
                                                                                 <TagCloseButton onClick={() => handleRemoveTag(tag)} />

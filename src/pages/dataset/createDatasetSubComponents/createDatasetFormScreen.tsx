@@ -102,9 +102,17 @@ const CreateDatasetFormScreen = (props: any) => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
+            if(projectSelected === '') {
+                setProjectSelected(AllProjectsData[0].id);
+                const formFields = {
+                    datasetName,
+                    projectSelected: projectSelected
+                };
+                setFormFields(formFields);
+                props.handleFormFields(formFields);
+            }
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
             setProjectAccess(getProjectAccessList(AllProjectsData, projectSelected));
-
 
         }
     }, [AllProjectsData]);

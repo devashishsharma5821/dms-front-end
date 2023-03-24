@@ -36,6 +36,7 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../.
 import { GetSingleProjectAppStoreState } from '../../models/project';
 import { getFormattedUserData } from '../../utils/common.utils';
 import { getToastOptions } from '../../models/toastMessages';
+import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 
 const Share = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
@@ -55,6 +56,8 @@ const Share = (props: any) => {
     const userOptions = AllUsersData?.map((user) => ({ label: user.email, value: user.email }));
     const [userValue, setUserValue] = React.useState([]);
     const { toast } = createStandaloneToast();
+    const [UserConfig] = useAppStore((state: any) => [state.UserConfig]);
+
     useEffect(() => {
         if (props.retainData?.length > 0) {
             setAccessUserList(props.retainData);
@@ -257,6 +260,7 @@ const Share = (props: any) => {
                                 <Flex as="nav" align="center" justify="space-between" wrap="wrap">
                                     {accessUserList.length > 0 &&
                                         accessUserList.map((icons: any, iconsIndex: number) => {
+                                            console.log('DMS', icons)
                                             return (
                                                 <>
                                                     <Center key={iconsIndex}>
@@ -283,7 +287,7 @@ const Share = (props: any) => {
                                                             </MenuButton>
                                                             <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
                                                                 <MenuItem
-                                                                    isDisabled={!props.isEdit}
+                                                                    isDisabled={!props.isEdit || UserConfig.userConfiguration.user.userId === icons.id}
                                                                     onClick={() => {
                                                                         accessMenuChanged(icons, 'canView');
                                                                     }}
@@ -300,7 +304,7 @@ const Share = (props: any) => {
                                                                 </MenuItem>
                                                                 <Divider />
                                                                 <MenuItem
-                                                                    isDisabled={!props.isEdit}
+                                                                    isDisabled={!props.isEdit || UserConfig.userConfiguration.user.userId === icons.id }
                                                                     onClick={() => {
                                                                         accessMenuChanged(icons, 'delete');
                                                                     }}

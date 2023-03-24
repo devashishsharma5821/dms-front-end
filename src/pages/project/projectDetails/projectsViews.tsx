@@ -148,18 +148,6 @@ const ProjectsViews = (props: any) => {
                                                     </AvatarGroup>
                                                 </Box>
                                             )}
-                                            {project.project_access && project.project_access.length === 0 && (
-                                                <Box ml={'20px'} mb={'10px'} mt={'10px'} height={'62px'}>
-                                                    <Avatar
-                                                        mr={'6'}
-                                                        p={'5px'}
-                                                        borderRadius="full"
-                                                        boxSize="32px"
-                                                        name={getUserNameFromId(AllUsersData, project.created_by)}
-                                                        color={'default.whiteText'}
-                                                    />
-                                                </Box>
-                                            )}
                                         </Box>
                                     </Box>
                                 </div>

@@ -64,6 +64,7 @@ export const getFormattedUserData = (allUserData: AllUsers[], projectData: GetSi
             return singleUser.userId === singleProjectAccess.user_id
         });
         return {
+            id: sharedUser![0].userId,
             firstName: (sharedUser?.length > 0) ? sharedUser![0].firstName : '',
             lastName: (sharedUser?.length > 0) ? sharedUser![0].lastName: '',
             email: (sharedUser?.length > 0) ? sharedUser![0].email: '',

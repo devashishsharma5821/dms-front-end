@@ -133,6 +133,9 @@ const ExperimentModal = (props: any) => {
             getAndUpdateAllProjectsData();
         } else {
             updateSpinnerInfo(false);
+            if(projectSelected === "") {
+                setProjectSelected(AllProjectsData[0].id);
+            }
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
             setProjectAccess(getProjectAccessList(AllProjectsData, projectSelected));
         }

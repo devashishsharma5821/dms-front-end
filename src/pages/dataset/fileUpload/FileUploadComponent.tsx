@@ -17,6 +17,7 @@ const FileUploadComponent = (props: any) => {
 
     const handleFile = (files: any) => {
         updateSpinnerInfo(true);
+        console.log("props.", props.projectId)
         client
             .mutate<UploadCSV<UploadCSVDetail>>({
                 mutation: uploadCSVDataset(),
