@@ -6,15 +6,19 @@ import { getAndUpdateAllProjectsData } from '../../../zustandActions/projectActi
 import useAppStore from '../../../store';
 import { GetAllProjectsAppStoreState } from '../../../models/project';
 import { updateSpinnerInfo } from '../../../zustandActions/commonActions';
+import SearchComponent from '../../search/SearchComponent';
+import { getTruncatedText } from '../../../utils/common.utils';
 
 const Explorer = (props: any) => {
-    const textColor = useColorModeValue('dark.header', 'default.whiteText');
+    const textColor = useColorModeValue('default.darkBlack', 'default.whiteText');
+    const explorerTitle = useColorModeValue('default.blackText', 'default.whiteText');
+    const explorerInnerTitle = useColorModeValue('default.darkBlack', 'default.whiteText');
     const iconsColor = useColorModeValue(' #666C80', 'white');
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
-    const [subMenuForExplorer, setSubMenuForExplorer] = React.useState<any>([]);
+    const [subMenuForExplorer, setSubMenuForExplorer] = React.useState<any>();
     const [UserConfig] = useAppStore((state: any) => [state.UserConfig]);
     const checkForSubMenuOrNavigation = (selectedProjectId: any) => {
-            props.hasThirdLevelMenu(selectedProjectId.id);
+        props.hasThirdLevelMenu(selectedProjectId.id);
     };
     useEffect(() => {
         updateSpinnerInfo(true);
@@ -31,82 +35,88 @@ const Explorer = (props: any) => {
             const explorerState = [
                 {
                     name: 'My Projects',
-                    hasSubMenu: userOnlyProjects
+                    hasSubMenu: userOnlyProjects,
+                    expanded: false
                 },
                 {
                     name: 'Shared with me',
-                    hasSubMenu: sharedWithMe
+                    hasSubMenu: sharedWithMe,
+                    expanded: false
                 }
             ];
             setSubMenuForExplorer(explorerState);
             updateSpinnerInfo(false);
         }
     }, [AllProjectsData]);
+
     return (
         <>
-            {
-                AllProjectsData &&
-                    <>
-                        <Flex mt={'1px'}>
-                            <Square ml={'16px'} className="sidebar-box-icon">
-                                <WhiteExperiment color={iconsColor} />
-                            </Square>
-                            <Text fontWeight={800} ml={'11px'} color={textColor}>
-                                Explorer
-                            </Text>
-                        </Flex>
+            {AllProjectsData && (
+                <>
+                    <Flex mt={'1px'}>
+                        <Square ml={'18px'} className="sidebar-box-icon">
+                            <WhiteExperiment color={iconsColor} />
+                        </Square>
+                        <Text fontWeight={800} ml={'11px'} color={explorerTitle}>
+                            Explorer
+                        </Text>
+                    </Flex>
 
-                        <Divider mt={'16px'} orientation="horizontal" bg={'light.lighterGrayishBlue'} />
-
+                    <Divider mt={'16px'} mb={'8px'} orientation="horizontal" bg={'light.lighterGrayishBlue'} />
+                    <Box width={'226px'} height={'16px'} ml={'14px'}>
+                        <SearchComponent />
+                    </Box>
+                    <Box mt={'24px'}>
                         {subMenuForExplorer &&
-                        subMenuForExplorer.map((section: any, sectionIndex: number) => {
-                            return (
-                                <Box>
-                                    <Accordion allowMultiple>
-                                        <AccordionItem>
-                                            <h2>
-                                                <AccordionButton>
-                                                    <AccordionIcon />
-                                                    <Box as="span" flex='1' textAlign='left'>
-                                                        {section.name}
-                                                    </Box>
-                                                    <Square size='20px' bg='purple.700' color='white'>
-                                                        {section.hasSubMenu.length}
-                                                    </Square>
-                                                </AccordionButton>
-                                            </h2>
-                                            <AccordionPanel pb={4}>
-                                                {
-                                                    section.hasSubMenu.map((project: any, projectIndex: any) => {
-                                                      return (
-                                                          <Box
-                                                              key={project.id}
-                                                              onClick={() => {
-                                                                  checkForSubMenuOrNavigation(project);
-                                                              }}
-                                                              className="sidebar-box-recent"
-                                                          >
-                                                              <Flex mr={'10px'} height={'44px'}>
-                                                                  <Box textAlign={'center'} ml={'17px'} mt={'10px'} color={textColor}>
-                                                                      {' '}
-                                                                      {project.name}{' '}
-                                                                  </Box>
-                                                                  <Center flex="2" justifyContent={'flex-end'} mr={'24px'}>
-                                                                      <RightArrow color={iconsColor} />
-                                                                  </Center>
-                                                              </Flex>
-                                                          </Box>
-                                                      )
-                                                    })
-                                                }
-                                            </AccordionPanel>
-                                        </AccordionItem>
-                                    </Accordion>
-                                </Box>
-                            );
-                        })}
-                    </>
-            }
+                            subMenuForExplorer.map((section: any, sectionIndex: number) => {
+                                return (
+                                    <Box>
+                                        <Accordion allowMultiple>
+                                            <AccordionItem height={'50%'} maxHeight={'400px'} overflowY={'scroll'}>
+                                                <h2>
+                                                    <AccordionButton>
+                                                        <Box ml={'16px'}>
+                                                            <AccordionIcon color={'#646A78'} />
+                                                        </Box>
+                                                        <Box as="span" flex="1" textAlign="left" color={explorerInnerTitle} fontWeight={700} ml={'8px'} height={'44px'} pt={'12px'}>
+                                                            {section.name}
+                                                        </Box>
+                                                        <Square size="26px" bg="white" color="#646A78" mr={'12px'} borderRadius={4} border={'1px'} borderColor={'#E3E3E3'} fontWeight={700}>
+                                                            {section.hasSubMenu.length}
+                                                        </Square>
+                                                    </AccordionButton>
+                                                </h2>
+                                                <AccordionPanel pb={4}>
+                                                    {section.hasSubMenu.map((project: any, projectIndex: any) => {
+                                                        return (
+                                                            <Box
+                                                                key={project.id}
+                                                                onClick={() => {
+                                                                    checkForSubMenuOrNavigation(project);
+                                                                }}
+                                                                className="sidebar-box-recent"
+                                                            >
+                                                                <Flex width={'254px'} mr={'10px'} height={'44px'} justifyContent={'flex-start'}>
+                                                                    <Box width={'80%'} ml={'44px'} mt={'10px'} color={textColor} fontWeight={400}>
+                                                                        {' '}
+                                                                        {getTruncatedText(project && project.name, 16)}
+                                                                    </Box>
+                                                                    <Center width={'20%'} justifyContent={'fle'} mr={'14px'}>
+                                                                        <RightArrow color={iconsColor} />
+                                                                    </Center>
+                                                                </Flex>
+                                                            </Box>
+                                                        );
+                                                    })}
+                                                </AccordionPanel>
+                                            </AccordionItem>
+                                        </Accordion>
+                                    </Box>
+                                );
+                            })}
+                    </Box>
+                </>
+            )}
         </>
     );
 };
