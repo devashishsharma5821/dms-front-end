@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/react';
 import { CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
 import { ShareData } from '../../models/share';
-import { convertTime, getUserNameFromId } from '../../utils/common.utils';
+import { convertTime, copyToClipBoard, getUserNameFromId } from '../../utils/common.utils';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { ProjectEdit, ProjectEditDetail } from '../../models/project';
@@ -36,6 +36,8 @@ import { getToastOptions } from '../../models/toastMessages';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { ExperimentEdit, ExperimentEditDetail } from '../../models/experimentModel';
 import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
+import Share from './Share';
+import { AllUsers } from '../../models/profile';
 
 const Properties = (props: any) => {
     const textColorIcon = useColorModeValue('#666C80', 'white');
@@ -45,8 +47,12 @@ const Properties = (props: any) => {
     const { onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
+    const [inlineExperimentName, setInlineExperimentName] = useState<string>(props.data.name || '');
     const [inlineDescription, setInlineDescription] = useState<string>(props.data.description || '');
     const { toast } = createStandaloneToast();
+    const editAccessModal = useDisclosure();
+    const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
+
     console.log('Project', props.projectData);
     console.log('Ex', props.data);
     console.log('all user', props.userData);
@@ -71,6 +77,26 @@ const Properties = (props: any) => {
             </Flex>
         );
     };
+    function EditableControlsName() {
+        const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
+
+        return isEditing ? (
+            <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getSubmitButtonProps()}>
+                    Save
+                </Button>
+                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getCancelButtonProps()}>
+                    Cancel
+                </Button>
+            </ButtonGroup>
+        ) : (
+            <Flex>
+                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
+                    <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
+                </Button>
+            </Flex>
+        );
+    }
     const handleEditExperiment = (variables: any, toastMessages: any) => {
         updateSpinnerInfo(true);
         client
@@ -109,7 +135,33 @@ const Properties = (props: any) => {
     const handleEditDescriptionChangeCancel = () => {
         setInlineDescription(props.data.description);
     };
+    const handleEditName = () => {
+        if (inlineExperimentName !== props.data.name) {
+            const variables = {
+                id: props.data.id,
+                name: inlineExperimentName,
+                description: props.data.description,
+                tags: props.data.tags
+            };
+            handleEditExperiment(variables, {
+                successMessage: 'Experiment Name Edited Successfully',
+                errorMessage: 'Experiment Name Failed To edit'
+            });
+        }
+    };
+    const handleEditNameChange = (editChangeValue: string) => {
+        setInlineExperimentName(editChangeValue);
+    };
+    const handleEditNameChangeCancel = () => {
+        setInlineExperimentName(props.data.name);
+    };
+    const clipBoardSuccess = () => {
+        toast(getToastOptions(`Location Copied To Clipboard`, 'success'));
+    };
 
+    const createUserAccessForCreateProjectMode = (userList: AllUsers) => {
+        setAccessUserListCreateMode(userList);
+    };
     return (
         <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
@@ -152,10 +204,27 @@ const Properties = (props: any) => {
                                                 Experiment Name
                                             </Text>
                                             <Center>
-                                                <Text color={accesstextColor} fontWeight={700} mr={'4px'}>
-                                                    {props.data.name}
-                                                </Text>
-                                                <PencilIcon color={textColorIcon} height={'20px'} Height={'20px'} />
+                                                <Editable
+                                                    maxWidth={'800px'}
+                                                    textAlign="left"
+                                                    fontWeight={400}
+                                                    onSubmit={handleEditName}
+                                                    onChange={handleEditNameChange}
+                                                    onCancel={handleEditNameChangeCancel}
+                                                    value={inlineExperimentName}
+                                                >
+                                                    <Flex>
+                                                        <Center mt={'-10'}>
+                                                            <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                                                <EditablePreview />
+                                                                <Input as={EditableInput} height={'30px'} mt={'-10px'} />
+                                                            </Box>
+                                                        </Center>
+                                                        <Box mt={'-40px'}>
+                                                            <EditableControlsName />
+                                                        </Box>
+                                                    </Flex>
+                                                </Editable>
                                             </Center>
                                             <Center>
                                                 <Box mt={12} mr={'4px'} ml={'-32px'} borderRadius="full" boxSize="14px" bg={'#ED6D74'} />
@@ -240,11 +309,11 @@ const Properties = (props: any) => {
                                                         </Text>
                                                     </Box>
                                                     <Center flex="2" justifyContent={'flex-end'} mr={46}>
-                                                        <Text color={'#2180C2'} mt={'21px'}>
+                                                        <Text cursor={'pointer'} onClick={editAccessModal.onOpen} color={'#2180C2'} mt={'21px'}>
                                                             {' '}
                                                             Edit
                                                         </Text>
-                                                        <Text color={'#2180C2'} mt={'21px'} ml={16}>
+                                                        <Text cursor={'pointer'} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} color={'#2180C2'} mt={'21px'} ml={16}>
                                                             {' '}
                                                             Copy Link
                                                         </Text>
@@ -326,6 +395,15 @@ const Properties = (props: any) => {
                             </Box>
                         </Box>
                     </FormControl>
+                    {editAccessModal.isOpen && (
+                        <Share
+                            isOpen={editAccessModal.isOpen}
+                            retainData={accessUserListCreateMode}
+                            onClose={editAccessModal.onClose}
+                            isEdit={true}
+                            onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateProjectMode(userList)}
+                        ></Share>
+                    )}
                 </ModalBody>
 
                 <Divider color={'default.dividerColor'} />

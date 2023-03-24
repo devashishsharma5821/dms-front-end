@@ -101,12 +101,18 @@ const ExperimentsPage = () => {
 
     // This useEffect will need to remove after implementation of child routing.
     useEffect(() => {
-        getAndUpdateSingleProjectData(projectId as string);
-        if (AllUsersData && SingleProjectData) {
-            setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+        if(SingleProjectData === null) {
+            getAndUpdateSingleProjectData(projectId as string);
+            if (AllUsersData && SingleProjectData) {
+                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+            }
+        } else {
+            if (AllUsersData && SingleProjectData) {
+                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+            }
         }
 
-    }, []);
+    }, [SingleProjectData]);
 
     useEffect(() => {
         if(AllUsersData === null) {
@@ -748,6 +754,11 @@ const ExperimentsPage = () => {
             detailsDrawer.onOpen();
         }
     }, [selectedStageId]);
+
+    const refreshExperiment = () => {
+        console.log('111111111')
+      getAndUpdateExperimentData(ExperimentData.id);
+    };
 
     return (
         <>

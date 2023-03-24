@@ -36,6 +36,7 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../.
 import { GetSingleProjectAppStoreState } from '../../models/project';
 import { getFormattedUserData } from '../../utils/common.utils';
 import { getToastOptions } from '../../models/toastMessages';
+import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 
 const Share = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
