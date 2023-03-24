@@ -45,7 +45,7 @@ const Properties = (props: any) => {
     const { onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
-    const [inlineDescription, setInlineDescription] = useState<string>(props.data.description);
+    const [inlineDescription, setInlineDescription] = useState<string>(props.data.description || '');
     const { toast } = createStandaloneToast();
     console.log('Project', props.projectData);
     console.log('Ex', props.data);
@@ -173,25 +173,24 @@ const Properties = (props: any) => {
                                         Tag:
                                     </Text>
                                     <Center>
-                                        <Box ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                            <Flex>
-                                                {
-                                                    props.data.tags &&
-                                                        props.data.tags.map((tag: any) => {
-                                                            return (
-                                                                <Center>
-                                                                    <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                        {tag}
-                                                                    </Text>
-                                                                    <Box justifyContent={'flex-end'} ml={'14px'}>
-                                                                        <CloseIcon color={'default.darkGrayCreate'} />
-                                                                    </Box>
-                                                                </Center>
-                                                            )
-                                                        })
-                                                }
-                                            </Flex>
-                                        </Box>
+                                        {
+                                            props.data.tags?.map((tag: any, tagIndex: number) => {
+                                                return (
+                                                    <Box key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                        <Flex>
+                                                            <Center>
+                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                    {tag}
+                                                                </Text>
+                                                                <Box justifyContent={'flex-end'} ml={'14px'}>
+                                                                    <CloseIcon color={'default.darkGrayCreate'} />
+                                                                </Box>
+                                                            </Center>
+                                                        </Flex>
+                                                    </Box>
+                                                )
+                                            })
+                                        }
                                     </Center>
                                     <Text color={'#2180C2'} mt={'20'} ml={20}>
                                         + Add Tag
@@ -220,7 +219,7 @@ const Properties = (props: any) => {
                                                     {convertTime(props.data.created_at, false)}
                                                 </Text>
                                                 <Text ml={12} color={accesstextColor} mt={'14px'}>
-                                                    Last Modifies
+                                                    Last Modified
                                                 </Text>
                                                 <Text ml={12} color={accesstextColor} fontWeight={700}>
                                                     {convertTime(props.data.updated_at, true)}

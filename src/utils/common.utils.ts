@@ -34,7 +34,6 @@ export const convertTime = (date: any, isLastModifiedNeeded: boolean) => {
 };
 
 export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
-    console.log('1111', userData, userId);
     const currentUser = userData?.filter((user: AllUsers) => {
         return user.userId === userId;
     });
