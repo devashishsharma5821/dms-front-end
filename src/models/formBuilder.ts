@@ -115,4 +115,5 @@ export interface GetFormElementsPropType {
     formSchemaKey: FormSchemaType;
     defaultValue: any;
     isEdit: boolean | undefined;
+    min: string;
 }

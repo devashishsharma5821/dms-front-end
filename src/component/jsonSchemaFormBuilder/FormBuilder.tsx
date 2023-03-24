@@ -16,6 +16,9 @@ function FormBuilder({ formSchema, onClose, onSubmit, isEdit, isDisabled }: Form
     }, [formSchema]);
 
     const initForm = (formSchema: FormSchemaType, values?: any) => {
+        if (values?.worker_type_id && !values.driver_type_id) {
+            values.driver_type_id = values.worker_type_id;
+        }
         const { _formData, _validationSchema } = CreateYupSchema(formSchema, values);
         isEdit ? setFormData(context.formData) : setFormData(_formData);
 

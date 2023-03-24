@@ -67,8 +67,8 @@ const ComputeDetails = () => {
             });
     };
 
-    const onEditClickHandler = (data: any) => {
-        getAndUpdateDbSettingsData();
+    const onEditClickHandler = async (data: any) => {
+        await getAndUpdateDbSettingsData();
         context.updateFormData({
             id: data.id,
             max_inactivity_min: data?.max_inactivity_min,
