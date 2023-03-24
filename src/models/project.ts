@@ -19,6 +19,7 @@ export interface GetAllProjectsDetail {
     "name": string,
     "created_by": string,
     "created_at": string,
+    "updated_at": string,
     "project_variables": string
     description: string;
     tags: string[];
@@ -43,6 +44,7 @@ export interface GetSingleProjectDetail {
     name: string,
     created_by: string,
     created_at: string,
+    updated_at: string,
     project_variables: string;
     description: string;
     tags: string[];

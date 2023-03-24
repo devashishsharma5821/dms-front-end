@@ -1,5 +1,6 @@
 import { AllUsers } from '../models/profile';
 import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project';
+import moment from 'moment';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
     if(selectedProject === "") {
@@ -24,8 +25,12 @@ export const copyToClipBoard = (copyMessage: string, callBack: any) => {
             callBack();
     });
 };
-export const convertTime = (date: string) => {
-    return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(Date.parse(date));
+export const convertTime = (date: any, isLastModifiedNeeded: boolean) => {
+    if(isLastModifiedNeeded) {
+        return moment.utc(date).local().fromNow();
+    } else {
+        return moment.utc(date).local().format('MM/DD/YYYY HH:MM A');
+    }
 };
 
 export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
@@ -74,6 +79,7 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
     return projectData.filter((project: any) => {
         const user = getUserNameFromId(AllUsersData, project.created_by);
         return project.name.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
+                project.id.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
                user.toLowerCase().match(new RegExp(searchTerm, 'g')) ||
             (project.project_access.filter((access: any) => {
                    const userFilteredProjectAccess = getUserNameFromIdInitials(AllUsersData, access.user_id);

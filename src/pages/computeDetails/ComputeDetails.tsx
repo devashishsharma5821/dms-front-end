@@ -130,33 +130,33 @@ const ComputeDetails = () => {
                                     {AllUsersData && getUserNameFromId(AllUsersData, computeData[0] && computeData[0].created_by)}
                                 </Text>
                             </Box>
-                            <Box ml={15} className="computedetailsContainer-2subsub-2sub-2">
-                                <Box>
+                            <Box width={'360px'} ml={15} className="computedetailsContainer-2subsub-2sub-2">
+                                <Box width={'150px'}>
                                     <Text fontSize={14}>Compute ID</Text>
                                     <Text fontSize={14} fontWeight={600}>
                                         {computeData[0].id}
                                     </Text>
                                 </Box>
-                                <Box>
+                                <Box width={'120px'} left={'20'}>
                                     <Text fontSize={14}>Compute Name</Text>
                                     <Text fontSize={14} fontWeight={600}>
                                         {computeData[0].name}
                                     </Text>
                                 </Box>
                             </Box>
-                            <Box ml={15} className="computedetailsContainer-2subsub-2sub-3">
-                                <Box>
+                            <Box width={'360px'} ml={15} className="computedetailsContainer-2subsub-2sub-3">
+                                <Box width={'150px'}>
                                     <Text fontSize={14}>Created On</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {convertTime(computeData[0].created_at)}
+                                        {convertTime(computeData[0].created_at, false)}
                                     </Text>
                                 </Box>
-                                {/*<Box>*/}
-                                {/*    <Text fontSize={14}>Last Modified</Text>*/}
-                                {/*    <Text fontSize={14} fontWeight={600}>*/}
-                                {/*        10 Minutes ago*/}
-                                {/*    </Text>*/}
-                                {/*</Box>*/}
+                                <Box width={'120px'}>
+                                    <Text fontSize={14}>Last Modified</Text>
+                                    <Text fontSize={14} fontWeight={600}>
+                                        {convertTime(computeData[0].updated_at, true)}
+                                    </Text>
+                                </Box>
                             </Box>
                         </Box>
                     </Box>

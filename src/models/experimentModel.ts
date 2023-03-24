@@ -31,3 +31,10 @@ export class ExperimentCreateDetail {
 export interface GetExperimentAppStoreState {
     ExperimentData: Experiment;
 }
+
+export class ExperimentEdit<T> {
+    dmsEditExperiment!: T;
+}
+export class ExperimentEditDetail {
+    dmsEditExperiment!: boolean;
+}

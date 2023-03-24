@@ -317,6 +317,7 @@ export const getComputeListData = () => {
                 status
                 created_by
                 created_at
+                updated_at
             }
         }
     `;
@@ -348,6 +349,7 @@ export const GET_ALL_PROJECTS = gql`
             name
             created_by
             created_at
+            updated_at
             project_variables
             tags
             description
@@ -369,6 +371,7 @@ export const GET_SINGLE_PROJECT = (id: string) => {
       name
       created_by
       created_at
+      updated_at
       project_variables
       tags
       description
@@ -472,6 +475,17 @@ export const deleteDataset = (variables: any) => {
 // Dataset APIs End Here
 
 // ProjectDetailsMenu APIs Start here
+export const dmsEditExperiment = (variables: any) => {
+    return gql`mutation {
+  dmsEditExperiment(
+    id: "${variables.id}"
+    name: "${variables.name}",
+    tags: ${JSON.stringify(variables.tags)},
+    description: "${variables.description}"
+  )
+}`;
+};
+
 export const createExperiment = (variables: any) => {
     return gql`mutation {
   dmsCreateExperiment(
