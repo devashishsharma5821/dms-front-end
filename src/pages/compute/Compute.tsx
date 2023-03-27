@@ -78,7 +78,7 @@ const Compute = () => {
         { headerName: 'Workers', field: 'resources.num_workers' },
         { headerName: 'Total Cores', field: 'totalCores' },
         { headerName: 'Total Memory', field: 'totalMemory' },
-        { headerName: 'Status', field: 'status'},
+        { headerName: 'Status', field: 'status' },
         { headerName: 'Set As Default', field: 'default', cellRenderer: defaultRow },
         { headerName: 'Action', field: 'Actions', cellRenderer: actionsRow }
     ]);
@@ -230,7 +230,7 @@ const Compute = () => {
             max_inactivity_min: data?.max_inactivity_min,
             compute_name: data?.name,
             autoscale: data?.resources?.autoscale,
-            workers: data?.resources?.num_workers ? data?.resources?.num_workers : '0',
+            workers: parseInt(data?.resources?.num_workers) || 0,
             spot_instances: data?.resources?.spot_instances,
             worker_type_id: data?.resources?.node_type?.worker_type_id,
             driver_type_id: data?.resources?.node_type?.driver_type_id,
@@ -240,8 +240,8 @@ const Compute = () => {
             terminate_after: data?.max_inactivity_min ? true : false,
             computeId: data?.id
         });
-        setIsEdit(true);
-        if (!dbSettingsData.length) {
+        if (dbSettingsData.length === 0) {
+            updateSpinnerInfo(true);
             const check = getAndUpdateDbSettingsData();
             check.then((res: any) => {
                 res ? createModal.onOpen() : toast(getToastOptions('Unable to open edit modal', 'error'));
@@ -249,6 +249,7 @@ const Compute = () => {
         } else {
             createModal.onOpen();
         }
+        setIsEdit(true);
     };
 
     function actionsRow(params: any) {
