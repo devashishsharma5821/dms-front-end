@@ -32,13 +32,7 @@ import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingl
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { CloseIcon, PencilIcon } from '../../../assets/icons';
-import {
-    getUserNameFromId,
-    getTruncatedText,
-    getFormattedUserData,
-    copyToClipBoard,
-    convertTime
-} from '../../../utils/common.utils';
+import { getUserNameFromId, getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
@@ -74,10 +68,10 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} mt={'15px'} justifyContent="center">
-                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
                 </Button>
-                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getCancelButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getCancelButtonProps()}>
                     Cancel
                 </Button>
             </ButtonGroup>
@@ -94,10 +88,10 @@ const ProjectDetails = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
-                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
                 </Button>
-                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getCancelButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getCancelButtonProps()}>
                     Cancel
                 </Button>
             </ButtonGroup>
@@ -111,17 +105,16 @@ const ProjectDetails = (props: any) => {
     }
     useEffect(() => {
         updateSpinnerInfo(true);
-            if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
-                getAndUpdateSingleProjectData(params.projectId as string);
-            } else {
-                updateSpinnerInfo(false);
-                setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
-                setInlineProjectName(SingleProjectData.basic.name);
-                if (AllUsersData && SingleProjectData) {
-                    setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
-                }
+        if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
+            getAndUpdateSingleProjectData(params.projectId as string);
+        } else {
+            updateSpinnerInfo(false);
+            setInlineDescription(SingleProjectData.basic.description === null ? '' : SingleProjectData.basic.description);
+            setInlineProjectName(SingleProjectData.basic.name);
+            if (AllUsersData && SingleProjectData) {
+                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
-
+        }
     }, [SingleProjectData]);
     useEffect(() => {
         updateSpinnerInfo(true);
@@ -394,9 +387,7 @@ const ProjectDetails = (props: any) => {
                                                         Last Modified
                                                     </Text>
                                                     <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData &&
-                                                            convertTime(SingleProjectData.basic.updated_at, true)
-                                                        }
+                                                        {SingleProjectData && convertTime(SingleProjectData.basic.updated_at, true)}
                                                     </Text>
                                                 </Box>
                                             </Flex>
