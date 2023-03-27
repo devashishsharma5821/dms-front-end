@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
-import { Box, Button, useColorModeValue, Text, Avatar, Link, ButtonGroup, useDisclosure } from '@chakra-ui/react';
-import { EditIcon } from '../../assets/icons';
+import { Box, Button, useColorModeValue, Text, Avatar, Link, ButtonGroup, useDisclosure, Editable, Flex, Center, EditablePreview, Input, EditableInput, useEditableControls } from '@chakra-ui/react';
+import { EditIcon, PencilIcon } from '../../assets/icons';
 import ComputeJsonModal from '../../component/modalSystem/ComputeJsonModal';
 import './computedetails.scss';
 import { DeleteConfirmationModal } from '../../component/modalSystem/deleteConfirmationModal';
@@ -10,17 +10,21 @@ import useAppStore from '../../store';
 import { useNavigate } from 'react-router-dom';
 import { getAndUpdateDbSettingsData, getAndUpdateDmsComputeData } from '../../zustandActions/computeActions';
 import client from '../../apollo-client';
-import { ComputeDelete, DeleteComputeDetail } from '../../models/computeDetails';
-import { dmsDeleteCompute } from '../../query';
-import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
+import { ComputeDelete, createCompute, DeleteComputeDetail } from '../../models/computeDetails';
+import { dmsDeleteCompute, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling } from '../../query';
+import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { convertTime, getUserNameFromId } from '../../utils/common.utils';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../models/toastMessages';
+import { String } from 'lodash';
+import { ProjectEdit, ProjectEditDetail } from '../../models/project';
+import { DocumentNode } from 'graphql';
+import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
 const { toast } = createStandaloneToast();
 
 const ComputeDetails = () => {
-    const [DmsComputeData, AllUsersData] = useAppStore((state: any) => [state.DmsComputeData, state.AllUsersData]);
+    const [DmsComputeData, AllUsersData, dbSettingsData] = useAppStore((state: any) => [state.DmsComputeData, state.AllUsersData, state.dbSettingsData]);
     const textColor = useColorModeValue('light.header', 'dark.white');
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const deleteComputeModal = useDisclosure();
@@ -29,6 +33,8 @@ const ComputeDetails = () => {
     const context = useContext(ComputeContext);
     const navigate = useNavigate();
     const { computeId } = useParams();
+    const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
+    const [editValue, setEditValue] = useState<string>('');
 
     useEffect(() => {
         if (AllUsersData === null) {
@@ -71,10 +77,11 @@ const ComputeDetails = () => {
         await getAndUpdateDbSettingsData();
         context.updateFormData({
             id: data.id,
+            computeId: data.id,
             max_inactivity_min: data?.max_inactivity_min,
             compute_name: data.name,
             autoscale: data.resources.autoscale,
-            workers: data.resources.num_workers ? data.resources.num_workers : '0',
+            workers: parseInt(data.resources.num_workers) || 0,
             spot_instances: data.resources.spot_instances,
             worker_type_id: data.resources.node_type.worker_type_id,
             driver_type_id: data.resources.node_type.driver_type_id,
@@ -83,13 +90,98 @@ const ComputeDetails = () => {
             enable_autoscaling: data.resources.autoscale ? true : false,
             terminate_after: data?.max_inactivity_min ? true : false
         });
+
         setIsEdit(true);
-        editComputeModal.onOpen();
+        if (dbSettingsData.length === 0) {
+            updateSpinnerInfo(true);
+            const check = getAndUpdateDbSettingsData();
+            check.then((res: any) => {
+                res ? editComputeModal.onOpen() : toast(getToastOptions('Unable to open edit modal', 'error'));
+            });
+        } else {
+            editComputeModal.onOpen();
+        }
     };
-    const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData.id === computeId);
+
+    function EditableControlsName() {
+        const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
+
+        return isEditing ? (
+            <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
+                    Save
+                </Button>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getCancelButtonProps()}>
+                    Cancel
+                </Button>
+            </ButtonGroup>
+        ) : (
+            <Flex>
+                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
+                    <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
+                </Button>
+            </Flex>
+        );
+    }
+
+    const handleEditNameChange = (editVal: any) => {
+        setEditValue(editVal);
+    };
+
+    let computeData = DmsComputeData && DmsComputeData.find((computeData: any) => computeData.id === computeId);
+
+    useEffect(() => {
+        if (computeData?.name) {
+            setEditValue(computeData.name);
+        }
+    }, [computeData]);
+
     if (!computeData) {
         return <div>loading</div>;
     }
+
+    const handleEditProject = (variables: any, toastMessages: any) => {
+        let mutation: DocumentNode | null = null;
+        updateSpinnerInfo(true);
+
+        if (!variables.enable_autoscaling) {
+            mutation = dmsEditComputeOffEnableAutoscaling(variables);
+        } else {
+            mutation = dmsEditComputeOnEnableAutoscaling(variables);
+        }
+
+        client
+            .mutate<dmsCreateComputeResponse<createCompute>>({
+                mutation: mutation
+            })
+            .then(async (response) => {
+                getAndUpdateDmsComputeData();
+                toast(getToastOptions(toastMessages.successMessage, 'success'));
+                updateSpinnerInfo(false);
+            })
+            .catch((err) => {
+                toast(getToastOptions(err, 'error'));
+            });
+    };
+
+    const handleEditName = () => {
+        if (editValue !== computeData?.name) {
+            const variables = {
+                id: computeData.id,
+                compute_name: editValue,
+                worker_type_id: computeData.resources.node_type.worker_type_id,
+                driver_type_id: computeData.resources.node_type.driver_type_id,
+                spot_instances: computeData.resources.spot_instances,
+                workers: computeData.resources.num_workers,
+                terminate_after: computeData.max_inactivity_min ? true : false,
+                max_inactivity_min: computeData.max_inactivity_min && computeData.max_inactivity_min
+            };
+            handleEditProject(variables, {
+                successMessage: 'Compute Name Edited Successfully',
+                errorMessage: 'Croject Name Failed To edit'
+            });
+        }
+    };
 
     return (
         <Box ml={71} mt={21}>
@@ -101,13 +193,21 @@ const ComputeDetails = () => {
                     <Button onClick={onBackClickHandler} className="back-button">
                         &lt;
                     </Button>
-                    <Text fontSize="18px" fontWeight="700">
-                        {computeData[0].name}
-                    </Text>
-                    <Box cursor={'pointer'} ml={10}>
-                        <EditIcon />
-                    </Box>
-                    <Button variant="outline" className="delete-button" fontWeight={100} onClick={() => onDeleteHandler(computeData[0].id)}>
+
+                    <Editable maxWidth={'800px'} textAlign="left" fontWeight={400} value={editValue} onChange={handleEditNameChange} onSubmit={handleEditName}>
+                        <Flex>
+                            <Center mt={'-10'}>
+                                <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                    <EditablePreview />
+                                    <Input as={EditableInput} height={'30px'} mt={'-10px'} />
+                                </Box>
+                            </Center>
+                            <Box mt={'-40px'}>
+                                <EditableControlsName />
+                            </Box>
+                        </Flex>
+                    </Editable>
+                    <Button variant="outline" className="delete-button" fontWeight={100} onClick={() => onDeleteHandler(computeData.id)}>
                         Delete
                     </Button>
                 </Box>
@@ -117,7 +217,7 @@ const ComputeDetails = () => {
                             <Avatar
                                 borderRadius="full"
                                 boxSize="40px"
-                                name={AllUsersData && getUserNameFromId(AllUsersData, computeData[0] && computeData[0].created_by)}
+                                name={AllUsersData && computeData && getUserNameFromId(AllUsersData, computeData.created_by)}
                                 bg="rgb(160,186,194)"
                                 fontSize="14px"
                                 mt={10}
@@ -127,20 +227,20 @@ const ComputeDetails = () => {
                             <Box ml={15}>
                                 <Text fontSize={14}>Created by</Text>
                                 <Text fontSize={14} fontWeight={600}>
-                                    {AllUsersData && getUserNameFromId(AllUsersData, computeData[0] && computeData[0].created_by)}
+                                    {AllUsersData && computeData && getUserNameFromId(AllUsersData, computeData.created_by)}
                                 </Text>
                             </Box>
                             <Box width={'360px'} ml={15} className="computedetailsContainer-2subsub-2sub-2">
                                 <Box width={'150px'}>
                                     <Text fontSize={14}>Compute ID</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].id}
+                                        {computeData.id}
                                     </Text>
                                 </Box>
                                 <Box width={'120px'} left={'20'}>
                                     <Text fontSize={14}>Compute Name</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].name}
+                                        {computeData.name}
                                     </Text>
                                 </Box>
                             </Box>
@@ -148,13 +248,13 @@ const ComputeDetails = () => {
                                 <Box width={'150px'}>
                                     <Text fontSize={14}>Created On</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {convertTime(computeData[0].created_at, false)}
+                                        {convertTime(computeData.created_at, false)}
                                     </Text>
                                 </Box>
                                 <Box width={'120px'}>
                                     <Text fontSize={14}>Last Modified</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {convertTime(computeData[0].updated_at, true)}
+                                        {convertTime(computeData.updated_at, true)}
                                     </Text>
                                 </Box>
                             </Box>
@@ -162,7 +262,7 @@ const ComputeDetails = () => {
                     </Box>
                     <Box className="computedetailsContainer-2sub-2">
                         <Box className="computedetailsContainer-2sub-2sub-1">
-                            <ButtonGroup ml={8} onClick={() => onEditClickHandler(computeData[0])}>
+                            <ButtonGroup ml={8} onClick={() => onEditClickHandler(computeData)}>
                                 <Link color="rgb(33,128,194)" fontWeight={100} href="#">
                                     Edit Compute
                                 </Link>
@@ -173,19 +273,19 @@ const ComputeDetails = () => {
                                 <Box>
                                     <Text fontSize={14}>Worker Type</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].resources.node_type.worker_type_id}
+                                        {computeData.resources.node_type.worker_type_id}
                                     </Text>
                                 </Box>
                                 <Box>
                                     <Text fontSize={14}>Driver Type</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].resources.node_type.driver_type_id}
+                                        {computeData.resources.node_type.driver_type_id}
                                     </Text>
                                 </Box>
                                 <Box>
                                     <Text fontSize={14}>Workers</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].resources.num_workers}
+                                        {computeData.resources.num_workers}
                                     </Text>
                                 </Box>
                             </Box>
@@ -193,13 +293,13 @@ const ComputeDetails = () => {
                                 <Box>
                                     <Text fontSize={14}>Total Cores</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {computeData[0].resources.node_type.total_num_cores}
+                                        {computeData.resources.node_type.total_num_cores}
                                     </Text>
                                 </Box>
                                 <Box>
                                     <Text fontSize={14}>Total Memory</Text>
                                     <Text fontSize={14} fontWeight={600}>
-                                        {Math.round(computeData[0].resources.node_type.total_memory_mb / 1024)} GB
+                                        {Math.round(computeData.resources.node_type.total_memory_mb / 1024)} GB
                                     </Text>
                                 </Box>
                                 <Box>
@@ -217,7 +317,7 @@ const ComputeDetails = () => {
                         isOpen={deleteComputeModal.isOpen}
                         onClose={deleteComputeModal.onClose}
                         submitDeleteHandler={submitDeleteHandler}
-                        options={{ name: computeData[0].name, label: 'compute', placeholder: 'My Compute 00' }}
+                        options={{ name: computeData.name, label: 'compute', placeholder: 'My Compute 00' }}
                     />
                 )}
                 {editComputeModal.isOpen && <ComputeJsonModal isOpen={editComputeModal.isOpen} isEdit={isEdit} onClose={editComputeModal.onClose} />}

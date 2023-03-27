@@ -38,13 +38,24 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
         if (values?.workers) {
             formSchema['workers'].defaultValue = values.workers;
         }
+
         if (values?.max_workers) {
             formSchema['max_workers'].defaultValue = values.max_workers;
         }
         if (values?.min_workers) {
             formSchema['min_workers'].defaultValue = values.min_workers;
         }
+        if (values?.max_inactivity_min) {
+            formSchema['max_inactivity_min'].defaultValue = values.max_inactivity_min;
+        }
 
+        if (values.worker_type_id && isEdit) {
+            formSchema['worker_type_id'].defaultValue = values.worker_type_id;
+        }
+
+        if (values.driver_type_id && isEdit) {
+            formSchema['driver_type_id'].defaultValue = values.driver_type_id;
+        }
         initForm(formSchema, values);
     }, [values]);
 

@@ -18,7 +18,8 @@ function GetFormElements(props: GetFormElementsPropType) {
             uiSchemaOptions: elementSchema.uiSchemaOptions,
             uniqueKey: props.uniqueKey,
             defaultValue: props.defaultValue,
-            min: elementSchema.min
+            min: elementSchema.min,
+            wrapper: elementSchema.wrapper
         };
 
         if (props.isEdit === true && elementSchema.isDefault === true) {

@@ -92,7 +92,7 @@ const Output = (props: any) => {
             max_inactivity_min: data?.max_inactivity_min,
             name: data.name,
             autoscale: data.resources.autoscale,
-            num_workers: data.resources?.num_workers,
+            num_workers: parseInt(data.resources?.num_workers),
             spot_instances: data.resources.spot_instances,
             worker_type_id: data.resources.node_type.worker_type_id,
             min_workers: data.resources?.autoscale?.min_workers,
