@@ -88,3 +88,21 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
                }).length > 0) ? true: false
     })
 }
+
+export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type: string) => {
+    if(type === 'All') {
+        return allProjectsData;
+    } else if(type === 'onlyMe') {
+        const userId = userConfig.userConfiguration.user.userId;
+        const userOnlyProjects = allProjectsData.filter((project: GetAllProjectsDetail ) => {
+            return project.created_by === userId;
+        });
+        return userOnlyProjects;
+    } else if (type === 'sharedWithMe') {
+        const userId = userConfig.userConfiguration.user.userId;
+        const sharedWithMe = allProjectsData.filter((project: GetAllProjectsDetail) => {
+            return project.created_by !== userId;
+        });
+        return sharedWithMe;
+    }
+};

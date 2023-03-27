@@ -28,6 +28,13 @@ export interface GetAllProjectsDetail {
         user_id: string,
         access_level: string,
     }[];
+    datasources: {
+        id: string;
+        name: string;
+        spec: {
+            path: string
+        }
+    }[];
 }
 export interface GetAllProjectsAppStoreState {
     AllProjectsData: GetAllProjectsDetail[];

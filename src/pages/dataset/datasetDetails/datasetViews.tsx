@@ -1,9 +1,59 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../dataset.scss';
 import { Box, Center, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
+import { GetAllProjectsDetail } from '../../../models/project';
 
 const DatasetViews = (props: any) => {
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
+    console.log('Props', props.data);
+    const gridRef = useRef<AgGridReact<any>>(null);
+    const gridStyle = useMemo(() => ({ height: '300px', width: '98%' }), []);
+    const [rowData, setRowData] = useState<any[]>([]);
+    const [columnDefs] = useState<ColDef[]>([
+        {
+            field: 'id',
+            headerName: 'Dataset ID'
+        },
+        {
+            field: 'name',
+            headerName: 'Dataset Name'
+        },
+        {
+            field: 'created_by',
+            headerName: 'Created By'
+        },
+        {
+            field: 'created_on',
+            headerName: 'Created On'
+        },
+        {
+            field: 'spec.path',
+            headerName: 'Source'
+        }
+    ]);
+    console.log('Row Data', rowData)
+    useEffect(() => {
+        let datasourceData: any = [];
+        props.data.forEach((project:GetAllProjectsDetail) => {
+            let listOfDataSources = [];
+            if(project.datasources.length > 0) {
+                listOfDataSources = project.datasources.map((datasource: any) => {
+                    return datasource;
+                });
+            };
+            datasourceData.push(...listOfDataSources);
+        });
+        setRowData(datasourceData);
+    }, [props.data]);
+
+    useEffect(() => {
+        if(gridRef?.current!.api) {
+            gridRef?.current!.api.setQuickFilter(props.search);
+            // setRowCount(gridRef?.current!.api.getModel().getRowCount());
+        }
+    }, [props.search]);
 
     return (
         <>
@@ -18,13 +68,15 @@ const DatasetViews = (props: any) => {
                         </Box>
                         <Box color={'default.containerAgGridRecords'}>
                             <Text ml={'14'} fontWeight={700}>
-                                12 Records
+                                1
                             </Text>
                         </Box>
                     </Center>
                 </Flex>
                 <Flex flexWrap={'wrap'} flexDirection={'row'} ml={'24'}>
-                    Add Grid here
+                    <Box style={gridStyle} className="ag-theme-alpine">
+                        <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                    </Box>
                 </Flex>
             </Box>
         </>
