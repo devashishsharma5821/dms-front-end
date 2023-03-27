@@ -56,10 +56,10 @@ const ProjectDetailsMenu = (props: any) => {
                         menuForProjectDetails.map((section: any, sectionIndex: any) => {
                             return (
                                 <Box>
-                                    <Accordion allowMultiple>
-                                        <AccordionItem height={'50%'} maxHeight={'400px'} overflowY={'scroll'}>
+                                    <Accordion allowMultiple cursor={'pointer'}>
+                                        <AccordionItem>
                                             <h2>
-                                                <AccordionButton>
+                                                <AccordionButton bg={'light.lightGrayishBlue'}>
                                                     <Box ml={'16px'}>
                                                         <AccordionIcon color={'#646A78'} />
                                                     </Box>
@@ -75,6 +75,7 @@ const ProjectDetailsMenu = (props: any) => {
                                                 {section.hasSubMenu.map((subSection: any, subSectionIndex: any) => {
                                                     return (
                                                         <Box
+                                                            cursor={'pointer'}
                                                             key={subSection.id}
                                                             onClick={() => {
                                                                 checkForSubMenuOrNavigation(SingleProjectData.basic.id, subSection, section.name);

@@ -71,10 +71,10 @@ const Explorer = (props: any) => {
                             subMenuForExplorer.map((section: any, sectionIndex: number) => {
                                 return (
                                     <Box>
-                                        <Accordion allowMultiple>
-                                            <AccordionItem height={'50%'} maxHeight={'400px'} overflowY={'scroll'}>
+                                        <Accordion allowMultiple cursor={'pointer'}>
+                                            <AccordionItem>
                                                 <h2>
-                                                    <AccordionButton>
+                                                    <AccordionButton bg={'light.lightGrayishBlue'}>
                                                         <Box ml={'16px'}>
                                                             <AccordionIcon color={'#646A78'} />
                                                         </Box>
@@ -101,7 +101,7 @@ const Explorer = (props: any) => {
                                                                         {' '}
                                                                         {getTruncatedText(project && project.name, 16)}
                                                                     </Box>
-                                                                    <Center width={'20%'} justifyContent={'fle'} mr={'14px'}>
+                                                                    <Center width={'20%'} justifyContent={'fle'} mr={'-8px'}>
                                                                         <RightArrow color={iconsColor} />
                                                                     </Center>
                                                                 </Flex>

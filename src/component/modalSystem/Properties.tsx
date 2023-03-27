@@ -23,7 +23,13 @@ import {
     ButtonGroup,
     useEditableControls,
     EditablePreview,
-    EditableInput, Textarea, createStandaloneToast, Popover, PopoverTrigger, PopoverContent, Stack
+    EditableInput,
+    Textarea,
+    createStandaloneToast,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    Stack
 } from '@chakra-ui/react';
 import { CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
 import { ShareData } from '../../models/share';
@@ -63,10 +69,10 @@ const Properties = (props: any) => {
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} mt={'15px'} justifyContent="center">
-                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
                 </Button>
-                <Button cursor={'pointer'} variant='link' colorScheme="blue" {...getCancelButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getCancelButtonProps()}>
                     Cancel
                 </Button>
             </ButtonGroup>
@@ -77,16 +83,16 @@ const Properties = (props: any) => {
                 </Button>
             </Flex>
         );
-    };
+    }
     function EditableControlsName() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
             <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
-                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getSubmitButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
                 </Button>
-                <Button cursor={'pointer'} variant='link' colorScheme="blue"  {...getCancelButtonProps()}>
+                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getCancelButtonProps()}>
                     Cancel
                 </Button>
             </ButtonGroup>
@@ -117,7 +123,7 @@ const Properties = (props: any) => {
                 getAndUpdateExperimentData(props.data.id);
                 toast(getToastOptions(`${err}`, 'error'));
             });
-    }
+    };
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== props.data.description) {
             const variables = {
@@ -170,29 +176,29 @@ const Properties = (props: any) => {
         setTagValue(ev);
     };
     const handleTagSubmit = () => {
-            const variables = {
-                id: props.data.id,
-                name: props.data.name,
-                description: props.data.description,
-                tags: [...props.data.tags, ...tagValue]
-            };
-            handleEditExperiment(variables, {
-                successMessage: 'Experiment Tags Edited Successfully',
-                errorMessage: 'Experiment Tags Failed To edit'
-            });
-            tagPopOver.onClose();
+        const variables = {
+            id: props.data.id,
+            name: props.data.name,
+            description: props.data.description,
+            tags: [...props.data.tags, ...tagValue]
+        };
+        handleEditExperiment(variables, {
+            successMessage: 'Experiment Tags Edited Successfully',
+            errorMessage: 'Experiment Tags Failed To edit'
+        });
+        tagPopOver.onClose();
     };
 
     const handleRemoveTag = (tag: string) => {
         props.data.tags = props.data.tags.filter((tagToKeep: any) => {
             return tagToKeep !== tag;
         });
-            const variables = {
-                id: props.data.id,
-                name: props.data.name,
-                description: props.data.description,
-                tags: [...props.data.tags]
-            };
+        const variables = {
+            id: props.data.id,
+            name: props.data.name,
+            description: props.data.description,
+            tags: [...props.data.tags]
+        };
         handleEditExperiment(variables, {
             successMessage: 'Project Tags Edited Successfully',
             errorMessage: 'Project Tags Failed To edit'
@@ -278,38 +284,36 @@ const Properties = (props: any) => {
                                         Tag:
                                     </Text>
                                     <Center>
-                                        {
-                                            props.data.tags?.map((tag: any, tagIndex: number) => {
-                                                if(tagIndex === 2) {
-                                                    return (
-                                                        <Box key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                                            <Flex>
-                                                                <Center>
-                                                                    <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                        + {props.data.tags.length - 2} more
-                                                                    </Text>
-                                                                </Center>
-                                                            </Flex>
-                                                        </Box>
-                                                    )
-                                                } else if (tagIndex < 2) {
-                                                    return (
-                                                        <Box cursor={"pointer"} key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                                            <Flex cursor={"pointer"}>
-                                                                <Center cursor={"pointer"}>
-                                                                    <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                        {getTruncatedText(tag, 9)}
-                                                                    </Text>
-                                                                    <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'14px'} cursor={"pointer"}>
-                                                                        <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={"pointer"} color={closeButton}/>
-                                                                    </Box>
-                                                                </Center>
-                                                            </Flex>
-                                                        </Box>
-                                                    )
-                                                }
-                                            })
-                                        }
+                                        {props.data.tags?.map((tag: any, tagIndex: number) => {
+                                            if (tagIndex === 2) {
+                                                return (
+                                                    <Box key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                        <Flex>
+                                                            <Center>
+                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                    + {props.data.tags.length - 2} more
+                                                                </Text>
+                                                            </Center>
+                                                        </Flex>
+                                                    </Box>
+                                                );
+                                            } else if (tagIndex < 2) {
+                                                return (
+                                                    <Box cursor={'pointer'} key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                        <Flex cursor={'pointer'}>
+                                                            <Center cursor={'pointer'}>
+                                                                <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                    {getTruncatedText(tag, 9)}
+                                                                </Text>
+                                                                <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'14px'} cursor={'pointer'}>
+                                                                    <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={'pointer'} color={closeButton} />
+                                                                </Box>
+                                                            </Center>
+                                                        </Flex>
+                                                    </Box>
+                                                );
+                                            }
+                                        })}
                                     </Center>
                                     <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={false}>
                                         <PopoverTrigger>
@@ -317,7 +321,7 @@ const Properties = (props: any) => {
                                                 + Add Tag
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent p={5} w={"520px"} h={"200px"}>
+                                        <PopoverContent p={5} w={'520px'} h={'200px'}>
                                             <Stack spacing={4}>
                                                 <MultiSelect
                                                     value={tagValue}
@@ -338,7 +342,6 @@ const Properties = (props: any) => {
                                             </Stack>
                                         </PopoverContent>
                                     </Popover>
-
                                 </Center>
                             </Flex>
 
@@ -346,7 +349,7 @@ const Properties = (props: any) => {
 
                             <Box width={671}>
                                 <Center>
-                                    <Flex ml={'36px'} mt={'-51px'}>
+                                    <Flex mt={'-51px'}>
                                         <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(props.userData, props.data.created_by)} color={'default.whiteText'} mt={'21px'} />
                                         <Center>
                                             <Box width={'300px'}>
@@ -373,7 +376,7 @@ const Properties = (props: any) => {
                                     </Flex>
                                     <Flex as="nav" align="center" justify="space-between" wrap="wrap">
                                         <Box>
-                                            <Flex>
+                                            <Flex mb={16}>
                                                 <Center flex="2">
                                                     <Text mt={'21px'} ml={12}>
                                                         Access by
@@ -395,24 +398,33 @@ const Properties = (props: any) => {
                                                     </Center>
                                                 </Center>
                                             </Flex>
-                                            {props.userAccessList.map((project: any) => {
-                                                return (
-                                                    <>
-                                                        <Center>
-                                                            <Avatar ml={16} p={'5px'} borderRadius="full" boxSize="32px" name={`${project.firstName} ${project.lastName}`} color={'default.whiteText'} />
-                                                            <Box mt={'17px'} width={'300px'}>
-                                                                <Text ml={12} color={accesstextColor}>
-                                                                    {project?.firstName} {project?.lastName}
-                                                                </Text>
-                                                                <Text ml={12} color={'default.veryLightGrayTextColor'}>
-                                                                    {project.email}{' '}
-                                                                </Text>
-                                                            </Box>
-                                                        </Center>
-                                                        <Center mr={'36px'}></Center>
-                                                    </>
-                                                );
-                                            })}
+                                            <Box overflowY="auto" overflowX="hidden" maxHeight="166px" minHeight="170px" h="100%" whiteSpace="nowrap" color="white" width={'100%'}>
+                                                {props.userAccessList.map((project: any) => {
+                                                    return (
+                                                        <div key={project} style={{ marginBottom: '16px' }}>
+                                                            <Flex justifyContent={'start'}>
+                                                                <Avatar
+                                                                    ml={16}
+                                                                    p={'5px'}
+                                                                    borderRadius="full"
+                                                                    boxSize="32px"
+                                                                    name={`${project.firstName} ${project.lastName}`}
+                                                                    color={'default.whiteText'}
+                                                                />
+                                                                <Box width={'166px'}>
+                                                                    <Text ml={12} color={accesstextColor}>
+                                                                        {project?.firstName} {project?.lastName}
+                                                                    </Text>
+                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'}>
+                                                                        {project.email}{' '}
+                                                                    </Text>
+                                                                </Box>
+                                                            </Flex>
+                                                            <Center mr={'36px'}></Center>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </Box>
                                         </Box>
                                     </Flex>
                                 </Center>
