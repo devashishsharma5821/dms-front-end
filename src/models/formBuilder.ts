@@ -15,6 +15,7 @@ export interface FieldPropsType {
     errormessage?: string | undefined;
     uniqueKey: string;
     defaultValue: any;
+    wrapper?: any;
 }
 
 export class InputFieldType<T> {
@@ -49,6 +50,8 @@ export interface FormSchemaType {
     value?: any;
     isDefault?: any;
     default_heading_value?: any;
+    wrapper?: any;
+    errmsg?: any;
 }
 export interface MainFormType {
     values: any;

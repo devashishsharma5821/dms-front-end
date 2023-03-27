@@ -37,9 +37,9 @@ export const CreateYupSchema = (formSchema: any, values: any) => {
             }
         }
         if (formSchema[key].required) {
-            if (formSchema[key].min) {
-                _validationSchema[key] = _validationSchema[key].min(0);
-            }
+            // if (formSchema[key].min) {
+            //     _validationSchema[key] = _validationSchema[key].min(formSchema[key].min);
+            // }
             _validationSchema[key] = _validationSchema[key].required(formSchema[key].errormessage);
         }
 

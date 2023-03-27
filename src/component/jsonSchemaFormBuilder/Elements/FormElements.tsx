@@ -1,5 +1,5 @@
 import { ErrorMessage } from 'formik';
-import { FormControl, FormLabel } from '@chakra-ui/react';
+import { FormControl, FormLabel, Select } from '@chakra-ui/react';
 import InputField from './InputField';
 import SwitchField from './SwitchField';
 import Numbers from './NumberField';
@@ -24,24 +24,17 @@ export function TextField(props: FieldPropsType) {
 export function SelectField(props: FieldPropsType) {
     const { name, label, options, uiSchema, uiSchemaOptions, className, defaultValue } = props;
     return (
-        <FormControl className={className} style={uiSchema}>
+        <FormControl isRequired className={className} style={uiSchema}>
             {label && (
-                <label htmlFor={name} style={uiSchemaOptions?.label ? uiSchemaOptions.label : {}}>
+                <FormLabel htmlFor={name} style={uiSchemaOptions?.label ? uiSchemaOptions.label : {}}>
                     {label}
-                </label>
+                </FormLabel>
             )}
-            <InputField as="select" {...props}>
-                <option value="">{defaultValue}</option>
+            <Select as="select" defaultValue={defaultValue} className="selectDropDown">
                 {options.map((optn: options, index: string) => {
-                    return (
-                        <option
-                            key={index}
-                            value={optn.node_type_id}
-                            label={optn.label || `${optn.node_type_id} \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 ${optn.memory_mb / 1024} GB Memory, ${optn.num_cores} Cores`}
-                        />
-                    );
+                    return <option key={index} value={optn.node_type_id} label={optn.label || `${optn.node_type_id} \u00A0\u00A0\ ${optn.memory_mb / 1024} GB Memory, ${optn.num_cores} Cores`} />;
                 })}
-            </InputField>
+            </Select>
             <ErrorMessage name={name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
         </FormControl>
     );
@@ -57,15 +50,30 @@ export const FieldSwitch = (props: FieldPropsType) => {
 };
 
 export const NumberField = (props: FieldPropsType) => {
-    if (!props.show) {
+    if (!props?.show) {
         return <></>;
     }
+
     return (
         <FormControl isRequired className={props?.className && props.className} style={props.uiSchema} key={props?.uniqueKey}>
-            <FormLabel htmlFor={props.name} style={props?.uiSchemaOptions?.label ? props.uiSchemaOptions.label : {}} className={props.className + '_' + props.label}>
-                {props.label}
-            </FormLabel>
-            <Numbers {...props} />
+            {props.wrapper ? (
+                <div style={props.wrapper.uiSchema}>
+                    {props.wrapper.elements.label && (
+                        <FormLabel htmlFor={props.name} style={props?.uiSchemaOptions?.label ? props.uiSchemaOptions.label : {}} className={props.className + '_' + props.label}>
+                            {props.label}
+                        </FormLabel>
+                    )}
+                    {props.wrapper.elements.number && <Numbers {...props} />}
+                </div>
+            ) : (
+                <>
+                    <FormLabel htmlFor={props.name} style={props?.uiSchemaOptions?.label ? props.uiSchemaOptions.label : {}} className={props.className + '_' + props.label}>
+                        {props.label}
+                    </FormLabel>
+                    <Numbers {...props} />
+                </>
+            )}
+
             <ErrorMessage name={props.name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
         </FormControl>
     );

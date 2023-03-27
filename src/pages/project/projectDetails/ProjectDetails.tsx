@@ -195,6 +195,7 @@ const ProjectDetails = (props: any) => {
                 toast(getToastOptions(`${err}`, 'error'));
             });
     };
+
     const handleAddTag = () => {
         tagPopOver.onClose();
         setPopOverTag('');
@@ -242,6 +243,7 @@ const ProjectDetails = (props: any) => {
             });
         }
     };
+
     const handleEditDescription = (nextDescription: string) => {
         if (nextDescription !== SingleProjectData.basic.description) {
             const variables = {

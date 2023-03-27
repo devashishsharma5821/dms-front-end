@@ -467,20 +467,18 @@ export const deleteProject = (id: string) => {
 // Project APIs end here
 // Dataset APIs start here
 export const uploadCSVDataset = () => {
-    return gql `mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!) {
-        dmsDatabricksUploadDBFS(
-        file: $file,
-        project_id: $projectId,
-        dataset_name: $datasetName
-        )
-    }`;
-}
+    return gql`
+        mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!) {
+            dmsDatabricksUploadDBFS(file: $file, project_id: $projectId, dataset_name: $datasetName)
+        }
+    `;
+};
 
 export const deleteDataset = (variables: any) => {
-    return gql `mutation {
+    return gql`mutation {
         dmsDeleteDatabricksDBFS(project_id: ${variables.projectId}, dataset_name: ${variables.datasetName})
     }`;
-}
+};
 // Dataset APIs End Here
 
 // ProjectDetailsMenu APIs Start here
