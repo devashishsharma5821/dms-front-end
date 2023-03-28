@@ -17,7 +17,7 @@ const ProjectsViews = (props: any) => {
     const AllUsersData = props.AllUsersData;
     const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const navigateToDetails = (id: string) => {
-        navigate(`/project/${id}`);
+        navigate(`/projectDetails/${id}`);
     };
     const [windowSize, setWindowSize] = React.useState([window.innerWidth, window.innerHeight]);
 
@@ -80,9 +80,7 @@ const ProjectsViews = (props: any) => {
                                     >
                                         <Box key={project.id} maxHeight={'69px'} bg={'light.lightGrayishBlue'} borderTopRadius={8}>
                                             <Center ml={'23px'} pt={'8px'} justifyContent={'flex-start'}>
-                                                {
-                                                    (UserConfig.userConfiguration.user.userId !== project.created_by) ? <People color={'#666C80'} /> : <Documentation color={'#666C80'} />
-                                                }
+                                                {UserConfig.userConfiguration.user.userId !== project.created_by ? <People color={'#666C80'} /> : <Documentation color={'#666C80'} />}
 
                                                 <Text title={project.name} ml={'11px'} fontWeight={700} fontSize={20} mt={'2px'} color={'default.blackText'} height={'27px'}>
                                                     {getTruncatedText(project && project.name, 20)}

@@ -20,7 +20,7 @@ const ProjectDetailsMenu = (props: any) => {
             // TODO Navigate to Dataset
             navigate(`/datasetDetails/${subSectionId.id}`);
         } else if (type === 'Experiment') {
-            navigate(`/project/${projectId}/experiment/${subSectionId.id}`);
+            navigate(`/projectDetails/${projectId}/experiment/${subSectionId.id}`);
         }
     };
     useEffect(() => {
