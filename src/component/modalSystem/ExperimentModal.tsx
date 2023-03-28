@@ -110,7 +110,7 @@ const ExperimentModal = (props: any) => {
                 toast(getToastOptions(`Experiment has being successfully created`, 'success'));
                 getAndUpdateSingleProjectData(projectSelected);
                 updateSpinnerInfo(false);
-                navigate(`/project/${projectSelected}`);
+                navigate(`/projectDetails/${projectSelected}`);
                 setFormFields({});
                 setProjectSelected('');
                 setExperimentName('');
@@ -136,7 +136,7 @@ const ExperimentModal = (props: any) => {
             getAndUpdateAllProjectsData();
         } else {
             updateSpinnerInfo(false);
-            if(projectSelected === "") {
+            if (projectSelected === '') {
                 setProjectSelected(AllProjectsData[0].id);
             }
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
