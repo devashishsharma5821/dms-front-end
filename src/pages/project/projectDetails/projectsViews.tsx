@@ -17,7 +17,7 @@ const ProjectsViews = (props: any) => {
     const AllUsersData = props.AllUsersData;
     const accessTextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const navigateToDetails = (id: string) => {
-        navigate(`/projectDetails/${id}`);
+        navigate(`/project/${id}`);
     };
     const [windowSize, setWindowSize] = React.useState([window.innerWidth, window.innerHeight]);
 

@@ -1,43 +1,46 @@
-import { Box, Button, useColorModeValue, Divider, Flex, Center, useColorMode, IconButton } from "@chakra-ui/react";
-import { useDisclosure } from "@chakra-ui/react-use-disclosure";
-import { useRef, useState, useEffect } from "react";
-import { useApolloClient } from "@apollo/client";
+import { Box, Button, useColorModeValue, Divider, Flex, Center, useColorMode, IconButton } from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react-use-disclosure';
+import { useRef, useState, useEffect } from 'react';
+import { useApolloClient } from '@apollo/client';
 import './TransformerMenu.scss';
+import { Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, Accordion, AccordionItem, AccordionButton, AccordionPanel, List, ListItem } from '@chakra-ui/react';
+import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
+import DownDeltaIcon from '../../assets/icons/DownDeltaIcon';
+import RightDeltaIcon from '../../assets/icons/RightDeltaIcon';
 import {
-    Drawer,
-    DrawerBody,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    List,
-    ListItem,
-} from "@chakra-ui/react";
-import DoubleAngleLeftIcon from "../../assets/icons/DoubleAngleLeftIcon";
-import DownDeltaIcon from "../../assets/icons/DownDeltaIcon";
-import RightDeltaIcon from "../../assets/icons/RightDeltaIcon";
-import {
-    AggregationDisaggregationIcon, AnomalyDetectionIcon, ArtificialNeuralNetworkIcon,
-    CustomTransformersIcon, DataFrameManipulationIcon, FeatureExtractionIcon, KeyPerformanceIndicatorIcon,
-    MachineLearningModelsIcon, PromotionModelsIcon, TimeSeriesModelsIcon, TransformersIcon,
-    AggregationDisaggregationIcon_white, AnomalyDetectionIcon_white, ArtificialNeuralNetworkIcon_white,
-    CustomTransformersIcon_white, DataFrameManipulationIcon_white, FeatureExtractionIcon_white, KeyPerformanceIndicatorIcon_white,
-    MachineLearningModelsIcon_white, PromotionModelsIcon_white, TimeSeriesModelsIcon_white, TransformersIcon_white
-} from "../../assets/icons/AllTransformerIcons";
-import { TransformerDetail } from "../../models/transformerDetail";
-import { TransformerListResponse } from "../../models/transformerListResponse";
-import { getTransformersData } from "../../query";
-import SearchComponent from "../search/SearchComponent";
-import client from "../../apollo-client";
-import TransformerMenuItem from "./TransformerMenuItem";
-import DoubleAngleRightIcon from "../../assets/icons/DoubleAngleRightIcon";
-import React from "react";
-import { dia, linkTools, shapes, ui } from "@antuit/rappid-v1";
-import transformerMenuConf from "../../models/transformersConfig";
+    AggregationDisaggregationIcon,
+    AnomalyDetectionIcon,
+    ArtificialNeuralNetworkIcon,
+    CustomTransformersIcon,
+    DataFrameManipulationIcon,
+    FeatureExtractionIcon,
+    KeyPerformanceIndicatorIcon,
+    MachineLearningModelsIcon,
+    PromotionModelsIcon,
+    TimeSeriesModelsIcon,
+    TransformersIcon,
+    AggregationDisaggregationIcon_white,
+    AnomalyDetectionIcon_white,
+    ArtificialNeuralNetworkIcon_white,
+    CustomTransformersIcon_white,
+    DataFrameManipulationIcon_white,
+    FeatureExtractionIcon_white,
+    KeyPerformanceIndicatorIcon_white,
+    MachineLearningModelsIcon_white,
+    PromotionModelsIcon_white,
+    TimeSeriesModelsIcon_white,
+    TransformersIcon_white
+} from '../../assets/icons/AllTransformerIcons';
+import { TransformerDetail } from '../../models/transformerDetail';
+import { TransformerListResponse } from '../../models/transformerListResponse';
+import { getTransformersData } from '../../query';
+import SearchComponent from '../search/SearchComponent';
+import client from '../../apollo-client';
+import TransformerMenuItem from './TransformerMenuItem';
+import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
+import React from 'react';
+import { dia, linkTools, shapes, ui } from '@antuit/rappid-v1';
+import transformerMenuConf from '../../models/transformersConfig';
 //     AggregationDisaggregationIcon,
 //     AnomalyDetectionIcon,
 //     ArtificialNeuralNetworkIcon,
@@ -67,8 +70,6 @@ interface DynamicObject {
 }
 
 const TransformerMenu = (props: any) => {
-
-
     const iconComponents: any = {
         AggregationDisaggregationIcon: AggregationDisaggregationIcon,
         TransformersIcon: TransformersIcon,
@@ -84,18 +85,18 @@ const TransformerMenu = (props: any) => {
     };
 
     const iconComponentsDark: any = {
-        'AggregationDisaggregationIcon': AggregationDisaggregationIcon_white,
-        'TransformersIcon': TransformersIcon_white,
-        'AnomalyDetectionIcon': AnomalyDetectionIcon_white,
-        'PromotionModelsIcon': PromotionModelsIcon_white,
-        'TimeSeriesModelsIcon': TimeSeriesModelsIcon_white,
-        'FeatureExtractionIcon': FeatureExtractionIcon_white,
-        'DataFrameManipulationIcon': DataFrameManipulationIcon_white,
-        'ArtificialNeuralNetworkIcon': ArtificialNeuralNetworkIcon_white,
-        'KeyPerformanceIndicatorIcon': KeyPerformanceIndicatorIcon_white,
-        'MachineLearningModelsIcon': MachineLearningModelsIcon_white,
-        'CustomTransformersIcon': CustomTransformersIcon_white,
-    }
+        AggregationDisaggregationIcon: AggregationDisaggregationIcon_white,
+        TransformersIcon: TransformersIcon_white,
+        AnomalyDetectionIcon: AnomalyDetectionIcon_white,
+        PromotionModelsIcon: PromotionModelsIcon_white,
+        TimeSeriesModelsIcon: TimeSeriesModelsIcon_white,
+        FeatureExtractionIcon: FeatureExtractionIcon_white,
+        DataFrameManipulationIcon: DataFrameManipulationIcon_white,
+        ArtificialNeuralNetworkIcon: ArtificialNeuralNetworkIcon_white,
+        KeyPerformanceIndicatorIcon: KeyPerformanceIndicatorIcon_white,
+        MachineLearningModelsIcon: MachineLearningModelsIcon_white,
+        CustomTransformersIcon: CustomTransformersIcon_white
+    };
     const [transformarsData, setTransformarsData] = useState(new Array<TransformerDetail>());
     const [formatedTransformersData, setFormatedTransformersData] = useState<DynamicObject>({});
     const [sortedTransformersData, setSortedTransformersData] = useState(Array<string>);
@@ -119,40 +120,33 @@ const TransformerMenu = (props: any) => {
     const [clipboard, setClipboard] = React.useState<ui.Clipboard>();
 
     const canvasBg = useColorModeValue('white', '#171717');
-    let transformersGroup:any = {};
+    let transformersGroup: any = {};
     //new joint.ui.Snaplines({ paper: paper });
     /*
      * for grouping transformers data by category and returning formatted object
-    */
-    let  TransformerGraph = new dia.Graph({}, { cellNamespace: shapes });
+     */
+    let TransformerGraph = new dia.Graph({}, { cellNamespace: shapes });
     let TransformerPaper = new dia.Paper({
         width: 0,
         height: 0,
         model: TransformerGraph,
-        gridSize:           20,
+        gridSize: 20,
         drawGrid: true,
-        snapLinks:          { radius: 600 },
-        markAvailable:      true,
-        background:         { color: canvasBg },
+        snapLinks: { radius: 600 },
+        markAvailable: true,
+        background: { color: canvasBg },
         interactive: { linkMove: false },
         frozen: true,
         async: true,
         sorting: dia.Paper.sorting.APPROX,
         cellViewNamespace: shapes,
         defaultLink: new dia.Link({
-            attrs: { ".marker-target": { d: "M 10 0 L 0 5 L 10 10 z" } }
+            attrs: { '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' } }
         }),
-        validateConnection: function(
-            cellViewS,
-            magnetS,
-            cellViewT,
-            magnetT,
-            end,
-            linkView
-        ) {
+        validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
             // Prevent loop linking
             return magnetS !== magnetT;
-        },
+        }
     });
     //setPaper(papert);
     // const selection = new ui.Selection({
@@ -167,9 +161,8 @@ const TransformerMenu = (props: any) => {
 
     // });
 
-
     let TransformerPaperScroller = new ui.PaperScroller({
-        paper:TransformerPaper,
+        paper: TransformerPaper,
         autoResizePaper: true,
         scrollWhileDragging: true,
         cursor: 'grab'
@@ -181,9 +174,9 @@ const TransformerMenu = (props: any) => {
 
     const formatTransformerData = (transformerdata: any) => {
         sortTransformers();
-        return  transformerdata.reduce((transformersList: any, currentObj: any) => {
-            if(!transformersGroup[currentObj['category']])
-                transformersGroup[currentObj['category']] = {index:transformerMenuConf[currentObj['category']].order,label:transformerMenuConf[currentObj['category']].category};
+        return transformerdata.reduce((transformersList: any, currentObj: any) => {
+            if (!transformersGroup[currentObj['category']])
+                transformersGroup[currentObj['category']] = { index: transformerMenuConf[currentObj['category']].order, label: transformerMenuConf[currentObj['category']].category };
             (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(currentObj);
             return transformersList;
         }, {});
@@ -270,7 +263,6 @@ const TransformerMenu = (props: any) => {
      */
 
     useEffect(() => {
-
         // setSnaplines(props.snaplines);
 
         //let selectionT = new ui.Selection({ paper: TransformerPaper, useModelGeometry: true });
@@ -287,25 +279,22 @@ const TransformerMenu = (props: any) => {
             .then((response) => {
                 let transformerdata = [...response.data.dmsTransformers];
                 setTransformarsData(transformerdata);
-                updateTransformersData(transformerdata)
+                updateTransformersData(transformerdata);
                 //  loadTransformers();
             })
             .catch((err) => console.error(err));
     }, []);
 
     useEffect(() => {
-
-        if(leftMenuOpen) {
+        if (leftMenuOpen) {
             onOpen();
             // const timer = setTimeout(()=>{ loadTransformers(); },100)
         } else onClose();
-
     }, [leftMenuOpen]);
 
-    const updateMainPaperScroller = () =>{
+    const updateMainPaperScroller = () => {
         // props.updatePaperScroll(TransformerPaperScroller);
-    }
-
+    };
 
     // const loadTransformers = () =>{
     //     // TransformerPaper.on('blank:pointerdown', (evt) => {
@@ -354,24 +343,22 @@ const TransformerMenu = (props: any) => {
     //
     // }
 
-
-
     // const assignColors = (darkColor: string, lightColor: string) => {
     //     return useColorModeValue('default.whiteText', 'dark.veryLightDarkGrayishBlue');
     // }
-    const transformerAdded = (transformer:any)=>{
+    const transformerAdded = (transformer: any) => {
         props.addNewTransformer(transformer);
-    }
-    const updatestencilService = ()=>{
+    };
+    const updatestencilService = () => {
         // props.updateStencilService(stencilService);
-    }
+    };
 
-    useEffect(()=>{
+    useEffect(() => {
         // if(transformarsData && transformarsData.length>0)
         //     loadTransformers()
-    },[colorMode])
+    }, [colorMode]);
     return (
-        <Box w="var(--chakra-space-60)" h='calc(90vh)' bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
+        <Box w="var(--chakra-space-60)" h="calc(90vh)" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')} marginInlineStart="0" ml={44}>
             <Box textAlign="right" ml="26">
                 <IconButton
                     aria-label="expand"
@@ -414,8 +401,8 @@ const TransformerMenu = (props: any) => {
                         Transformers
                     </DrawerHeader>
 
-                    <DrawerBody pl='0' pt='14' pr="17">
-                        <div className="stencil-container"/>
+                    <DrawerBody pl="0" pt="14" pr="17">
+                        <div className="stencil-container" />
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>

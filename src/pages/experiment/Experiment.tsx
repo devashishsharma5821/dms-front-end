@@ -12,7 +12,7 @@ import { cloneDeep } from 'lodash';
 import useAppStore from '../../store';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
-import { getAndUpdateTransformersData, updateSelectedStageId } from '../../zustandActions/transformersActions';
+import { getAndUpdateTransformersData, updateSelectedStageId, updateTransformersData } from '../../zustandActions/transformersActions';
 import '@antuit/rappid-v1/build/package/rappid.css';
 import './canvasStyles/style.css';
 import './canvasStyles/style.modern.css';
@@ -29,11 +29,7 @@ import { TransformersAppStoreState } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
 import { shapes } from '@antuit/rappid-v1';
 import { updateDmsComputeData } from '../../zustandActions/computeActions';
-import {
-    getAndUpdateAllUsersData,
-    updateDmsDatabricksCredentialsValidToken,
-    updateSpinnerInfo
-} from '../../zustandActions/commonActions';
+import { getAndUpdateAllUsersData, updateDmsDatabricksCredentialsValidToken, updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { hasSubscribed } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
@@ -51,18 +47,18 @@ import { createStandaloneToast } from '@chakra-ui/react';
 const { toast } = createStandaloneToast();
 
 const ExperimentsPage = () => {
-    const { projectId } = useParams();
+    const { projectId, experimentId } = useParams();
 
     // New Consts For the new ProjectDetailsMenu Page I am designing.
-    const params = useParams();
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState, selectedStageId, ExperimentData, TransformersData] = useAppStore((state: ExperimentAppStoreState) => [
+    const [DmsComputeData, UserConfig, connectionState, selectedStageId, ExperimentData, TransformersData, SingleProjectData] = useAppStore((state: ExperimentAppStoreState) => [
         state.DmsComputeData,
         state.UserConfig,
         state.connectionState,
         state.selectedStageId,
         state.ExperimentData,
-        state.TransformersData
+        state.TransformersData,
+        state.SingleProjectData
     ]);
     const navigate = useNavigate();
     const opid = v4();
@@ -84,7 +80,6 @@ const ExperimentsPage = () => {
     const { colorMode } = useColorMode();
     const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
     const [newComputedata, setNewComputedata] = useState<DmsComputeData[]>([]);
-    const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
     // React Hook
@@ -101,7 +96,7 @@ const ExperimentsPage = () => {
 
     // This useEffect will need to remove after implementation of child routing.
     useEffect(() => {
-        if(SingleProjectData === null) {
+        if (SingleProjectData === null) {
             getAndUpdateSingleProjectData(projectId as string);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
@@ -111,11 +106,10 @@ const ExperimentsPage = () => {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
         }
-
     }, [SingleProjectData]);
 
     useEffect(() => {
-        if(AllUsersData === null) {
+        if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
         } else {
@@ -176,14 +170,45 @@ const ExperimentsPage = () => {
 
     useEffect(() => {
         updateSpinnerInfo(true);
-            if (ExperimentData === null || params.experimentId !== ExperimentData.id) {
-                getAndUpdateExperimentData(params.experimentId as string);
-            } else {
-                updateSpinnerInfo(false);
-            }
-    }, [ExperimentData]);
+        getAndUpdateExperimentData(experimentId as string);
+    }, [experimentId]);
+
+    const addLoadDataframeInTransformers = (TransformersData: any) => {
+        if (TransformersData[0].name === 'Load Dataframe') {
+            return;
+        }
+
+        const arr = cloneDeep(TransformersData);
+        const [obj] = arr.filter((transformer: any) => transformer.name === 'LoadingSparkDataframe');
+
+        obj['name'] = 'Load Dataframe';
+        obj['id'] = 'antuit.dms.dfp.io.Load Dataframe';
+
+        let newArr: any = [];
+        SingleProjectData?.datasources.map((csvData: any) => newArr.push(csvData.name));
+
+        let newParseSchemaData = JSON.parse(obj?.schema?.jsonSchema);
+
+        newParseSchemaData['title'] = 'Load Dataframe';
+        newParseSchemaData['description'] = 'Loads a csv file';
+        newParseSchemaData.properties['files'] = {
+            type: 'string',
+            enum: newArr
+        };
+
+        delete newParseSchemaData.properties.input_name;
+        delete newParseSchemaData.properties.file_type;
+
+        newParseSchemaData.required.pop();
+        newParseSchemaData.required.pop();
+        newParseSchemaData.required.push('files');
+        obj.schema.jsonSchema = JSON.stringify(newParseSchemaData);
+        TransformersData.unshift(obj);
+        updateTransformersData(TransformersData);
+    };
 
     const createCanvasSchemaFromTransformersData = () => {
+        addLoadDataframeInTransformers(TransformersData);
         let transformerData = cloneDeep(TransformersData);
         let transformersGroup: any = {};
         let transformedNewDataForStencil: any;
@@ -547,9 +572,9 @@ const ExperimentsPage = () => {
         if (TransformersData === null) {
             getAndUpdateTransformersData();
         } else {
-            createCanvasSchemaFromTransformersData();
+            SingleProjectData && createCanvasSchemaFromTransformersData();
         }
-    }, [TransformersData]);
+    }, [TransformersData, SingleProjectData]);
 
     const returnCurrentTransformersIcon = (icon: string) => {
         const location = window.location.host;
@@ -700,10 +725,6 @@ const ExperimentsPage = () => {
         transformerMenuDrawer.onOpen();
     };
 
-    useEffect(() => {
-        const rappidd = new DmsCanvasService(elementRef?.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
-    }, []);
-
     //Method to initialize DMS and stencil services
     const initializeAndStartRapid = async (stencil?: any, group?: any) => {
         try {
@@ -756,20 +777,21 @@ const ExperimentsPage = () => {
     }, [selectedStageId]);
 
     const refreshExperiment = () => {
-        console.log('111111111')
-      getAndUpdateExperimentData(ExperimentData.id);
+        console.log('111111111');
+        getAndUpdateExperimentData(ExperimentData.id);
     };
 
     return (
         <>
             <Box ref={elementRef} width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
-                    <Toolbar computeData={newComputedata}
-                             is_default={dmsComputeRunningStatusIsDefaultOne}
-                             experimentData={ExperimentData}
-                             projectData={SingleProjectData}
-                             usersData={AllUsersData}
-                             userAccessList={accessUserList}
+                    <Toolbar
+                        computeData={newComputedata}
+                        is_default={dmsComputeRunningStatusIsDefaultOne}
+                        experimentData={ExperimentData}
+                        projectData={SingleProjectData}
+                        usersData={AllUsersData}
+                        userAccessList={accessUserList}
                     />
                 </Box>
 

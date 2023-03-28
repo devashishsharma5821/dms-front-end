@@ -83,5 +83,6 @@ export interface SingleProjectData {
 
 export interface DetailsAppStoreState {
     TransformersData: any;
-    SingleProjectData: SingleProjectData;
+    SingleProjectData?: SingleProjectData;
+    ExperimentData?: any;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import './pagenotfound.scss';
-import { Box, Flex, Text, useColorModeValue, Button, Link, Square, Stack, Center, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Text, useColorModeValue, Button, Link, Square, Stack } from '@chakra-ui/react';
 import { PageNotFoundLogo } from '../../assets/icons';
 
 const PageNotFound = () => {

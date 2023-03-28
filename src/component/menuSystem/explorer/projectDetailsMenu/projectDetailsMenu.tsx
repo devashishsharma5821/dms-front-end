@@ -20,8 +20,7 @@ const ProjectDetailsMenu = (props: any) => {
             // TODO Navigate to Dataset
             navigate(`/datasetDetails/${subSectionId.id}`);
         } else if (type === 'Experiment') {
-            // TODO Navigate to Experiment
-            navigate(`/projectDetails/${projectId}/experiment/${subSectionId.id}`);
+            navigate(`/project/${projectId}/experiment/${subSectionId.id}`);
         }
     };
     useEffect(() => {
@@ -40,6 +39,7 @@ const ProjectDetailsMenu = (props: any) => {
             updateSpinnerInfo(false);
         }
     }, [SingleProjectData]);
+
     return (
         <>
             {SingleProjectData && (
@@ -50,6 +50,7 @@ const ProjectDetailsMenu = (props: any) => {
                         </Text>
                     </Flex>
 
+                    <Divider mt={'16px'} orientation="horizontal" bg={'light.lighterGrayishBlue'} />
                     <Divider mt={'16px'} orientation="horizontal" bg={'light.lighterGrayishBlue'} />
 
                     {menuForProjectDetails &&
@@ -102,4 +103,5 @@ const ProjectDetailsMenu = (props: any) => {
         </>
     );
 };
+
 export default ProjectDetailsMenu;
