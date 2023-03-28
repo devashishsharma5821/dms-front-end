@@ -1,6 +1,8 @@
 import { TextField, SelectField, FieldSwitch, NumberField } from './Elements/FormElements';
 import { FormSchemaType, GetFormElementsPropType } from '../.././models/formBuilder';
-
+import {
+    FormControl
+} from '@chakra-ui/react';
 function GetFormElements(props: GetFormElementsPropType) {
     const getFormElement = (elementName: string, elementSchema: FormSchemaType) => {
         const fieldProps = {
@@ -24,9 +26,11 @@ function GetFormElements(props: GetFormElementsPropType) {
 
         if (props.isEdit === true && elementSchema.isDefault === true) {
             return (
-                <p>
-                    {elementSchema.default_heading_value} {elementSchema.value}
-                </p>
+                <FormControl style={fieldProps.uiSchema}>
+                    <p>
+                        {elementSchema.default_heading_value} {elementSchema.value}
+                    </p>
+                </FormControl>
             );
         }
 

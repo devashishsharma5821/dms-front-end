@@ -2,7 +2,10 @@
     "default": {
         "isDefault": true,
         "default_heading_value": "Compute ID:",
-        "value": ""
+        "value": "",
+        "uiSchema": {
+            "grid-column": "auto / span 8"
+        }
     },
     "compute_name": {
         "type": "text",

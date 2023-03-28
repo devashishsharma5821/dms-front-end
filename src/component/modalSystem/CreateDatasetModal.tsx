@@ -31,9 +31,6 @@ import {
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { deleteDataset } from '../../query';
-import { getProjectAccessList, getProjectNameAndLabelsForSelect } from '../../utils/common.utils';
-import useAppStore from '../../store';
-import { GetAllProjectsAppStoreState } from '../../models/project';
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
