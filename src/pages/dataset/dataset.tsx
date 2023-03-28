@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './dataset.scss';
 import { Box, Button, Center, Divider, Flex, FormControl, FormLabel, Select, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import SearchComponent from '../../component/search/SearchComponent';
@@ -8,7 +8,13 @@ import CreateDatasetModal from '../../component/modalSystem/CreateDatasetModal';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetAllProjectsDetail } from '../../models/project';
-import { handleProjectsFilter, projectsSearch } from '../../utils/common.utils';
+import {
+    getProjectAccessList,
+    getProjectNameAndLabelsForSelect,
+    handleProjectsFilter,
+    projectsSearch
+} from '../../utils/common.utils';
+import { cloneDeep } from 'lodash';
 
 const Dataset = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -20,24 +26,38 @@ const Dataset = () => {
     const [UserConfig] = useAppStore((state: any) => [state.UserConfig]);
     const [allProjectsData, setAllProjectsData] = React.useState<GetAllProjectsDetail[]>(AllProjectsData);
     const [searchValue, setSearchValue] = React.useState('');
+    const [projectNames, setProjectNames] = React.useState([{name: 'All', id: 'All'}]);
+    const [projectSelected, setProjectSelected] = useState('');
+
     const handleTabsChange = (tabIn: number) => {
         setTabIndex(tabIn);
         if (tabIn === 0) {
-            const allData = handleProjectsFilter(UserConfig,AllProjectsData, 'All' );
+            const allData = handleProjectsFilter(UserConfig,  AllProjectsData, 'All', projectSelected );
             setAllProjectsData(allData);
         } else if (tabIn === 1) {
-            const userOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'onlyMe' );
+            const userOnlyData = handleProjectsFilter(UserConfig,  AllProjectsData, 'onlyMe', projectSelected );
             setAllProjectsData(userOnlyData);
         } else if (tabIn === 2) {
-            const sharedOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'sharedWithMe' );
+            const sharedOnlyData = handleProjectsFilter(UserConfig, AllProjectsData, 'sharedWithMe', projectSelected );
             setAllProjectsData(sharedOnlyData);
         }
     };
+    const handleProjectChange = (evt: any) => {
+        setProjectSelected(evt.target.value);
+    };
+
+    useEffect(() => {
+        if (projectSelected !== '') {
+            handleTabsChange(tabIndex);
+        };
+    }, [projectSelected]);
+
     useEffect(() => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
-            setAllProjectsData(AllProjectsData);
+            setProjectNames([{name: 'All Projects', id: 'All'}, ...getProjectNameAndLabelsForSelect(AllProjectsData)]);
+            setProjectSelected('All');
         }
     }, [AllProjectsData]);
 
@@ -73,51 +93,47 @@ const Dataset = () => {
                                 id="existingProject"
                                 name="existingProject"
                                 variant="outline"
-                                validate={(value: any) => {
-                                    let error;
-                                    if (value.length === 0) {
-                                        error = ' Select here';
-                                    }
-                                    return error;
-                                }}
+                                onChange={handleProjectChange}
+                                value={projectSelected}
                             >
                                 <>
-                                    <option>Project 1</option>
-                                    <option>Project 2</option>
+                                    {projectNames.map((project, projectIndex) => {
+                                        return <option key={projectIndex} value={project.id}>{project.name}</option>
+                                    })}
                                 </>
                             </Select>
                         </FormControl>
-                        <FormControl>
-                            <Box>
-                                <FormLabel color={projectTitleColor} fontWeight={600}>
-                                    Created by
-                                </FormLabel>
-                                <Select
-                                    icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}
-                                    borderRadius={3}
-                                    width={'294px'}
-                                    mb={38}
-                                    border={'1px'}
-                                    borderColor={'light.lighterGrayishBlue'}
-                                    as={Select}
-                                    id="userDataset"
-                                    name="userDataset"
-                                    variant="outline"
-                                    validate={(value: any) => {
-                                        let error;
-                                        if (value.length === 0) {
-                                            error = ' Select here';
-                                        }
-                                        return error;
-                                    }}
-                                >
-                                    <>
-                                        <option>User 1</option>
-                                        <option>User 2</option>
-                                    </>
-                                </Select>
-                            </Box>
-                        </FormControl>
+                        {/*<FormControl>*/}
+                        {/*    <Box>*/}
+                        {/*        <FormLabel color={projectTitleColor} fontWeight={600}>*/}
+                        {/*            Created by*/}
+                        {/*        </FormLabel>*/}
+                        {/*        <Select*/}
+                        {/*            icon={<DownArrowShare pl={'15px'} color={'#666C80'} />}*/}
+                        {/*            borderRadius={3}*/}
+                        {/*            width={'294px'}*/}
+                        {/*            mb={38}*/}
+                        {/*            border={'1px'}*/}
+                        {/*            borderColor={'light.lighterGrayishBlue'}*/}
+                        {/*            as={Select}*/}
+                        {/*            id="userDataset"*/}
+                        {/*            name="userDataset"*/}
+                        {/*            variant="outline"*/}
+                        {/*            validate={(value: any) => {*/}
+                        {/*                let error;*/}
+                        {/*                if (value.length === 0) {*/}
+                        {/*                    error = ' Select here';*/}
+                        {/*                }*/}
+                        {/*                return error;*/}
+                        {/*            }}*/}
+                        {/*        >*/}
+                        {/*            <>*/}
+                        {/*                <option>User 1</option>*/}
+                        {/*                <option>User 2</option>*/}
+                        {/*            </>*/}
+                        {/*        </Select>*/}
+                        {/*    </Box>*/}
+                        {/*</FormControl>*/}
                     </Flex>
                     <Center mt={-10} flex="3" justifyContent={'flex-end'} zIndex={2}>
                         <Box>

@@ -1,6 +1,7 @@
 import { AllUsers } from '../models/profile';
 import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project';
 import moment from 'moment';
+import { cloneDeep } from 'lodash';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
     if (selectedProject === '') {
@@ -91,18 +92,28 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
     });
 };
 
-export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type: string) => {
+export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type: string, projectSelected?: string) => {
+    let projectFilteredData = [];
+    if(projectSelected) {
+        if(projectSelected === 'All') {
+            projectFilteredData = allProjectsData;
+        } else {
+            projectFilteredData = allProjectsData.filter((project: GetAllProjectsDetail) => {
+                return project.id === projectSelected;
+            });
+        }
+    }
     if(type === 'All') {
-        return allProjectsData;
+        return projectFilteredData;
     } else if(type === 'onlyMe') {
         const userId = userConfig.userConfiguration.user.userId;
-        const userOnlyProjects = allProjectsData.filter((project: GetAllProjectsDetail ) => {
+        const userOnlyProjects = projectFilteredData.filter((project: GetAllProjectsDetail ) => {
             return project.created_by === userId;
         });
         return userOnlyProjects;
     } else if (type === 'sharedWithMe') {
         const userId = userConfig.userConfiguration.user.userId;
-        const sharedWithMe = allProjectsData.filter((project: GetAllProjectsDetail) => {
+        const sharedWithMe = projectFilteredData.filter((project: GetAllProjectsDetail) => {
             return project.created_by !== userId;
         });
         return sharedWithMe;

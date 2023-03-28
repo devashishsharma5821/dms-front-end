@@ -7,7 +7,6 @@ import { GetAllProjectsDetail } from '../../../models/project';
 
 const DatasetViews = (props: any) => {
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
-    console.log('Props', props.data);
     const gridRef = useRef<AgGridReact<any>>(null);
     const gridStyle = useMemo(() => ({ height: '300px', width: '98%' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
@@ -33,7 +32,6 @@ const DatasetViews = (props: any) => {
             headerName: 'Source'
         }
     ]);
-    console.log('Row Data', rowData)
     useEffect(() => {
         let datasourceData: any = [];
         props.data.forEach((project:GetAllProjectsDetail) => {
@@ -46,13 +44,20 @@ const DatasetViews = (props: any) => {
             datasourceData.push(...listOfDataSources);
         });
         setRowData(datasourceData);
+        if(props.search !== '') {
+            setTimeout(() => {
+                doGridSearch();
+            }, 200)
+        }
     }, [props.data]);
 
-    useEffect(() => {
+    const doGridSearch = () => {
         if(gridRef?.current!.api) {
             gridRef?.current!.api.setQuickFilter(props.search);
-            // setRowCount(gridRef?.current!.api.getModel().getRowCount());
         }
+    }
+    useEffect(() => {
+        doGridSearch();
     }, [props.search]);
 
     return (
