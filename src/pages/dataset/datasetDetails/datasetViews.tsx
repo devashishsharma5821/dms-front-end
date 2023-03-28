@@ -4,16 +4,30 @@ import { Box, Center, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { GetAllProjectsDetail } from '../../../models/project';
+import { useNavigate } from 'react-router-dom';
+import { convertTime, getUserNameFromId } from '../../../utils/common.utils';
 
 const DatasetViews = (props: any) => {
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
     const gridRef = useRef<AgGridReact<any>>(null);
     const gridStyle = useMemo(() => ({ height: '300px', width: '98%' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
+    const navigate = useNavigate();
+    const renderDatasetId = (params: any) => {
+        return (
+            <div style={{ color: 'rgb(3, 135, 176)', cursor: 'pointer' }} onClick={() => navigateToDataset(params.data.id)}>
+                {params.data.id}
+            </div>
+        );
+    };
+    const navigateToDataset = (id: any) => {
+        navigate(`/datasetDetails/${id}`);
+    };
     const [columnDefs] = useState<ColDef[]>([
         {
             field: 'id',
-            headerName: 'Dataset ID'
+            headerName: 'Dataset ID',
+            cellRenderer: renderDatasetId
         },
         {
             field: 'name',
@@ -21,17 +35,24 @@ const DatasetViews = (props: any) => {
         },
         {
             field: 'created_by',
-            headerName: 'Created By'
+            headerName: 'Created By',
+            valueFormatter: (params: any) => {
+                return getUserNameFromId(props.allUsers, params.data.created_by)
+            }
         },
         {
             field: 'created_at',
             headerName: 'Created On',
+            valueFormatter: (params: any) => {
+                return convertTime(params.data.created_at, false)
+            }
         },
         {
             field: 'spec.path',
             headerName: 'Source'
         }
     ]);
+
     useEffect(() => {
         let datasourceData: any = [];
         props.data.forEach((project:GetAllProjectsDetail) => {

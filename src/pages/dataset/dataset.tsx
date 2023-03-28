@@ -15,6 +15,7 @@ import {
     projectsSearch
 } from '../../utils/common.utils';
 import { cloneDeep } from 'lodash';
+import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 
 const Dataset = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -28,7 +29,8 @@ const Dataset = () => {
     const [searchValue, setSearchValue] = React.useState('');
     const [projectNames, setProjectNames] = React.useState([{name: 'All', id: 'All'}]);
     const [projectSelected, setProjectSelected] = useState('');
-
+    const [allUserData, setAllUserData] = React.useState([]);
+    const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
     const handleTabsChange = (tabIn: number) => {
         setTabIndex(tabIn);
         if (tabIn === 0) {
@@ -61,13 +63,22 @@ const Dataset = () => {
         }
     }, [AllProjectsData]);
 
+    useEffect(() => {
+        if (AllUsersData === null) {
+            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
+            getAndUpdateAllUsersData(variablesForAllUsers);
+        } else {
+            setAllUserData(AllUsersData)
+        }
+    }, [AllUsersData]);
+
     const onSearchChange = (searchValue: string) => {
         setSearchValue(searchValue);
     };
     return (
         <>
             {
-                allProjectsData &&
+                allProjectsData && allUserData &&
                 <Box className="dataset-page" marginLeft={50}>
                     <Box fontSize={'24px'} fontWeight={700} mt={'24'} mb={'8'} color={textColorPage}>
                         Dataset
@@ -165,13 +176,13 @@ const Dataset = () => {
 
                         <TabPanels mr={'10px'} maxHeight="758px">
                             <TabPanel>
-                                <DatasetViews data={allProjectsData} search={searchValue} />
+                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={allUserData} />
                             </TabPanel>
                             <TabPanel>
-                                <DatasetViews data={allProjectsData} search={searchValue} />
+                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={allUserData} />
                             </TabPanel>
                             <TabPanel>
-                                <DatasetViews data={allProjectsData} search={searchValue} />
+                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={allUserData} />
                             </TabPanel>
                         </TabPanels>
                     </Tabs>
