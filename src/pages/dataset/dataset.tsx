@@ -78,7 +78,7 @@ const Dataset = () => {
     return (
         <>
             {
-                allProjectsData && allUserData &&
+                allProjectsData && AllUsersData &&
                 <Box className="dataset-page" marginLeft={50}>
                     <Box fontSize={'24px'} fontWeight={700} mt={'24'} mb={'8'} color={textColorPage}>
                         Dataset
@@ -176,13 +176,13 @@ const Dataset = () => {
 
                         <TabPanels mr={'10px'} maxHeight="758px">
                             <TabPanel>
-                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={allUserData} />
+                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={AllUsersData} />
                             </TabPanel>
                             <TabPanel>
-                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={allUserData} />
+                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={AllUsersData} />
                             </TabPanel>
                             <TabPanel>
-                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={allUserData} />
+                                <DatasetViews data={allProjectsData} search={searchValue} allUsers={AllUsersData} />
                             </TabPanel>
                         </TabPanels>
                     </Tabs>

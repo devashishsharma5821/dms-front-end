@@ -81,6 +81,14 @@ const DatasetViews = (props: any) => {
         doGridSearch();
     }, [props.search]);
 
+    const onFirstDataRendered = () => {
+        gridRef?.current!?.api?.sizeColumnsToFit();
+    };
+    window.addEventListener('resize', () => {
+        if(gridRef?.current!.api) {
+            gridRef?.current!?.api?.sizeColumnsToFit();
+        }
+    });
     return (
         <>
             <Box border={'1px solid'} borderColor={'light.lighterGrayishBlue'} overflowX={'hidden'} overflowY={'scroll'} borderRadius={8} width={'100%'} mt={'16'} pb={'16'} pl={10}>
@@ -101,7 +109,7 @@ const DatasetViews = (props: any) => {
                 </Flex>
                 <Flex flexWrap={'wrap'} flexDirection={'row'} ml={'24'}>
                     <Box style={gridStyle} className="ag-theme-alpine">
-                        <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                        <AgGridReact<any> ref={gridRef} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                     </Box>
                 </Flex>
             </Box>
