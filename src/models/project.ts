@@ -31,6 +31,8 @@ export interface GetAllProjectsDetail {
     datasources: {
         id: string;
         name: string;
+        created_by: string;
+        created_at: string;
         spec: {
             path: string
         }

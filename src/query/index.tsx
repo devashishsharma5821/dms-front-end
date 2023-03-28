@@ -361,6 +361,8 @@ export const GET_ALL_PROJECTS = gql`
                 datasources {
       id
       name
+       created_by
+      created_at
       spec {
         ... on DMSDatabricksFileUpload {
           path

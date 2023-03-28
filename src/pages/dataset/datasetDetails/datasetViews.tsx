@@ -24,8 +24,8 @@ const DatasetViews = (props: any) => {
             headerName: 'Created By'
         },
         {
-            field: 'created_on',
-            headerName: 'Created On'
+            field: 'created_at',
+            headerName: 'Created On',
         },
         {
             field: 'spec.path',
