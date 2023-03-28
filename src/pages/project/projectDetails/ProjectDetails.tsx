@@ -42,7 +42,7 @@ import Share from '../../../component/modalSystem/Share';
 import LeftArrow from '../../../assets/LeftArrow';
 import { getToastOptions } from '../../../models/toastMessages';
 import ProjectDetailsGrid from './detailsGridComponent';
-import moment from 'moment';
+
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
