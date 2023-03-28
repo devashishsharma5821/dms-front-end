@@ -111,7 +111,7 @@ const SideBarMenu = () => {
                     <VStack>
                         <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
                             <h3>
-                                <ProjectDetailsMenu></ProjectDetailsMenu>
+                                <ProjectDetailsMenu />
                             </h3>
                         </Box>
                     </VStack>

@@ -4,11 +4,13 @@ import moment from 'moment';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
     if (selectedProject === '') {
-        return projectList[0].project_access;
-    } else {
-        return projectList.filter((project: any) => {
-            return project.id.toString() === selectedProject;
-        })[0].project_access;
+        if (selectedProject === '') {
+            return projectList[0].project_access;
+        } else {
+            return projectList.filter((project: any) => {
+                return project.id.toString() === selectedProject;
+            })[0].project_access;
+        }
     }
 };
 export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDetail[]) => {
@@ -22,6 +24,7 @@ export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDeta
 };
 export const copyToClipBoard = (copyMessage: string, callBack: any) => {
     navigator.clipboard.writeText(copyMessage).then(() => {
+        callBack();
         callBack();
     });
 };
@@ -37,7 +40,7 @@ export const getUserNameFromId = (userData: AllUsers[], userId: string) => {
     const currentUser = userData?.filter((user: AllUsers) => {
         return user.userId === userId;
     });
-    const fullName = `${currentUser![0].firstName} ${currentUser![0].lastName}`;
+    const fullName = `${currentUser![0]?.firstName} ${currentUser![0]?.lastName}`;
     return fullName;
 };
 
@@ -45,7 +48,7 @@ export const getUserNameFromIdInitials = (userData: AllUsers[], userId: string) 
     const currentUser = userData?.filter((user: AllUsers) => {
         return user.userId === userId;
     });
-    const initials = `${currentUser![0].firstName[0]}${currentUser![0].lastName[0]}`;
+    const initials = `${currentUser![0]?.firstName[0]}${currentUser![0]?.lastName[0]}`;
     return initials;
 };
 
@@ -58,8 +61,8 @@ export const getTruncatedText = (name: string, size: number) => {
     }
 };
 
-export const getFormattedUserData = (allUserData: AllUsers[], projectData: GetSingleProjectDetail) => {
-    const reformattedProjectAccessData = projectData.project_access.map((singleProjectAccess, projectAccessIndex) => {
+export const getFormattedUserData = (allUserData: AllUsers[], projectData: any) => {
+    const reformattedProjectAccessData = projectData.project_access.map((singleProjectAccess: any, projectAccessIndex: any) => {
         const sharedUser = allUserData?.filter((singleUser) => {
             return singleUser.userId === singleProjectAccess.user_id;
         });

@@ -18,14 +18,17 @@ import {
     Select,
     Avatar,
     Input,
-    VStack, createStandaloneToast, AvatarGroup, useDisclosure
+    VStack,
+    createStandaloneToast,
+    AvatarGroup,
+    useDisclosure
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { getProjectAccessList, getProjectNameAndLabelsForSelect, getUserNameFromId } from '../../utils/common.utils';
 import useAppStore from '../../store';
-import {  GetAllProjectsAppStoreState } from '../../models/project';
+import { GetAllProjectsAppStoreState } from '../../models/project';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { createExperiment } from '../../query';
@@ -46,7 +49,7 @@ const ExperimentModal = (props: any) => {
     const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
     const [formFields, setFormFields] = useState({});
-    const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
+    const [projectNames, setProjectNames] = React.useState([{ name: '', id: '' }]);
     const [projectAccess, setProjectAccess] = React.useState<any>([]);
     const [projectSelected, setProjectSelected] = useState('');
     const [experimentDescription, setExperimentDescription] = useState('');
@@ -107,7 +110,7 @@ const ExperimentModal = (props: any) => {
                 toast(getToastOptions(`Experiment has being successfully created`, 'success'));
                 getAndUpdateSingleProjectData(projectSelected);
                 updateSpinnerInfo(false);
-                navigate(`/projectDetails/${projectSelected}`);
+                navigate(`/project/${projectSelected}`);
                 setFormFields({});
                 setProjectSelected('');
                 setExperimentName('');
@@ -185,7 +188,11 @@ const ExperimentModal = (props: any) => {
                                 >
                                     <>
                                         {projectNames.map((project, projectIndex) => {
-                                            return <option key={projectIndex} value={project.id}>{project.name}</option>
+                                            return (
+                                                <option key={projectIndex} value={project.id}>
+                                                    {project.name}
+                                                </option>
+                                            );
                                         })}
                                     </>
                                 </Select>
@@ -215,12 +222,7 @@ const ExperimentModal = (props: any) => {
                             </Button>
                         </Box>
                         {projectModal.isOpen && (
-                            <CreateProjectModal
-                                isOpen={projectModal.isOpen}
-                                onClose={projectModal.onClose}
-                                onSuccess={onCreateProjectSuccess}
-                                isEdit={{ status: false, data: {}, usersData: [] }}
-                            />
+                            <CreateProjectModal isOpen={projectModal.isOpen} onClose={projectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
                         )}
                     </Center>
                 </Flex>
@@ -294,7 +296,18 @@ const ExperimentModal = (props: any) => {
                                     <FormLabel htmlFor="Description" mt={12} mb={6} color={projectTitleColor} fontWeight={600}>
                                         Description
                                     </FormLabel>
-                                    <Input value={experimentDescription} onChange={handleExperimentDescriptionChange} height={97} width={612} borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="DescriptionProjectName" name="Description" />
+                                    <Input
+                                        value={experimentDescription}
+                                        onChange={handleExperimentDescriptionChange}
+                                        height={97}
+                                        width={612}
+                                        borderRadius={3}
+                                        border={'1px'}
+                                        borderColor={'light.lighterGrayishBlue'}
+                                        as={Input}
+                                        id="DescriptionProjectName"
+                                        name="Description"
+                                    />
                                 </FormControl>
                             </VStack>
                         </Flex>
@@ -305,8 +318,7 @@ const ExperimentModal = (props: any) => {
                                 </Text>
                             </Center>
                         </Flex>
-                        {
-                            AllUsersData &&
+                        {AllUsersData && (
                             <Flex>
                                 <Center>
                                     <AvatarGroup size={'md'} max={3} spacing={1}>
@@ -316,7 +328,7 @@ const ExperimentModal = (props: any) => {
                                     </AvatarGroup>
                                 </Center>
                             </Flex>
-                        }
+                        )}
                     </Box>
                 </Flex>
 
