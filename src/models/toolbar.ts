@@ -6,7 +6,7 @@ import { AllUsers } from './profile';
 export interface toolbarPropsType {
     computeData: DmsComputeData[];
     experimentData: Experiment;
-    projectData: GetSingleProjectDetail;
+    projectData: any;
     usersData: AllUsers;
     userAccessList: any;
     is_default: boolean | undefined;

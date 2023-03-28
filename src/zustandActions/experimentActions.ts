@@ -13,6 +13,7 @@ export const getAndUpdateExperimentData: getAndUpdateExperimentDataDataType = as
         const response = await client.query<GetExperiment<Experiment>>({
             query: GET_EXPERIMENT(experiment_id.toString())
         });
+        updateSpinnerInfo(false);
         useAppStore.setState(() => ({ ExperimentData: response.data.dmsExperiment }));
     } catch (err: any) {
         updateSpinnerInfo(false);

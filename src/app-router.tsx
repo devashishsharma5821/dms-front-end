@@ -31,10 +31,10 @@ export const AppRouter = (props: any) => {
                                     <ToastProvider />
                                     <Routes>
                                         <Route path="/" element={<Navigate to="/compute" />}></Route>
-                                        <Route path="*" element={<Navigate to="/"/>} />
-                                        <Route path="projects" element={<Project />} />
-                                        <Route path="projectDetails/:projectId" element={<ProjectDetails />} />
-                                        <Route path="projectDetails/:projectId/experiment/:experimentId" element={<ExperimentsPage />} />
+                                        <Route path="*" element={<Navigate to="/" />} />
+                                        <Route path="/projects" element={<Project />} />
+                                        <Route path="/projectDetails/:projectId" element={<ProjectDetails />} />
+                                        <Route path="/projectDetails/:projectId/experiment/:experimentId" element={<ExperimentsPage />} />
                                         <Route path="/home" element={<HomePage />} />
                                         <Route path="/notfound" element={<PageNotFound />} />
                                         <Route path="/notebook" element={<Notebook />} />

@@ -8,7 +8,7 @@ import useAppStore from '../../store';
 import { DetailsAppStoreState, DetailsPropsType } from '../../models/transformer';
 
 const Details = (props: DetailsPropsType) => {
-    const [TransformersData, SingleProjectData] = useAppStore((state: DetailsAppStoreState) => [state.TransformersData, state.SingleProjectData]);
+    const [TransformersData, ExperimentData] = useAppStore((state: DetailsAppStoreState) => [state.TransformersData, state.ExperimentData]);
 
     const transformer = TransformersData.find((transformer: any) => transformer?.id === props?.selectedStageId);
 
@@ -122,6 +122,7 @@ const Details = (props: DetailsPropsType) => {
             }
         }
     });
+
     const formData = {
         stringFormats: {
             email: 'chuck@norris.net',
@@ -143,6 +144,7 @@ const Details = (props: DetailsPropsType) => {
         readonly2: 'I am also read-only.',
         widgetOptions: 'I am yellow'
     };
+
     const layout = {
         boolean: {
             radio: {
@@ -192,20 +194,6 @@ const Details = (props: DetailsPropsType) => {
     //     updateSelectedStageId(null);
     // };
 
-    let newParseSchemaData;
-    if (transformer?.name === 'LoadingSparkDataframe') {
-        let newArr: any = [];
-        SingleProjectData?.datasources.map((csvData: any) => newArr.push(csvData.name));
-        newParseSchemaData = JSON.parse(transformer?.schema?.jsonSchema);
-        newParseSchemaData.properties['files'] = {
-            type: 'string',
-            enum: newArr
-        };
-        delete newParseSchemaData.properties.input_name;
-        newParseSchemaData.required.pop();
-        newParseSchemaData.required.push('files');
-    }
-
     const onSubmitHandler = (e: any) => {
         console.log('onSubmitHandler ===>', e);
     };
@@ -217,12 +205,7 @@ const Details = (props: DetailsPropsType) => {
                 <DrawerContent mt="64px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
                     <DrawerBody mt="30px">
-                        <Form
-                            schema={transformer?.name === 'LoadingSparkDataframe' ? newParseSchemaData : JSON.parse(transformer?.schema?.jsonSchema)}
-                            onSubmit={onSubmitHandler}
-                            omitExtraData={true}
-                            validator={validator}
-                        />
+                        <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onSubmit={onSubmitHandler} omitExtraData={true} validator={validator} />
                     </DrawerBody>
                     {/* 
                     <DrawerFooter>

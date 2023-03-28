@@ -76,39 +76,52 @@ class DmsCanvasService {
             model: graph,
             cellViewNamespace: appShapes,
             background: { color: 'white' },
-            defaultLink: <joint.dia.Link>new appShapes.app.Link(),
-            defaultConnectionPoint: appShapes.app.Link.connectionPoint,
+            // defaultLink: <joint.dia.Link>new appShapes.app.Link(),
+            defaultLink: () =>
+                new appShapes.standard.Link({
+                    // source: { x: 100, y: 90 },
+                    // target: { x: 200, y: 200 },
+                    attrs: {
+                        wrapper: {
+                            cursor: 'default'
+                        }
+                        // connection: {
+                        //     connectionPoint: {
+                        //         name: 'bbox'
+                        //     }
+                        // }
+                    }
+                }),
+
+            defaultConnectionPoint: {
+                name: 'bbox'
+            },
+            defaultConnector: {
+                name: 'smooth'
+            },
+            // defaultConnectionPoint: appShapes.app.Link.connectionPoint,
             interactive: { linkMove: false },
+            // interactive: {
+            //     addLinkFromMagnet: true,
+            //     elementMove: false,
+            //     labelMove: false,
+            //     linkMove: true,
+            //     stopDelegation: false
+            // },
             async: true,
             snapLinks: { radius: 20 },
             sorting: joint.dia.Paper.sorting.APPROX,
             markAvailable: true,
 
-            highlighting: {
-                magnetAvailability: {
-                    name: 'addClass',
-                    options: {
-                        className: 'available-magnet'
-                    }
-                },
-                elementAvailability: {
-                    name: 'stroke',
-                    options: {
-                        padding: 20,
-                        attrs: {
-                            'stroke-width': 3,
-                            stroke: '#ED6A5A'
-                        }
-                    }
-                }
-            },
             validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+                // console.log('lets check validateConnection function values', cellViewS, magnetS, cellViewT, magnetT, end, linkView);
                 // Prevent linking from input ports
-                if (magnetS && magnetS.getAttribute('port-group') === 'in') return false;
+                // if (magnetS && magnetS.getAttribute('port-group') === 'in') return false;
                 // Prevent linking from output ports to input ports within one element
-                if (cellViewS === cellViewT) return false;
+                // if (cellViewS === cellViewT) return false;
                 // Prevent linking to output ports
-                return magnetT && magnetT.getAttribute('port-group') === 'in';
+                // return magnetT && magnetT.getAttribute('port-group') === 'in';
+                return true;
             },
             validateMagnet: function (cellView, magnet) {
                 // Note that this is the default behaviour. It is shown for reference purposes.
@@ -120,11 +133,12 @@ class DmsCanvasService {
         // paper.on('blank:mousewheel', _.partial(this.onMousewheel, null), this);
         paper.on('cell:mousewheel', this.onMousewheel.bind(this));
 
-        paper.on('cell:pointerdown', function (cellView, evt, x, y) {
+        paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
             updateSelectedStageId(cellView?.model?.attributes?.attrs?.idOfTransformer);
         });
 
         graph.on('add', function (cell, collection, opt) {
+            console.log('lets check on add ===>', cell);
             updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
         });
 
@@ -184,6 +198,14 @@ class DmsCanvasService {
             }
         });
 
+        this.graph.on('port:mouseover', (elementView: joint.dia.ElementView, evt: joint.dia.Event) => {
+            console.log('lets check this on port:mouseover');
+        });
+
+        this.graph.on('change:source change:target', (link: joint.dia.Link) => {
+            console.log('inside change:source change:target', link);
+        });
+
         this.graph.on('remove', (cell: joint.dia.Cell) => {
             // If element is removed from the graph, remove from the selection too.
             if (this.selection.collection.has(cell)) {
@@ -193,6 +215,7 @@ class DmsCanvasService {
 
         this.selection.on('selection-box:pointerdown', (elementView: joint.dia.ElementView, evt: joint.dia.Event) => {
             // Unselect an element if the CTRL/Meta key is pressed while a selected element is clicked.
+            console.log('lets check how its working');
             if (keyboard.isActive('ctrl meta', evt)) {
                 this.selection.collection.remove(elementView.model);
             }
@@ -219,6 +242,7 @@ class DmsCanvasService {
     }
 
     selectPrimaryCell(cellView: joint.dia.CellView) {
+        console.log('lets check cellView ==>', cellView);
         const cell = cellView.model;
         if (cell.isElement()) {
             this.selectPrimaryElement(<joint.dia.ElementView>cellView);
@@ -272,6 +296,7 @@ class DmsCanvasService {
 
         this.paper.on('link:mouseenter', (linkView: joint.dia.LinkView) => {
             // Open tool only if there is none yet
+            console.log('lets check how its working');
             if (linkView.hasTools()) {
                 return;
             }
