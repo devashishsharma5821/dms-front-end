@@ -261,7 +261,7 @@ const CreateProjectModal = (props: any) => {
                                                 <Center>
                                                     {addTagClicked && (
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
-                                                            <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={false}>
+                                                            <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={true}>
                                                                 <PopoverContent p={5}>
                                                                     <HStack spacing={4}>
                                                                         <FormControl>

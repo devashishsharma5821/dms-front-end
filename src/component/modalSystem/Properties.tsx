@@ -286,7 +286,7 @@ const Properties = (props: any) => {
                                         Tag:
                                     </Text>
 
-                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={false}>
+                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={true}>
                                         <PopoverTrigger>
                                             <Button variant="link" color={'default.toolbarButton'} mt={'20'} ml={8} cursor={'pointer'}>
                                                 + Add Tag
@@ -302,18 +302,15 @@ const Properties = (props: any) => {
                                                         <PopoverCloseButton mr={'16px'} mt={'14px'} color={'#757575'} />
                                                     </Box>
                                                 </Flex>
-                                                <FormControl>
                                                     <MultiSelect
-                                                        w={30}
                                                         value={tagValue}
                                                         options={tagOptions}
                                                         color={defaultInBoxTextColor}
                                                         onChange={handleTagChange!}
                                                         create
                                                         bg={'black'}
-                                                        marginInlineStart={'-4px'}
+                                                        marginInlineStart={'-10px'}
                                                     />
-                                                </FormControl>
                                                 <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-start" cursor={'pointer'}>
                                                     <Button onClick={handleTagSubmit} bg={'default.toolbarButton'} cursor={'pointer'} width={'104px'} height={'36px'} borderRadius={4} mb={20} mt={16}>
                                                         Add Tag(s)
