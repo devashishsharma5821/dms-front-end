@@ -95,53 +95,77 @@ const Share = (props: any) => {
     const handleUserChange = (ev: any) => {
         setUserValue(ev);
     };
-    const accessMenuChanged = (access: any, type: string) => {
+    const setCreateProjectAccessRoles = (access: any, level: any) => {
+        let newAccessList = [...accessUserList];
+        newAccessList.forEach((user: any) => {
+           if(user.userId === access.userId) {
+               user.accessLevel = level;
+           }
+        });
+        console.log('asdfsdfsdf', newAccessList)
+        setAccessUserList(newAccessList);
+    };
+    const deleteCreateProjectAccessRoles = (access: any) => {
+        const userToKeep = accessUserList.filter((user: any) => {
+          return user.userId !== access.userId;
+        });
+        setAccessUserList(userToKeep);
+    };
+    const accessMenuChanged = (access: any, type: string, isEdit: boolean) => {
         const user = AllUsersData?.filter((singleUser) => {
             return singleUser.email === access.email;
         });
-        updateSpinnerInfo(true);
-        if (type === 'delete') {
-            const removeVariable = {
-                userId: user![0].userId,
-                projectId: params.projectId
-            };
-            client
-                .mutate<ShareDelete<ShareDeleteDetail>>({
-                    mutation: deleteAccess(removeVariable)
-                })
-                .then(() => {
-                    toast(getToastOptions(`Access removed Successfully`, 'success'));
-                    getAndUpdateSingleProjectData(params.projectId as string);
-                    updateSpinnerInfo(false);
-                })
-                .catch((err) => {
-                    updateSpinnerInfo(false);
-                    toast(getToastOptions(`${err}`, 'error'));
-                });
-        } else if (type === 'canEdit') {
-            const mutationVariable = {
-                access: [
-                    {
-                        user_id: user![0].userId,
-                        access_level: DMSAccessLevel[1]
-                    }
-                ],
-                project_id: params.projectId
-            };
-            client
-                .mutate<ShareCreate<ShareCreateDetail>>({
-                    mutation: createAccess(),
-                    variables: { input: mutationVariable }
-                })
-                .then(() => {
-                    toast(getToastOptions(`Project Permission Changed Successfully`, 'success'));
-                    getAndUpdateSingleProjectData(params.projectId as string);
-                    updateSpinnerInfo(false);
-                })
-                .catch((err) => {
-                    updateSpinnerInfo(false);
-                    toast(getToastOptions(`${err}`, 'error'));
-                });
+        if(!isEdit) {
+            if(type === 'delete') {
+                deleteCreateProjectAccessRoles(access);
+            } else if(type === 'canEdit' || type === 'canView') {
+                setCreateProjectAccessRoles(access, (type === 'canEdit') ? DMSAccessLevel[1] : DMSAccessLevel[0]);
+            }
+        } else {
+            updateSpinnerInfo(true);
+            if (type === 'delete') {
+                const removeVariable = {
+                    userId: user![0].userId,
+                    projectId: params.projectId
+                };
+                client
+                    .mutate<ShareDelete<ShareDeleteDetail>>({
+                        mutation: deleteAccess(removeVariable)
+                    })
+                    .then(() => {
+                        toast(getToastOptions(`Access removed Successfully`, 'success'));
+                        getAndUpdateSingleProjectData(params.projectId as string);
+                        updateSpinnerInfo(false);
+                    })
+                    .catch((err) => {
+                        updateSpinnerInfo(false);
+                        toast(getToastOptions(`${err}`, 'error'));
+                    });
+            } else if (type === 'canEdit' || type === 'canView') {
+                const mutationVariable = {
+                    access: [
+                        {
+                            user_id: user![0].userId,
+                            access_level: (type === 'canEdit') ? DMSAccessLevel[1] : DMSAccessLevel[0]
+                        }
+                    ],
+                    project_id: params.projectId
+                };
+                client
+                    .mutate<ShareCreate<ShareCreateDetail>>({
+                        mutation: createAccess(),
+                        variables: { input: mutationVariable }
+                    })
+                    .then(() => {
+                        toast(getToastOptions(`Project Permission Changed Successfully`, 'success'));
+                        getAndUpdateSingleProjectData(params.projectId as string);
+                        updateSpinnerInfo(false);
+                    })
+                    .catch((err) => {
+                        updateSpinnerInfo(false);
+                        toast(getToastOptions(`${err}`, 'error'));
+                    });
+            }
         }
     };
 
@@ -260,7 +284,6 @@ const Share = (props: any) => {
                                 <Flex as="nav" align="center" justify="space-between" wrap="wrap">
                                     {accessUserList.length > 0 &&
                                         accessUserList.map((icons: any, iconsIndex: number) => {
-                                            console.log('DMS', icons)
                                             return (
                                                 <>
                                                     <Center key={iconsIndex}>
@@ -287,26 +310,25 @@ const Share = (props: any) => {
                                                             </MenuButton>
                                                             <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
                                                                 <MenuItem
-                                                                    isDisabled={!props.isEdit || UserConfig.userConfiguration.user.userId === icons.id}
+                                                                    isDisabled={UserConfig.userConfiguration.user.userId === icons.id}
                                                                     onClick={() => {
-                                                                        accessMenuChanged(icons, 'canView');
+                                                                        accessMenuChanged(icons, 'canView', props.isEdit);
                                                                     }}
                                                                 >
                                                                     Can View
                                                                 </MenuItem>
                                                                 <MenuItem
-                                                                    isDisabled={!props.isEdit}
                                                                     onClick={() => {
-                                                                        accessMenuChanged(icons, 'canEdit');
+                                                                        accessMenuChanged(icons, 'canEdit', props.isEdit);
                                                                     }}
                                                                 >
                                                                     Can Edit
                                                                 </MenuItem>
                                                                 <Divider />
                                                                 <MenuItem
-                                                                    isDisabled={!props.isEdit || UserConfig.userConfiguration.user.userId === icons.id }
+                                                                    isDisabled={UserConfig.userConfiguration.user.userId === icons.id }
                                                                     onClick={() => {
-                                                                        accessMenuChanged(icons, 'delete');
+                                                                        accessMenuChanged(icons, 'delete', props.isEdit);
                                                                     }}
                                                                 >
                                                                     Remove

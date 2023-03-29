@@ -190,7 +190,7 @@ const CreateProjectModal = (props: any) => {
                                                 access: accessUserListCreateMode.map((user: any, userIndex: any) => {
                                                     return {
                                                         user_id: user.userId,
-                                                        access_level: DMSAccessLevel[0]
+                                                        access_level: user.accessLevel
                                                     };
                                                 }),
                                                 project_id: response?.data?.dmsCreateProject
