@@ -323,7 +323,7 @@ const ExperimentModal = (props: any) => {
                                 <Center>
                                     <AvatarGroup size={'md'} max={3} spacing={1}>
                                         {projectAccess?.map((access: any, accessIndex: any) => {
-                                            return <Avatar key={accessIndex} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
+                                            return <Avatar key={access.id} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
                                         })}
                                     </AvatarGroup>
                                 </Center>

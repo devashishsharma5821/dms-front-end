@@ -3,7 +3,6 @@ import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project'
 import moment from 'moment';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
-    if (selectedProject === '') {
         if (selectedProject === '') {
             return projectList[0].project_access;
         } else {
@@ -11,7 +10,6 @@ export const getProjectAccessList = (projectList: any, selectedProject: string) 
                 return project.id.toString() === selectedProject;
             })[0].project_access;
         }
-    }
 };
 export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDetail[]) => {
     const projectsName = projectList.map((project) => {
