@@ -1,7 +1,6 @@
 import { AllUsers } from '../models/profile';
 import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project';
 import moment from 'moment';
-import { cloneDeep } from 'lodash';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
     if (selectedProject === '') {
