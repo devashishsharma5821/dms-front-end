@@ -190,7 +190,7 @@ const CreateProjectModal = (props: any) => {
                                                 access: accessUserListCreateMode.map((user: any, userIndex: any) => {
                                                     return {
                                                         user_id: user.userId,
-                                                        access_level: DMSAccessLevel[0]
+                                                        access_level: user.accessLevel
                                                     };
                                                 }),
                                                 project_id: response?.data?.dmsCreateProject
@@ -261,9 +261,9 @@ const CreateProjectModal = (props: any) => {
                                                 <Center>
                                                     {addTagClicked && (
                                                         <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
-                                                            <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={false}>
+                                                            <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={true}>
                                                                 <PopoverContent p={5}>
-                                                                    <Stack spacing={4}>
+                                                                    <HStack spacing={4}>
                                                                         <FormControl>
                                                                             <Field
                                                                                 borderRadius={3}
@@ -278,14 +278,11 @@ const CreateProjectModal = (props: any) => {
                                                                             <FormErrorMessage>{errors.description}</FormErrorMessage>
                                                                         </FormControl>
                                                                         <ButtonGroup display="flex" justifyContent="flex-end">
-                                                                            <Button variant="outline" onClick={tagPopOver.onClose}>
-                                                                                Cancel
-                                                                            </Button>
-                                                                            <Button onClick={() => addTagHandler('add', values)} colorScheme="teal">
+                                                                            <Button color={'white'} bg={'default.toolbarButton'} borderRadius={'3'} onClick={() => addTagHandler('add', values)}>
                                                                                 Add Tag
                                                                             </Button>
                                                                         </ButtonGroup>
-                                                                    </Stack>
+                                                                    </HStack>
                                                                 </PopoverContent>
                                                             </Popover>
                                                         </Box>

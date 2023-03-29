@@ -112,8 +112,6 @@ const Properties = (props: any) => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateExperimentData(props.data.id);
                 updateSpinnerInfo(false);
-                setInlineDescription('');
-                setInlineExperimentName('');
                 setTagValue([]);
             })
             .catch((err) => {
@@ -238,7 +236,7 @@ const Properties = (props: any) => {
                         <Box borderColor={'light.lighterGrayishBlue'} borderWidth={1} mb={20} ml={16} pb={10} borderRadius={'4px'} width={'671px'} maxHeight={'635px'}>
                             <Flex>
                                 <Center ml={'16px'}>
-                                    <Box mt={'-10px'}>
+                                    <Box mt={'24px'}>
                                         <WhiteExperimentForProperties color={textColorIcon} />
                                     </Box>
                                     <Flex>
@@ -270,14 +268,16 @@ const Properties = (props: any) => {
                                                     </Flex>
                                                 </Editable>
                                             </Center>
-                                            <Center>
-                                                <Box mt={12} mr={'4px'} borderRadius="full" boxSize="14px" bg={'#ED6D74'} />
-                                                <Text mt={15} fontSize={14} fontWeight={700} color={'#ED6D74'}>
-                                                    Not Yet Deployed{' '}
-                                                </Text>
-                                            </Center>
                                         </Box>
                                     </Flex>
+                                </Center>
+                            </Flex>
+                            <Flex>
+                                <Center ml={'56px'}>
+                                    <Box mt={12} mr={'4px'} borderRadius="full" boxSize="14px" bg={'#ED6D74'} />
+                                    <Text mt={15} fontSize={14} fontWeight={700} color={'#ED6D74'}>
+                                        Not Yet Deployed{' '}
+                                    </Text>
                                 </Center>
                             </Flex>
                             <Flex>
@@ -286,7 +286,7 @@ const Properties = (props: any) => {
                                         Tag:
                                     </Text>
 
-                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={false}>
+                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={true}>
                                         <PopoverTrigger>
                                             <Button variant="link" color={'default.toolbarButton'} mt={'20'} ml={8} cursor={'pointer'}>
                                                 + Add Tag
@@ -302,18 +302,15 @@ const Properties = (props: any) => {
                                                         <PopoverCloseButton mr={'16px'} mt={'14px'} color={'#757575'} />
                                                     </Box>
                                                 </Flex>
-                                                <FormControl>
                                                     <MultiSelect
-                                                        w={30}
                                                         value={tagValue}
                                                         options={tagOptions}
                                                         color={defaultInBoxTextColor}
                                                         onChange={handleTagChange!}
                                                         create
                                                         bg={'black'}
-                                                        marginInlineStart={'-4px'}
+                                                        marginInlineStart={'-10px'}
                                                     />
-                                                </FormControl>
                                                 <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-start" cursor={'pointer'}>
                                                     <Button onClick={handleTagSubmit} bg={'default.toolbarButton'} cursor={'pointer'} width={'104px'} height={'36px'} borderRadius={4} mb={20} mt={16}>
                                                         Add Tag(s)
@@ -347,7 +344,7 @@ const Properties = (props: any) => {
                                                             <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
                                                                 {getTruncatedText(tag, 9)}
                                                             </Text>
-                                                            <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'14px'} cursor={'pointer'}>
+                                                            <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'10px'} mr={'8px'} cursor={'pointer'}>
                                                                 <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={'pointer'} color={closeButton} />
                                                             </Box>
                                                         </Center>
@@ -476,7 +473,7 @@ const Properties = (props: any) => {
                                 <Flex>
                                     <Box>
                                         <Editable
-                                            height={'44px'}
+                                            height={'40px'}
                                             maxWidth={'639px'}
                                             minWidth={'639px'}
                                             textAlign="left"
@@ -495,7 +492,7 @@ const Properties = (props: any) => {
                                                     <EditableControls />
                                                 </Center>
                                             </Flex>
-                                            <Box maxWidth={'639px'} maxHeight={'50px'} overflowY={'auto'} color={textColor2} fontWeight={400} cursor={'pointer'}>
+                                            <Box maxWidth={'639px'} maxHeight={'40px'} overflowY={'auto'} color={textColor2} fontWeight={400} cursor={'pointer'}>
                                                 <EditablePreview />
                                                 <Textarea as={EditableInput} />
                                             </Box>

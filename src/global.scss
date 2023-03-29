@@ -25,3 +25,13 @@
     color: rgb(3, 135, 176);
     cursor: pointer;
 }
+.ag-theme-alpine {
+    --ag-foreground-color: #111111;
+    --ag-data-color: 'red';
+    --ag-background-color: white;
+    --ag-header-foreground-color: #333333;
+    --ag-header-background-color: #f6f6f6;
+    --ag-font-weight: 400px;
+    --ag-font-size: 15px;
+    --ag-font-family: 'IBM Plex Sans';
+}

@@ -159,33 +159,37 @@ const baseStyle = (props: Record<string, any>) => ({
 export const sizes = {
     sm: {
         control: {
-            minH: 8,
+            minH: 10,
             px: 1,
             spacing: 1,
+            justifyContent: 'space-between',
+            marginLeft: '20px'
         },
         input: {
-            m: 'px',
+            m: '2px',
+            width: '210px',
+            height: '36px',
+            maxWidth: '210px'
         },
         actionGroup: {
             spacing: '0',
         },
         item: {
-            py: 1,
-            px: 2,
+            py: 2,
+            px: 3,
         },
         textList: {
-            py: 0,
-            px: 1,
+            p: 1,
         },
         selectedItem: {
-            m: 'px',
+            m: '2px',
         },
         selectedList: {
-            py: 'px',
+            py: '2px',
         },
         groupTitle: {
-            mx: 2,
-            my: 1,
+            mx: 4,
+            my: 2,
             fontSize: 'sm',
         },
     },
@@ -195,11 +199,10 @@ export const sizes = {
             px: 1,
             spacing: 1,
             justifyContent: 'space-between',
-            marginLeft: '20px'
         },
         input: {
             m: '2px',
-            width: '510px',
+            width: '180px',
             height: '36px',
             maxWidth: '510px'
         },

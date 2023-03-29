@@ -397,26 +397,23 @@ const ProjectDetails = (props: any) => {
                                                 <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>
                                                     Tag:
                                                 </Text>
-                                                <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={false}>
+                                                <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={true}>
                                                     <PopoverTrigger>
                                                         <Text color={'default.textButton'} ml={8} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
                                                             + Add Tag
                                                         </Text>
                                                     </PopoverTrigger>
                                                     <PopoverContent p={5}>
-                                                        <Stack spacing={4}>
+                                                        <HStack spacing={4}>
                                                             <FormControl>
                                                                 <Input onChange={(evt: any) => setPopOverTag(evt.target.value)} value={popOverTag} placeholder="Type Here" />
                                                             </FormControl>
-                                                            <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-end">
-                                                                <Button variant="outline" onClick={tagPopOver.onClose} cursor={'pointer'}>
-                                                                    Cancel
-                                                                </Button>
+                                                            <ButtonGroup display="flex" mt={'20px'} ml={'10px'} justifyContent="flex-end">
                                                                 <Button onClick={handleAddTag} bg={'default.textButton'} cursor={'pointer'}>
                                                                     Add Tag
                                                                 </Button>
                                                             </ButtonGroup>
-                                                        </Stack>
+                                                        </HStack>
                                                     </PopoverContent>
                                                 </Popover>
                                                 <Center borderRadius={3}>
