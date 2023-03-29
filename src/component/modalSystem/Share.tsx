@@ -170,52 +170,55 @@ const Share = (props: any) => {
     };
 
     const handleShare = () => {
-        if (props.isEdit && userValue.length > 0) {
-            updateSpinnerInfo(true);
-            const mutationVariable = {
-                access: userValue.map((selUserEmail) => {
+        if(userValue.length > 0) {
+            if (props.isEdit) {
+                updateSpinnerInfo(true);
+                const mutationVariable = {
+                    access: userValue.map((selUserEmail) => {
+                        const sharedUser = AllUsersData?.filter((singleUser) => {
+                            return singleUser.email === selUserEmail;
+                        });
+                        return {
+                            user_id: sharedUser![0].userId,
+                            access_level: DMSAccessLevel[0]
+                        };
+                    }),
+                    project_id: params.projectId
+                };
+                client
+                    .mutate<ShareCreate<ShareCreateDetail>>({
+                        mutation: createAccess(),
+                        variables: { input: mutationVariable }
+                    })
+                    .then(() => {
+                        toast(getToastOptions(`Project Shared Successfully`, 'success'));
+                        getAndUpdateSingleProjectData(params.projectId as string);
+                        getAndUpdateAllProjectsData();
+                        setUserValue([]);
+                        updateSpinnerInfo(false);
+                    })
+                    .catch((err) => {
+                        toast(getToastOptions(`${err}`, 'error'));
+                    });
+            } else {
+                let newAccessList = [...accessUserList];
+                userValue.forEach((selUserEmail) => {
                     const sharedUser = AllUsersData?.filter((singleUser) => {
                         return singleUser.email === selUserEmail;
                     });
-                    return {
-                        user_id: sharedUser![0].userId,
-                        access_level: DMSAccessLevel[0]
+                    const accessLevel = DMSAccessLevel[0];
+                    const userToAdd = {accessLevel, ...sharedUser![0]};
+                    const checkIfUserAlreadyExists = newAccessList.filter((user) => {
+                        return user.userId === sharedUser![0].userId;
+                    });
+                    if(checkIfUserAlreadyExists.length === 0) {
+                        newAccessList.push(userToAdd);
                     };
-                }),
-                project_id: params.projectId
-            };
-            client
-                .mutate<ShareCreate<ShareCreateDetail>>({
-                    mutation: createAccess(),
-                    variables: { input: mutationVariable }
-                })
-                .then(() => {
-                    toast(getToastOptions(`Project Shared Successfully`, 'success'));
-                    getAndUpdateSingleProjectData(params.projectId as string);
-                    getAndUpdateAllProjectsData();
-                    setUserValue([]);
-                    updateSpinnerInfo(false);
-                })
-                .catch((err) => {
-                    toast(getToastOptions(`${err}`, 'error'));
                 });
-        } else {
-            let newAccessList = [...accessUserList];
-            userValue.forEach((selUserEmail) => {
-                const sharedUser = AllUsersData?.filter((singleUser) => {
-                    return singleUser.email === selUserEmail;
-                });
-                const accessLevel = DMSAccessLevel[0];
-                const userToAdd = {accessLevel, ...sharedUser![0]};
-                const checkIfUserAlreadyExists = newAccessList.filter((user) => {
-                   return user.userId === sharedUser![0].userId;
-                });
-                if(checkIfUserAlreadyExists.length === 0) {
-                    newAccessList.push(userToAdd);
-                };
-            });
-            setAccessUserList(newAccessList);
+                setAccessUserList(newAccessList);
+            }
         }
+
     };
     const closeShareModal = (ev: any) => {
         ev.preventDefault();
