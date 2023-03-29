@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getComputeListData } from '../../query';
 import { startCase } from 'lodash';
-import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from '@chakra-ui/react';
+import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Button } from '@chakra-ui/react';
 import { useApolloClient } from '@apollo/client';
 import { ComputeDetailListResponse, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { GET_DATABRICKS_CREDS } from '../../query/index';
 import { DataBricksTokenResponse } from '../../models/dataBricksTokenResponse';
-import { DataBricksTokenDetails } from '../../models/types';
+import { DataBricksTokenDetails, PersistedExperiment } from '../../models/types';
 import Toolbar from '../../component/toolbar/Toolbar';
 import { cloneDeep } from 'lodash';
 import useAppStore from '../../store';
@@ -27,7 +27,7 @@ import { KeyboardService } from './services/keyboard-service';
 import DmsCanvasService from './services/dms-canvas-service';
 import { TransformersAppStoreState } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
-import { shapes } from '@antuit/rappid-v1';
+import { g, shapes } from '@antuit/rappid-v1';
 import { updateDmsComputeData } from '../../zustandActions/computeActions';
 import { getAndUpdateAllUsersData, updateDmsDatabricksCredentialsValidToken, updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { hasSubscribed } from '../../zustandActions/socketActions';
@@ -44,6 +44,7 @@ import { getFormattedUserData } from '../../utils/common.utils';
 import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 import { getToastOptions } from '../../models/toastMessages';
 import { createStandaloneToast } from '@chakra-ui/react';
+import { Dictionary } from '../../models/schema';
 const { toast } = createStandaloneToast();
 
 const ExperimentsPage = () => {
@@ -733,7 +734,7 @@ const ExperimentsPage = () => {
                 setRappidData(rappid);
 
                 // Use below to load a sample Ready to go JSON
-                // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
+                // rappid.rappidData?.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
             }
         } catch (err) {
             toast(getToastOptions('Something went wrong', 'error'));
@@ -781,10 +782,85 @@ const ExperimentsPage = () => {
         getAndUpdateExperimentData(ExperimentData.id);
     };
 
+    const onSaveClickHandler = () => {
+        console.log('lets check working or not ---->', rappidData?.graph.getCells());
+
+        let currentStages: any;
+
+        let experimentToSave: any = {
+            stages: []
+        };
+
+        // Collect the position of the arrows
+        let inputsPosition: Dictionary<g.PlainPoint> = {};
+        console.log('lets check cells ===>', rappidData?.graph?.getCells());
+        rappidData?.graph?.getCells().map((cell: any) => {
+            if (cell.get('type') === 'standard.Link') {
+                console.log('lets check cells ===> going inside');
+                let source = cell.get('source');
+                let target = cell.get('target');
+                let port = cell.get('ports-name');
+                console.log('ports ===>', port);
+                inputsPosition[`${source.id}.${port}-${target.id}.${port}`] = cell.position();
+            }
+        });
+        console.log('inputsPosition ==>', inputsPosition);
+
+        // Collect the stages
+        rappidData?.graph?.getCells().map((cell: any) => {
+            let stageId = cell.get('id');
+            console.log('let me check stageId', stageId);
+            if (cell?.attributes?.type !== 'standard.EmbeddedImage') {
+                let stage = TransformersData?.find((st: any) => st.id === stageId);
+                console.log('are we getting stage ==>', stage);
+                if (stageId && stage) {
+                    let stageInputs = stage.inputs?.map((input: any) => {
+                        return {
+                            id: input.id,
+                            isConnected: input.isConnected,
+                            connectedStageId: input.connectedStageId,
+                            connectedStageOutputId: input.connectedStageOutputId,
+                            position: inputsPosition[`${input.connectedStageId}.${input.connectedStageOutputId}-${stageId}.${input.id}`]
+                        };
+                    });
+
+                    let stageOutpus = stage.outputs?.map((output: any) => {
+                        return {
+                            id: output.id,
+                            isValid: output.isValid,
+                            inferredOutput: output.inferredOutput,
+                            signature: output.signature
+                        };
+                    });
+
+                    experimentToSave.stages.push({
+                        id: cell.id.toString(),
+                        transformerId: stage.id,
+                        name: stage.name,
+                        inputs: stageInputs,
+                        outputs: stageOutpus,
+                        // formData: stage.formState?.currentForm.formData,
+                        // status: stage.status,
+                        // signature: stage.signature,
+                        position: cell.position()
+                    });
+                }
+            }
+        });
+
+        console.log('lets check experimentToSave ===>', experimentToSave);
+
+        // Save it into local storage
+        localStorage.setItem('savedGraph', JSON.stringify(experimentToSave));
+    };
+
     return (
         <>
             <Box ref={elementRef} width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
+                    {/* <Button style={{ marginLeft: '600px' }} onClick={onSaveClickHandler}>
+                        lets check
+                    </Button> */}
                     <Toolbar
                         computeData={newComputedata}
                         is_default={dmsComputeRunningStatusIsDefaultOne}
@@ -792,6 +868,7 @@ const ExperimentsPage = () => {
                         projectData={SingleProjectData}
                         usersData={AllUsersData}
                         userAccessList={accessUserList}
+                        onSaveClickHandler={onSaveClickHandler}
                     />
                 </Box>
 

@@ -87,7 +87,13 @@ const Toolbar = (props: toolbarPropsType) => {
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                 return (
                     <>
-                        {sections.type === 'icon' && (
+                        {sections.type === 'icon' && sections.name === 'SaveAs' && (
+                            <Center onClick={props.onSaveClickHandler} ml={'16'} mr={'16'}>
+                                <Box mr={'8'}>{sections.component}</Box>
+                                <Box>{sections.name}</Box>
+                            </Center>
+                        )}
+                        {sections.type === 'icon' && sections.name !== 'SaveAs' && (
                             <Center onClick={() => triggerActions(sections.name)} ml={'16'} mr={'16'}>
                                 <Box mr={'8'}>{sections.component}</Box>
                                 <Box>{sections.name}</Box>
@@ -240,7 +246,16 @@ const Toolbar = (props: toolbarPropsType) => {
                 )}
             </Box>
             <Comments isOpen={commentModal.isOpen} onClose={commentModal.onClose} commentClosed={commentModalClosed}></Comments>
-            {propertiesModal.isOpen && <Properties isOpen={propertiesModal.isOpen} onClose={propertiesModal.onClose} data={props.experimentData} projectData={props.projectData} userData={props.usersData} userAccessList={props.userAccessList} />}
+            {propertiesModal.isOpen && (
+                <Properties
+                    isOpen={propertiesModal.isOpen}
+                    onClose={propertiesModal.onClose}
+                    data={props.experimentData}
+                    projectData={props.projectData}
+                    userData={props.usersData}
+                    userAccessList={props.userAccessList}
+                />
+            )}
             {saveAsModal.isOpen && <SaveAs isOpen={saveAsModal.isOpen} onClose={saveAsModal.onClose} />}
             {VariablesModal.isOpen && <Variables isOpen={VariablesModal.isOpen} onClose={VariablesModal.onClose} />}
             {OutputModal.isOpen && <Output isOpen={OutputModal.isOpen} onClose={OutputModal.onClose} />}

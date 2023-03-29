@@ -130,6 +130,7 @@ class DmsCanvasService {
             }
         }));
 
+        console.log('lets check here ===>', graph.getCells());
         // paper.on('blank:mousewheel', _.partial(this.onMousewheel, null), this);
         paper.on('cell:mousewheel', this.onMousewheel.bind(this));
 
@@ -138,8 +139,12 @@ class DmsCanvasService {
         });
 
         graph.on('add', function (cell, collection, opt) {
-            console.log('lets check on add ===>', cell);
+            console.log('lets check on add ===>', graph?.getCells());
             updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
+        });
+
+        graph.on('link:connected', function (linkView, evt, elementViewConnected, magnetConnected) {
+            console.log('Link connected between ' + linkView.model.getSourceElement().id + ' and ' + linkView.model.getTargetElement().id);
         });
 
         this.snaplines = new joint.ui.Snaplines({ paper: paper });

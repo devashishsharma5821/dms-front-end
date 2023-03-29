@@ -10,4 +10,5 @@ export interface toolbarPropsType {
     usersData: AllUsers;
     userAccessList: any;
     is_default: boolean | undefined;
+    onSaveClickHandler: () => void;
 }
