@@ -170,7 +170,7 @@ const Share = (props: any) => {
     };
 
     const handleShare = () => {
-        if (props.isEdit) {
+        if (props.isEdit && userValue.length > 0) {
             updateSpinnerInfo(true);
             const mutationVariable = {
                 access: userValue.map((selUserEmail) => {
