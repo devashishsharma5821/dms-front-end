@@ -34,7 +34,7 @@ import { createAccess, deleteAccess } from '../../query';
 import { useParams } from 'react-router-dom';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
-import { getFormattedUserData } from '../../utils/common.utils';
+import { copyToClipBoard, getFormattedUserData } from '../../utils/common.utils';
 import { getToastOptions } from '../../models/toastMessages';
 import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 
@@ -280,10 +280,18 @@ const Share = (props: any) => {
                                 overflowY={'auto'}
                                 borderRadius={4}
                             >
-                                <Text mt={17} ml={16} color={accesstextColor} fontWeight={700}>
-                                    Access by{' '}
-                                </Text>
-
+                                <Flex justifyContent={'start'}>
+                                    <Center>
+                                        <Text mt={17} ml={16} color={accesstextColor} fontWeight={700}>
+                                            Access by
+                                        </Text>
+                                        <Box mt={17} ml={8} bg={'default.tagBoxColor'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
+                                            <Text color={'default.accessByNumber'} fontSize={'14px'} pt={2} fontWeight={600} cursor={'pointer'}>
+                                                {accessUserList.length}
+                                            </Text>
+                                        </Box>
+                                    </Center>
+                                </Flex>
                                 <Flex as="nav" align="center" justify="space-between" wrap="wrap">
                                     {accessUserList.length > 0 &&
                                         accessUserList.map((icons: any, iconsIndex: number) => {
