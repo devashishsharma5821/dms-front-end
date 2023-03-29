@@ -200,9 +200,9 @@ const Details = (props: DetailsPropsType) => {
 
     return (
         <>
-            <Drawer isOpen={props?.isOpen} placement="right" onClose={props?.onClose} colorScheme={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+            <Drawer isOpen={props?.isOpen} placement="right" onClose={props?.onClose} colorScheme={useColorModeValue('light.whiteText', 'dark.veryDarkGrayishBlue')}>
                 <DrawerOverlay />
-                <DrawerContent mt="64px" bg={useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue')}>
+                <DrawerContent mt="64px" bg={useColorModeValue('default.whiteText', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
                     <DrawerBody mt="30px">
                         <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onSubmit={onSubmitHandler} omitExtraData={true} validator={validator} />
