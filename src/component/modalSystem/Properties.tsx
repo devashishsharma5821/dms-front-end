@@ -238,7 +238,7 @@ const Properties = (props: any) => {
                         <Box borderColor={'light.lighterGrayishBlue'} borderWidth={1} mb={20} ml={16} pb={10} borderRadius={'4px'} width={'671px'} maxHeight={'635px'}>
                             <Flex>
                                 <Center ml={'16px'}>
-                                    <Box mt={'-10px'}>
+                                    <Box mt={'24px'}>
                                         <WhiteExperimentForProperties color={textColorIcon} />
                                     </Box>
                                     <Flex>
@@ -270,14 +270,16 @@ const Properties = (props: any) => {
                                                     </Flex>
                                                 </Editable>
                                             </Center>
-                                            <Center>
-                                                <Box mt={12} mr={'4px'} borderRadius="full" boxSize="14px" bg={'#ED6D74'} />
-                                                <Text mt={15} fontSize={14} fontWeight={700} color={'#ED6D74'}>
-                                                    Not Yet Deployed{' '}
-                                                </Text>
-                                            </Center>
                                         </Box>
                                     </Flex>
+                                </Center>
+                            </Flex>
+                            <Flex>
+                                <Center ml={'56px'}>
+                                    <Box mt={12} mr={'4px'} borderRadius="full" boxSize="14px" bg={'#ED6D74'} />
+                                    <Text mt={15} fontSize={14} fontWeight={700} color={'#ED6D74'}>
+                                        Not Yet Deployed{' '}
+                                    </Text>
                                 </Center>
                             </Flex>
                             <Flex>
@@ -347,7 +349,7 @@ const Properties = (props: any) => {
                                                             <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
                                                                 {getTruncatedText(tag, 9)}
                                                             </Text>
-                                                            <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'14px'} cursor={'pointer'}>
+                                                            <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'10px'} mr={'8px'} cursor={'pointer'}>
                                                                 <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={'pointer'} color={closeButton} />
                                                             </Box>
                                                         </Center>
