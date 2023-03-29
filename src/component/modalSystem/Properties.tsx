@@ -112,8 +112,6 @@ const Properties = (props: any) => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateExperimentData(props.data.id);
                 updateSpinnerInfo(false);
-                setInlineDescription('');
-                setInlineExperimentName('');
                 setTagValue([]);
             })
             .catch((err) => {
@@ -478,7 +476,7 @@ const Properties = (props: any) => {
                                 <Flex>
                                     <Box>
                                         <Editable
-                                            height={'44px'}
+                                            height={'40px'}
                                             maxWidth={'639px'}
                                             minWidth={'639px'}
                                             textAlign="left"
@@ -497,7 +495,7 @@ const Properties = (props: any) => {
                                                     <EditableControls />
                                                 </Center>
                                             </Flex>
-                                            <Box maxWidth={'639px'} maxHeight={'50px'} overflowY={'auto'} color={textColor2} fontWeight={400} cursor={'pointer'}>
+                                            <Box maxWidth={'639px'} maxHeight={'40px'} overflowY={'auto'} color={textColor2} fontWeight={400} cursor={'pointer'}>
                                                 <EditablePreview />
                                                 <Textarea as={EditableInput} />
                                             </Box>
