@@ -75,8 +75,8 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             })
             .catch((err) => {
                 setIsDisabled(false);
-                toast(getToastOptions(err, 'error'));
-                props.onClose();
+                toast(getToastOptions('Something went wrong, please try again later!', 'error'));
+                // props.onClose();
             });
     };
 
