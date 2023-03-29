@@ -26,7 +26,7 @@ import SearchComponent from '../../component/search/SearchComponent';
 import { DownArrow } from '../../assets/icons';
 import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
 import ProjectsViews from './projectDetails/projectsViews';
-import { projectsSearch } from '../../utils/common.utils';
+import { handleProjectsFilter, projectsSearch } from '../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
@@ -66,41 +66,26 @@ const Project = () => {
             const search = await projectsSearch(AllProjectsData, searchVl, AllUsersData);
             setAllProjectsData(search);
         } else if (tabIndex === 1) {
-            const userOnlyData = handleUserOnlyProjects();
+            const userOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'onlyMe' );
             const search = await projectsSearch(userOnlyData, searchVl, AllUsersData);
             setAllProjectsData(search);
         } else {
-            const sharedOnlyData = sharedWithMeProjects();
+            const sharedOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'sharedWithMe' );
             const search = await projectsSearch(sharedOnlyData, searchVl, AllUsersData);
             setAllProjectsData(search);
         }
-    }
-    const handleUserOnlyProjects = () => {
-        const userId = UserConfig.userConfiguration.user.userId;
-        const userOnlyProjects = AllProjectsData.filter((project) => {
-            return project.created_by === userId;
-        });
-        return userOnlyProjects;
-    };
-    const sharedWithMeProjects = () => {
-        const userId = UserConfig.userConfiguration.user.userId;
-        const sharedWithMe = AllProjectsData.filter((project) => {
-            return project.created_by !== userId;
-        });
-        return sharedWithMe;
     };
     const handleTabsChange = (tabIn: number) => {
         setTabIndex(tabIn);
-        const userId = UserConfig.userConfiguration.user.userId;
         if (tabIn === 0) {
             const search = projectsSearch(AllProjectsData, searchValue, AllUsersData);
             setAllProjectsData(search);
         } else if (tabIn === 1) {
-            const userOnlyData = handleUserOnlyProjects();
+            const userOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'onlyMe' );
             const search = projectsSearch(userOnlyData, searchValue, AllUsersData);
             setAllProjectsData(search);
         } else if (tabIn === 2) {
-            const sharedOnlyData = sharedWithMeProjects();
+            const sharedOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'sharedWithMe' );
             const search = projectsSearch(sharedOnlyData, searchValue, AllUsersData);
             setAllProjectsData(search);
         }
