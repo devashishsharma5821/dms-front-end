@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { Formik, FormikProps } from 'formik';
 import MainForm from './Elements/MainForm';
 import { CreateYupSchema } from './CreateYupSchema';
-import { FormSchemaType, FormBuilderProps } from '../.././models/formBuilder';
+import { FormSchemaKey, FormBuilderProps } from '../.././models/formBuilder';
 import { ComputeContext } from '../../context/computeContext';
 
 function FormBuilder({ formSchema, onClose, onSubmit, isEdit, isDisabled }: FormBuilderProps) {
@@ -15,7 +15,7 @@ function FormBuilder({ formSchema, onClose, onSubmit, isEdit, isDisabled }: Form
         initForm(formSchema);
     }, [formSchema]);
 
-    const initForm = (formSchema: FormSchemaType, values?: any) => {
+    const initForm = (formSchema: FormSchemaKey, values?: any) => {
         if (values?.worker_type_id && !values.driver_type_id) {
             values.driver_type_id = values.worker_type_id;
         }

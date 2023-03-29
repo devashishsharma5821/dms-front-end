@@ -2,41 +2,28 @@ import React, { useState } from 'react';
 import { createContext } from 'react';
 import { FormData } from '../models/context';
 
+const defaultComputeData = {
+    id: '',
+    max_inactivity_min: null,
+    compute_name: '',
+    autoscale: false,
+    workers: null,
+    spot_instances: false,
+    worker_type_id: '',
+    driver_type_id: '',
+    min_workers: null,
+    max_workers: null,
+    enable_autoscaling: false,
+    terminate_after: false,
+    computeId: ''
+};
 export const ComputeContext = createContext<any>({
-    data: {
-        id: '',
-        max_inactivity_min: null,
-        compute_name: '',
-        autoscale: false,
-        workers: null,
-        spot_instances: false,
-        worker_type_id: '',
-        driver_type_id: '',
-        min_workers: null,
-        max_workers: null,
-        enable_autoscaling: false,
-        terminate_after: false,
-        computeId: ''
-    },
+    data: { ...defaultComputeData },
     updateFormData: (data: FormData) => {}
 });
 
 export const ContextCompute = (props: React.PropsWithChildren) => {
-    const [formData, setFormData] = useState<FormData>({
-        id: '',
-        max_inactivity_min: null,
-        compute_name: '',
-        autoscale: false,
-        workers: null,
-        spot_instances: false,
-        worker_type_id: '',
-        driver_type_id: '',
-        min_workers: null,
-        max_workers: null,
-        enable_autoscaling: false,
-        terminate_after: false,
-        computeId: ''
-    });
+    const [formData, setFormData] = useState<FormData>(defaultComputeData);
     const updateFormData = (data: FormData) => {
         setFormData({
             id: data.id,

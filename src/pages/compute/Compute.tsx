@@ -64,7 +64,7 @@ const Compute = () => {
     const alertConfirm = useDisclosure();
     const context = useContext(ComputeContext);
     const [rowData, setRowData] = useState<DmsComputeData[]>([]);
-
+    const [errorinComputeList, setErrorinComputeList] = useState(false);
     // TODO Write Default Columns Definitions which is common for all
     const defaultColDef = {
         resizable: true
@@ -100,6 +100,7 @@ const Compute = () => {
                 })
                 .catch((err: any) => {
                     toast(getToastOptions(err.message, 'error'));
+                    setErrorinComputeList(true);
                 });
         } else if (DmsComputeData?.length > 0) {
             const newComputedataa = newComputeData(DmsComputeData);
@@ -415,9 +416,9 @@ const Compute = () => {
     };
 
     const computeData = DmsComputeData && DmsComputeData.filter((computeData: any) => computeData?.id === globalComputeId);
-    if (!computeData) {
-        return <div>Loading...</div>;
-    }
+    // if (!computeData && !errorinComputeList) {
+    //     return <div>Loading...</div>;
+    // }
 
     return (
         <>
@@ -459,20 +460,26 @@ const Compute = () => {
                         </Center>
                         <Box mr={'17'} mb={'17'}>
                             <Box style={gridStyle} className="ag-theme-alpine" ml={'23'}>
-                                <AgGridReact<DmsComputeData>
-                                    ref={gridRef}
-                                    onFirstDataRendered={onFirstDataRendered}
-                                    rowData={rowData}
-                                    pagination={true}
-                                    paginationPageSize={10}
-                                    defaultColDef={defaultColDef}
-                                    columnDefs={columnDefs}
-                                    onCellClicked={onCellClicked}
-                                    rowSelection={'single'}
-                                    animateRows={true}
-                                    enableBrowserTooltips={true}
-                                    tooltipShowDelay={0}
-                                ></AgGridReact>
+                                {errorinComputeList ? (
+                                    <p>No Computes Found</p>
+                                ) : !computeData ? (
+                                    <p>Loading</p>
+                                ) : (
+                                    <AgGridReact<DmsComputeData>
+                                        ref={gridRef}
+                                        onFirstDataRendered={onFirstDataRendered}
+                                        rowData={rowData}
+                                        pagination={true}
+                                        paginationPageSize={10}
+                                        defaultColDef={defaultColDef}
+                                        columnDefs={columnDefs}
+                                        onCellClicked={onCellClicked}
+                                        rowSelection={'single'}
+                                        animateRows={true}
+                                        enableBrowserTooltips={true}
+                                        tooltipShowDelay={0}
+                                    ></AgGridReact>
+                                )}
                             </Box>
                         </Box>
                     </Box>

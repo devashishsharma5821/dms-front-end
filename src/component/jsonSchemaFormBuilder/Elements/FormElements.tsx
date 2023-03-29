@@ -1,4 +1,4 @@
-import { ErrorMessage } from 'formik';
+import { ErrorMessage, Field, FieldProps } from 'formik';
 import { FormControl, FormLabel, Select } from '@chakra-ui/react';
 import InputField from './InputField';
 import SwitchField from './SwitchField';
@@ -22,21 +22,33 @@ export function TextField(props: FieldPropsType) {
 }
 
 export function SelectField(props: FieldPropsType) {
-    const { name, label, options, uiSchema, uiSchemaOptions, className, defaultValue } = props;
+    const { name, label, options, uiSchema, uiSchemaOptions, className, uniqueKey } = props;
     return (
-        <FormControl isRequired className={className} style={uiSchema}>
-            {label && (
-                <FormLabel htmlFor={name} style={uiSchemaOptions?.label ? uiSchemaOptions.label : {}}>
-                    {label}
-                </FormLabel>
-            )}
-            <Select as="select" defaultValue={defaultValue} className="selectDropDown">
-                {options.map((optn: options, index: string) => {
-                    return <option key={index} value={optn.node_type_id} label={optn.label || `${optn.node_type_id} \u00A0\u00A0\ ${optn.memory_mb / 1024} GB Memory, ${optn.num_cores} Cores`} />;
-                })}
-            </Select>
-            <ErrorMessage name={name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
-        </FormControl>
+        <Field>
+            {({ field, form }: FieldProps) => {
+                return (
+                    <FormControl isRequired className={className} style={uiSchema} key={uniqueKey}>
+                        {label && (
+                            <FormLabel htmlFor={name} style={uiSchemaOptions?.label ? uiSchemaOptions.label : {}} className={className + '_' + label}>
+                                {label}
+                            </FormLabel>
+                        )}
+                        <Select {...props} onChange={field.onChange} defaultValue={options[0]?.node_type_id}>
+                            {options.map((optn: options, index: string) => {
+                                return (
+                                    <option
+                                        key={index}
+                                        value={optn.node_type_id}
+                                        label={optn.label || `${optn.node_type_id} \u00A0\u00A0\ ${optn.memory_mb / 1024} GB Memory, ${optn.num_cores} Cores`}
+                                    />
+                                );
+                            })}
+                        </Select>
+                        <ErrorMessage name={name} render={(msg) => <div className="schemaErrorMessage">{msg}</div>} />
+                    </FormControl>
+                );
+            }}
+        </Field>
     );
 }
 
