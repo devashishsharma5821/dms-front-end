@@ -81,7 +81,7 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     };
 
     return (
-        <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
             <ModalContent maxWidth={632} color="#171717">
                 <ModalHeader height="var(--chakra-space-60)" fontSize={16} borderBottom="1px solid #EAEAEA" fontWeight="700" flex={'none'} padding={20}>

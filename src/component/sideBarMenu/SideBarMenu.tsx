@@ -27,7 +27,7 @@ const SideBarMenu = () => {
     const [isHovering, setIsHovering] = React.useState(false);
     const [activateSubMenu, setActivateSubMenu] = React.useState(false);
     const [activateThirdSubMenu, setActivateThirdSubMenu] = React.useState(false);
-    const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
+    const zIndexStyle = useMemo(() => ({ zIndex: '1' }), []);
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const createComputeModal = useDisclosure();
     const createProjectFromModal = useDisclosure();

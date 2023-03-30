@@ -111,7 +111,7 @@ const CreateProjectModal = (props: any) => {
         props.onSuccess(projectName, projectId);
     };
     return (
-        <Modal closeOnOverlayClick={false} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} size={'lg'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
 
             <ModalContent>
