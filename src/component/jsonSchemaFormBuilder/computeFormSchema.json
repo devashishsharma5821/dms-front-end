@@ -1,7 +1,7 @@
 {
-    "default": {
-        "isDefault": true,
-        "default_heading_value": "Compute ID:",
+    "compute_id": {
+        "type": "plaintext",
+        "label": "Compute ID:",
         "value": "",
         "uiSchema": {
             "grid-column": "auto / span 8"
@@ -12,7 +12,6 @@
         "label": "Compute Name",
         "required": true,
         "show": true,
-        "isDefaultValue": true,
         "defaultValue": "My Compute 1",
         "errormessage": "Compute Name is required",
         "className": "computeName",
@@ -23,10 +22,9 @@
     "worker_type_id": {
         "type": "select",
         "label": "Worker Type",
-        "className": "workerType",
+        "className": "selectDropDown workerType",
         "required": true,
-        "isDefaultValue": true,
-        "defaultValue": "Select Worker Type",
+        "defaultValue": "Standard_DS3_v2",
         "errormessage": "Worker Type is Required",
         "child": "child",
         "options": [],
@@ -37,10 +35,9 @@
     "driver_type_id": {
         "type": "select",
         "label": "Driver Type",
-        "className": "DriverType",
+        "className": "selectDropDown DriverType",
         "required": true,
-        "isDefaultValue": true,
-        "defaultValue": "Select Driver Type",
+        "defaultValue": "Standard_DS3_v2",
         "errormessage": "Driver Type is required",
         "child": "child",
         "options": [],
@@ -53,13 +50,12 @@
         "label": "Workers",
         "required": false,
         "show": true,
-        "isDefaultValue": true,
+        "errormessage": "Workers is required",
+        "className": "Workers",
         "defaultValue": 8,
         "conditionalRender": true,
         "child": "child",
-        "errormessage": "Workers is required",
-        "className": "Workers",
-        "min": "0",
+        "min": 0,
         "uiSchema": {
             "grid-column": "auto / span 4"
         }
@@ -70,17 +66,16 @@
         "show": false,
         "required": false,
         "conditionalRender": true,
-        "isDefaultValue": true,
         "defaultValue": 1,
         "errormessage": "min workers is required",
         "className": "minWorkers",
-        "min": "0",
+        "min": 0,
         "uiSchema": {
             "grid-column": "auto / span 2"
         },
         "lessThan": true,
         "ref": "max_workers",
-        "msg": "min workers must be less than max workers"
+        "msg": "Min workers must be less than max workers"
     },
     "max_workers": {
         "type": "number",
@@ -88,17 +83,16 @@
         "show": false,
         "required": false,
         "conditionalRender": true,
-        "isDefaultValue": true,
         "defaultValue": 8,
-        "errormessage": "max workers is required",
+        "errormessage": "Max workers is required",
         "className": "maxWorkers",
-        "min": "0",
+        "min": 0,
         "uiSchema": {
             "grid-column": "auto / span 2"
         },
         "moreThan": true,
         "ref": "min_workers",
-        "msg": "max workers must be greater than min workers"
+        "msg": "Max workers must be greater than min workers"
     },
     "spot_instances": {
         "type": "switch",
@@ -137,7 +131,6 @@
         "type": "switch",
         "label": "Terminate after",
         "className": "terminateAfter",
-        "isDefaultValue": true,
         "defaultValue": true,
         "uiSchema": {
             "grid-column": "auto / span 3",
@@ -158,11 +151,10 @@
         "disable": true,
         "conditionalRender": true,
         "required": false,
-        "isDefaultValue": true,
-        "errormessage": "minutes of inactivity is required",
+        "errormessage": "Minutes of inactivity is required",
         "defaultValue": 60,
         "className": "minutesOfInactivity",
-        "msg": "minutes of inactivity must be greater than or equal to 1",
+        "msg": "Minutes of inactivity must be greater than or equal to 1",
         "wrapper": {
             "elements": {
                 "label": true,
@@ -175,7 +167,7 @@
                 "flex-direction": "row-reverse"
             }
         },
-        "min": "1",
+        "min": 1,
         "extraStyles": {
             "inputWidth": "50px"
         },

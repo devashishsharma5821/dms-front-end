@@ -21,7 +21,8 @@ const ProjectDetailsGrid = (props: any) => {
             {
                 headerName: 'Asset Id',
                 field: 'id',
-                cellRenderer: renderDatasetId
+                cellRenderer: renderDatasetId,
+                minWidth: 200
             },
             {
                 headerName: 'Asset Name',

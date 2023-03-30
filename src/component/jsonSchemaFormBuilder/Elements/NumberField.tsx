@@ -1,7 +1,8 @@
 import { NumberInput, NumberInputField } from '@chakra-ui/react';
 import { useField } from 'formik';
+import { FieldPropsType } from '../../../models/formBuilder';
 
-const Numbers = (props: any) => {
+const Numbers = (props: FieldPropsType) => {
     const [field] = useField(props?.name);
 
     return (

@@ -254,7 +254,7 @@ const CreateDatasetFormScreen = (props: any) => {
                         <Flex>
                             <Center>
                                 <AvatarGroup size={'md'} max={3} spacing={1}>
-                                    {projectAccess.map((access: any, accessIndex: any) => {
+                                    {projectAccess?.map((access: any, accessIndex: any) => {
                                         return <Avatar key={accessIndex} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
                                     })}
                                 </AvatarGroup>

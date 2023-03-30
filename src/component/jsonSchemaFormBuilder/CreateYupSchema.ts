@@ -3,38 +3,26 @@ import * as Yup from 'yup';
 export const CreateYupSchema = (formSchema: any, values: any) => {
     let _formData: any = {};
     let _validationSchema: any = {};
+    const setDefaultValue = (key: string) => {
+        if (formSchema[key]?.defaultValue !== undefined && formSchema[key]?.defaultValue !== null) {
+            _formData[key] = formSchema[key].defaultValue;
+        } else {
+            if (formSchema[key].type !== 'switch') {
+                _formData[key] = '';
+            } else {
+                _formData[key] = false;
+            }
+        }
+    };
 
     for (let key of Object.keys(formSchema)) {
-        if (formSchema[key].type === 'switch') {
-            _formData[key] = false;
-        }
-        if (formSchema[key].type === 'text') {
+        setDefaultValue(key);
+        if (formSchema[key].type === 'text' || formSchema[key].type === 'select') {
             _validationSchema[key] = Yup.string();
-            if (formSchema[key].isDefaultValue === true) {
-                _formData[key] = formSchema[key].defaultValue;
-            } else {
-                _formData[key] = '';
-            }
         } else if (formSchema[key].type === 'email') {
             _validationSchema[key] = Yup.string().email();
-            if (formSchema[key].isDefaultValue === true) {
-                _formData[key] = formSchema[key].defaultValue;
-            } else {
-                _formData[key] = '';
-            }
         } else if (formSchema[key].type === 'number') {
             _validationSchema[key] = Yup.number();
-            if (formSchema[key].isDefaultValue === true) {
-                _formData[key] = formSchema[key].defaultValue;
-            } else {
-                _formData[key] = '';
-            }
-        } else if (formSchema[key].type === 'select') {
-            _validationSchema[key] = Yup.string();
-        } else if (formSchema[key].type === 'switch') {
-            if (formSchema[key].isDefaultValue === true) {
-                _formData[key] = formSchema[key].defaultValue;
-            }
         }
         if (formSchema[key].required) {
             // if (formSchema[key].min) {
