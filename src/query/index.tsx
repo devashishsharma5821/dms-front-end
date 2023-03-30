@@ -289,6 +289,13 @@ export const getComputeListData = () => {
             dmsComputes {
                 id
                 name
+                 tasks {
+                    task_key
+                    cleanup_duration
+                    start_time
+                    end_time
+                    execution_duration
+                    }
                 resources {
                     instance_pool {
                         worker_pool_id

@@ -115,6 +115,13 @@ export interface DmsComputeData {
     is_default: boolean;
     max_inactivity_min: number;
     name: string;
+    tasks: {
+        cleanup_duration: number;
+        end_time: number;
+        execution_duration: number;
+        start_time: number;
+        task_key: string;
+    }[];
     resources: {
         autoscale?: boolean;
         instance_pool?: boolean;
