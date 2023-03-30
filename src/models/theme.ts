@@ -4,7 +4,7 @@ export const styles = {
     global: {
         // styles for the `body`
         body: {
-            fontFamily: 'ibm-plex-sans , Fallback, sans-serif',
+            fontFamily: 'IBM Plex Sans , Fallback, sans-serif',
             fontWeight: 400,
             overflow: 'hidden',
             width: '100vw',
