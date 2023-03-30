@@ -4,15 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import LeftArrow from '../../../assets/LeftArrow';
 import { PencilIcon } from '../../../assets/icons';
 import { CloseIcon } from '@chakra-ui/icons';
+import useAppStore from '../../../store';
+import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
+import { getUserNameFromId, getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime } from '../../../utils/common.utils';
+// import { GetDatasetAppStoreState } from '../../../models/dataset';
 
+import Dataset from '../dataset';
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const datasetDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
+    // const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const navigate = useNavigate();
     const navigateToDataset = () => {
         navigate(`/dataset`);
     };
+    // const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
+    // const [DatasetData] = useAppStore((state: GetDatasetAppStoreState) => [state.DatasetData]);
     function EditableControlsName() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -33,6 +41,7 @@ const DatasetDetails = (props: any) => {
             </Flex>
         );
     }
+
     return (
         <>
             <Box marginLeft={'50px'}>

@@ -358,17 +358,15 @@ export const GET_ALL_PROJECTS = gql`
                 user_id
                 access_level
             }
-                datasources {
-      id
-      name
-       created_by
-      created_at
-      spec {
-        ... on DMSDatabricksFileUpload {
-          path
-        }
-      }
-    }
+            datasources {
+                id
+                name
+                spec {
+                    ... on DMSDatabricksFileUpload {
+                        path
+                    }
+                }
+            }
         }
     }
 `;
