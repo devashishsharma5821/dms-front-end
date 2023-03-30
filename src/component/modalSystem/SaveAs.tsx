@@ -25,6 +25,7 @@ const SaveAs = (props: any) => {
         isOpen={props.isOpen}
         onClose={props.onClose}
         isCentered
+        closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true}
       >
         <ModalOverlay />
    

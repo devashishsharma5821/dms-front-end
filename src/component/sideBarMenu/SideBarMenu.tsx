@@ -315,27 +315,27 @@ const SideBarMenu = () => {
                             )}
                         </VStack>{' '}
                     </Flex>
-                    {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
-                    {createDatasetModal.isOpen && <CreateDatasetModal isOpen={createDatasetModal.isOpen} onClose={createDatasetModal.onClose} />}
-                    {createExperimentModal.isOpen && <ExperimentModal isOpen={createExperimentModal.isOpen} onClose={createExperimentModal.onClose} />}
-                    {createProjectFromModal.isOpen && (
-                        <LeftSideBarMenuCreateProjectModal
-                            isOpen={createProjectFromModal.isOpen}
-                            onClose={createProjectFromModal.onClose}
-                            openCreateProjectFromScratch={openCreateProjectFromScratch}
-                        />
-                    )}
-                    {createProjectModal.isOpen && (
-                        <CreateProjectModal
-                            isOpen={createProjectModal.isOpen}
-                            onClose={createProjectModal.onClose}
-                            onSuccess={onCreateProjectSuccess}
-                            isEdit={{ status: false, data: {}, usersData: [] }}
-                        />
-                    )}
                 </div>
                 {activateSubMenu && secondLevelMenu()}
                 {activateThirdSubMenu && thirdLevelMenu()}
+                {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
+                {createDatasetModal.isOpen && <CreateDatasetModal isOpen={createDatasetModal.isOpen} onClose={createDatasetModal.onClose} />}
+                {createExperimentModal.isOpen && <ExperimentModal isOpen={createExperimentModal.isOpen} onClose={createExperimentModal.onClose} />}
+                {createProjectFromModal.isOpen && (
+                    <LeftSideBarMenuCreateProjectModal
+                        isOpen={createProjectFromModal.isOpen}
+                        onClose={createProjectFromModal.onClose}
+                        openCreateProjectFromScratch={openCreateProjectFromScratch}
+                    />
+                )}
+                {createProjectModal.isOpen && (
+                    <CreateProjectModal
+                        isOpen={createProjectModal.isOpen}
+                        onClose={createProjectModal.onClose}
+                        onSuccess={onCreateProjectSuccess}
+                        isEdit={{ status: false, data: {}, usersData: [] }}
+                    />
+                )}
             </>
         </Flex>
     );
