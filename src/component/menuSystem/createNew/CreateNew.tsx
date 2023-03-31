@@ -85,6 +85,7 @@ const CreateNew = (props: any) => {
                                         <>
                                             {section.type === 'icon' && (
                                                 <Box
+                                                    cursor={'pointer'}
                                                     key={section.name}
                                                     _hover={{ bg: '#0073E6', color: 'white' }}
                                                     ml={'14px'}
