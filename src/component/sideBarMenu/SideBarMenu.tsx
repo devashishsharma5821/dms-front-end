@@ -109,7 +109,7 @@ const SideBarMenu = () => {
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '464px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
-                        <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
+                        <Box width={'254px'} pl={'0px'} mt="17">
                             <h3>
                                 <ProjectDetailsMenu />
                             </h3>
@@ -130,7 +130,7 @@ const SideBarMenu = () => {
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         {sideBarMenuIcons[0].section[currentIndex].isClicked && (
-                            <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
+                            <Box width={'254px'} pl={'0px'} mt="17">
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' && (
                                     <h3>
                                         <CreateNew openCreateModal={(type: string) => triggerCreateModal(type)} />
