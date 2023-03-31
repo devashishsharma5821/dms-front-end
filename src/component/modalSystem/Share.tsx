@@ -98,16 +98,16 @@ const Share = (props: any) => {
     const setCreateProjectAccessRoles = (access: any, level: any) => {
         let newAccessList = [...accessUserList];
         newAccessList.forEach((user: any) => {
-           if(user.userId === access.userId) {
-               user.accessLevel = level;
-           }
+            if (user.userId === access.userId) {
+                user.accessLevel = level;
+            }
         });
-        console.log('asdfsdfsdf', newAccessList)
+        console.log('asdfsdfsdf', newAccessList);
         setAccessUserList(newAccessList);
     };
     const deleteCreateProjectAccessRoles = (access: any) => {
         const userToKeep = accessUserList.filter((user: any) => {
-          return user.userId !== access.userId;
+            return user.userId !== access.userId;
         });
         setAccessUserList(userToKeep);
     };
@@ -115,11 +115,11 @@ const Share = (props: any) => {
         const user = AllUsersData?.filter((singleUser) => {
             return singleUser.email === access.email;
         });
-        if(!isEdit) {
-            if(type === 'delete') {
+        if (!isEdit) {
+            if (type === 'delete') {
                 deleteCreateProjectAccessRoles(access);
-            } else if(type === 'canEdit' || type === 'canView') {
-                setCreateProjectAccessRoles(access, (type === 'canEdit') ? DMSAccessLevel[1] : DMSAccessLevel[0]);
+            } else if (type === 'canEdit' || type === 'canView') {
+                setCreateProjectAccessRoles(access, type === 'canEdit' ? DMSAccessLevel[1] : DMSAccessLevel[0]);
             }
         } else {
             updateSpinnerInfo(true);
@@ -146,7 +146,7 @@ const Share = (props: any) => {
                     access: [
                         {
                             user_id: user![0].userId,
-                            access_level: (type === 'canEdit') ? DMSAccessLevel[1] : DMSAccessLevel[0]
+                            access_level: type === 'canEdit' ? DMSAccessLevel[1] : DMSAccessLevel[0]
                         }
                     ],
                     project_id: params.projectId
@@ -170,7 +170,7 @@ const Share = (props: any) => {
     };
 
     const handleShare = () => {
-        if(userValue.length > 0) {
+        if (userValue.length > 0) {
             if (props.isEdit) {
                 updateSpinnerInfo(true);
                 const mutationVariable = {
@@ -207,25 +207,24 @@ const Share = (props: any) => {
                         return singleUser.email === selUserEmail;
                     });
                     const accessLevel = DMSAccessLevel[0];
-                    const userToAdd = {accessLevel, ...sharedUser![0]};
+                    const userToAdd = { accessLevel, ...sharedUser![0] };
                     const checkIfUserAlreadyExists = newAccessList.filter((user) => {
                         return user.userId === sharedUser![0].userId;
                     });
-                    if(checkIfUserAlreadyExists.length === 0) {
+                    if (checkIfUserAlreadyExists.length === 0) {
                         newAccessList.push(userToAdd);
-                    };
+                    }
                 });
                 setAccessUserList(newAccessList);
             }
         }
-
     };
     const closeShareModal = (ev: any) => {
         ev.preventDefault();
         if (props.isEdit) {
             props.onClose();
         } else {
-            if(accessUserList?.length > 0) {
+            if (accessUserList?.length > 0) {
                 props.onCreateUserAccess(accessUserList);
             }
             props.onClose();
@@ -247,19 +246,14 @@ const Share = (props: any) => {
                         </Box>
                         <FormControl>
                             <Flex>
-                                <Box width={'592px'} mr={'20px'} pl={'-40px'} height={'36px'}>
-                                    <MultiSelect
-                                        value={userValue}
-                                        options={userOptions}
-                                        color={defaultInBoxTextColor}
-                                        label="Send to"
-                                        onChange={handleUserChange!}
-                                        bg={'black'}
-                                        marginInlineStart={'-4px'}
-                                    />
+                                <Box width={'602px'} pl={'20px'} height={'36px'}>
+                                    <Text fontWeight={400} fontSize={16} color={textColor2} mb={'8px'}>
+                                        Send to
+                                    </Text>
+                                    <MultiSelect value={userValue} options={userOptions} color={defaultInBoxTextColor} onChange={handleUserChange!} bg={'black'} marginInlineStart={'-4px'} />
                                 </Box>
-                                <Box maxWidth={'79px'}>
-                                    <Button onClick={handleShare} bg={'default.textButton'} borderRadius={'4'} mt={'28px'} minWidth={'66px'} height={'36px'} ml={'10px'} mr={'15px'}>
+                                <Box maxWidth={'79px'} mt={'8px'}>
+                                    <Button onClick={handleShare} bg={'default.textButton'} borderRadius={'4'} mt={'28px'} minWidth={'66px'} height={'36px'} ml={'16px'} mr={'15px'}>
                                         Share
                                     </Button>
                                 </Box>
@@ -270,7 +264,7 @@ const Share = (props: any) => {
                             <Box
                                 borderColor={'light.lighterGrayishBlue'}
                                 borderWidth={1}
-                                mt={20}
+                                mt={16}
                                 mb={20}
                                 ml={20}
                                 mr={20}
@@ -311,13 +305,15 @@ const Share = (props: any) => {
                                                     <Center mr={'20px'}>
                                                         <Menu>
                                                             <MenuButton>
-                                                                    <Center>
-                                                                        <Text fontSize={'16px'} fontWeight={400} color={textColor}>{icons.accessLevel}</Text>
+                                                                <Center>
+                                                                    <Text fontSize={'16px'} fontWeight={400} color={textColor}>
+                                                                        {icons.accessLevel}
+                                                                    </Text>
 
-                                                                        <Box ml={'12px'}>
-                                                                            <DownArrowShare color={'#666C80'} />
-                                                                        </Box>
-                                                                    </Center>
+                                                                    <Box ml={'12px'}>
+                                                                        <DownArrowShare color={'#666C80'} />
+                                                                    </Box>
+                                                                </Center>
                                                             </MenuButton>
                                                             <MenuList width={121} borderRadius={'0'} ml={'-18px'} mt={'-2'} color={textColor}>
                                                                 <MenuItem
@@ -337,7 +333,7 @@ const Share = (props: any) => {
                                                                 </MenuItem>
                                                                 <Divider />
                                                                 <MenuItem
-                                                                    isDisabled={UserConfig.userConfiguration.user.userId === icons.id }
+                                                                    isDisabled={UserConfig.userConfiguration.user.userId === icons.id}
                                                                     onClick={() => {
                                                                         accessMenuChanged(icons, 'delete', props.isEdit);
                                                                     }}
