@@ -250,7 +250,15 @@ const Share = (props: any) => {
                                     <Text fontWeight={400} fontSize={16} color={textColor2} mb={'8px'}>
                                         Send to
                                     </Text>
-                                    <MultiSelect value={userValue} options={userOptions} color={defaultInBoxTextColor} onChange={handleUserChange!} bg={'black'} marginInlineStart={'-4px'} />
+                                    <MultiSelect
+                                        overflowY={'scroll'}
+                                        value={userValue}
+                                        options={userOptions}
+                                        color={defaultInBoxTextColor}
+                                        onChange={handleUserChange!}
+                                        bg={'black'}
+                                        marginInlineStart={'-4px'}
+                                    />
                                 </Box>
                                 <Box maxWidth={'79px'} mt={'8px'}>
                                     <Button onClick={handleShare} bg={'default.textButton'} borderRadius={'4'} mt={'28px'} minWidth={'66px'} height={'36px'} ml={'16px'} mr={'15px'}>
@@ -349,7 +357,7 @@ const Share = (props: any) => {
                                         })}
                                     {accessUserList.length === 0 && (
                                         <Box ml={'15px'}>
-                                            <Text color={accesstextColor}>This Project Is not Shared with Any Users</Text>
+                                            <Text color={accesstextColor}>This Project Is Not Shared With Any User</Text>
                                         </Box>
                                     )}
                                 </Flex>
