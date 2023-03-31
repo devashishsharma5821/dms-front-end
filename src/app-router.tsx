@@ -9,6 +9,7 @@ import { ContextCompute } from './context/computeContext';
 import SocketWrapper from './component/SocketWrapper';
 import { ToastProvider } from '@chakra-ui/react';
 import useAppStore from './store';
+import DatasetDetails from './pages/dataset/datasetDetails/datasetDetails';
 
 export const AppRouter = (props: any) => {
     const [spinnerInfo] = useAppStore((state: any) => [state.spinnerInfo]);
@@ -41,7 +42,7 @@ export const AppRouter = (props: any) => {
                                         <Route path="/compute" element={<Compute />} />
                                         <Route path="/computedetails/:computeId" element={<ComputeDetails />} />
                                         <Route path="/dataset" element={<Dataset />} />
-                                        <Route path="/datasetDetails/:datasetId" element={<Dataset />} />
+                                        <Route path="/datasetDetails/:datasetId" element={<DatasetDetails />} />
                                     </Routes>
                                 </Box>
                             </ContextCompute>

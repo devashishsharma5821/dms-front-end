@@ -21,7 +21,8 @@ const ProjectDetailsGrid = (props: any) => {
             {
                 headerName: 'Asset Id',
                 field: 'id',
-                cellRenderer: renderDatasetId
+                cellRenderer: renderDatasetId,
+                minWidth: 200
             },
             {
                 headerName: 'Asset Name',
@@ -81,6 +82,12 @@ const ProjectDetailsGrid = (props: any) => {
             setRowDataExperiment(props.gridData.experiments);
         }
     };
+    const onFirstDataRendered = () => {
+        gridRefExperiment?.current!?.api?.sizeColumnsToFit();
+    };
+    const onFirstDataRenderedDataSources = () => {
+        gridRefDataSources?.current!?.api?.sizeColumnsToFit();
+    };
     return (
         <>
             <Box className="project-details-grid-page" marginTop={50}>
@@ -99,12 +106,12 @@ const ProjectDetailsGrid = (props: any) => {
                     <TabPanels mr={'10px'} maxHeight="758px">
                         <TabPanel>
                             <Box style={gridStyle} className="ag-theme-alpine">
-                                <AgGridReact<any> ref={gridRefDataSources} rowData={rowDataDatasources} columnDefs={columnDefsDatasource} animateRows={true}></AgGridReact>
+                                <AgGridReact<any> onFirstDataRendered={onFirstDataRenderedDataSources} ref={gridRefDataSources} rowData={rowDataDatasources} columnDefs={columnDefsDatasource} animateRows={true}></AgGridReact>
                             </Box>
                         </TabPanel>
                         <TabPanel>
                             <Box style={gridStyle} className="ag-theme-alpine">
-                                <AgGridReact<any> ref={gridRefExperiment} rowData={rowDataExperiment} columnDefs={columnDefsExperiment} animateRows={true}></AgGridReact>
+                                <AgGridReact<any> onFirstDataRendered={onFirstDataRendered} ref={gridRefExperiment} rowData={rowDataExperiment} columnDefs={columnDefsExperiment} animateRows={true}></AgGridReact>
                             </Box>
                         </TabPanel>
                     </TabPanels>

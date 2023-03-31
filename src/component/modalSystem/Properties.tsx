@@ -18,7 +18,6 @@ import {
     ModalFooter,
     Modal,
     Divider,
-    Link,
     Editable,
     ButtonGroup,
     useEditableControls,
@@ -29,22 +28,22 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    Stack
+    Stack,
+    PopoverCloseButton
 } from '@chakra-ui/react';
-import { CloseIcon, LinkChain, PencilIcon, WhiteExperiment } from '../../assets/icons';
-import { ShareData } from '../../models/share';
+import { CloseIcon, PencilIcon } from '../../assets/icons';
 import { convertTime, copyToClipBoard, getTruncatedText, getUserNameFromId } from '../../utils/common.utils';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
-import { ProjectEdit, ProjectEditDetail } from '../../models/project';
-import { dmsEditExperiment, editProject } from '../../query';
+import { dmsEditExperiment } from '../../query';
 import { getToastOptions } from '../../models/toastMessages';
-import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { ExperimentEdit, ExperimentEditDetail } from '../../models/experimentModel';
 import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 import Share from './Share';
 import { AllUsers } from '../../models/profile';
 import { MultiSelect } from 'chakra-multiselect';
+import WhiteExperimentForProperties from '../../assets/icons/WhiteExperimentForProperties';
+import { CopyIcon } from '@chakra-ui/icons';
 
 const Properties = (props: any) => {
     const textColorIcon = useColorModeValue('#666C80', 'white');
@@ -53,7 +52,6 @@ const Properties = (props: any) => {
     const accesstextColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
     const closeButton = useColorModeValue('#666C80', '#ffffff');
-    const { onClose } = useDisclosure();
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [inlineExperimentName, setInlineExperimentName] = useState<string>(props.data.name || '');
@@ -114,8 +112,6 @@ const Properties = (props: any) => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
                 getAndUpdateExperimentData(props.data.id);
                 updateSpinnerInfo(false);
-                setInlineDescription('');
-                setInlineExperimentName('');
                 setTagValue([]);
             })
             .catch((err) => {
@@ -211,42 +207,46 @@ const Properties = (props: any) => {
                 <ModalHeader color={shretextColor} mt={'13'} ml={20}>
                     Properties
                 </ModalHeader>
-                <ModalCloseButton mt={'12'} mr={8} color={textColor2} />
+                <ModalCloseButton mt={'12'} mr={8} color={textColor2} cursor={'pointer'} />
                 <Divider color={'default.dividerColor'} />
                 <ModalBody pb={6}>
                     <Flex fontWeight={700}>
                         <Center>
-                            <Text color={textColor2} mt={'20'} ml={20} mb={10}>
-                                Project Id:
+                            <Text color={accesstextColor} mt={'20'} ml={20} mb={16}>
+                                Project ID:
                             </Text>
-                            <Text color={textColor2} mt={'20'} mb={10} ml={'5px'}>
+                            <Text color={accesstextColor} mt={'20'} mb={16} ml={'5px'}>
                                 {props.projectData.basic.id}
                             </Text>
+                            <Box ml={8}>
+                                <CopyIcon />
+                            </Box>
                         </Center>
                         <Center>
-                            <Text color={textColor2} mt={'20'} ml={20} mb={10}>
+                            <Text color={accesstextColor} mt={'20'} ml={31} mb={16}>
                                 Project Name:
                             </Text>
-                            <Text color={textColor2} mt={'20'} mb={10} ml={'5px'}>
+                            <Text color={accesstextColor} mt={'20'} mb={16} ml={'5px'}>
                                 {props.projectData.basic.name}
                             </Text>
                         </Center>
                     </Flex>
 
                     <FormControl mt={4}>
-                        <Box borderColor={'light.lighterGrayishBlue'} borderWidth={1} mt={20} mb={20} ml={16} pb={10} borderRadius={'4px'} width={'671px'} maxHeight={'635px'}>
+                        <Box borderColor={'light.lighterGrayishBlue'} borderWidth={1} mb={20} ml={16} pb={10} borderRadius={'4px'} width={'671px'} maxHeight={'635px'}>
                             <Flex>
-                                <Center ml={'19px'}>
-                                    <Box mt={'-10px'}>
-                                        <WhiteExperiment color={textColorIcon} />
+                                <Center ml={'16px'}>
+                                    <Box mt={'24px'}>
+                                        <WhiteExperimentForProperties color={textColorIcon} />
                                     </Box>
                                     <Flex>
                                         <Box ml={12}>
-                                            <Text mt={17} color={accesstextColor}>
+                                            <Text mt={17} color={accesstextColor} fontWeight={600}>
                                                 Experiment Name
                                             </Text>
                                             <Center>
                                                 <Editable
+                                                    cursor={'pointer'}
                                                     maxWidth={'800px'}
                                                     textAlign="left"
                                                     fontWeight={400}
@@ -268,74 +268,51 @@ const Properties = (props: any) => {
                                                     </Flex>
                                                 </Editable>
                                             </Center>
-                                            <Center>
-                                                <Box mt={12} mr={'4px'} ml={'-32px'} borderRadius="full" boxSize="14px" bg={'#ED6D74'} />
-                                                <Text mt={15} fontSize={14} fontWeight={700} color={'#ED6D74'}>
-                                                    Not Yet Deployed{' '}
-                                                </Text>
-                                            </Center>
                                         </Box>
                                     </Flex>
                                 </Center>
                             </Flex>
-                            <Flex mb={'21px'}>
+                            <Flex>
+                                <Center ml={'56px'}>
+                                    <Box mt={12} mr={'4px'} borderRadius="full" boxSize="14px" bg={'#ED6D74'} />
+                                    <Text mt={15} fontSize={14} fontWeight={700} color={'#ED6D74'}>
+                                        Not Yet Deployed{' '}
+                                    </Text>
+                                </Center>
+                            </Flex>
+                            <Flex>
                                 <Center>
-                                    <Text color={textColor2} mt={'20'} ml={20}>
+                                    <Text color={textColor2} mt={'20'} ml={16}>
                                         Tag:
                                     </Text>
-                                    <Center>
-                                        {props.data.tags?.map((tag: any, tagIndex: number) => {
-                                            if (tagIndex === 2) {
-                                                return (
-                                                    <Box key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                                        <Flex>
-                                                            <Center>
-                                                                <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                    + {props.data.tags.length - 2} more
-                                                                </Text>
-                                                            </Center>
-                                                        </Flex>
-                                                    </Box>
-                                                );
-                                            } else if (tagIndex < 2) {
-                                                return (
-                                                    <Box cursor={'pointer'} key={`${tag}_${tagIndex}`} ml={14} mt={16} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
-                                                        <Flex cursor={'pointer'}>
-                                                            <Center cursor={'pointer'}>
-                                                                <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
-                                                                    {getTruncatedText(tag, 9)}
-                                                                </Text>
-                                                                <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'14px'} cursor={'pointer'}>
-                                                                    <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={'pointer'} color={closeButton} />
-                                                                </Box>
-                                                            </Center>
-                                                        </Flex>
-                                                    </Box>
-                                                );
-                                            }
-                                        })}
-                                    </Center>
-                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={false}>
+
+                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={true}>
                                         <PopoverTrigger>
-                                            <Button variant="link" color={'#2180C2'} mt={'20'} ml={20}>
+                                            <Button variant="link" color={'default.toolbarButton'} mt={'20'} ml={8} cursor={'pointer'}>
                                                 + Add Tag
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent p={5} w={'520px'} h={'200px'}>
-                                            <Stack spacing={4}>
-                                                <MultiSelect
-                                                    value={tagValue}
-                                                    options={tagOptions}
-                                                    mr={'500px'}
-                                                    color={defaultInBoxTextColor}
-                                                    label=""
-                                                    onChange={handleTagChange!}
-                                                    create
-                                                    bg={'black'}
-                                                    marginInlineStart={'-4px'}
-                                                />
-                                                <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-end">
-                                                    <Button onClick={handleTagSubmit} bg={'default.textButton'} cursor={'pointer'}>
+                                        <PopoverContent p={5} w={'399px'} h={'201px'} ml={'256px'}>
+                                            <Stack cursor={'pointer'}>
+                                                <Flex flexDirection={'row'}>
+                                                    <Text color={'default.modalShareText'} fontWeight={700} mb={12}>
+                                                        Add Tag
+                                                    </Text>
+                                                    <Box justifyContent="flex-end">
+                                                        <PopoverCloseButton mr={'16px'} mt={'14px'} color={'#757575'} />
+                                                    </Box>
+                                                </Flex>
+                                                    <MultiSelect
+                                                        value={tagValue}
+                                                        options={tagOptions}
+                                                        color={defaultInBoxTextColor}
+                                                        onChange={handleTagChange!}
+                                                        create
+                                                        bg={'black'}
+                                                        marginInlineStart={'-10px'}
+                                                    />
+                                                <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-start" cursor={'pointer'}>
+                                                    <Button onClick={handleTagSubmit} bg={'default.toolbarButton'} cursor={'pointer'} width={'104px'} height={'36px'} borderRadius={4} mb={20} mt={16}>
                                                         Add Tag(s)
                                                     </Button>
                                                 </ButtonGroup>
@@ -344,31 +321,65 @@ const Properties = (props: any) => {
                                     </Popover>
                                 </Center>
                             </Flex>
-
-                            <Divider color={'default.dividerColor'} />
-
-                            <Box width={671}>
+                            <Flex>
                                 <Center>
-                                    <Flex mt={'-51px'}>
+                                    {props.data.tags?.map((tag: any, tagIndex: number) => {
+                                        if (tagIndex === 2) {
+                                            return (
+                                                <Box key={`${tag}_${tagIndex}`} ml={16} mt={8} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                    <Flex>
+                                                        <Center>
+                                                            <Text color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                + {props.data.tags.length - 2} more
+                                                            </Text>
+                                                        </Center>
+                                                    </Flex>
+                                                </Box>
+                                            );
+                                        } else if (tagIndex < 2) {
+                                            return (
+                                                <Box cursor={'pointer'} key={`${tag}_${tagIndex}`} ml={16} mt={8} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                    <Flex cursor={'pointer'}>
+                                                        <Center cursor={'pointer'}>
+                                                            <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                                {getTruncatedText(tag, 9)}
+                                                            </Text>
+                                                            <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'10px'} mr={'8px'} cursor={'pointer'}>
+                                                                <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={'pointer'} color={closeButton} />
+                                                            </Box>
+                                                        </Center>
+                                                    </Flex>
+                                                </Box>
+                                            );
+                                        }
+                                    })}
+                                </Center>
+                            </Flex>
+
+                            <Divider color={'default.dividerColor'} mt={16} />
+
+                            <Box width={671} pb={'16px'} minHeight={'330'}>
+                                <Center>
+                                    <Flex mt={'-51px'} ml={'16px'}>
                                         <Avatar p={'5px'} borderRadius="full" boxSize="42px" name={getUserNameFromId(props.userData, props.data.created_by)} color={'default.whiteText'} mt={'21px'} />
                                         <Center>
                                             <Box width={'300px'}>
-                                                <Text ml={12} color={accesstextColor} mt={'21px'}>
+                                                <Text ml={12} color={accesstextColor} mt={'21px'} fontWeight={600}>
                                                     Created by
                                                 </Text>
-                                                <Text ml={12} color={accesstextColor} fontWeight={700}>
+                                                <Text ml={12} color={textColor2} fontWeight={700}>
                                                     {getUserNameFromId(props.userData, props.data.created_by)}
                                                 </Text>
-                                                <Text ml={12} color={accesstextColor} mt={'14px'}>
+                                                <Text ml={12} color={accesstextColor} mt={'14px'} fontWeight={600}>
                                                     Created On
                                                 </Text>
-                                                <Text ml={12} color={accesstextColor} fontWeight={700}>
+                                                <Text ml={12} color={textColor2} fontWeight={700}>
                                                     {convertTime(props.data.created_at, false)}
                                                 </Text>
-                                                <Text ml={12} color={accesstextColor} mt={'14px'}>
+                                                <Text ml={12} color={accesstextColor} mt={'14px'} fontWeight={600}>
                                                     Last Modified
                                                 </Text>
-                                                <Text ml={12} color={accesstextColor} fontWeight={700}>
+                                                <Text ml={12} color={textColor2} fontWeight={700}>
                                                     {convertTime(props.data.updated_at, true)}
                                                 </Text>
                                             </Box>
@@ -378,20 +389,28 @@ const Properties = (props: any) => {
                                         <Box>
                                             <Flex mb={16}>
                                                 <Center flex="2">
-                                                    <Text mt={'21px'} ml={12}>
+                                                    <Text mt={'21px'} ml={12} fontWeight={700} color={accesstextColor}>
                                                         Access by
                                                     </Text>
-                                                    <Box ml={14} mt={16} bg={' #F2F4F8'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
+                                                    <Box ml={8} mt={16} bg={' #F2F4F8'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
                                                         <Text color={'#75858F'} fontSize={'14px'} mt={2}>
                                                             {props.userAccessList.length}
                                                         </Text>
                                                     </Box>
-                                                    <Center flex="2" justifyContent={'flex-end'} mr={46}>
-                                                        <Text cursor={'pointer'} onClick={editAccessModal.onOpen} color={'#2180C2'} mt={'21px'}>
+                                                    <Center flex="2" justifyContent={'flex-end'} ml={'44px'}>
+                                                        <Text cursor={'pointer'} onClick={editAccessModal.onOpen} color={'default.toolbarButton'} mt={'21px'} fontWeight={600}>
                                                             {' '}
                                                             Edit
                                                         </Text>
-                                                        <Text cursor={'pointer'} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} color={'#2180C2'} mt={'21px'} ml={16}>
+                                                        <Text
+                                                            cursor={'pointer'}
+                                                            onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)}
+                                                            color={'default.toolbarButton'}
+                                                            mt={'21px'}
+                                                            ml={16}
+                                                            mr={16}
+                                                            fontWeight={600}
+                                                        >
                                                             {' '}
                                                             Copy Link
                                                         </Text>
@@ -412,10 +431,10 @@ const Properties = (props: any) => {
                                                                     color={'default.whiteText'}
                                                                 />
                                                                 <Box width={'166px'}>
-                                                                    <Text ml={12} color={accesstextColor}>
+                                                                    <Text ml={12} color={accesstextColor} fontWeight={600}>
                                                                         {project?.firstName} {project?.lastName}
                                                                     </Text>
-                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'}>
+                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600}>
                                                                         {project.email}{' '}
                                                                     </Text>
                                                                 </Box>
@@ -454,8 +473,9 @@ const Properties = (props: any) => {
                                 <Flex>
                                     <Box>
                                         <Editable
-                                            height={'80px'}
-                                            maxWidth={'400px'}
+                                            height={'40px'}
+                                            maxWidth={'639px'}
+                                            minWidth={'639px'}
                                             textAlign="left"
                                             fontWeight={400}
                                             ml={16}
@@ -466,13 +486,13 @@ const Properties = (props: any) => {
                                         >
                                             <Flex>
                                                 <Center>
-                                                    <Text mt={'15px'} color={textColor2} lineHeight={'22px'} fontWeight={600}>
+                                                    <Text mt={'15px'} color={accesstextColor} fontWeight={600}>
                                                         Description
                                                     </Text>
                                                     <EditableControls />
                                                 </Center>
                                             </Flex>
-                                            <Box maxWidth={'425px'} maxHeight={'80px'} overflowY={'auto'} color={accesstextColor}>
+                                            <Box maxWidth={'639px'} maxHeight={'40px'} overflowY={'auto'} color={textColor2} fontWeight={400} cursor={'pointer'}>
                                                 <EditablePreview />
                                                 <Textarea as={EditableInput} />
                                             </Box>
@@ -495,7 +515,7 @@ const Properties = (props: any) => {
 
                 <Divider color={'default.dividerColor'} />
                 <ModalFooter>
-                    <Button onClick={props.onClose} bg={'default.shareModalButton'} borderRadius={'2'} mb={19} mr={20} mt={'19'} width={'72px'} height={'40px'}>
+                    <Button onClick={props.onClose} bg={'default.toolbarButton'} borderRadius={'3'} mb={19} mr={20} mt={'19'} width={'72px'} height={'40px'}>
                         Close
                     </Button>
                 </ModalFooter>

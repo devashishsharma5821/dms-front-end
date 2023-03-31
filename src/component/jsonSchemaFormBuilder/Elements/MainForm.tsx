@@ -32,7 +32,7 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
         }
 
         if (values?.computeId) {
-            formSchema['default'].value = values.computeId;
+            formSchema['compute_id'].value = values.computeId;
         }
 
         if (values?.workers) {
@@ -62,7 +62,7 @@ const MainForm = ({ values, formSchema, initForm, handleSubmit, onClose, isEdit,
     return (
         <form className="needs-validation" onSubmit={handleSubmit}>
             {Object.keys(formSchema).map((key, idx) => {
-                return <GetFormElements uniqueKey={`${key}_${idx}`} elementName={key} formSchemaKey={formSchema[key]} defaultValue={formSchema[key].defaultValue} isEdit={isEdit} min={''} />;
+                return <GetFormElements uniqueKey={`${key}_${idx}`} elementName={key} formSchemaKey={formSchema[key]} defaultValue={formSchema[key].defaultValue} isEdit={isEdit} />;
             })}
             <Box borderTop={'1px solid #EAEAEA'} pt={'10px'} className="main-container">
                 <Button type="button" variant="outline" colorScheme="blue" className="cancel-button" onClick={onClose}>

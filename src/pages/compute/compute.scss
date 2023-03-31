@@ -19,22 +19,10 @@ div.ag-center-cols-container {
     color: rgb(3, 135, 176);
     cursor: pointer;
 }
-.ag-theme-alpine {
-    --ag-foreground-color: #333333;
-    --ag-background-color: white;
-    --ag-header-foreground-color: #333333;
-    --ag-header-background-color: #f6f6f6;
-    font-family: 'IBM Plex Sans';
-}
-.ag-ltr .ag-cell {
-    font-size: 16px;
-    font-weight: 400;
-}
 .ag-header-cell-text {
     font-size: 16px;
     font-weight: 600;
 }
-
 .selectDropDown {
     padding-right: 25px;
 }
