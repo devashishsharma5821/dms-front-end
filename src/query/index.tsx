@@ -514,6 +514,18 @@ export const createExperiment = (variables: any) => {
   )
 }`;
 };
+
+export const cloneExperiment = (variables: any) => {
+    // TODO replace transformer_libary_version to unhardcode.
+    return gql`mutation {
+  dmsCloneExperiment(
+    project_id: "${variables.projectSelected}"
+    experiment_id: "${variables.experimentId}",
+    name: "${variables.experimentName}",
+    transformer_library_version: "adf_library-1.3.0+gce603324a-cp38-cp38-linux_x86_64.whl"
+  )
+}`;
+};
 export const GET_EXPERIMENT = (experiment_id: string) => {
     return gql`
   query {
