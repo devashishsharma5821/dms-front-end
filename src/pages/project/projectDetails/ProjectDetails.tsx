@@ -356,7 +356,6 @@ const ProjectDetails = (props: any) => {
                                             <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
                                                 {getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)}
                                             </Text>
-
                                             <Flex flexDir={'row'}>
                                                 <Box>
                                                     <Text ml={16} color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
@@ -416,6 +415,8 @@ const ProjectDetails = (props: any) => {
                                                         </HStack>
                                                     </PopoverContent>
                                                 </Popover>
+                                            </Flex>{' '}
+                                            <Flex ml={'10px'} mt={'8px'} minHeight={'24px'}>
                                                 <Center borderRadius={3}>
                                                     <>
                                                         <HStack spacing={4}>
@@ -465,7 +466,6 @@ const ProjectDetails = (props: any) => {
                                                     </>
                                                 </Center>
                                             </Flex>
-
                                             <Editable
                                                 height={'80px'}
                                                 maxWidth={'400px'}
@@ -479,13 +479,13 @@ const ProjectDetails = (props: any) => {
                                             >
                                                 <Flex>
                                                     <Center>
-                                                        <Text mt={'15px'} color={textColor2} lineHeight={'22px'} fontWeight={600}>
+                                                        <Text mt={'14px'} color={textColor2} fontWeight={600}>
                                                             Description
                                                         </Text>
                                                         <EditableControls />
                                                     </Center>
                                                 </Flex>
-                                                <Box maxWidth={'425px'} maxHeight={'80px'} overflowY={'auto'} color={accesstextColor}>
+                                                <Box maxWidth={'425px'} maxHeight={'48px'} overflowY={'auto'} color={accesstextColor}>
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>

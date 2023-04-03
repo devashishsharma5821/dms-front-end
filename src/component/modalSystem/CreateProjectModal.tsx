@@ -28,10 +28,10 @@ import {
     TagCloseButton,
     HStack,
     PopoverContent,
-    Stack,
     ButtonGroup,
     Popover,
-    createStandaloneToast
+    createStandaloneToast,
+    AvatarGroup
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import Share from './Share';
@@ -39,7 +39,7 @@ import { CreateProject, ProjectCreate, ProjectCreateDetail, ProjectEdit, Project
 import client from '../../apollo-client';
 import { createAccess, createProject, editProject } from '../../query';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
-import { AllUsers, DMSAccessLevel } from '../../models/profile';
+import { AllUsers } from '../../models/profile';
 import { ShareCreate, ShareCreateDetail } from '../../models/share';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { getToastOptions } from '../../models/toastMessages';
@@ -225,7 +225,7 @@ const CreateProjectModal = (props: any) => {
                             <form onSubmit={handleSubmit}>
                                 <VStack align="flex-start">
                                     <FormControl isInvalid={!!errors.name && touched.name} isRequired>
-                                        <FormLabel htmlFor="notebookName" color={textColorTitle} mb={6}>
+                                        <FormLabel htmlFor="notebookName" color={textColorTitle} mb={6} fontWeight={600}>
                                             Project Name
                                         </FormLabel>
                                         <Field
@@ -248,21 +248,32 @@ const CreateProjectModal = (props: any) => {
                                         <FormErrorMessage>{errors.name}</FormErrorMessage>
                                     </FormControl>
                                     <FormControl isInvalid={!!errors.description}>
-                                        <FormLabel htmlFor="description" color={textColorTitle} mb={6} mt={'16px'}>
+                                        <FormLabel htmlFor="description" color={textColorTitle} mb={6} mt={'16px'} fontWeight={600}>
                                             Description
                                         </FormLabel>
-                                        <Field borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Textarea} id="description" name="description" variant="outline" />
+                                        <Field
+                                            borderRadius={3}
+                                            border={'1px'}
+                                            borderColor={'light.lighterGrayishBlue'}
+                                            as={Textarea}
+                                            id="description"
+                                            name="description"
+                                            variant="outline"
+                                            placeholder="Some text"
+                                            pt={'5px'}
+                                            pl={'6px'}
+                                        />
                                         <FormErrorMessage>{errors.description}</FormErrorMessage>
                                         <Flex>
                                             <Center>
-                                                <Text color={textColor} mt={'20'}>
+                                                <Text color={textColorTitle} mt={'20'} fontWeight={600}>
                                                     Tags:
                                                 </Text>
                                                 <Center>
                                                     {addTagClicked && (
-                                                        <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
+                                                        <Box mt={16} minWidth={'auto'} width={'auto'}>
                                                             <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={true}>
-                                                                <PopoverContent p={5}>
+                                                                <PopoverContent p={5} mt={'180px'}>
                                                                     <HStack spacing={4}>
                                                                         <FormControl>
                                                                             <Field
@@ -278,7 +289,13 @@ const CreateProjectModal = (props: any) => {
                                                                             <FormErrorMessage>{errors.description}</FormErrorMessage>
                                                                         </FormControl>
                                                                         <ButtonGroup display="flex" justifyContent="flex-end">
-                                                                            <Button color={'white'} bg={'default.toolbarButton'} borderRadius={'3'} onClick={() => addTagHandler('add', values)}>
+                                                                            <Button
+                                                                                color={'white'}
+                                                                                bg={'default.toolbarButton'}
+                                                                                borderRadius={'3'}
+                                                                                onClick={() => addTagHandler('add', values)}
+                                                                                fontWeight={600}
+                                                                            >
                                                                                 Add Tag
                                                                             </Button>
                                                                         </ButtonGroup>
@@ -288,14 +305,14 @@ const CreateProjectModal = (props: any) => {
                                                         </Box>
                                                     )}
                                                     {!addTagClicked && (
-                                                        <Box ml={14} mt={16} minWidth={'auto'} width={'auto'}>
+                                                        <Box ml={'8px'} mt={16} minWidth={'auto'} width={'auto'}>
                                                             <HStack spacing={4}>
                                                                 {values &&
                                                                     values.tags &&
                                                                     values.tags.split(',').length > 0 &&
                                                                     values.tags.split(',').map((tag, tagIndex) => {
                                                                         return (
-                                                                            <Tag size={'sm'} key={tag} borderRadius="none" variant="solid">
+                                                                            <Tag size={'sm'} key={tag} borderRadius={3} variant="solid" bg={'#F2F4F8'} pt={'2px'} pl={'6px'} color={'#1A3F59'}>
                                                                                 <TagLabel>{tag}</TagLabel>
                                                                                 <TagCloseButton onClick={() => removeTag(tag, tagIndex, values)} />
                                                                             </Tag>
@@ -306,24 +323,24 @@ const CreateProjectModal = (props: any) => {
                                                     )}
                                                 </Center>
                                                 {!addTagClicked && (
-                                                    <Text onClick={() => addTagHandler('trigger', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
+                                                    <Text onClick={() => addTagHandler('trigger', values)} cursor={'pointer'} color={'default.toolbarButton'} mt={'20'} ml={'8px'} fontWeight={600}>
                                                         + Add Tag(s)
                                                     </Text>
                                                 )}
                                                 {addTagClicked && (
-                                                    <Text onClick={() => addTagHandler('add', values)} cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'}>
+                                                    <Text onClick={() => addTagHandler('add', values)} cursor={'pointer'} color={'default.toolbarButton'} mt={'20'} ml={'8px'} fontWeight={600}>
                                                         Add Tag
                                                     </Text>
                                                 )}
                                             </Center>
                                         </Flex>
 
-                                        <Flex mb={'21px'}>
+                                        <Flex mb={'8px'}>
                                             <Center>
-                                                <Text color={projectId} mt={'20'}>
+                                                <Text color={projectId} mt={'20'} fontWeight={400}>
                                                     Shared with:
                                                 </Text>
-                                                <Text cursor={'pointer'} color={'default.shareModalButton'} mt={'20'} ml={'8px'} onClick={addShareMemberModal.onOpen}>
+                                                <Text cursor={'pointer'} color={'default.toolbarButton'} mt={'20'} ml={'8px'} onClick={addShareMemberModal.onOpen} fontWeight={600}>
                                                     + Add Member(s)
                                                 </Text>
                                                 {addShareMemberModal.isOpen && (
@@ -357,24 +374,26 @@ const CreateProjectModal = (props: any) => {
                                         {!isEdit && (
                                             <Flex>
                                                 <Center>
-                                                    {accessUserListCreateMode &&
-                                                        accessUserListCreateMode.map((user: any, userIndex: any) => {
-                                                            return (
-                                                                <Avatar
-                                                                    mr={'5px'}
-                                                                    key={userIndex}
-                                                                    p={'5px'}
-                                                                    borderRadius="full"
-                                                                    boxSize="42px"
-                                                                    name={`${user.firstName} ${user.lastName}`}
-                                                                    color={'default.whiteText'}
-                                                                />
-                                                            );
-                                                        })}
+                                                    <AvatarGroup size={'sm'} max={3} spacing={1}>
+                                                        {accessUserListCreateMode &&
+                                                            accessUserListCreateMode.map((user: any, userIndex: any) => {
+                                                                return (
+                                                                    <Avatar
+                                                                        mr={'5px'}
+                                                                        key={userIndex}
+                                                                        p={'5px'}
+                                                                        borderRadius="full"
+                                                                        boxSize="32px"
+                                                                        name={`${user.firstName} ${user.lastName}`}
+                                                                        color={'default.whiteText'}
+                                                                    />
+                                                                );
+                                                            })}
+                                                    </AvatarGroup>
                                                 </Center>
                                             </Flex>
                                         )}
-                                        <Divider color={'default.dividerColor'} mt={'26px'} ml={'-24px'} width={'509px'} />
+                                        <Divider color={'default.dividerColor'} mt={'24px'} ml={'-24px'} width={'509px'} />
 
                                         <ModalFooter mb={'18px'} mt={'21px'} mr={'0px'}>
                                             <Button
