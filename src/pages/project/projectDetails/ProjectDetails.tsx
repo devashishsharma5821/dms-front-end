@@ -22,6 +22,9 @@ import {
     Stack,
     Popover,
     PopoverTrigger,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverArrow,
     PopoverContent,
     Textarea,
     createStandaloneToast
@@ -436,9 +439,27 @@ const ProjectDetails = (props: any) => {
                                                                                 ml={8}
                                                                                 pr={'5px'}
                                                                             >
-                                                                                <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
-                                                                                    + {SingleProjectData.basic.tags.length - 2} more
-                                                                                </TagLabel>
+                                                                                <Popover
+                                                                                    placement='right'
+                                                                                    closeOnBlur={false}
+                                                                                >
+                                                                                    <PopoverTrigger>
+                                                                                        <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
+                                                                                            + {SingleProjectData.basic.tags.length - 2} more
+                                                                                        </TagLabel>
+                                                                                    </PopoverTrigger>
+                                                                                    <PopoverContent color='white' bg='blue.800' borderColor='blue.800'>
+                                                                                        <PopoverArrow />
+                                                                                        <PopoverCloseButton />
+                                                                                        <PopoverBody>
+                                                                                            {SingleProjectData.basic.tags.map((tagPop: any) => {
+                                                                                                return (
+                                                                                                    <Text fontSize={'14px'} fontWeight={600} pl={6} pr={6} key={tagPop}>{tagPop}</Text>
+                                                                                                )
+                                                                                            })}
+                                                                                        </PopoverBody>
+                                                                                    </PopoverContent>
+                                                                                </Popover>
                                                                             </Tag>
                                                                         );
                                                                     } else if (tagIndex < 2) {
