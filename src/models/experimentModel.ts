@@ -38,3 +38,10 @@ export class ExperimentEdit<T> {
 export class ExperimentEditDetail {
     dmsEditExperiment!: boolean;
 }
+
+export class CloneExperiment<T> {
+    dmsCloneExperiment!: T;
+}
+export class CloneExperimentDetail {
+    dmsCloneExperiment!: boolean;
+}

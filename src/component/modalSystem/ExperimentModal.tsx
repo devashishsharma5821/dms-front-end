@@ -155,7 +155,7 @@ const ExperimentModal = (props: any) => {
     }, [AllUsersData]);
 
     return (
-        <Modal size={'md'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal size={'md'} closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
             <ModalContent minWidth={'653px'}>
                 <ModalHeader color={textColor} mt={'20px'} ml={'20px'}>

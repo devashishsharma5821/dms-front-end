@@ -13,12 +13,9 @@ import client from '../../apollo-client';
 import { ComputeDelete, createCompute, DeleteComputeDetail } from '../../models/computeDetails';
 import { dmsDeleteCompute, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling } from '../../query';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
-import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { convertTime, getUserNameFromId } from '../../utils/common.utils';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../models/toastMessages';
-import { String } from 'lodash';
-import { ProjectEdit, ProjectEditDetail } from '../../models/project';
 import { DocumentNode } from 'graphql';
 import { dmsCreateComputeResponse } from '../../models/dmsCreateComputeResponse';
 const { toast } = createStandaloneToast();
@@ -237,7 +234,7 @@ const ComputeDetails = () => {
                                         {computeData.id}
                                     </Text>
                                 </Box>
-                                <Box width={'120px'} left={'20'}>
+                                <Box width={'150px'} left={'20'}>
                                     <Text fontSize={14}>Compute Name</Text>
                                     <Text fontSize={14} fontWeight={600}>
                                         {computeData.name}
@@ -251,10 +248,32 @@ const ComputeDetails = () => {
                                         {convertTime(computeData.created_at, false)}
                                     </Text>
                                 </Box>
-                                <Box width={'120px'}>
+                                <Box width={'150px'}>
                                     <Text fontSize={14}>Last Modified</Text>
                                     <Text fontSize={14} fontWeight={600}>
                                         {convertTime(computeData.updated_at, true)}
+                                    </Text>
+                                </Box>
+                            </Box>
+                            <Box width={'360px'} ml={15} className="computedetailsContainer-2subsub-2sub-3">
+                                <Box width={'150px'}>
+                                    <Text fontSize={14}>Start On</Text>
+                                    <Text fontSize={14} fontWeight={600}>
+                                        {convertTime(computeData.tasks[0].start_time, false)}
+                                    </Text>
+                                </Box>
+                                <Box width={'150px'}>
+                                    <Text fontSize={14}>End On</Text>
+                                    <Text fontSize={14} fontWeight={600}>
+                                        {convertTime(computeData.tasks[0].end_time, false)}
+                                    </Text>
+                                </Box>
+                            </Box>
+                            <Box width={'360px'} ml={15} className="computedetailsContainer-2subsub-2sub-3">
+                                <Box width={'150px'}>
+                                    <Text fontSize={14}>Duration</Text>
+                                    <Text fontSize={14} fontWeight={600}>
+                                        {(computeData.tasks[0].execution_duration === 0) ? 'N/A' : `${computeData.tasks[0].execution_duration / 60000} mins` }
                                     </Text>
                                 </Box>
                             </Box>

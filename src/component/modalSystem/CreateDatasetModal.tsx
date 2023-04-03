@@ -147,7 +147,7 @@ const CreateDataset = (props: any) => {
         setSelectedProjectId(formFields.projectSelected);
     };
     return (
-        <Modal size={'lg'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal size={'lg'} closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
             <ModalContent minWidth={'901px'}>
                 <ModalHeader color={textColor} mt={'13px'} ml={'20px'}>

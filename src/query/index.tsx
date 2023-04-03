@@ -289,6 +289,13 @@ export const getComputeListData = () => {
             dmsComputes {
                 id
                 name
+                 tasks {
+                    task_key
+                    cleanup_duration
+                    start_time
+                    end_time
+                    execution_duration
+                    }
                 resources {
                     instance_pool {
                         worker_pool_id
@@ -361,6 +368,8 @@ export const GET_ALL_PROJECTS = gql`
                 datasources {
       id
       name
+       created_by
+      created_at
       spec {
         ... on DMSDatabricksFileUpload {
           path
@@ -501,6 +510,18 @@ export const createExperiment = (variables: any) => {
     name: "${variables.experimentName}",
     tags: ${JSON.stringify(variables.tags)},
     description: "${variables.description}",
+    transformer_library_version: "adf_library-1.3.0+gce603324a-cp38-cp38-linux_x86_64.whl"
+  )
+}`;
+};
+
+export const cloneExperiment = (variables: any) => {
+    // TODO replace transformer_libary_version to unhardcode.
+    return gql`mutation {
+  dmsCloneExperiment(
+    project_id: "${variables.projectSelected}"
+    experiment_id: "${variables.experimentId}",
+    name: "${variables.experimentName}",
     transformer_library_version: "adf_library-1.3.0+gce603324a-cp38-cp38-linux_x86_64.whl"
   )
 }`;
