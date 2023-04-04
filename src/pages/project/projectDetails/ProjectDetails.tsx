@@ -50,6 +50,7 @@ const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const projectDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
+    const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [deleteId, setDeleteId] = useState<string>('');
@@ -448,7 +449,7 @@ const ProjectDetails = (props: any) => {
                                                                                             + {SingleProjectData.basic.tags.length - 2} more
                                                                                         </TagLabel>
                                                                                     </PopoverTrigger>
-                                                                                    <PopoverContent color='white' bg='blue.800' borderColor='blue.800'>
+                                                                                    <PopoverContent color={textColor2} bg={themeBg} borderColor={themeBg}>
                                                                                         <PopoverArrow />
                                                                                         <PopoverCloseButton />
                                                                                         <PopoverBody>
