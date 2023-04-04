@@ -33,11 +33,11 @@ export const onPlayClickHandler: agGridClickHandler = async (id) => {
         const response = await client.mutate<ComputeRun<RunComputeDetail>>({
             mutation: dmsRunCompute(runComputeId)
         });
-        response && toast(getToastOptions(`Compute is succeeded`, 'success'));
+        response && toast(getToastOptions(`Compute is Starting`, 'success'));
         useAppStore.setState((state) => ({
             DmsComputeData: state.DmsComputeData.map((computeData: any) => {
                 if (runComputeId === computeData.id) {
-                    computeData.status = 'SUCCEEDED';
+                    computeData.status = 'STARTING';
                     return computeData;
                 }
                 if (!(runComputeId === computeData.id)) {
