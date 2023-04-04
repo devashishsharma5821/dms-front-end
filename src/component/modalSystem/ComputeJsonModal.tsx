@@ -13,14 +13,14 @@ import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../models/toastMessages';
-const { toast } = createStandaloneToast();
-
+import './ComputeJsonModal.scss';
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
     const navigate = useNavigate();
     const client = useApolloClient();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [isComputeCreated, setIsComputeCreated] = useState<boolean>(false);
+    const { toast } = createStandaloneToast();
     useEffect(() => {
         formSchema.worker_type_id.options = dbSettingsData;
         formSchema.driver_type_id.options = dbSettingsData;

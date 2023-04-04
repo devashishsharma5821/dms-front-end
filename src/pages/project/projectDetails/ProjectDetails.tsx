@@ -200,19 +200,22 @@ const ProjectDetails = (props: any) => {
 
     const handleAddTag = () => {
         tagPopOver.onClose();
-        setPopOverTag('');
-        SingleProjectData.basic.tags.push(popOverTag);
-        const variables = {
-            id: SingleProjectData.basic.id,
-            name: SingleProjectData.basic.name,
-            project_variables: SingleProjectData.basic.project_variables,
-            description: SingleProjectData.basic.description,
-            tags: [...SingleProjectData.basic.tags]
-        };
-        handleEditProject(variables, {
-            successMessage: 'Project Tags Edited Successfully',
-            errorMessage: 'Project Tags Failed To edit'
-        });
+        if(popOverTag !== '') {
+            SingleProjectData.basic.tags.push(popOverTag);
+            const variables = {
+                id: SingleProjectData.basic.id,
+                name: SingleProjectData.basic.name,
+                project_variables: SingleProjectData.basic.project_variables,
+                description: SingleProjectData.basic.description,
+                tags: [...SingleProjectData.basic.tags]
+            };
+            handleEditProject(variables, {
+                successMessage: 'Project Tags Edited Successfully',
+                errorMessage: 'Project Tags Failed To edit'
+            });
+            setPopOverTag('');
+        }
+
     };
     const handleRemoveTag = (tag: string) => {
         SingleProjectData.basic.tags = SingleProjectData.basic.tags.filter((tagToKeep) => {
