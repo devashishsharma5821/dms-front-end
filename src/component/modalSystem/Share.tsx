@@ -102,7 +102,6 @@ const Share = (props: any) => {
                 user.accessLevel = level;
             }
         });
-        console.log('asdfsdfsdf', newAccessList);
         setAccessUserList(newAccessList);
     };
     const deleteCreateProjectAccessRoles = (access: any) => {
@@ -134,6 +133,7 @@ const Share = (props: any) => {
                     })
                     .then(() => {
                         toast(getToastOptions(`Access removed Successfully`, 'success'));
+                        // TODO remove the api call, and manually change zustand store state using updateSingleProjectData
                         getAndUpdateSingleProjectData(params.projectId as string);
                         updateSpinnerInfo(false);
                     })
@@ -158,6 +158,7 @@ const Share = (props: any) => {
                     })
                     .then(() => {
                         toast(getToastOptions(`Project Permission Changed Successfully`, 'success'));
+                        // TODO remove the api call, and manually change zustand store state using updateSingleProjectData
                         getAndUpdateSingleProjectData(params.projectId as string);
                         updateSpinnerInfo(false);
                     })
@@ -192,8 +193,8 @@ const Share = (props: any) => {
                     })
                     .then(() => {
                         toast(getToastOptions(`Project Shared Successfully`, 'success'));
+                        // TODO remove the api call, and manually change zustand store state using updateSingleProjectData
                         getAndUpdateSingleProjectData(params.projectId as string);
-                        getAndUpdateAllProjectsData();
                         setUserValue([]);
                         updateSpinnerInfo(false);
                     })

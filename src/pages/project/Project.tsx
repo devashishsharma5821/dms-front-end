@@ -71,12 +71,14 @@ const Project = () => {
         }
     };
     useEffect(() => {
-        if (AllProjectsData === null) {
-            getAndUpdateAllProjectsData();
-        } else {
+        if (AllProjectsData?.length) {
             setAllProjectsData(AllProjectsData);
-        }
+        };
     }, [AllProjectsData]);
+
+    useEffect(() => {
+        getAndUpdateAllProjectsData();
+    }, [])
 
     const onCreateProjectSuccess = () => {
         getAndUpdateAllProjectsData();
