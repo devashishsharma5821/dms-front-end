@@ -36,7 +36,7 @@ const Settings = (props: any) => {
     }
 
     return (
-        <Modal size={'md'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} size={'md'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
             <ModalContent maxWidth={'458px'} height={'auto'}>
                 <ModalHeader mt={'20px'} ml={'15px'}>

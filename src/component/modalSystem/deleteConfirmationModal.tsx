@@ -38,7 +38,7 @@ export const DeleteConfirmationModal = ({ isOpen, onClose, submitDeleteHandler, 
 
     return (
         <>
-            <Modal closeOnOverlayClick={isOpen} isOpen={isOpen} onClose={onClose} isCentered>
+            <Modal closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay />
                 <ModalContent justifyContent="center" maxWidth={600} borderRadius="3px">
                     <ModalHeader fontSize="15px" padding="15px" borderBottom="1px solid rgb(234,234,234)">

@@ -231,7 +231,7 @@ const Share = (props: any) => {
         }
     };
     return (
-        <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} closeOnOverlayClick={false} isCentered>
+        <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} isCentered>
             <ModalOverlay />
             <ModalContent width={'713px'} borderRadius={'4'} maxHeight={'autos'}>
                 <ModalHeader color={shretextColor} mt={'13px'} ml={20} mb={'13px'}>

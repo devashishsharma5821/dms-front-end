@@ -44,7 +44,7 @@ const variablesData1 = {
             isOpen={props.isOpen}
             onClose={props.onClose}
             isCentered
-        
+               closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true}
             >        
           <ModalOverlay />
           <ModalContent width={'826px'} borderRadius={'2'} maxHeight={'534px'}>

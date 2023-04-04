@@ -241,7 +241,7 @@ const ExperimentsPage = () => {
                         label: {
                             text: currentObj?.name,
                             fill: '#08192E',
-                            fontFamily: 'ibm-plex-sans',
+                            fontFamily: 'IBM Plex Sans',
                             fontWeight: '600',
                             fontSize: 14,
                             strokeWidth: 1,
