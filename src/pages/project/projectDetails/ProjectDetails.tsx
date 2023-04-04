@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Text,
@@ -19,7 +19,6 @@ import {
     TagCloseButton,
     HStack,
     FormControl,
-    Stack,
     Popover,
     PopoverTrigger,
     PopoverBody,
@@ -30,11 +29,18 @@ import {
     createStandaloneToast
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
-import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete, ProjectEdit, ProjectEditDetail } from '../../../models/project';
+import {
+    DeleteProjectDetail,
+    GetSingleProjectAppStoreState,
+    GetSingleProjectDetail,
+    ProjectDelete,
+    ProjectEdit,
+    ProjectEditDetail
+} from '../../../models/project';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingleProjectData } from '../../../zustandActions/projectActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
-import { CloseIcon, PencilIcon } from '../../../assets/icons';
+import { PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
@@ -56,7 +62,6 @@ const ProjectDetails = (props: any) => {
     const [deleteId, setDeleteId] = useState<string>('');
     const [inlineDescription, setInlineDescription] = useState<string>('');
     const [inlineProjectName, setInlineProjectName] = useState<string>('');
-    const [inlineProjectField, setInlineProjectField] = useState<boolean>(false);
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const [popOverTag, setPopOverTag] = React.useState('');
     const deleteConfirmationModal = useDisclosure();
@@ -108,8 +113,7 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
-        updateSpinnerInfo(true);
-        if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
+        if (SingleProjectData === null) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
             updateSpinnerInfo(false);
@@ -120,22 +124,23 @@ const ProjectDetails = (props: any) => {
             }
         }
     }, [SingleProjectData]);
+
     useEffect(() => {
-        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
         } else {
-            updateSpinnerInfo(false);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
         }
     }, [AllUsersData]);
-    const editProjectModal = () => {
-        setInlineProjectField(true);
-        //createProjectModal.onOpen();
-    };
+
+    useEffect(() => {
+        updateSpinnerInfo(true);
+        return ()=>{updateSingleProjectData(null)}
+    },[])
+
     const onCreateProjectSuccess = () => {
         getAndUpdateSingleProjectData(SingleProjectData.basic.id);
         createProjectModal.onClose();
@@ -185,17 +190,10 @@ const ProjectDetails = (props: any) => {
             })
             .then(() => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
-                getAndUpdateAllProjectsData();
-                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
                 updateSpinnerInfo(false);
-                setInlineProjectField(false);
-                setInlineProjectName('');
             })
             .catch((err) => {
                 updateSpinnerInfo(false);
-                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
-                setInlineProjectField(false);
-                setInlineProjectName('');
                 toast(getToastOptions(`${err}`, 'error'));
             });
     };
@@ -296,8 +294,6 @@ const ProjectDetails = (props: any) => {
                                 {' '}
                                 <LeftArrow />
                             </Button>
-                            {SingleProjectData && (
-                                <>
                                     <Flex>
                                         <Editable
                                             maxWidth={'800px'}
@@ -338,8 +334,6 @@ const ProjectDetails = (props: any) => {
                                             Delete
                                         </Button>
                                     </Flex>
-                                </>
-                            )}
                         </Flex>
                         <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
                             <Flex>
@@ -348,7 +342,7 @@ const ProjectDetails = (props: any) => {
                                         p={'5px'}
                                         borderRadius="full"
                                         boxSize="42px"
-                                        name={getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)}
+                                        name={getUserNameFromId(AllUsersData, SingleProjectData.basic.created_by)}
                                         color={'default.whiteText'}
                                         mt={'24px'}
                                     />
@@ -358,7 +352,7 @@ const ProjectDetails = (props: any) => {
                                                 Created by
                                             </Text>
                                             <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                {getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)}
+                                                {getUserNameFromId(AllUsersData,  SingleProjectData.basic.created_by)}
                                             </Text>
                                             <Flex flexDir={'row'}>
                                                 <Box>
@@ -366,15 +360,15 @@ const ProjectDetails = (props: any) => {
                                                         Project ID
                                                     </Text>
                                                     <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData && SingleProjectData.basic.id}
+                                                        {SingleProjectData.basic.id}
                                                     </Text>
                                                 </Box>
                                                 <Box ml={'145px'}>
                                                     <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Project Name
                                                     </Text>
-                                                    <Text title={SingleProjectData && SingleProjectData.basic.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {getTruncatedText(SingleProjectData && SingleProjectData.basic.name, 50)}
+                                                    <Text title={SingleProjectData.basic.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                        {getTruncatedText(SingleProjectData.basic.name, 50)}
                                                     </Text>
                                                 </Box>
                                             </Flex>
@@ -384,7 +378,7 @@ const ProjectDetails = (props: any) => {
                                                         Created On
                                                     </Text>
                                                     <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData && convertTime(SingleProjectData.basic.created_at, false)}
+                                                        {convertTime(SingleProjectData.basic.created_at, false)}
                                                     </Text>
                                                 </Box>
                                                 <Box ml={'51px'}>
@@ -392,7 +386,7 @@ const ProjectDetails = (props: any) => {
                                                         Last Modified
                                                     </Text>
                                                     <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData && convertTime(SingleProjectData.basic.updated_at, true)}
+                                                        {convertTime(SingleProjectData.basic.updated_at, true)}
                                                     </Text>
                                                 </Box>
                                             </Flex>
@@ -424,8 +418,7 @@ const ProjectDetails = (props: any) => {
                                                 <Center borderRadius={3}>
                                                     <>
                                                         <HStack spacing={4}>
-                                                            {SingleProjectData &&
-                                                                SingleProjectData.basic.tags !== null &&
+                                                            {   SingleProjectData.basic.tags !== null &&
                                                                 SingleProjectData.basic.tags.map((tag: string, tagIndex: number) => {
                                                                     if (tagIndex === 2) {
                                                                         return (

@@ -56,7 +56,7 @@ export type updateDmsDatabricksCredentialsValidToken = (token: boolean) => void;
 export type updateDmsComputeData = (computeData: DmsComputeData[]) => void;
 export type updateTransformersData = (transformersData: TransformerInfo[]) => void;
 export type updateAllProjectsData = (projectsData: GetAllProjectsDetail[]) => void;
-export type updateSingleProjectData = (projectData: GetSingleProjectDetail) => void;
+export type updateSingleProjectData = (projectData: any) => void;
 export type updateUserConfig = (UserConfig: []) => void;
 export type connectionEstablished = () => void;
 export type receiveMessage = (action: any) => void;

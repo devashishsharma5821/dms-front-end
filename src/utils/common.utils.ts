@@ -1,5 +1,5 @@
 import { AllUsers } from '../models/profile';
-import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project';
+import { GetAllProjectsDetail } from '../models/project';
 import moment from 'moment';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
@@ -112,7 +112,6 @@ export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type
         const userOnlyProjects = projectFilteredData.filter((project: GetAllProjectsDetail ) => {
             return project.created_by === userId;
         });
-        console.log("project Selected", userId, projectSelected, type, userOnlyProjects)
         return userOnlyProjects;
     } else if (type === 'sharedWithMe') {
         const userId = userConfig.userConfiguration.user.userId;
