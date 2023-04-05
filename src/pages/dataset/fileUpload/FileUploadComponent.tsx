@@ -17,23 +17,29 @@ const FileUploadComponent = (props: any) => {
 
     const handleFile = (files: any) => {
         updateSpinnerInfo(true);
-        console.log("props.", props.projectId)
-        client
-            .mutate<UploadCSV<UploadCSVDetail>>({
-                mutation: uploadCSVDataset(),
-                variables: { file: files[0], projectId: props.projectId, datasetName: props.datasetName },
-                context: { useMultipart: true }
-            })
-            .then((response: any) => {
-                setTimeout(() => {
-                    props.getResponseFromFileUpload(response.data.dmsDatabricksUploadDBFS);
+        let fileSizeMB = files[0].size / (1024 ** 2);
+        if(fileSizeMB > 100) {
+            toast(getToastOptions(`Please upload file less than 100 MB`, 'error'));
+            updateSpinnerInfo(false);
+
+        } else {
+            client
+                .mutate<UploadCSV<UploadCSVDetail>>({
+                    mutation: uploadCSVDataset(),
+                    variables: { file: files[0], projectId: props.projectId, datasetName: props.datasetName },
+                    context: { useMultipart: true }
+                })
+                .then((response: any) => {
+                    setTimeout(() => {
+                        props.getResponseFromFileUpload(response.data.dmsDatabricksUploadDBFS);
+                        updateSpinnerInfo(false);
+                    },200)
+                })
+                .catch(() => {
                     updateSpinnerInfo(false);
-                },200)
-            })
-            .catch(() => {
-                updateSpinnerInfo(false);
-                toast(getToastOptions(`Upload Error`, 'error'));
-            });
+                    toast(getToastOptions(`Upload Error`, 'error'));
+                });
+        }
     };
     // handle drag events
     const handleDrag = (evt: any) => {
@@ -72,7 +78,7 @@ const FileUploadComponent = (props: any) => {
 
     return (
         <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
-            <input ref={inputRef} type="file" id="input-file-upload" multiple={true} onChange={handleChange} />
+            <input ref={inputRef} type="file" onClick={(e: any) => (e.target.value = null)} id="input-file-upload" accept=".csv,.parquet" multiple={true} onChange={handleChange} />
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? 'drag-active' : ''}>
                 <div>
                     <Text fontSize={'21px'} fontWeight={600} color={titleDarkCSV} mt={'86px'}>

@@ -34,6 +34,7 @@ const CreateDataset = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
     const [datasetName, setDatasetName] = useState('');
+    const [datasetId, setDatasetId] = useState('');
     const [selectedProjectId, setSelectedProjectId] = useState('');
     const gridRef = useRef<AgGridReact<any>>(null);
     const gridStyle = useMemo(() => ({ height: '300px', width: '856px' }), []);
@@ -55,13 +56,9 @@ const CreateDataset = (props: any) => {
         // TODO After backend adds the delete dataset Id as a input add the delete dataset mutation
         if (screenState.screen3) {
             updateSpinnerInfo(true);
-            const deleteVariables = {
-                projectId: selectedProjectId,
-                datasetName: datasetName
-            };
             client
                 .mutate<DeleteDataset<DeleteDatasetDetail>>({
-                    mutation: deleteDataset(deleteVariables)
+                    mutation: deleteDataset(datasetId)
                 })
                 .then(() => {
                     toast(getToastOptions(`Dataset Delete Successfully`, 'success'));
@@ -103,6 +100,7 @@ const CreateDataset = (props: any) => {
         if (!uploadResponse) {
             toast(getToastOptions(`File Upload Failed, contact support`, 'error'));
         } else {
+            setDatasetId(uploadResponse.id);
             const colDefKeysSchema = [
                 {
                     field: 'col_name',
