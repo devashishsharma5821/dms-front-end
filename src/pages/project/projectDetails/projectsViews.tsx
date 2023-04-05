@@ -67,7 +67,6 @@ const ProjectsViews = (props: any) => {
                                 <div key={project.id}>
                                     <Box
                                         key={project.id}
-                                        cursor={'pointer'}
                                         bg={'#FFFFFF'}
                                         width={'309px'}
                                         border={'1px'}
@@ -77,7 +76,7 @@ const ProjectsViews = (props: any) => {
                                         ml={'22'}
                                         mt={'20'}
                                     >
-                                        <Box onClick={() => navigateToDetails(project.id)} key={project.id} maxHeight={'69px'} bg={'light.lightGrayishBlue'} borderTopRadius={8}>
+                                        <Box onClick={() => navigateToDetails(project.id)} key={project.id} maxHeight={'69px'} bg={'light.lightGrayishBlue'} borderTopRadius={8} cursor={'pointer'}>
                                             <Center ml={'23px'} pt={'8px'} justifyContent={'flex-start'}>
                                                 {UserConfig.userConfiguration.user.userId !== project.created_by ? <People color={'#666C80'} /> : <Documentation color={'#666C80'} />}
 
@@ -99,7 +98,7 @@ const ProjectsViews = (props: any) => {
                                                         mt={'20px'}
                                                     />
                                                     <Center>
-                                                        <Box width={'300px'}>
+                                                        <Box width={'245px'}>
                                                             <Text ml={10} color={'default.titleForShare'} mt={'20px'} fontWeight={600} height={'22px'}>
                                                                 Created by
                                                             </Text>
