@@ -30,6 +30,9 @@ export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async
     const response = await client.query<ComputeDetailListResponse<Array<ComputeDetail>>>({
         query: GET_COMPUTELIST
     });
+    if(response.errors?.length) {
+        toast(getToastOptions(response.errors[0].message, 'error'));
+    }
     useAppStore.setState(() => ({ DmsComputeData: response.data.dmsComputes }));
 };
 
@@ -37,6 +40,9 @@ export const getAndUpdateDmsSingleComputeData: getAndUpdateDmsSingleComputesData
     const response = await client.query<ComputeDetailSingleListResponse<ComputeDetail>>({
         query: getSingleComputeData(computeId)
     });
+    if(response.errors?.length) {
+        toast(getToastOptions(response.errors[0].message, 'error'));
+    }
     useAppStore.setState(() => ({ DmsSingleComputeData: response.data.dmsCompute }));
 };
 
