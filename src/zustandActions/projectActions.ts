@@ -23,4 +23,4 @@ export const getAndUpdateSingleProjectData: getAndUpdateSingleProjectDataType = 
     });
     useAppStore.setState(() => ({ SingleProjectData: response?.data?.dmsProject }));
 };
-export const updateSingleProjectData: updateSingleProjectDataType = (SingleProjectData) => useAppStore.setState(() => ({ SingleProjectData: SingleProjectData }));
+export const updateSingleProjectData: updateSingleProjectDataType = (SingleProjectData: any) => useAppStore.setState(() => ({ SingleProjectData: SingleProjectData }));
