@@ -196,8 +196,8 @@ const Properties = (props: any) => {
             tags: [...props.data.tags]
         };
         handleEditExperiment(variables, {
-            successMessage: 'Project Tags Edited Successfully',
-            errorMessage: 'Project Tags Failed To edit'
+            successMessage: 'Project Tags Deleted Successfully',
+            errorMessage: 'Project Tags Failed To Delete'
         });
     };
     return (

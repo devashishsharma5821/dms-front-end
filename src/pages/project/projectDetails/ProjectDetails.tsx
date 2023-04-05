@@ -210,8 +210,8 @@ const ProjectDetails = (props: any) => {
                 tags: [...SingleProjectData.basic.tags]
             };
             handleEditProject(variables, {
-                successMessage: 'Project Tags Edited Successfully',
-                errorMessage: 'Project Tags Failed To edit'
+                successMessage: 'Project Tags Added Successfully',
+                errorMessage: 'Project Tags Failed To Add'
             });
             setPopOverTag('');
         }
@@ -229,8 +229,8 @@ const ProjectDetails = (props: any) => {
             tags: [...SingleProjectData.basic.tags]
         };
         handleEditProject(variables, {
-            successMessage: 'Project Tags Edited Successfully',
-            errorMessage: 'Project Tags Failed To edit'
+            successMessage: 'Project Tags Deleted Successfully',
+            errorMessage: 'Project Tags Failed To Delete'
         });
     };
     const handleEditName = () => {
