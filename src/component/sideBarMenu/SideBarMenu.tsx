@@ -322,11 +322,7 @@ const SideBarMenu = () => {
                 {createDatasetModal.isOpen && <CreateDatasetModal isOpen={createDatasetModal.isOpen} onClose={createDatasetModal.onClose} />}
                 {createExperimentModal.isOpen && <ExperimentModal isOpen={createExperimentModal.isOpen} onClose={createExperimentModal.onClose} />}
                 {createProjectFromModal.isOpen && (
-                    <LeftSideBarMenuCreateProjectModal
-                        isOpen={createProjectFromModal.isOpen}
-                        onClose={createProjectFromModal.onClose}
-                        openCreateProjectFromScratch={openCreateProjectFromScratch}
-                    />
+                    <LeftSideBarMenuCreateProjectModal isOpen={createProjectFromModal.isOpen} onClose={createProjectFromModal.onClose} openCreateProjectFromScratch={openCreateProjectFromScratch} />
                 )}
                 {createProjectModal.isOpen && (
                     <CreateProjectModal
