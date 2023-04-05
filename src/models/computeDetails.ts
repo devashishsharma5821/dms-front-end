@@ -16,6 +16,7 @@ export class ComputeDetail {
     totalCores?: number;
 }
 
+
 export interface InstancePoolsType {
     instance_pool_id: string;
     instance_pool_name: string;
@@ -66,7 +67,9 @@ export class nodeType {
     worker_type_id!: string;
     driver_type_id!: any;
 }
-
+export class ComputeDetailSingleListResponse<T> {
+    dmsCompute!: T;
+}
 export class ComputeDetailListResponse<T> {
     dmsComputes!: T;
 }

@@ -1,11 +1,22 @@
 import client from '../apollo-client';
-import { agGridClickHandler, ComputeDetail, ComputeDetailListResponse, ComputeRun, DbSettingsDetail, GetDbSettingsType, RunComputeDetail } from '../models/computeDetails';
-import { getComputeListData, dmsRunCompute, GET_DB_SETTINGS } from '../query';
+import {
+    agGridClickHandler,
+    ComputeDetail,
+    ComputeDetailListResponse,
+    ComputeDetailSingleListResponse,
+    ComputeRun,
+    DbSettingsDetail,
+    GetDbSettingsType,
+    RunComputeDetail
+} from '../models/computeDetails';
+import { getComputeListData, dmsRunCompute, GET_DB_SETTINGS, getSingleComputeData } from '../query';
 import useAppStore from '../store';
 import {
     getAndUpdateDmsComputeData as getAndUpdateDmsComputesDataType,
+    getAndUpdateDmsSingleComputeData as getAndUpdateDmsSingleComputesDataType,
     setComputeState as setComputeStateType,
     updateDmsComputeData as updateDmsComputeDataType,
+    updateDmsSingleComputeData as updateDmsSingleComputeDataType,
     dmsRunCompute as dmsRunComputesType
 } from '../models/zustandStore';
 
@@ -20,6 +31,13 @@ export const getAndUpdateDmsComputeData: getAndUpdateDmsComputesDataType = async
         query: GET_COMPUTELIST
     });
     useAppStore.setState(() => ({ DmsComputeData: response.data.dmsComputes }));
+};
+
+export const getAndUpdateDmsSingleComputeData: getAndUpdateDmsSingleComputesDataType = async (computeId: string) => {
+    const response = await client.query<ComputeDetailSingleListResponse<ComputeDetail>>({
+        query: getSingleComputeData(computeId)
+    });
+    useAppStore.setState(() => ({ DmsSingleComputeData: response.data.dmsCompute }));
 };
 
 export const onPlayClickHandler: agGridClickHandler = async (id) => {
@@ -69,4 +87,5 @@ export const DmsRunCompute: dmsRunComputesType = async (id: string) => {
     await client.mutate<ComputeRun<RunComputeDetail>>({ mutation: dmsRunCompute(id) });
 };
 export const updateDmsComputeData: updateDmsComputeDataType = (ComputeData) => useAppStore.setState(() => ({ DmsComputeData: ComputeData }));
+export const updateDmsSingleComputeData: updateDmsSingleComputeDataType = (SingleComputeData) => useAppStore.setState(() => ({ DmsSingleComputeData: SingleComputeData }));
 export const setComputeState: setComputeStateType = (value) => useAppStore.setState({ computeState: value });
