@@ -10,7 +10,7 @@ import { convertTime, getUserNameFromId } from '../../../utils/common.utils';
 const DatasetViews = (props: any) => {
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
     const gridRef = useRef<AgGridReact<any>>(null);
-    const gridStyle = useMemo(() => ({ height: '300px', width: '98%' }), []);
+    const gridStyle = useMemo(() => ({ height: '400px', width: '98%' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
     const navigate = useNavigate();
     const renderDatasetId = (params: any) => {
@@ -102,14 +102,14 @@ const DatasetViews = (props: any) => {
                         </Box>
                         <Box color={'default.containerAgGridRecords'}>
                             <Text ml={'14'} fontWeight={700}>
-                                {rowData.length}
+                                {rowData.length} records
                             </Text>
                         </Box>
                     </Center>
                 </Flex>
                 <Flex flexWrap={'wrap'} flexDirection={'row'} ml={'24'}>
                     <Box style={gridStyle} className="ag-theme-alpine">
-                        <AgGridReact<any> ref={gridRef} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                        <AgGridReact<any> ref={gridRef} pagination={true} paginationPageSize={10} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                     </Box>
                 </Flex>
             </Box>

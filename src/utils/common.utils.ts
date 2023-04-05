@@ -23,7 +23,6 @@ export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDeta
 export const copyToClipBoard = (copyMessage: string, callBack: any) => {
     navigator.clipboard.writeText(copyMessage).then(() => {
         callBack();
-        callBack();
     });
 };
 export const convertTime = (date: any, isLastModifiedNeeded: boolean) => {
