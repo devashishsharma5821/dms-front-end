@@ -16,7 +16,6 @@ const FileUploadComponent = (props: any) => {
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
 
     const handleFile = (files: any) => {
-        console.log(files)
         updateSpinnerInfo(true);
         let fileSizeMB = files[0].size / (1024 ** 2);
         if(fileSizeMB > 100) {

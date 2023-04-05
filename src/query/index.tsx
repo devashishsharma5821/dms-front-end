@@ -521,9 +521,9 @@ export const uploadCSVDataset = () => {
     `;
 };
 
-export const deleteDataset = (variables: any) => {
+export const deleteDataset = (dataSourceId: any) => {
     return gql`mutation {
-        dmsDeleteDatabricksDBFS(project_id: ${variables.projectId}, dataset_name: ${variables.datasetName})
+        dmsDeleteDataSource(id: ${dataSourceId})
     }`;
 };
 // Dataset APIs End Here

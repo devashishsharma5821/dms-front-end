@@ -75,7 +75,7 @@ const ComputeDetails = () => {
         gridRef?.current!?.api?.sizeColumnsToFit();
     };
     window.addEventListener('resize', () => {
-        if (gridRef?.current!.api) {
+        if (gridRef?.current) {
             gridRef?.current!?.api?.sizeColumnsToFit();
         }
     });
