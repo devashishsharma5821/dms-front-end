@@ -40,6 +40,7 @@ import { useNavigate } from 'react-router-dom';
 import CreateProjectModal from './CreateProjectModal';
 import { MultiSelect } from 'chakra-multiselect';
 import IsRequired from '../../assets/icons/IsRequired';
+import Share from './Share';
 // import CreateProjectModal from './CreateProjectModal';
 
 const ExperimentModal = (props: any) => {
@@ -63,6 +64,7 @@ const ExperimentModal = (props: any) => {
     const { toast } = createStandaloneToast();
     const navigate = useNavigate();
     const projectModal = useDisclosure();
+    const AddMembers = useDisclosure();
     const tagPopOver = useDisclosure();
     const handleProjectChange = (evt: any) => {
         setProjectSelected(evt.target.value);
@@ -130,6 +132,9 @@ const ExperimentModal = (props: any) => {
     };
     const handleProjectCreate = () => {
         projectModal.onOpen();
+    };
+    const handleAddMember = () => {
+        AddMembers.onOpen();
     };
     const onCreateProjectSuccess = (projectName: any, projectId: any) => {
         setProjectSelected(projectId);
@@ -317,6 +322,10 @@ const ExperimentModal = (props: any) => {
                                 <Text color={projectTitleColor} mt={'46'} fontWeight={600}>
                                     Shared with:
                                 </Text>
+                                {/* <Text onClick={handleAddMember} color={'default.textButton'} ml={8} mt={'46'} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
+                                    + Add Member(s)
+                                </Text>
+                                {AddMembers.isOpen && <Share isOpen={AddMembers.isOpen} onClose={AddMembers.onClose} />} */}
                             </Center>
                         </Flex>
                         {AllUsersData && (
