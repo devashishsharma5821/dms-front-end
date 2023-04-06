@@ -9,8 +9,7 @@ import { DetailsAppStoreState, DetailsPropsType } from '../../models/transformer
 
 const Details = (props: DetailsPropsType) => {
     const [TransformersData, ExperimentData] = useAppStore((state: DetailsAppStoreState) => [state.TransformersData, state.ExperimentData]);
-
-    const transformer = TransformersData.find((transformer: any) => transformer?.id === props?.selectedStageId);
+    const transformer = TransformersData?.find((transformer: any) => transformer?.id === props?.selectedStageId);
 
     const [schema] = React.useState<JSONSchema7>({
         title: 'Widgets',

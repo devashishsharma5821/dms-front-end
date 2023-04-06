@@ -45,7 +45,7 @@ export class TransformerModel extends shapes.basic.Generic {
                 },
                 '.label': {
                     style: {
-                        color: theme.palette.getContrastText(theme.palette.background.paper),
+                        color: theme?.palette?.getContrastText(theme.palette.background.paper),
                         'text-align': 'center',
                         'font-family': 'ibm-plex-sans,Arial,Helvetica,sans-serif;',
                         'font-size': '10px',
@@ -53,7 +53,7 @@ export class TransformerModel extends shapes.basic.Generic {
                         overflow: 'hidden'
                     }
                 },
-                '.icon': { width: 18, height: 18, x: (TRANSFORMER_WIDTH - 18) / 2, y: 16, color: theme.palette.getContrastText(theme.palette.background.paper) }
+                '.icon': { width: 18, height: 18, x: (TRANSFORMER_WIDTH - 18) / 2, y: 16, color: theme?.palette?.getContrastText(theme?.palette?.background?.paper) }
             },
             ports: {
                 groups: {
@@ -63,8 +63,8 @@ export class TransformerModel extends shapes.basic.Generic {
                         },
                         attrs: {
                             '.port-body': {
-                                fill: theme.palette.grey[200],
-                                stroke: theme.palette.grey.A200,
+                                fill: theme?.palette?.grey[200],
+                                stroke: theme?.palette?.grey.A200,
                                 'stroke-width': 1,
                                 magnet: 'passive'
                             },
@@ -81,8 +81,8 @@ export class TransformerModel extends shapes.basic.Generic {
                         },
                         attrs: {
                             '.port-body': {
-                                fill: theme.palette.grey[200],
-                                stroke: theme.palette.grey.A200,
+                                fill: theme?.palette?.grey[200],
+                                stroke: theme?.palette?.grey?.A200,
                                 'stroke-width': 1,
                                 magnet: true
                             },
@@ -115,8 +115,8 @@ export class TransformerModel extends shapes.basic.Generic {
                 y="0"
                 width="${TRANSFORMER_WIDTH}"
                 height="${TRANSFORMER_HEIGHT}"
-                fill="${theme.palette.background.paper}"
-                stroke="${theme.palette.grey[400]}"
+                fill="${theme?.palette?.background?.paper}"
+                stroke="${theme?.palette?.grey[400]}"
             />
             <foreignObject class="label-container">
                <div xmlns="http://www.w3.org/1999/xhtml" class="label" id="node_${this.get('id')}">
@@ -142,25 +142,25 @@ export class TransformerModel extends shapes.basic.Generic {
 
     public createPortItem(group: string, port: TSPort) {
         return {
-            id: port.name,
-            type: port.type,
+            id: port?.name,
+            type: port?.type,
             group: group,
             markup:
-                port.type === InputOutputType.Dataframe
+                port?.type === InputOutputType.Dataframe
                     ? '<rect class="port-body" x="-7" y="-7" width="14" height="14" stroke="transparent" />'
-                    : port.type === InputOutputType.Dataset
+                    : port?.type === InputOutputType.Dataset
                     ? '<circle class="port-body" r="7" />'
-                    : port.type === InputOutputType.Metadata
+                    : port?.type === InputOutputType.Metadata
                     ? '<polygon class="port-body" points="-7,0 -4.0,-7 4.0,-7 7,0 4.0,7 -4.0,7" stroke="transparent" />'
-                    : port.type === InputOutputType.Model
+                    : port?.type === InputOutputType.Model
                     ? '<polygon class="port-body" points="0,-7, 7,7, -7,7" stroke="tranparent" />'
                     : '<rect class="port-dummy" x="-7" y="-7" width="14" height="14" />',
             attrs: {
                 '.port-body': {
-                    'port-type': port.type
+                    'port-type': port?.type
                 },
                 '.port-label': {
-                    text: port.name
+                    text: port?.name
                 }
             }
         };
@@ -185,7 +185,7 @@ export class TransformerModel extends shapes.basic.Generic {
     public setLabel(paper: dia.Paper, label: string, graph?: any) {
         if (graph) {
             graph.getCells().forEach((cell: any) => {
-                if (cell.cid === this.cid) {
+                if (cell?.cid === this.cid) {
                     const view = this.findView(paper);
                     view.$el.find('.label').text(label);
                     this.set('label', label);

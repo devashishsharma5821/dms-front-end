@@ -47,6 +47,9 @@ export interface AppState {
     dbSettingsData: any;
     spinnerInfo: boolean;
     selectedStageId: any;
+    selectedTransformer: any;
+    selectedCellId: any;
+    stages: any;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -79,3 +82,6 @@ export type submitMessage = (content: any) => void;
 export type dmsRunCompute = (id: string) => void;
 export type updateSpinnerInfo = (spinnerInfo: boolean) => void;
 export type updateSelectedStageId = (stageId: any) => void;
+export type updateSelectedTransformer = (stageId: any) => void;
+export type addStages = (stage: any) => void;
+export type updateSelectedCellId = (cellId: string) => void;
