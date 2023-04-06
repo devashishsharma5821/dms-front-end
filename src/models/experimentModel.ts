@@ -43,5 +43,5 @@ export class CloneExperiment<T> {
     dmsCloneExperiment!: T;
 }
 export class CloneExperimentDetail {
-    dmsCloneExperiment!: boolean;
+    dmsCloneExperiment!: string;
 }

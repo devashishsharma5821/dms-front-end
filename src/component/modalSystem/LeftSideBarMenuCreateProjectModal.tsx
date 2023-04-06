@@ -19,12 +19,12 @@ const LeftSideBarMenuCreateProjectModal = (props: any) => {
                     name: 'Start from scratch',
                     icon: <ScratchIcon />,
                     type: 'icon'
-                },
-                {
-                    name: 'Use a template',
-                    icon: <TemplateIconCreateProject />,
-                    type: 'icon'
                 }
+                // {
+                //     name: 'Use a template',
+                //     icon: <TemplateIconCreateProject />,
+                //     type: 'icon'
+                // }
             ]
         }
     ];
@@ -42,7 +42,7 @@ const LeftSideBarMenuCreateProjectModal = (props: any) => {
                 {subMenuForCreateProject &&
                     subMenuForCreateProject.map((row) => {
                         return (
-                            <Flex>
+                            <Flex justifyContent={'center'}>
                                 {row.sections &&
                                     row.sections.map((section, iconIndex) => {
                                         const lastItemLength = row.sections.length - 1;

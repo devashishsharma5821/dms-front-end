@@ -282,20 +282,58 @@ export const dmsStopComputeRun = (cellId: string | null) => {
                   )
             }`;
 };
-
+export const getSingleComputeData = (computeId: string) => {
+    return gql`
+query {
+  dmsCompute(compute_id: ${computeId}, task_limit: 25) {
+    id
+    name
+    created_by
+    created_at
+    updated_at
+     is_default
+                max_inactivity_min
+                cluster_policy_id
+                status
+       resources {
+                    instance_pool {
+                        worker_pool_id
+                        driver_pool_id
+                    }
+                    node_type {
+                        worker_type_id
+                        driver_type_id
+                        worker_memory_mb
+                        driver_memory_mb
+                        worker_num_cores
+                        driver_num_cores
+                        total_num_cores
+                        total_memory_mb
+                    }
+                    autoscale {
+                        min_workers
+                        max_workers
+                    }
+                    num_workers
+                    spot_instances
+                }
+    tasks {
+      task_key
+      cleanup_duration
+      start_time
+      end_time
+      execution_duration
+    }
+  }
+}
+`;
+}
 export const getComputeListData = () => {
     const GET_COMPUTELIST = gql`
         query {
             dmsComputes {
                 id
                 name
-                 tasks {
-                    task_key
-                    cleanup_duration
-                    start_time
-                    end_time
-                    execution_duration
-                    }
                 resources {
                     instance_pool {
                         worker_pool_id
@@ -483,9 +521,9 @@ export const uploadCSVDataset = () => {
     `;
 };
 
-export const deleteDataset = (variables: any) => {
+export const deleteDataset = (dataSourceId: any) => {
     return gql`mutation {
-        dmsDeleteDatabricksDBFS(project_id: ${variables.projectId}, dataset_name: ${variables.datasetName})
+        dmsDeleteDataSource(id: ${dataSourceId})
     }`;
 };
 // Dataset APIs End Here
@@ -523,7 +561,9 @@ export const cloneExperiment = (variables: any) => {
     experiment_id: "${variables.experimentId}",
     name: "${variables.experimentName}",
     transformer_library_version: "adf_library-1.3.0+gce603324a-cp38-cp38-linux_x86_64.whl"
-  )
+  ){
+    experiment_id
+  }
 }`;
 };
 export const GET_EXPERIMENT = (experiment_id: string) => {

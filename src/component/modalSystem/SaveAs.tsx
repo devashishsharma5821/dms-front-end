@@ -90,10 +90,10 @@ const SaveAs = (props: any) => {
                         mutation: cloneExperiment(cloneVariables)
                     })
                     .then((response) => {
+                        console.log('Respnse', response)
                         props.onClose();
                         setLoading(false);
                         toast(getToastOptions('Experiment Cloned Successfully', 'success'));
-                        getAndUpdateSingleProjectData(selectedProjectId);
                         setSelectedProjectId('');
                     })
                     .catch((err) => toast(getToastOptions(`${err}`, 'error')));

@@ -67,7 +67,6 @@ const ProjectsViews = (props: any) => {
                                 <div key={project.id}>
                                     <Box
                                         key={project.id}
-                                        onClick={() => navigateToDetails(project.id)}
                                         bg={'#FFFFFF'}
                                         width={'309px'}
                                         border={'1px'}
@@ -77,12 +76,12 @@ const ProjectsViews = (props: any) => {
                                         ml={'22'}
                                         mt={'20'}
                                     >
-                                        <Box key={project.id} maxHeight={'69px'} bg={'light.lightGrayishBlue'} borderTopRadius={8} cursor={'pointer'}>
+                                        <Box onClick={() => navigateToDetails(project.id)} key={project.id} maxHeight={'69px'} bg={'light.lightGrayishBlue'} borderTopRadius={8} cursor={'pointer'}>
                                             <Center ml={'23px'} pt={'8px'} justifyContent={'flex-start'}>
                                                 {UserConfig.userConfiguration.user.userId !== project.created_by ? <People color={'#666C80'} /> : <Documentation color={'#666C80'} />}
 
                                                 <Text title={project.name} ml={'11px'} fontWeight={700} fontSize={20} mt={'2px'} color={'default.blackText'} height={'27px'}>
-                                                    {getTruncatedText(project && project.name, 20)}
+                                                    {getTruncatedText(project && project.name, 16)}
                                                 </Text>
                                             </Center>
                                             <Text ml={'52px'} mb={'10px'} color={'default.containerAgGridRecords'} fontWeight={400} height={'22px'}>
