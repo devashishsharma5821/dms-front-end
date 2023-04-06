@@ -6,7 +6,7 @@ import { HaloService } from './halo-service';
 import { KeyboardService } from './keyboard-service';
 import * as appShapes from './app-shapes';
 import TransformerModel from '../../../models/transformerModal';
-import { updateSelectedStageId } from '../../../zustandActions/transformersActions';
+import { updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
 
 class DmsCanvasService {
     el: HTMLElement;
@@ -139,12 +139,14 @@ class DmsCanvasService {
         });
 
         graph.on('add', function (cell, collection, opt) {
-            console.log('lets check on add ===>', graph?.getCells());
-            updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
-        });
+            console.log('lets check on add ===>', graph?.getCells(), cell.attributes.attrs.idOfTransformer);
 
-        graph.on('link:connected', function (linkView, evt, elementViewConnected, magnetConnected) {
-            console.log('Link connected between ' + linkView.model.getSourceElement().id + ' and ' + linkView.model.getTargetElement().id);
+            if (cell.attributes.attrs.idOfTransformer) {
+                updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
+                updateSelectedCellId(cell.id);
+                updateSelectedTransformer(cell.attributes.attrs.idOfTransformer);
+                console.log('lets check id of transformer ==>', cell);
+            }
         });
 
         this.snaplines = new joint.ui.Snaplines({ paper: paper });

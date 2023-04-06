@@ -54,7 +54,7 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
     });
 
     useEffect(() => {
-        if (connectionState.connected && message.length > 0) {
+        if (connectionState?.connected && message?.length > 0) {
             disperseMessage(message);
             // if(message.content?.)
             // checkAlive(message.content);
@@ -79,10 +79,10 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
     };
 
     const checkComputeStatus = async (dmsComputes: DmsComputeData[]) => {
-        const computeRunningStatus: DmsComputeData[] = dmsComputes.filter((compute: DmsComputeData) => compute.status === 'RUNNING' || compute.status === 'STARTING');
-        if (computeRunningStatus.length !== 0) {
+        const computeRunningStatus: DmsComputeData[] = dmsComputes?.filter((compute: DmsComputeData) => compute.status === 'RUNNING' || compute.status === 'STARTING');
+        if (computeRunningStatus?.length !== 0) {
             const messageQue: Array<disperseMessage> = [];
-            await computeRunningStatus.forEach((compute: DmsComputeData) => {
+            await computeRunningStatus?.forEach((compute: DmsComputeData) => {
                 if (compute?.status && compute?.id) {
                     const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
                         experimentId: 1,

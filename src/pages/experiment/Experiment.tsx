@@ -12,7 +12,7 @@ import { cloneDeep } from 'lodash';
 import useAppStore from '../../store';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
-import { getAndUpdateTransformersData, updateSelectedStageId, updateTransformersData } from '../../zustandActions/transformersActions';
+import { addStages, getAndUpdateTransformersData, updateSelectedStageId, updateSelectedTransformer, updateTransformersData } from '../../zustandActions/transformersActions';
 import '@antuit/rappid-v1/build/package/rappid.css';
 import './canvasStyles/style.css';
 import './canvasStyles/style.modern.css';
@@ -25,7 +25,7 @@ import { InspectorService } from './services/inspector-service';
 import { HaloService } from './services/halo-service';
 import { KeyboardService } from './services/keyboard-service';
 import DmsCanvasService from './services/dms-canvas-service';
-import { TransformersAppStoreState } from '../../models/transformerDetail';
+import { TransformerDetail, TransformersAppStoreState } from '../../models/transformerDetail';
 import transformerMenuConf from '../../models/transformersConfig';
 import { g, shapes } from '@antuit/rappid-v1';
 import { updateDmsComputeData } from '../../zustandActions/computeActions';
@@ -45,24 +45,36 @@ import { getAndUpdateExperimentData } from '../../zustandActions/experimentActio
 import { getToastOptions } from '../../models/toastMessages';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { Dictionary } from '../../models/schema';
+import { Port } from '../../models/transformer';
+import TransformerModel from '../../models/transformerModal';
+import { uniqueId } from 'underscore';
 const { toast } = createStandaloneToast();
+
+interface ExtendedEmbeddedImage extends shapes.standard.EmbeddedImage {
+    uuid?: string;
+}
 
 const ExperimentsPage = () => {
     const { projectId, experimentId } = useParams();
 
     // New Consts For the new ProjectDetailsMenu Page I am designing.
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState, selectedStageId, ExperimentData, TransformersData, SingleProjectData] = useAppStore((state: ExperimentAppStoreState) => [
-        state.DmsComputeData,
-        state.UserConfig,
-        state.connectionState,
-        state.selectedStageId,
-        state.ExperimentData,
-        state.TransformersData,
-        state.SingleProjectData
-    ]);
+    const [DmsComputeData, UserConfig, connectionState, selectedStageId, ExperimentData, TransformersData, SingleProjectData, selectedTransformer, selectedCellId, stages] = useAppStore(
+        (state: ExperimentAppStoreState) => [
+            state.DmsComputeData,
+            state.UserConfig,
+            state.connectionState,
+            state.selectedStageId,
+            state.ExperimentData,
+            state.TransformersData,
+            state.SingleProjectData,
+            state.selectedTransformer,
+            state.selectedCellId,
+            state.stages
+        ]
+    );
     const navigate = useNavigate();
-    const opid = v4();
+    const uuid = v4();
     const computeRunningModal = useDisclosure();
     const computeModal = useDisclosure();
     const client = useApolloClient();
@@ -126,17 +138,22 @@ const ExperimentsPage = () => {
             computeModal.onOpen();
         } else {
             //Checking if compute is already in running condition.
-            const computeRunningStatus = dmsComputes.filter((compute: DmsComputeData) => compute?.status === 'RUNNING' || 'STARTING');
-            if (computeRunningStatus.length === 0) {
+            const computeRunningStatus = dmsComputes?.filter((compute: DmsComputeData) => compute?.status === 'RUNNING' || 'STARTING');
+            if (!computeRunningStatus || computeRunningStatus?.length === 0) {
                 // unsubscribe = useAppStore.subscribe(onComputeStarted);
                 setLoadingMessage('Checking session status....');
                 // waitForCompute(5000);
                 computeRunningModal.onOpen();
+                console.log('lets check computeRunningStatus====>', computeRunningStatus);
             } else {
                 //Checking isdefualt condition
-                const defaultCompute = computeRunningStatus.filter((runningCompute: DmsComputeData) => runningCompute?.is_default === true);
-                if (defaultCompute?.length > 0) setComputeId(defaultCompute[0]?.id);
-                else setComputeId(computeRunningStatus[0]?.id);
+                const defaultCompute = computeRunningStatus?.filter((runningCompute: DmsComputeData) => runningCompute?.is_default === true);
+                if (defaultCompute?.length > 0) {
+                    setComputeId(defaultCompute[0]?.id);
+                } else {
+                    console.log('lets check computeRunningStatus====>', computeRunningStatus);
+                    setComputeId(computeRunningStatus[0]?.id);
+                }
                 //TODO:- Compute socket connect
                 computeRunningStatus.map((compute: DmsComputeData) => {
                     if (compute?.status && compute?.id) {
@@ -221,7 +238,7 @@ const ExperimentsPage = () => {
                 if (!transformersGroup[currentObj['category']])
                     transformersGroup[currentObj['category']] = { index: transformerMenuConf[currentObj['category']]?.order, label: transformerMenuConf[currentObj['category']]?.category };
                 currentObj.name = startCase(currentObj.name ? currentObj?.name : currentObj?.id?.split('.').pop());
-                const stencilMarkup = new shapes.standard.EmbeddedImage({
+                const stencilMarkup: ExtendedEmbeddedImage = new shapes.standard.EmbeddedImage({
                     size: { width: 257, height: 52 },
                     attrs: {
                         idOfTransformer: currentObj?.id,
@@ -501,6 +518,8 @@ const ExperimentsPage = () => {
                         }
                     }
                 });
+                stencilMarkup.uuid = uuid;
+                console.log('lets check stencilMarkup ===>', stencilMarkup.uuid);
                 let inputPorts = [];
                 let outputPorts = [];
                 if (currentObj?.inputs?.length > 0) {
@@ -565,6 +584,7 @@ const ExperimentsPage = () => {
                 return transformersList;
             }, TransformersData[0]);
         }
+        console.log('lets check transformedNewDataForStencil  ==>', transformedNewDataForStencil);
         setTransformersGroup(transformersGroup);
         setTransformedNewDataForStencil(transformedNewDataForStencil);
     };
@@ -777,14 +797,96 @@ const ExperimentsPage = () => {
         }
     }, [selectedStageId]);
 
+    useEffect(() => {
+        console.log('lets check selectedTransformer ==>', selectedTransformer, 'selectedCellId ===>', selectedCellId);
+        addTransformerAsStage(selectedTransformer, undefined, selectedCellId);
+    }, [selectedTransformer, selectedCellId]);
+
+    const addTransformerAsStage = (selectedTransformer: TransformerDetail, position?: g.PlainPoint, cellId?: string, restoring?: boolean) => {
+        console.log('lets check addTransformerAsStage ==>', selectedTransformer, ' position ===>', position, 'cellID', cellId, '===>', restoring);
+
+        if (restoring === undefined) {
+            restoring = false;
+        }
+
+        let outputs = selectedTransformer?.outputs;
+        console.log('lets check output ==>', outputs, selectedTransformer?.id);
+        let outPorts = new Array<Port>();
+        if (outputs?.length > 0) {
+            outputs.forEach((output: any) => {
+                outPorts.push({
+                    label: output.name,
+                    name: output.id,
+                    required: true,
+                    type: output.type
+                });
+            });
+        }
+        let inputs = selectedTransformer?.inputs;
+        let inPorts = new Array<Port>();
+        if (inputs?.length > 0) {
+            inputs.forEach((input: any) => {
+                inPorts.push({
+                    label: input.name,
+                    name: input.id,
+                    required: true,
+                    type: input.type
+                });
+            });
+        }
+
+        let lastCell = rappidData?.graph?.getLastCell();
+        let box = lastCell?.getBBox();
+
+        let attrs: any = {
+            name: selectedTransformer?.name,
+            label: selectedTransformer?.name,
+            transformerId: selectedTransformer?.id,
+            icon: selectedTransformer?.icon,
+            layout: null,
+            inPorts: inPorts,
+            outPorts: outPorts,
+            position: position ? position : { x: box?.x, y: box?.y }
+        };
+        if (cellId) {
+            attrs.id = cellId;
+        } else {
+            attrs.id = uuid;
+        }
+        let model = new TransformerModel(attrs);
+        console.log('lets check optidAttr: ', attrs, model, uuid);
+
+        if (box && !position) {
+            model.translate(box.x, box.y);
+        }
+
+        // TODO AFTER confirmation gonna add this line
+        // rappidData?.graph?.addCell(model);
+
+        let currentModel = model?.getTransformer();
+
+        if (!restoring && currentModel.name) {
+            addStages({
+                stageId: currentModel?.stageId,
+                name: currentModel?.name,
+                transformerId: selectedTransformer?.id,
+                outputs: outputs?.map((op) => {
+                    return { id: op?.id, name: op?.name, type: op?.type };
+                }),
+                inputs: inputs?.map((ip) => {
+                    return { id: ip?.id, name: ip?.name, type: ip?.type };
+                }),
+                schema: selectedTransformer?.schema?.jsonSchema
+            });
+        }
+    };
+
     const refreshExperiment = () => {
         console.log('111111111');
         getAndUpdateExperimentData(ExperimentData.id);
     };
 
     const onSaveClickHandler = () => {
-        console.log('lets check working or not ---->', rappidData?.graph.getCells());
-
         let currentStages: any;
 
         let experimentToSave: any = {
@@ -793,26 +895,47 @@ const ExperimentsPage = () => {
 
         // Collect the position of the arrows
         let inputsPosition: Dictionary<g.PlainPoint> = {};
-        console.log('lets check cells ===>', rappidData?.graph?.getCells());
+        let extractedPorts: any;
+        let extractedPortsIdArray: any = [];
+        console.log('lets check cellsData ===>', rappidData?.graph?.getCells());
+
+        // This map is for getting port type
         rappidData?.graph?.getCells().map((cell: any) => {
-            if (cell.get('type') === 'standard.Link') {
-                console.log('lets check cells ===> going inside');
-                let source = cell.get('source');
-                let target = cell.get('target');
-                let port = cell.get('ports-name');
-                console.log('ports ===>', port);
-                inputsPosition[`${source.id}.${port}-${target.id}.${port}`] = cell.position();
+            if (cell.get('type') === 'standard.EmbeddedImage') {
+                console.log('lets check cells of standard.EmbeddedImage ==>', cell);
+                if (cell._portSettingsData.ports.length > 1) {
+                    extractedPortsIdArray.push(cell._portSettingsData.ports[0].id);
+                } else {
+                    extractedPortsIdArray.push(cell._portSettingsData.ports[0].id);
+                }
             }
         });
-        console.log('inputsPosition ==>', inputsPosition);
+        console.log('lets check extractedPorts ==>', extractedPorts);
+
+        rappidData?.graph?.getCells().map((cell: any) => {
+            if (cell.get('type') === 'standard.Link') {
+                console.log('lets check going inside if check for inputsPostion ===>');
+                console.log('lets check extractedPortsIdArray ==>', extractedPortsIdArray);
+                let [port1, port2] = extractedPortsIdArray;
+                let source = cell.get('source');
+                let target = cell.get('target');
+                let port = cell.get('_byId');
+                console.log('lets check and find ports ===>', port);
+                inputsPosition[`${source.id}.${port1}-${target.id}.${port2}`] = cell.position();
+            }
+        });
+        console.log('lets check inputsPosition ===>', inputsPosition);
+
+        console.log('lets check transformerData ===>', TransformersData);
 
         // Collect the stages
-        rappidData?.graph?.getCells().map((cell: any) => {
+        rappidData?.graph?.getCells()?.map((cell: any) => {
             let stageId = cell.get('id');
-            console.log('let me check stageId', stageId);
+            console.log('let me check cell inside onSvaeHandler ==>', cell, 'stages =>>', stages);
             if (cell?.attributes?.type !== 'standard.EmbeddedImage') {
-                let stage = TransformersData?.find((st: any) => st.id === stageId);
-                console.log('are we getting stage ==>', stage);
+                let stage = stages?.find((st: any) => st.id === stageId);
+
+                console.log('lets check stage after filter ===>', stage, 'currentStages ===>', stages, 'stageId ===>', stageId);
                 if (stageId && stage) {
                     let stageInputs = stage.inputs?.map((input: any) => {
                         return {
@@ -824,7 +947,9 @@ const ExperimentsPage = () => {
                         };
                     });
 
-                    let stageOutpus = stage.outputs?.map((output: any) => {
+                    console.log('lets check stageInputs ===>', stageInputs);
+
+                    let stageOutput = stage.outputs?.map((output: any) => {
                         return {
                             id: output.id,
                             isValid: output.isValid,
@@ -835,13 +960,13 @@ const ExperimentsPage = () => {
 
                     experimentToSave.stages.push({
                         id: cell.id.toString(),
-                        transformerId: stage.id,
+                        transformerId: stage.transformerId,
                         name: stage.name,
                         inputs: stageInputs,
-                        outputs: stageOutpus,
-                        // formData: stage.formState?.currentForm.formData,
-                        // status: stage.status,
-                        // signature: stage.signature,
+                        outputs: stageOutput,
+                        formData: stage.formState?.currentForm.formData,
+                        status: stage.status,
+                        signature: stage.signature,
                         position: cell.position()
                     });
                 }
@@ -858,9 +983,6 @@ const ExperimentsPage = () => {
         <>
             <Box ref={elementRef} width={'100%'}>
                 <Box width={'100%'} height={'56px'} bg={themebg}>
-                    {/* <Button style={{ marginLeft: '600px' }} onClick={onSaveClickHandler}>
-                        lets check
-                    </Button> */}
                     <Toolbar
                         computeData={newComputedata}
                         is_default={dmsComputeRunningStatusIsDefaultOne}

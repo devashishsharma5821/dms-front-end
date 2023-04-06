@@ -30,7 +30,10 @@ const useAppStore = create<AppState>((set) => ({
     dbSettingsData: [],
     toastMessage: {},
     spinnerInfo: false,
-    selectedStageId: null
+    selectedStageId: null,
+    selectedCellId: null,
+    selectedTransformer: null,
+    stages: []
 }));
 
 export default useAppStore;

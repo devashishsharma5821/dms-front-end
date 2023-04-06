@@ -88,7 +88,7 @@ const Toolbar = (props: toolbarPropsType) => {
                 return (
                     <>
                         {sections.type === 'icon' && sections.name === 'SaveAs' && (
-                            <Center onClick={props.onSaveClickHandler} ml={'16'} mr={'16'}>
+                            <Center onClick={props.onSaveClickHandler} cursor="pointer" ml={'16'} mr={'16'}>
                                 <Box mr={'8'}>{sections.component}</Box>
                                 <Box>{sections.name}</Box>
                             </Center>

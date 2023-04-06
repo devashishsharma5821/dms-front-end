@@ -164,6 +164,9 @@ export interface ExperimentAppStoreState {
     SingleProjectData: SingleProjectData;
     ExperimentData: Experiment;
     TransformersData: TransformerDetail[];
+    selectedTransformer: any;
+    selectedCellId: any;
+    stages: any;
 }
 
 export interface SocketWrapperAppStoreState {

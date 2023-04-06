@@ -1,7 +1,7 @@
 import { DmsComputeData } from '../../models/computeDetails';
 
 export const newComputeData = (computedata: DmsComputeData[]) => {
-    return computedata.map((compute: DmsComputeData) => {
+    return computedata?.map((compute: DmsComputeData) => {
         return {
             ...compute,
             status: compute.status === 'STARTING' ? 'STARTING' : compute.status,
@@ -10,5 +10,3 @@ export const newComputeData = (computedata: DmsComputeData[]) => {
         };
     });
 };
-
-Math.round(0.9);
