@@ -26,7 +26,7 @@ export class ExperimentCreate<T> {
     dmsCreateExperiment!: T;
 }
 export class ExperimentCreateDetail {
-    dmsCreateExperiment!: boolean;
+    dmsCreateExperiment!: string;
 }
 export interface GetExperimentAppStoreState {
     ExperimentData: Experiment;
