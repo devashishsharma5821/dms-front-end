@@ -40,8 +40,12 @@ export class ExperimentEditDetail {
 }
 
 export class CloneExperiment<T> {
-    dmsCloneExperiment!: T;
+    dmsCloneExperiment!: {
+    experiment_id: T;
+}
 }
 export class CloneExperimentDetail {
-    dmsCloneExperiment!: string;
+    dmsCloneExperiment!: {
+        experiment_id: string
+    }
 }

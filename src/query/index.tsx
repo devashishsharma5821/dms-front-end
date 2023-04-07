@@ -559,6 +559,7 @@ export const cloneExperiment = (variables: any) => {
   dmsCloneExperiment(
     project_id: "${variables.projectSelected}"
     experiment_id: "${variables.experimentId}",
+    destination_project_id: "${variables.destination_project_id}",
     name: "${variables.experimentName}",
     transformer_library_version: "adf_library-1.3.0+gce603324a-cp38-cp38-linux_x86_64.whl"
   ){
