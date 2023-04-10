@@ -221,7 +221,7 @@ const CreateProjectModal = (props: any) => {
                             }
                         }}
                     >
-                        {({ handleSubmit, errors, touched, isValid, values }) => (
+                        {({ handleSubmit, errors, touched, isValid, dirty, values }) => (
                             <form onSubmit={handleSubmit}>
                                 <VStack align="flex-start">
                                     <FormControl isInvalid={!!errors.name && touched.name} isRequired>
@@ -417,7 +417,7 @@ const CreateProjectModal = (props: any) => {
                                                     ml={'11px'}
                                                     borderRadius={4}
                                                     isLoading
-                                                    disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
+                                                    disabled={!isValid || !dirty}
                                                     onSubmit={props.onSubmit}
                                                     type="submit"
                                                     colorScheme="blue"
@@ -430,7 +430,7 @@ const CreateProjectModal = (props: any) => {
                                                     height={'36px'}
                                                     ml={'11px'}
                                                     borderRadius={4}
-                                                    disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
+                                                    disabled={!isValid || !dirty}
                                                     onSubmit={props.onSubmit}
                                                     type="submit"
                                                     colorScheme="blue"
