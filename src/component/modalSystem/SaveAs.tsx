@@ -1,22 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Field } from "formik";
-import { Button, Divider, VStack, Modal, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, ModalBody, FormControl, Input, FormLabel, ModalFooter, FormErrorMessage, useColorModeValue,Select } from '@chakra-ui/react';
-import {setSettingsData} from "../../query";
-import { useApolloClient } from "@apollo/client";
+import {
+    Button,
+    Divider,
+    VStack,
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    ModalCloseButton,
+    ModalBody,
+    FormControl,
+    Input,
+    FormLabel,
+    ModalFooter,
+    FormErrorMessage,
+    useColorModeValue,
+    Select,
+    createStandaloneToast
+} from '@chakra-ui/react';
+import { cloneExperiment } from '../../query';
 import { DownArrowShare } from '../../assets/icons';
-
+import useAppStore from '../../store';
+import { GetAllProjectsAppStoreState } from '../../models/project';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { getProjectNameAndLabelsForSelect } from '../../utils/common.utils';
+import { useNavigate, useParams } from 'react-router-dom';
+import { CloneExperiment, CloneExperimentDetail } from '../../models/experimentModel';
+import client from '../../apollo-client';
+import { getToastOptions } from '../../models/toastMessages';
 const SaveAs = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
     const textColorTitle = useColorModeValue('l default.titleForShare', 'default.whiteText');
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
     const [loading, setLoading] = useState(false);
-    const client = useApolloClient();
+    const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
+    const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
+    const [selectedProjectId, setSelectedProjectId] = React.useState('');
+    const params = useParams();
+    const { toast } = createStandaloneToast();
+    const navigate = useNavigate();
     interface databricksSettings {
         projectName: string;
         experimentName: string;
      }
-
+    useEffect(() => {
+        if (AllProjectsData === null) {
+            getAndUpdateAllProjectsData();
+        } else {
+            setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
+            setSelectedProjectId(getProjectNameAndLabelsForSelect(AllProjectsData)[0].id);
+        }
+    }, [AllProjectsData]);
     return (
     <Modal
         size={'lg'}
@@ -25,9 +61,10 @@ const SaveAs = (props: any) => {
         isOpen={props.isOpen}
         onClose={props.onClose}
         isCentered
+        closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true}
       >
         <ModalOverlay />
-   
+
         <ModalContent  >
           <ModalHeader color={textColor}  mt={'13px'}  ml={'20px'}>Save As</ModalHeader>
           <ModalCloseButton color={textColor} mr={'10px'} mt={'12px'} />
@@ -36,24 +73,31 @@ const SaveAs = (props: any) => {
             <Formik
                 initialValues={{
                   validateOnMount: true,
-                  projectName: "",
+                  projectName: projectNames[0].id,
                   experimentName: ""
                 } as databricksSettings}
                 validateOnBlur={true}
                 validateOnChange={true}
                 onSubmit={(values) => {
                  setLoading(true);
+                 const cloneVariables = {
+                     projectSelected: params.projectId,
+                     experimentId: params.experimentId,
+                     experimentName: values.experimentName,
+                     destination_project_id: selectedProjectId
+                };
                  // The below api will be available when needs to be integrated
-                //  client.mutate({
-                //     mutation: setSettingsData(values.projectName ,values.experimentName)
-                // })
-                //     .then((response) => {
-                //     if(response.data.dmsSetDatabricksCredentials){
-                //         props.onClose();
-                //         setLoading(false);
-                //     }
-                //     })
-                //     .catch((err) => console.error(err));
+                    client.mutate<CloneExperiment<CloneExperimentDetail>>({
+                        mutation: cloneExperiment(cloneVariables)
+                    })
+                    .then((response) => {
+                        props.onClose();
+                        setLoading(false);
+                        toast(getToastOptions('Experiment Cloned Successfully', 'success'));
+                        navigate(`/projectDetails/${selectedProjectId}/experiment/${response.data?.dmsCloneExperiment.experiment_id}`);
+                        setSelectedProjectId('');
+                    })
+                    .catch((err) => toast(getToastOptions(`${err}`, 'error')));
                 }}
             >
               {({ handleSubmit, errors, touched ,isValid}) => (
@@ -61,7 +105,7 @@ const SaveAs = (props: any) => {
                     <VStack  align="flex-start">
                       <FormControl  isInvalid={!!errors.projectName && touched.projectName} isRequired>
                         <FormLabel htmlFor="projectName" fontWeight={600}  color={textColorTitle} mb={6} >Project Name</FormLabel>
-                        <Select 
+                        <Select
                             icon={<DownArrowShare pl={'15px'} color={'#666C80'}/>}
                             borderRadius={3}
                             mb={16}
@@ -69,21 +113,18 @@ const SaveAs = (props: any) => {
                             borderColor={'#D8DCDE'}
                             as={Select}
                             id="projectName"
-                            name="projectName"    
+                            name="projectName"
                             variant='outline'
-                            validate={(value: any) => {
-                                let error;
-                                if (value.length === 0) {
-                                  error = " Project Name is required";
-                                }
-                                return error;
-                              }} >
- 
-                                <option>My Project</option>
-                                <option>Project 2</option>
-                            
+                            onChange={(evt: any) => setSelectedProjectId(evt.target.value)}
+                            value={selectedProjectId}
+                        >
+
+                            {projectNames.map((project, projectIndex) => {
+                                return <option key={project.id} value={project.id}>{project.name}</option>
+                            })}
+
                         </Select>
-                       
+
                         <FormErrorMessage>{errors.projectName}</FormErrorMessage>
                       </FormControl>
                       <FormControl isInvalid={!!errors.experimentName && touched.experimentName} isRequired>
@@ -99,7 +140,7 @@ const SaveAs = (props: any) => {
                             validate={(value: any) => {
                               let error;
                               if (value.length === 0) {
-                                error = "ProjectDetailsMenu Name is required";
+                                error = "Experiment Name is required";
                               }
 
                               return error;
@@ -126,7 +167,7 @@ const SaveAs = (props: any) => {
           </ModalBody>
        </ModalContent>
     </Modal>
-      
+
     );
 };
 

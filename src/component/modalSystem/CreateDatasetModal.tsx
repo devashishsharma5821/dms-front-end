@@ -23,11 +23,7 @@ import { keys, startCase } from 'lodash';
 import { getToastOptions } from '../../models/toastMessages';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import CreateDatasetFormScreen from '../../pages/dataset/createDatasetSubComponents/createDatasetFormScreen';
-import {
-    datasetPreviewSchema,
-    DeleteDataset,
-    DeleteDatasetDetail,
-} from '../../models/dataset';
+import { datasetPreviewSchema, DeleteDataset, DeleteDatasetDetail } from '../../models/dataset';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { deleteDataset } from '../../query';
@@ -38,6 +34,7 @@ const CreateDataset = (props: any) => {
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
     const [datasetName, setDatasetName] = useState('');
+    const [datasetId, setDatasetId] = useState('');
     const [selectedProjectId, setSelectedProjectId] = useState('');
     const gridRef = useRef<AgGridReact<any>>(null);
     const gridStyle = useMemo(() => ({ height: '300px', width: '856px' }), []);
@@ -57,23 +54,21 @@ const CreateDataset = (props: any) => {
 
     const handleDeleteDataset = () => {
         // TODO After backend adds the delete dataset Id as a input add the delete dataset mutation
-        if(screenState.screen3){
+        if (screenState.screen3) {
             updateSpinnerInfo(true);
-            const deleteVariables = {
-                projectId: selectedProjectId,
-                datasetName: datasetName
-            };
-            client.mutate<DeleteDataset<DeleteDatasetDetail>>({
-                mutation: deleteDataset(deleteVariables)
-            }).then(() => {
-                toast(getToastOptions(`Dataset Delete Successfully`, 'success'));
-                getAndUpdateAllProjectsData();
-                getAndUpdateSingleProjectData(selectedProjectId);
-                setSelectedProjectId('');
-                setDatasetName('');
-                updateSpinnerInfo(false);
-                props.onClose();
-            })
+            client
+                .mutate<DeleteDataset<DeleteDatasetDetail>>({
+                    mutation: deleteDataset(datasetId)
+                })
+                .then(() => {
+                    toast(getToastOptions(`Dataset Delete Successfully`, 'success'));
+                    getAndUpdateAllProjectsData();
+                    getAndUpdateSingleProjectData(selectedProjectId);
+                    setSelectedProjectId('');
+                    setDatasetName('');
+                    updateSpinnerInfo(false);
+                    props.onClose();
+                })
                 .catch((err: any) => {
                     updateSpinnerInfo(false);
                     props.onClose();
@@ -102,9 +97,10 @@ const CreateDataset = (props: any) => {
         }
     };
     const getResponseFromFileUpload = (uploadResponse: any) => {
-        if(!uploadResponse) {
+        if (!uploadResponse) {
             toast(getToastOptions(`File Upload Failed, contact support`, 'error'));
         } else {
+            setDatasetId(uploadResponse.id);
             const colDefKeysSchema = [
                 {
                     field: 'col_name',
@@ -117,17 +113,18 @@ const CreateDataset = (props: any) => {
                 {
                     field: 'comment',
                     headerName: 'Comment'
-                },
-
+                }
             ];
             setColumnDefsSchema(colDefKeysSchema);
-            setRowDataSchema(uploadResponse['schema'].map((row: any) => {
-                return {
-                    'col_name': row[0] ,
-                    'data_type': row[1] ,
-                    'comment': row[2]
-                }
-            }));
+            setRowDataSchema(
+                uploadResponse['schema'].map((row: any) => {
+                    return {
+                        col_name: row[0],
+                        data_type: row[1],
+                        comment: row[2]
+                    };
+                })
+            );
             const colDefKeys = keys(uploadResponse['sample_rows'][0]);
             const colDef = colDefKeys.map((headerKeys: string) => {
                 return { headerName: startCase(headerKeys), field: headerKeys } as ColDef;
@@ -188,7 +185,9 @@ const CreateDataset = (props: any) => {
                 {screenState.screen1 && (
                     <CreateDatasetFormScreen
                         setScreenState={(stateOfScreens: any) => setScreenState(stateOfScreens)}
-                        handleFormFields={(formFields: any) =>{ handleFormFields(formFields) }}
+                        handleFormFields={(formFields: any) => {
+                            handleFormFields(formFields);
+                        }}
                     ></CreateDatasetFormScreen>
                 )}
                 {screenState.screen2 && (
@@ -199,7 +198,7 @@ const CreateDataset = (props: any) => {
                                     <Flex mb={'19px'} fontSize={'21px'}>
                                         <Text color={datasetTitleColor}>Dataset Name:</Text>
                                         <Text color={titleDarkCSV} ml={'8px'}>
-                                            My Dataset 1
+                                            {datasetName}
                                         </Text>
                                     </Flex>
                                     <Text fontWeight={700} color={datasetTitleColor}>
@@ -224,23 +223,25 @@ const CreateDataset = (props: any) => {
                 {screenState.screen3 && (
                     <>
                         <Flex flexDirection={'column'}>
-                                <Box ml={'23'} mr={'12'} borderColor={'light.lighterGrayishBlue'} width={'1400px'} mt={'18'}>
-                                    <Text fontWeight={700} fontSize={'16px'} color={textColor}>Schema</Text>
-                                    <Box style={gridStyleSchema} className="ag-theme-alpine">
-                                        <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
-                                    </Box>
+                            <Box ml={'23'} mr={'12'} borderColor={'light.lighterGrayishBlue'} width={'1400px'} mt={'18'}>
+                                <Text fontWeight={700} fontSize={'16px'} color={textColor}>
+                                    Schema
+                                </Text>
+                                <Box style={gridStyleSchema} className="ag-theme-alpine">
+                                    <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
                                 </Box>
-                                <Box ml={'23'} mr={'12'} borderColor={'light.lighterGrayishBlue'} width={'1400px'} mt={'18'}>
-                                    <Text fontWeight={700} fontSize={'16px'} color={textColor}>Sample Data</Text>
-                                    <Box style={gridStyle} className="ag-theme-alpine">
-                                        <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
-                                    </Box>
+                            </Box>
+                            <Box ml={'23'} mr={'12'} borderColor={'light.lighterGrayishBlue'} width={'1400px'} mt={'18'}>
+                                <Text fontWeight={700} fontSize={'16px'} color={textColor}>
+                                    Sample Data
+                                </Text>
+                                <Box style={gridStyle} className="ag-theme-alpine">
+                                    <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                                 </Box>
+                            </Box>
                         </Flex>
-
                     </>
                 )}
-
 
                 <Divider color={'default.dividerColor'} mt={'70px'} width={'auto'} />
                 <ModalFooter mb={'18px'} mt={'21px'} mr={'20px'}>

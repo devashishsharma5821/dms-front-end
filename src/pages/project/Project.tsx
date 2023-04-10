@@ -1,40 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import './project.scss';
-import {
-    Box,
-    Button,
-    Center,
-    Divider,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
-    Stack,
-    Tab,
-    TabList,
-    TabPanel,
-    TabPanels,
-    Tabs,
-    Text,
-    useColorModeValue,
-    useDisclosure
-} from '@chakra-ui/react';
+import { Box, Button, Center, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetAllProjectsDetail } from '../../models/project';
 import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
 import SearchComponent from '../../component/search/SearchComponent';
-import { DownArrow } from '../../assets/icons';
+// import { DownArrow } from '../../assets/icons';
 import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
 import ProjectsViews from './projectDetails/projectsViews';
 import { handleProjectsFilter, projectsSearch } from '../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
-import { tab } from '@testing-library/user-event/dist/tab';
 
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
-    const textColor = useColorModeValue('light.header', 'dark.white');
     const tabTextColor = useColorModeValue('default.darkGrayCreate', 'dark.white');
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
@@ -57,20 +37,20 @@ const Project = () => {
             setSearchValue(searchVl);
             setTabContents(searchVl);
         } else {
-            setSearchValue("");
-            setTabContents("");
+            setSearchValue('');
+            setTabContents('');
         }
     };
     const setTabContents = async (searchVl: string) => {
-        if(tabIndex === 0) {
+        if (tabIndex === 0) {
             const search = await projectsSearch(AllProjectsData, searchVl, AllUsersData);
             setAllProjectsData(search);
         } else if (tabIndex === 1) {
-            const userOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'onlyMe' );
+            const userOnlyData = handleProjectsFilter(UserConfig, AllProjectsData, 'onlyMe');
             const search = await projectsSearch(userOnlyData, searchVl, AllUsersData);
             setAllProjectsData(search);
         } else {
-            const sharedOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'sharedWithMe' );
+            const sharedOnlyData = handleProjectsFilter(UserConfig, AllProjectsData, 'sharedWithMe');
             const search = await projectsSearch(sharedOnlyData, searchVl, AllUsersData);
             setAllProjectsData(search);
         }
@@ -81,22 +61,24 @@ const Project = () => {
             const search = projectsSearch(AllProjectsData, searchValue, AllUsersData);
             setAllProjectsData(search);
         } else if (tabIn === 1) {
-            const userOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'onlyMe' );
+            const userOnlyData = handleProjectsFilter(UserConfig, AllProjectsData, 'onlyMe');
             const search = projectsSearch(userOnlyData, searchValue, AllUsersData);
             setAllProjectsData(search);
         } else if (tabIn === 2) {
-            const sharedOnlyData = handleProjectsFilter(UserConfig,AllProjectsData, 'sharedWithMe' );
+            const sharedOnlyData = handleProjectsFilter(UserConfig, AllProjectsData, 'sharedWithMe');
             const search = projectsSearch(sharedOnlyData, searchValue, AllUsersData);
             setAllProjectsData(search);
         }
     };
     useEffect(() => {
-        if (AllProjectsData === null) {
-            getAndUpdateAllProjectsData();
-        } else {
+        if (AllProjectsData?.length) {
             setAllProjectsData(AllProjectsData);
-        }
+        };
     }, [AllProjectsData]);
+
+    useEffect(() => {
+        getAndUpdateAllProjectsData();
+    }, [])
 
     const onCreateProjectSuccess = () => {
         getAndUpdateAllProjectsData();
@@ -148,10 +130,9 @@ const Project = () => {
                     {/*        <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />*/}
                     {/*    </MenuList>*/}
                     {/*</Menu>*/}
-                    { CreateProject.isOpen &&
-                    <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
-                    }
-
+                    {CreateProject.isOpen && (
+                        <CreateProjectModal isOpen={CreateProject.isOpen} onClose={CreateProject.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
+                    )}
                 </Center>
                 <Tabs index={tabIndex} onChange={handleTabsChange} width={'100%'} isLazy mt={-30} colorScheme={'tabsTheme'}>
                     <TabList width={'100%'} color={tabTextColor}>

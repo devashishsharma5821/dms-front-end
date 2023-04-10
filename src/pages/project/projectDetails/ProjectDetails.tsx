@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Text,
@@ -19,19 +19,21 @@ import {
     TagCloseButton,
     HStack,
     FormControl,
-    Stack,
     Popover,
     PopoverTrigger,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverArrow,
     PopoverContent,
     Textarea,
     createStandaloneToast
 } from '@chakra-ui/react';
 import useAppStore from '../../../store';
-import { DeleteProjectDetail, GetSingleProjectAppStoreState, ProjectDelete, ProjectEdit, ProjectEditDetail } from '../../../models/project';
+import { DeleteProjectDetail, GetSingleProjectAppStoreState, GetSingleProjectDetail, ProjectDelete, ProjectEdit, ProjectEditDetail } from '../../../models/project';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData, updateSingleProjectData } from '../../../zustandActions/projectActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
-import { CloseIcon, PencilIcon } from '../../../assets/icons';
+import { CopyIcon, PencilIcon } from '../../../assets/icons';
 import { getUserNameFromId, getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
@@ -47,12 +49,12 @@ const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const projectDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
+    const themeBg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlue');
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [deleteId, setDeleteId] = useState<string>('');
     const [inlineDescription, setInlineDescription] = useState<string>('');
     const [inlineProjectName, setInlineProjectName] = useState<string>('');
-    const [inlineProjectField, setInlineProjectField] = useState<boolean>(false);
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const [popOverTag, setPopOverTag] = React.useState('');
     const deleteConfirmationModal = useDisclosure();
@@ -104,8 +106,7 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
-        updateSpinnerInfo(true);
-        if (SingleProjectData === null || params.projectId !== SingleProjectData.basic.id) {
+        if (SingleProjectData === null) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
             updateSpinnerInfo(false);
@@ -116,22 +117,25 @@ const ProjectDetails = (props: any) => {
             }
         }
     }, [SingleProjectData]);
+
     useEffect(() => {
-        updateSpinnerInfo(true);
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
         } else {
-            updateSpinnerInfo(false);
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
         }
     }, [AllUsersData]);
-    const editProjectModal = () => {
-        setInlineProjectField(true);
-        //createProjectModal.onOpen();
-    };
+
+    useEffect(() => {
+        updateSpinnerInfo(true);
+        return () => {
+            updateSingleProjectData(null);
+        };
+    }, []);
+
     const onCreateProjectSuccess = () => {
         getAndUpdateSingleProjectData(SingleProjectData.basic.id);
         createProjectModal.onClose();
@@ -181,36 +185,31 @@ const ProjectDetails = (props: any) => {
             })
             .then(() => {
                 toast(getToastOptions(toastMessages.successMessage, 'success'));
-                getAndUpdateAllProjectsData();
-                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
                 updateSpinnerInfo(false);
-                setInlineProjectField(false);
-                setInlineProjectName('');
             })
             .catch((err) => {
                 updateSpinnerInfo(false);
-                getAndUpdateSingleProjectData(SingleProjectData.basic.id);
-                setInlineProjectField(false);
-                setInlineProjectName('');
                 toast(getToastOptions(`${err}`, 'error'));
             });
     };
 
     const handleAddTag = () => {
         tagPopOver.onClose();
-        setPopOverTag('');
-        SingleProjectData.basic.tags.push(popOverTag);
-        const variables = {
-            id: SingleProjectData.basic.id,
-            name: SingleProjectData.basic.name,
-            project_variables: SingleProjectData.basic.project_variables,
-            description: SingleProjectData.basic.description,
-            tags: [...SingleProjectData.basic.tags]
-        };
-        handleEditProject(variables, {
-            successMessage: 'Project Tags Edited Successfully',
-            errorMessage: 'Project Tags Failed To edit'
-        });
+        if (popOverTag !== '') {
+            SingleProjectData.basic.tags.push(popOverTag);
+            const variables = {
+                id: SingleProjectData.basic.id,
+                name: SingleProjectData.basic.name,
+                project_variables: SingleProjectData.basic.project_variables,
+                description: SingleProjectData.basic.description,
+                tags: [...SingleProjectData.basic.tags]
+            };
+            handleEditProject(variables, {
+                successMessage: 'Project Tags Added Successfully',
+                errorMessage: 'Project Tags Failed To Add'
+            });
+            setPopOverTag('');
+        }
     };
     const handleRemoveTag = (tag: string) => {
         SingleProjectData.basic.tags = SingleProjectData.basic.tags.filter((tagToKeep) => {
@@ -224,8 +223,8 @@ const ProjectDetails = (props: any) => {
             tags: [...SingleProjectData.basic.tags]
         };
         handleEditProject(variables, {
-            successMessage: 'Project Tags Edited Successfully',
-            errorMessage: 'Project Tags Failed To edit'
+            successMessage: 'Project Tags Deleted Successfully',
+            errorMessage: 'Project Tags Failed To Delete'
         });
     };
     const handleEditName = () => {
@@ -292,50 +291,46 @@ const ProjectDetails = (props: any) => {
                                 {' '}
                                 <LeftArrow />
                             </Button>
-                            {SingleProjectData && (
-                                <>
+                            <Flex>
+                                <Editable
+                                    maxWidth={'800px'}
+                                    textAlign="left"
+                                    fontWeight={400}
+                                    onSubmit={handleEditName}
+                                    onChange={handleEditNameChange}
+                                    onCancel={handleEditNameChangeCancel}
+                                    value={inlineProjectName}
+                                >
                                     <Flex>
-                                        <Editable
-                                            maxWidth={'800px'}
-                                            textAlign="left"
-                                            fontWeight={400}
-                                            onSubmit={handleEditName}
-                                            onChange={handleEditNameChange}
-                                            onCancel={handleEditNameChangeCancel}
-                                            value={inlineProjectName}
-                                        >
-                                            <Flex>
-                                                <Center mt={'-10'}>
-                                                    <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
-                                                        <EditablePreview />
-                                                        <Input as={EditableInput} height={'30px'} mt={'-10px'} />
-                                                    </Box>
-                                                </Center>
-                                                <Box mt={'-40px'}>
-                                                    <EditableControlsName />
-                                                </Box>
-                                            </Flex>
-                                        </Editable>
-                                        <Button
-                                            cursor={'pointer'}
-                                            width={'71px'}
-                                            height={'36px'}
-                                            colorScheme="gray"
-                                            bg={'white'}
-                                            color={'default.textButton'}
-                                            border={'1px'}
-                                            borderColor={'default.textButton'}
-                                            borderRadius={4}
-                                            fontWeight={600}
-                                            ml={'30px'}
-                                            mt={'-10px'}
-                                            onClick={() => onDeleteHandler(SingleProjectData.basic.id)}
-                                        >
-                                            Delete
-                                        </Button>
+                                        <Center mt={'-10'}>
+                                            <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                                <EditablePreview />
+                                                <Input as={EditableInput} height={'30px'} mt={'-10px'} />
+                                            </Box>
+                                        </Center>
+                                        <Box mt={'-40px'}>
+                                            <EditableControlsName />
+                                        </Box>
                                     </Flex>
-                                </>
-                            )}
+                                </Editable>
+                                <Button
+                                    cursor={'pointer'}
+                                    width={'71px'}
+                                    height={'36px'}
+                                    colorScheme="gray"
+                                    bg={'white'}
+                                    color={'default.textButton'}
+                                    border={'1px'}
+                                    borderColor={'default.textButton'}
+                                    borderRadius={4}
+                                    fontWeight={600}
+                                    ml={'30px'}
+                                    mt={'-10px'}
+                                    onClick={() => onDeleteHandler(SingleProjectData.basic.id)}
+                                >
+                                    Delete
+                                </Button>
+                            </Flex>
                         </Flex>
                         <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
                             <Flex>
@@ -344,7 +339,7 @@ const ProjectDetails = (props: any) => {
                                         p={'5px'}
                                         borderRadius="full"
                                         boxSize="42px"
-                                        name={getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)}
+                                        name={getUserNameFromId(AllUsersData, SingleProjectData.basic.created_by)}
                                         color={'default.whiteText'}
                                         mt={'24px'}
                                     />
@@ -354,24 +349,28 @@ const ProjectDetails = (props: any) => {
                                                 Created by
                                             </Text>
                                             <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                {getUserNameFromId(AllUsersData, SingleProjectData && SingleProjectData.basic.created_by)}
+                                                {getUserNameFromId(AllUsersData, SingleProjectData.basic.created_by)}
                                             </Text>
-
                                             <Flex flexDir={'row'}>
                                                 <Box>
                                                     <Text ml={16} color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Project ID
                                                     </Text>
-                                                    <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData && SingleProjectData.basic.id}
-                                                    </Text>
+                                                    <Center justifyContent={'flex-start'}>
+                                                        <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                            {SingleProjectData.basic.id}
+                                                        </Text>
+                                                        <Text ml={8} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} cursor={'pointer'}>
+                                                            <CopyIcon />
+                                                        </Text>
+                                                    </Center>
                                                 </Box>
                                                 <Box ml={'145px'}>
                                                     <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Project Name
                                                     </Text>
-                                                    <Text title={SingleProjectData && SingleProjectData.basic.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {getTruncatedText(SingleProjectData && SingleProjectData.basic.name, 50)}
+                                                    <Text title={SingleProjectData.basic.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                        {getTruncatedText(SingleProjectData.basic.name, 50)}
                                                     </Text>
                                                 </Box>
                                             </Flex>
@@ -381,7 +380,7 @@ const ProjectDetails = (props: any) => {
                                                         Created On
                                                     </Text>
                                                     <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData && convertTime(SingleProjectData.basic.created_at, false)}
+                                                        {convertTime(SingleProjectData.basic.created_at, false)}
                                                     </Text>
                                                 </Box>
                                                 <Box ml={'51px'}>
@@ -389,7 +388,7 @@ const ProjectDetails = (props: any) => {
                                                         Last Modified
                                                     </Text>
                                                     <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {SingleProjectData && convertTime(SingleProjectData.basic.updated_at, true)}
+                                                        {convertTime(SingleProjectData.basic.updated_at, true)}
                                                     </Text>
                                                 </Box>
                                             </Flex>
@@ -397,33 +396,31 @@ const ProjectDetails = (props: any) => {
                                                 <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>
                                                     Tag:
                                                 </Text>
-                                                <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={false}>
+                                                <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={true}>
                                                     <PopoverTrigger>
                                                         <Text color={'default.textButton'} ml={8} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
                                                             + Add Tag
                                                         </Text>
                                                     </PopoverTrigger>
                                                     <PopoverContent p={5}>
-                                                        <Stack spacing={4}>
+                                                        <HStack spacing={4}>
                                                             <FormControl>
                                                                 <Input onChange={(evt: any) => setPopOverTag(evt.target.value)} value={popOverTag} placeholder="Type Here" />
                                                             </FormControl>
-                                                            <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-end">
-                                                                <Button variant="outline" onClick={tagPopOver.onClose} cursor={'pointer'}>
-                                                                    Cancel
-                                                                </Button>
+                                                            <ButtonGroup display="flex" mt={'20px'} ml={'10px'} justifyContent="flex-end">
                                                                 <Button onClick={handleAddTag} bg={'default.textButton'} cursor={'pointer'}>
                                                                     Add Tag
                                                                 </Button>
                                                             </ButtonGroup>
-                                                        </Stack>
+                                                        </HStack>
                                                     </PopoverContent>
                                                 </Popover>
+                                            </Flex>{' '}
+                                            <Flex ml={'10px'} mt={'8px'} minHeight={'24px'}>
                                                 <Center borderRadius={3}>
                                                     <>
                                                         <HStack spacing={4}>
-                                                            {SingleProjectData &&
-                                                                SingleProjectData.basic.tags !== null &&
+                                                            {SingleProjectData.basic.tags !== null &&
                                                                 SingleProjectData.basic.tags.map((tag: string, tagIndex: number) => {
                                                                     if (tagIndex === 2) {
                                                                         return (
@@ -438,9 +435,26 @@ const ProjectDetails = (props: any) => {
                                                                                 ml={8}
                                                                                 pr={'5px'}
                                                                             >
-                                                                                <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
-                                                                                    + {SingleProjectData.basic.tags.length - 2} more
-                                                                                </TagLabel>
+                                                                                <Popover placement="right" closeOnBlur={false}>
+                                                                                    <PopoverTrigger>
+                                                                                        <TagLabel fontSize={'14px'} fontWeight={600} pl={6} pr={6} maxWidth={'125px'}>
+                                                                                            + {SingleProjectData.basic.tags.length - 2} more
+                                                                                        </TagLabel>
+                                                                                    </PopoverTrigger>
+                                                                                    <PopoverContent color={textColor2} bg={themeBg} borderColor={themeBg}>
+                                                                                        <PopoverArrow />
+                                                                                        <PopoverCloseButton />
+                                                                                        <PopoverBody>
+                                                                                            {SingleProjectData.basic.tags.map((tagPop: any) => {
+                                                                                                return (
+                                                                                                    <Text fontSize={'14px'} fontWeight={600} pl={6} pr={6} key={tagPop}>
+                                                                                                        {tagPop}
+                                                                                                    </Text>
+                                                                                                );
+                                                                                            })}
+                                                                                        </PopoverBody>
+                                                                                    </PopoverContent>
+                                                                                </Popover>
                                                                             </Tag>
                                                                         );
                                                                     } else if (tagIndex < 2) {
@@ -468,7 +482,6 @@ const ProjectDetails = (props: any) => {
                                                     </>
                                                 </Center>
                                             </Flex>
-
                                             <Editable
                                                 height={'80px'}
                                                 maxWidth={'400px'}
@@ -482,13 +495,13 @@ const ProjectDetails = (props: any) => {
                                             >
                                                 <Flex>
                                                     <Center>
-                                                        <Text mt={'15px'} color={textColor2} lineHeight={'22px'} fontWeight={600}>
+                                                        <Text mt={'14px'} color={textColor2} fontWeight={600}>
                                                             Description
                                                         </Text>
                                                         <EditableControls />
                                                     </Center>
                                                 </Flex>
-                                                <Box maxWidth={'425px'} maxHeight={'80px'} overflowY={'auto'} color={accesstextColor}>
+                                                <Box maxWidth={'425px'} maxHeight={'48px'} overflowY={'auto'} color={accesstextColor}>
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>

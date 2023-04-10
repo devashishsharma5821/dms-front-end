@@ -1,10 +1,8 @@
 import { AllUsers } from '../models/profile';
-import { GetAllProjectsDetail, GetSingleProjectDetail } from '../models/project';
+import { GetAllProjectsDetail } from '../models/project';
 import moment from 'moment';
-import { cloneDeep } from 'lodash';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
-    if (selectedProject === '') {
         if (selectedProject === '') {
             return projectList[0].project_access;
         } else {
@@ -12,7 +10,6 @@ export const getProjectAccessList = (projectList: any, selectedProject: string) 
                 return project.id.toString() === selectedProject;
             })[0].project_access;
         }
-    }
 };
 export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDetail[]) => {
     const projectsName = projectList.map((project) => {
@@ -25,7 +22,6 @@ export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDeta
 };
 export const copyToClipBoard = (copyMessage: string, callBack: any) => {
     navigator.clipboard.writeText(copyMessage).then(() => {
-        callBack();
         callBack();
     });
 };
@@ -105,6 +101,8 @@ export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type
                 return project.id === projectSelected;
             });
         }
+    } else {
+        projectFilteredData = allProjectsData;
     }
     if(type === 'All') {
         return projectFilteredData;

@@ -1,20 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Avatar, AvatarGroup,
-    Box,
-    Button,
-    Center,
-    Divider,
-    Flex,
-    FormControl,
-    FormLabel,
-    Input,
-    Select,
-    Stack,
-    Text,
-    useColorModeValue, useDisclosure,
-    VStack
-} from '@chakra-ui/react';
+import { Avatar, AvatarGroup, Box, Button, Center, Divider, Flex, FormControl, FormLabel, Input, Select, Stack, Text, useColorModeValue, useDisclosure, VStack } from '@chakra-ui/react';
 import { DownArrowShare } from '../../../assets/icons/DownArrowShare';
 import OrIconSmall from '../../../assets/icons/OrIconSmall';
 import { CloseIcon } from '../../../assets/icons/CloseIcon';
@@ -28,6 +13,7 @@ import { getAndUpdateAllProjectsData } from '../../../zustandActions/projectActi
 import { getProjectAccessList, getProjectNameAndLabelsForSelect, getUserNameFromId } from '../../../utils/common.utils';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 import { getAndUpdateAllUsersData } from '../../../zustandActions/commonActions';
+import IsRequired from '../../../assets/icons/IsRequired';
 
 const CreateDatasetFormScreen = (props: any) => {
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -37,7 +23,7 @@ const CreateDatasetFormScreen = (props: any) => {
     const [formFields, setFormFields] = useState({});
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
     const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
-    const [projectNames, setProjectNames] = React.useState([{name: '', id: ''}]);
+    const [projectNames, setProjectNames] = React.useState([{ name: '', id: '' }]);
     const [projectAccess, setProjectAccess] = React.useState<any>([]);
     const projectModal = useDisclosure();
     const handleDataSetNameChange = (evt: any) => {
@@ -76,9 +62,9 @@ const CreateDatasetFormScreen = (props: any) => {
                     name: 'Databricks Tables',
                     icon: <SourceDatabricks color={'#666C80'} />,
                     type: 'icon',
-                    disable: true,
+                    disable: true
                 },
-                { name: 'Azure Blob Storage', icon: <SourceAzure color={'#666C80'} />, type: 'icon',  disable: true, }
+                { name: 'Azure Blob Storage', icon: <SourceAzure color={'#666C80'} />, type: 'icon', disable: true }
             ]
         },
         {
@@ -87,13 +73,13 @@ const CreateDatasetFormScreen = (props: any) => {
                     name: 'DBFS',
                     icon: <SourceDBFS color={'#666C80'} />,
                     type: 'icon',
-                    disable: true,
+                    disable: true
                 },
                 {
                     name: 'Upload CSV OR PARQUET',
                     icon: <SourceCSV color={'#666C80'} />,
                     type: 'icon',
-                    disable: false,
+                    disable: false
                 }
             ]
         }
@@ -102,7 +88,7 @@ const CreateDatasetFormScreen = (props: any) => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
-            if(projectSelected === '') {
+            if (projectSelected === '') {
                 setProjectSelected(AllProjectsData[0].id);
                 const formFields = {
                     datasetName,
@@ -113,7 +99,6 @@ const CreateDatasetFormScreen = (props: any) => {
             }
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
             setProjectAccess(getProjectAccessList(AllProjectsData, projectSelected));
-
         }
     }, [AllProjectsData]);
 
@@ -159,7 +144,11 @@ const CreateDatasetFormScreen = (props: any) => {
                             >
                                 <>
                                     {projectNames.map((project, projectIndex) => {
-                                        return <option key={projectIndex} value={project.id}>{project.name}</option>
+                                        return (
+                                            <option key={projectIndex} value={project.id}>
+                                                {project.name}
+                                            </option>
+                                        );
                                     })}
                                 </>
                             </Select>
@@ -172,6 +161,10 @@ const CreateDatasetFormScreen = (props: any) => {
                     <Box width={'768px'}>
                         <Text color={datasetTitleColor} mb={'-14px'} fontWeight={600}>
                             Create New Project
+                        </Text>
+                        <Text ml={'152px'} mt={'-20px'}>
+                            {' '}
+                            <IsRequired />
                         </Text>
 
                         <Button onClick={handleProjectCreate} width={'127px'} height={'36px'} mt={18} color={'default.toolbarButton'} bg={'white'} border={'1px'} borderColor={'default.toolbarButton'}>
@@ -201,20 +194,12 @@ const CreateDatasetFormScreen = (props: any) => {
                                     name="datasetName"
                                     variant="outline"
                                 />
-
+                            </FormControl>
+                            <FormControl>
                                 <FormLabel htmlFor="Description" mt={20} mb={6} color={datasetTitleColor} fontWeight={600}>
                                     Description
                                 </FormLabel>
-                                <Input
-                                    height={98}
-                                    width={484}
-                                    borderRadius={3}
-                                    border={'1px'}
-                                    borderColor={'light.lighterGrayishBlue'}
-                                    as={Input}
-                                    id="DescriptionDatasetName"
-                                    name="Description"
-                                />
+                                <Input height={98} width={484} borderRadius={3} border={'1px'} borderColor={'light.lighterGrayishBlue'} as={Input} id="DescriptionDatasetName" name="Description" />
                             </FormControl>
                         </VStack>
                     </Flex>
@@ -249,19 +234,17 @@ const CreateDatasetFormScreen = (props: any) => {
                             </Text>
                         </Center>
                     </Flex>
-                    {
-                        AllUsersData && AllProjectsData &&
+                    {AllUsersData && AllProjectsData && (
                         <Flex>
                             <Center>
                                 <AvatarGroup size={'md'} max={3} spacing={1}>
-                                    {projectAccess.map((access: any, accessIndex: any) => {
+                                    {projectAccess?.map((access: any, accessIndex: any) => {
                                         return <Avatar key={accessIndex} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
                                     })}
                                 </AvatarGroup>
                             </Center>
                         </Flex>
-                    }
-
+                    )}
                 </Box>
 
                 <Stack direction="row" h="338px" p={4}>
@@ -278,34 +261,36 @@ const CreateDatasetFormScreen = (props: any) => {
                                 return (
                                     <Flex flexDirection={'row'} key={rowIndex}>
                                         {row.sections &&
-                                        row.sections.map((section) => {
-                                            return (
-                                                <>
-                                                    {section.type === 'icon' && (
-                                                        <Box
-                                                            key={section.name}
-                                                            _hover={{ bg: 'default.toolbarButton', color: 'white' }}
-                                                            cursor={(section.disable) ? 'not-allowed': 'pointer'}
-                                                            ml={'20px'}
-                                                            bg="default.lightGray"
-                                                            width={'155px'}
-                                                            height="134px"
-                                                            mt={'14px'}
-                                                            className="sidebar-box"
-                                                            borderRadius={'4'}
-                                                            onClick={() => triggerAction(section.name)}
-                                                        >
-                                                            <Center cursor={(section.disable) ? 'not-allowed': 'pointer'} mt={'35px'}>{section.icon}</Center>
+                                            row.sections.map((section) => {
+                                                return (
+                                                    <>
+                                                        {section.type === 'icon' && (
+                                                            <Box
+                                                                key={section.name}
+                                                                _hover={{ bg: 'default.toolbarButton', color: 'white' }}
+                                                                cursor={section.disable ? 'not-allowed' : 'pointer'}
+                                                                ml={'20px'}
+                                                                bg="default.lightGray"
+                                                                width={'155px'}
+                                                                height="134px"
+                                                                mt={'14px'}
+                                                                className="sidebar-box"
+                                                                borderRadius={'4'}
+                                                                onClick={() => triggerAction(section.name)}
+                                                            >
+                                                                <Center cursor={section.disable ? 'not-allowed' : 'pointer'} mt={'35px'}>
+                                                                    {section.icon}
+                                                                </Center>
 
-                                                            <Box cursor={(section.disable) ? 'not-allowed': 'pointer'} textAlign={'center'} mt={'4px'} color={'black'} fontWeight={400}>
-                                                                {' '}
-                                                                {section.name}{' '}
+                                                                <Box cursor={section.disable ? 'not-allowed' : 'pointer'} textAlign={'center'} mt={'4px'} color={'black'} fontWeight={400}>
+                                                                    {' '}
+                                                                    {section.name}{' '}
+                                                                </Box>
                                                             </Box>
-                                                        </Box>
-                                                    )}
-                                                </>
-                                            );
-                                        })}
+                                                        )}
+                                                    </>
+                                                );
+                                            })}
                                     </Flex>
                                 );
                             })}
@@ -313,12 +298,7 @@ const CreateDatasetFormScreen = (props: any) => {
                     </Center>
                 </Flex>
                 {projectModal.isOpen && (
-                    <CreateProjectModal
-                        isOpen={projectModal.isOpen}
-                        onClose={projectModal.onClose}
-                        onSuccess={onCreateProjectSuccess}
-                        isEdit={{ status: false, data: {}, usersData: [] }}
-                    />
+                    <CreateProjectModal isOpen={projectModal.isOpen} onClose={projectModal.onClose} onSuccess={onCreateProjectSuccess} isEdit={{ status: false, data: {}, usersData: [] }} />
                 )}
             </Flex>
         </>

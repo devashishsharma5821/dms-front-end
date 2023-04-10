@@ -107,7 +107,7 @@ const Output = (props: any) => {
     };
 
     return (
-        <Modal size={'6xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} size={'6xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
             <ModalContent width={'1229px'} borderRadius={'2'} maxHeight={'829px'}>
                 <ModalHeader color={shretextColor} mt={'13'} mb={'15'} ml={20}>

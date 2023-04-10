@@ -62,7 +62,7 @@ const DeployPipelineModal = (props: any) => {
 
     return (
         <Flex width={'653px'}>
-            <Modal size={'2xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
+            <Modal size={'2xl'} closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
                 <ModalOverlay />
 
                 <ModalContent>

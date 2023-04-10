@@ -7,6 +7,7 @@ const useAppStore = create<AppState>((set) => ({
     DmsDatabricksCredentialsValidToken: false,
     AllUsersData: null,
     DmsComputeData: null,
+    DmsSingleComputeData: null,
     ExperimentData: null,
     TransformersData: null,
     AllProjectsData: null,
@@ -29,7 +30,10 @@ const useAppStore = create<AppState>((set) => ({
     dbSettingsData: [],
     toastMessage: {},
     spinnerInfo: false,
-    selectedStageId: null
+    selectedStageId: null,
+    selectedCellId: null,
+    selectedTransformer: null,
+    stages: []
 }));
 
 export default useAppStore;

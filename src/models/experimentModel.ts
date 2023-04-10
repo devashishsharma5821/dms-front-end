@@ -26,7 +26,7 @@ export class ExperimentCreate<T> {
     dmsCreateExperiment!: T;
 }
 export class ExperimentCreateDetail {
-    dmsCreateExperiment!: boolean;
+    dmsCreateExperiment!: string;
 }
 export interface GetExperimentAppStoreState {
     ExperimentData: Experiment;
@@ -37,4 +37,15 @@ export class ExperimentEdit<T> {
 }
 export class ExperimentEditDetail {
     dmsEditExperiment!: boolean;
+}
+
+export class CloneExperiment<T> {
+    dmsCloneExperiment!: {
+    experiment_id: T;
+}
+}
+export class CloneExperimentDetail {
+    dmsCloneExperiment!: {
+        experiment_id: string
+    }
 }

@@ -13,14 +13,14 @@ import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../models/toastMessages';
-const { toast } = createStandaloneToast();
-
+import './ComputeJsonModal.scss';
 const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
     const [dbSettingsData] = useAppStore((state: any) => [state.dbSettingsData]);
     const navigate = useNavigate();
     const client = useApolloClient();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [isComputeCreated, setIsComputeCreated] = useState<boolean>(false);
+    const { toast } = createStandaloneToast();
     useEffect(() => {
         formSchema.worker_type_id.options = dbSettingsData;
         formSchema.driver_type_id.options = dbSettingsData;
@@ -75,13 +75,13 @@ const ComputeJsonModal = (props: COMPUTE_MODAL_PROPS) => {
             })
             .catch((err) => {
                 setIsDisabled(false);
-                toast(getToastOptions(err, 'error'));
-                props.onClose();
+                toast(getToastOptions('Something went wrong, please try again later!', 'error'));
+                // props.onClose();
             });
     };
 
     return (
-        <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
+        <Modal closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} isOpen={props.isOpen} onClose={props.onClose} isCentered>
             <ModalOverlay />
             <ModalContent maxWidth={632} color="#171717">
                 <ModalHeader height="var(--chakra-space-60)" fontSize={16} borderBottom="1px solid #EAEAEA" fontWeight="700" flex={'none'} padding={20}>

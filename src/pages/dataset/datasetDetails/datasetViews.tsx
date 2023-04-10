@@ -10,7 +10,7 @@ import { convertTime, getUserNameFromId } from '../../../utils/common.utils';
 const DatasetViews = (props: any) => {
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
     const gridRef = useRef<AgGridReact<any>>(null);
-    const gridStyle = useMemo(() => ({ height: '300px', width: '98%' }), []);
+    const gridStyle = useMemo(() => ({ height: '400px', width: '98%' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
     const navigate = useNavigate();
     const renderDatasetId = (params: any) => {
@@ -37,14 +37,14 @@ const DatasetViews = (props: any) => {
             field: 'created_by',
             headerName: 'Created By',
             valueFormatter: (params: any) => {
-                return getUserNameFromId(props.allUsers, params.data.created_by)
+                return getUserNameFromId(props.allUsers, params.data.created_by);
             }
         },
         {
             field: 'created_at',
             headerName: 'Created On',
             valueFormatter: (params: any) => {
-                return convertTime(params.data.created_at, false)
+                return convertTime(params.data.created_at, false);
             }
         },
         {
@@ -55,28 +55,28 @@ const DatasetViews = (props: any) => {
 
     useEffect(() => {
         let datasourceData: any = [];
-        props.data.forEach((project:GetAllProjectsDetail) => {
+        props.data.forEach((project: GetAllProjectsDetail) => {
             let listOfDataSources = [];
-            if(project.datasources.length > 0) {
+            if (project.datasources.length > 0) {
                 listOfDataSources = project.datasources.map((datasource: any) => {
                     return datasource;
                 });
-            };
+            }
             datasourceData.push(...listOfDataSources);
         });
         setRowData(datasourceData);
-        if(props.search !== '') {
+        if (props.search !== '') {
             setTimeout(() => {
                 doGridSearch();
-            }, 200)
+            }, 200);
         }
     }, [props.data]);
 
     const doGridSearch = () => {
-        if(gridRef?.current!.api) {
+        if (gridRef?.current!.api) {
             gridRef?.current!.api.setQuickFilter(props.search);
         }
-    }
+    };
     useEffect(() => {
         doGridSearch();
     }, [props.search]);
@@ -85,7 +85,7 @@ const DatasetViews = (props: any) => {
         gridRef?.current!?.api?.sizeColumnsToFit();
     };
     window.addEventListener('resize', () => {
-        if(gridRef?.current!.api) {
+        if (gridRef?.current!.api) {
             gridRef?.current!?.api?.sizeColumnsToFit();
         }
     });
@@ -102,14 +102,14 @@ const DatasetViews = (props: any) => {
                         </Box>
                         <Box color={'default.containerAgGridRecords'}>
                             <Text ml={'14'} fontWeight={700}>
-                                1
+                                {rowData.length} records
                             </Text>
                         </Box>
                     </Center>
                 </Flex>
                 <Flex flexWrap={'wrap'} flexDirection={'row'} ml={'24'}>
                     <Box style={gridStyle} className="ag-theme-alpine">
-                        <AgGridReact<any> ref={gridRef} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                        <AgGridReact<any> ref={gridRef} pagination={true} paginationPageSize={10} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                     </Box>
                 </Flex>
             </Box>

@@ -27,7 +27,7 @@ const SideBarMenu = () => {
     const [isHovering, setIsHovering] = React.useState(false);
     const [activateSubMenu, setActivateSubMenu] = React.useState(false);
     const [activateThirdSubMenu, setActivateThirdSubMenu] = React.useState(false);
-    const zIndexStyle = useMemo(() => ({ zIndex: '10000' }), []);
+    const zIndexStyle = useMemo(() => ({ zIndex: '1' }), []);
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const createComputeModal = useDisclosure();
     const createProjectFromModal = useDisclosure();
@@ -109,7 +109,7 @@ const SideBarMenu = () => {
             <div style={{ ...zIndexStyle, position: 'absolute', marginLeft: '464px', border: ' 1px solid #D8DCDE' }} id="mySidebar" onMouseOver={hoverInThirdSubMenu} onMouseOut={hoverOutThirdSubMenu}>
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
-                        <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
+                        <Box width={'254px'} pl={'0px'} mt="17">
                             <h3>
                                 <ProjectDetailsMenu />
                             </h3>
@@ -130,7 +130,7 @@ const SideBarMenu = () => {
                 <Flex h={'100vh'} overflow={'hidden'} as="nav" justify="space-between" wrap="wrap" bg={themeSecondLevel}>
                     <VStack>
                         {sideBarMenuIcons[0].section[currentIndex].isClicked && (
-                            <Box width={'254px'} pl={'0px'} mt="17" cursor={'pointer'}>
+                            <Box width={'254px'} pl={'0px'} mt="17">
                                 {sideBarMenuIcons[0].section[currentIndex].iconName === 'Create' && (
                                     <h3>
                                         <CreateNew openCreateModal={(type: string) => triggerCreateModal(type)} />
@@ -315,27 +315,23 @@ const SideBarMenu = () => {
                             )}
                         </VStack>{' '}
                     </Flex>
-                    {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
-                    {createDatasetModal.isOpen && <CreateDatasetModal isOpen={createDatasetModal.isOpen} onClose={createDatasetModal.onClose} />}
-                    {createExperimentModal.isOpen && <ExperimentModal isOpen={createExperimentModal.isOpen} onClose={createExperimentModal.onClose} />}
-                    {createProjectFromModal.isOpen && (
-                        <LeftSideBarMenuCreateProjectModal
-                            isOpen={createProjectFromModal.isOpen}
-                            onClose={createProjectFromModal.onClose}
-                            openCreateProjectFromScratch={openCreateProjectFromScratch}
-                        />
-                    )}
-                    {createProjectModal.isOpen && (
-                        <CreateProjectModal
-                            isOpen={createProjectModal.isOpen}
-                            onClose={createProjectModal.onClose}
-                            onSuccess={onCreateProjectSuccess}
-                            isEdit={{ status: false, data: {}, usersData: [] }}
-                        />
-                    )}
                 </div>
                 {activateSubMenu && secondLevelMenu()}
                 {activateThirdSubMenu && thirdLevelMenu()}
+                {createComputeModal.isOpen && <ComputeJsonModal isOpen={createComputeModal.isOpen} onClose={createComputeModal.onClose} />}
+                {createDatasetModal.isOpen && <CreateDatasetModal isOpen={createDatasetModal.isOpen} onClose={createDatasetModal.onClose} />}
+                {createExperimentModal.isOpen && <ExperimentModal isOpen={createExperimentModal.isOpen} onClose={createExperimentModal.onClose} />}
+                {createProjectFromModal.isOpen && (
+                    <LeftSideBarMenuCreateProjectModal isOpen={createProjectFromModal.isOpen} onClose={createProjectFromModal.onClose} openCreateProjectFromScratch={openCreateProjectFromScratch} />
+                )}
+                {createProjectModal.isOpen && (
+                    <CreateProjectModal
+                        isOpen={createProjectModal.isOpen}
+                        onClose={createProjectModal.onClose}
+                        onSuccess={onCreateProjectSuccess}
+                        isEdit={{ status: false, data: {}, usersData: [] }}
+                    />
+                )}
             </>
         </Flex>
     );

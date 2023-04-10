@@ -1,62 +1,42 @@
-export interface FieldPropsType {
+export interface FieldPropsType extends FormSchemaType {
     name: string;
-    type?: string;
-    label?: string;
-    show?: boolean;
-    className?: string;
-    uiSchema?: any;
-    conditionalRender?: boolean;
-    child?: string;
-    min?: string;
-    uiSchemaOptions?: any;
-    disable?: boolean;
-    options?: any;
-    uioptions?: any;
-    errormessage?: string | undefined;
-    uniqueKey: string;
-    defaultValue: any;
-    wrapper?: any;
+    extraStyles?: any;
+    uniqueKey?: string;
+    // as?: string;
 }
 
-export class InputFieldType<T> {
-    name: any;
-    disabled?: boolean;
-    disable?: boolean;
-    uniqueKey!: string | undefined;
-    children?: any;
-    props?: T;
-    as?: any;
-    extraStyles?: any;
+export interface FormSchemaKey {
+    [key: string]: FormSchemaType;
 }
 
 export interface FormSchemaType {
-    driver_type_id: any;
     type?: string;
     label?: string;
     required?: boolean;
     show?: boolean;
+    isDefaultValue?: boolean;
+    defaultValue?: any;
     errormessage?: string;
     className?: string;
     uiSchema?: any;
-    extraStyles?: any;
     conditionalRender?: boolean;
     child?: string;
-    min?: string;
+    min?: number;
     uiSchemaOptions?: any;
     disable?: boolean;
     options?: any;
-    uioptions?: any;
-    worker_type_id?: any;
+    // uioptions?: any;
+    // driver_type_id: any;
+    extraStyles?: any;
+    // worker_type_id?: any;
     value?: any;
-    isDefault?: any;
-    default_heading_value?: any;
     wrapper?: any;
-    errmsg?: any;
+    msg?: any;
 }
 export interface MainFormType {
     values: any;
-    formSchema: any;
-    initForm: (formSchema: FormSchemaType, values: any) => void;
+    formSchema: FormSchemaKey;
+    initForm: (formSchema: FormSchemaKey, values: any) => void;
     onClose: () => void;
     handleSubmit: (values: any) => void;
     isEdit?: boolean;
@@ -71,52 +51,18 @@ export interface options {
     label?: string;
 }
 
-export interface FormSchemaType {
-    type?: string;
-    label?: string;
-    required?: boolean;
-    show?: boolean;
-    errormessage?: string;
-    className?: string;
-    uiSchema?: any;
-    conditionalRender?: boolean;
-    child?: string;
-    min?: string;
-    uiSchemaOptions?: any;
-    disable?: boolean;
-    options?: any;
-    uioptions?: any;
-    worker_type_id?: any;
-}
 export interface FormBuilderProps {
-    formSchema: FormSchemaType;
+    formSchema: FormSchemaKey;
     onClose: () => void;
     onSubmit: (values: any) => void;
     isEdit?: boolean;
     isDisabled?: boolean;
 }
 
-export interface FormSchemaType {
-    type?: string;
-    label?: string;
-    required?: boolean;
-    show?: boolean;
-    errormessage?: string | undefined;
-    className?: string;
-    uiSchema?: any;
-    conditionalRender?: boolean;
-    child?: string;
-    min?: string;
-    uiSchemaOptions?: any;
-    disable?: boolean;
-    options?: any;
-    uioptions?: any;
-}
 export interface GetFormElementsPropType {
     uniqueKey: string;
     elementName: string;
     formSchemaKey: FormSchemaType;
     defaultValue: any;
     isEdit: boolean | undefined;
-    min: string;
 }
