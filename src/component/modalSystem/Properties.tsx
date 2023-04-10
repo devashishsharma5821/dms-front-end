@@ -31,7 +31,7 @@ import {
     Stack,
     PopoverCloseButton
 } from '@chakra-ui/react';
-import { CloseIcon, PencilIcon } from '../../assets/icons';
+import { CloseIcon, CopyIcon, PencilIcon } from '../../assets/icons';
 import { convertTime, copyToClipBoard, getTruncatedText, getUserNameFromId } from '../../utils/common.utils';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
@@ -43,7 +43,6 @@ import Share from './Share';
 import { AllUsers } from '../../models/profile';
 import { MultiSelect } from 'chakra-multiselect';
 import WhiteExperimentForProperties from '../../assets/icons/WhiteExperimentForProperties';
-import { CopyIcon } from '@chakra-ui/icons';
 
 const Properties = (props: any) => {
     const textColorIcon = useColorModeValue('#666C80', 'white');
@@ -302,15 +301,15 @@ const Properties = (props: any) => {
                                                         <PopoverCloseButton mr={'16px'} mt={'14px'} color={'#757575'} />
                                                     </Box>
                                                 </Flex>
-                                                    <MultiSelect
-                                                        value={tagValue}
-                                                        options={tagOptions}
-                                                        color={defaultInBoxTextColor}
-                                                        onChange={handleTagChange!}
-                                                        create
-                                                        bg={'black'}
-                                                        marginInlineStart={'-10px'}
-                                                    />
+                                                <MultiSelect
+                                                    value={tagValue}
+                                                    options={tagOptions}
+                                                    color={defaultInBoxTextColor}
+                                                    onChange={handleTagChange!}
+                                                    create
+                                                    bg={'black'}
+                                                    marginInlineStart={'-10px'}
+                                                />
                                                 <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-start" cursor={'pointer'}>
                                                     <Button onClick={handleTagSubmit} bg={'default.toolbarButton'} cursor={'pointer'} width={'104px'} height={'36px'} borderRadius={4} mb={20} mt={16}>
                                                         Add Tag(s)
