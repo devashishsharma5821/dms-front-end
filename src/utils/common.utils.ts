@@ -91,6 +91,13 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
     });
 };
 
+export const projectsSearchByNameOnly = (projectData: any, keyword: any) => {
+    const searchTerm = keyword.toLowerCase();
+    return projectData.filter((project: any) => {
+        return project.name.toLowerCase().match(new RegExp(searchTerm, 'g'))
+    });
+};
+
 export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type: string, projectSelected?: string) => {
     let projectFilteredData = [];
     if(projectSelected) {
