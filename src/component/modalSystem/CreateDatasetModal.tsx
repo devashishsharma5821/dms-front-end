@@ -45,12 +45,14 @@ const CreateDataset = (props: any) => {
     const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
     const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
     const { toast } = createStandaloneToast();
-
+    const [isNextAvaiable, setIsNextAvaiable] = useState(false);
+    const [isNextAvaiableForFileUpload, setIsNextAvaiableForFileUpload] = useState(false);
     const [screenState, setScreenState] = useState({
         screen1: true,
         screen2: false,
         screen3: false
     });
+    const [previousStateData, setPreviousStateData] = useState({});
 
     const handleDeleteDataset = () => {
         // TODO After backend adds the delete dataset Id as a input add the delete dataset mutation
@@ -68,21 +70,34 @@ const CreateDataset = (props: any) => {
                     setDatasetName('');
                     updateSpinnerInfo(false);
                     props.onClose();
+                    setScreenState({ screen1: true,
+                        screen2: false,
+                        screen3: false});
                 })
                 .catch((err: any) => {
                     updateSpinnerInfo(false);
                     props.onClose();
                     toast(getToastOptions(`${err}`, 'error'));
+                    setScreenState({ screen1: true,
+                        screen2: false,
+                        screen3: false});
                 });
         } else {
             updateSpinnerInfo(false);
             props.onClose();
+            setScreenState({ screen1: true,
+                screen2: false,
+                screen3: false});
         }
     };
     const createDataset = () => {
         getAndUpdateSingleProjectData(selectedProjectId);
         setSelectedProjectId('');
         setDatasetName('');
+        setPreviousStateData({
+            datasetName: '',
+            projectSelected: ''
+        });
         props.onClose();
         toast(getToastOptions(`File Uploaded Successfully`, 'success'));
     };
@@ -92,6 +107,16 @@ const CreateDataset = (props: any) => {
                 screen1: false,
                 screen2: true,
                 screen3: false
+            };
+            setScreenState(newScreens);
+        }
+    };
+    const navigateToNextScreenFileUpload = () => {
+        if (screenState.screen2) {
+            const newScreens = {
+                screen1: false,
+                screen2: false,
+                screen3: true
             };
             setScreenState(newScreens);
         }
@@ -131,17 +156,28 @@ const CreateDataset = (props: any) => {
             });
             setColumnDefs(colDef);
             setRowData(uploadResponse['sample_rows']);
-            const newScreens = {
-                screen1: false,
-                screen2: false,
-                screen3: true
-            };
-            setScreenState(newScreens);
+            setIsNextAvaiableForFileUpload(true);
         }
     };
     const handleFormFields = (formFields: any) => {
         setDatasetName(formFields.datasetName);
         setSelectedProjectId(formFields.projectSelected);
+    };
+    const enableNext = (enableNextButton: boolean) => {
+        console.log("asdfds",enableNextButton, datasetName )
+        setIsNextAvaiable(enableNextButton);
+    };
+    const navigateToPrevScreen = () => {
+        setPreviousStateData({
+            datasetName: datasetName,
+            projectSelected: selectedProjectId
+        });
+        setScreenState({
+            screen1: true,
+            screen2: false,
+            screen3: false
+        });
+
     };
     return (
         <Modal size={'lg'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -184,7 +220,8 @@ const CreateDataset = (props: any) => {
                 </Center>
                 {screenState.screen1 && (
                     <CreateDatasetFormScreen
-                        setScreenState={(stateOfScreens: any) => setScreenState(stateOfScreens)}
+                        setScreenState={(stateOfNextButton: any) => enableNext(stateOfNextButton)}
+                        previousState={previousStateData}
                         handleFormFields={(formFields: any) => {
                             handleFormFields(formFields);
                         }}
@@ -259,10 +296,43 @@ const CreateDataset = (props: any) => {
                     >
                         Cancel
                     </Button>
-                    {!screenState.screen3 && (
+                    {screenState.screen1 && (
                         <Button
-                            disabled={loading}
+                            disabled={loading || (!isNextAvaiable || datasetName === "")}
                             onClick={navigateToNextScreen}
+                            colorScheme="gray"
+                            bg={'white'}
+                            color={'default.toolbarButton'}
+                            width={'81px'}
+                            border={'1px'}
+                            borderColor={'default.toolbarButton'}
+                            height={'40px'}
+                            borderRadius={4}
+                            ml={'20px'}
+                        >
+                            Next
+                        </Button>
+                    )}
+                    {screenState.screen2 && (
+                        <Button
+                            onClick={navigateToPrevScreen}
+                            colorScheme="gray"
+                            bg={'white'}
+                            color={'default.toolbarButton'}
+                            width={'81px'}
+                            border={'1px'}
+                            borderColor={'default.toolbarButton'}
+                            height={'40px'}
+                            borderRadius={4}
+                            ml={'20px'}
+                        >
+                            Previous
+                        </Button>
+                    )}
+                    {screenState.screen2 && (
+                        <Button
+                            disabled={!isNextAvaiableForFileUpload}
+                            onClick={navigateToNextScreenFileUpload}
                             colorScheme="gray"
                             bg={'white'}
                             color={'default.toolbarButton'}
