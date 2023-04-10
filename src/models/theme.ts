@@ -18,6 +18,9 @@ export const styles = {
             _hover: {
                 textDecoration: 'none'
             }
+        },
+        input: {
+            paddingRight: '25px'
         }
     }
 };
