@@ -21,7 +21,7 @@ import {
     VStack,
     createStandaloneToast,
     AvatarGroup,
-    useDisclosure
+    useDisclosure, FormErrorMessage
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
@@ -229,7 +229,7 @@ const ExperimentModal = (props: any) => {
                     <Box ml={'21'}>
                         <Flex>
                             <VStack align="flex-start">
-                                <FormControl isRequired>
+                                <FormControl isInvalid={experimentName === ""} isRequired>
                                     <FormLabel htmlFor="Project Name" mb={6} color={projectTitleColor} fontWeight={600}>
                                         Experiment Name
                                     </FormLabel>
@@ -246,6 +246,11 @@ const ExperimentModal = (props: any) => {
                                         value={experimentName}
                                         onChange={handleExperimentNameChange}
                                     />{' '}
+                                    {
+                                        experimentName === "" &&
+                                        <FormErrorMessage>Experiment Name is required</FormErrorMessage>
+                                    }
+
                                 </FormControl>
                                 <Flex>
                                     <Center>
@@ -349,7 +354,7 @@ const ExperimentModal = (props: any) => {
                     </Button>
 
                     <Button
-                        disabled={loading}
+                        disabled={loading || experimentName === ''}
                         colorScheme="gray"
                         bg={'white'}
                         color={'default.toolbarButton'}
