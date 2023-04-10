@@ -217,6 +217,7 @@ const Share = (props: any) => {
                     }
                 });
                 setAccessUserList(newAccessList);
+                setUserValue([]);
             }
         }
     };
