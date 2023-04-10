@@ -17,7 +17,7 @@ import client from '../../apollo-client';
 import { ComputeDelete, createCompute, DeleteComputeDetail } from '../../models/computeDetails';
 import { dmsDeleteCompute, dmsEditComputeOffEnableAutoscaling, dmsEditComputeOnEnableAutoscaling } from '../../query';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
-import { convertTime, getUserNameFromId } from '../../utils/common.utils';
+import { convertTime, getTruncatedText, getUserNameFromId } from '../../utils/common.utils';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../models/toastMessages';
 import { DocumentNode } from 'graphql';
@@ -43,6 +43,7 @@ const ComputeDetails = () => {
     const gridStyle = useMemo(() => ({ height: '300px', width: '98%' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
     const params = useParams();
+    const [showEditValuePreview, setShowEditValuePreview] = useState(true);
     const [columnDefs] = useState<ColDef[]>([
         {
             field: 'start_time',
@@ -160,7 +161,7 @@ const ComputeDetails = () => {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
-            <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
+            <ButtonGroup ml={'20px'} justifyContent="center" mt={'50px'}>
                 <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
                 </Button>
@@ -178,6 +179,7 @@ const ComputeDetails = () => {
     }
 
     const handleEditNameChange = (editVal: any) => {
+        setShowEditValuePreview(false);
         setEditValue(editVal);
     };
 
@@ -222,6 +224,7 @@ const ComputeDetails = () => {
                 errorMessage: 'Compute Name Failed To edit'
             });
         }
+        setShowEditValuePreview(true);
     };
 
     const calculateTotalRunTime = (tasks: any) => {
@@ -243,23 +246,28 @@ const ComputeDetails = () => {
                 </Text>
                 <Box className="computeDetailsMainContainer">
                     <Box color={textColor} className="computedetailsContainer-1">
-                        <Button onClick={onBackClickHandler} className="back-button">
-                            &lt;
-                        </Button>
+                        <Box display="flex" alignItems="center">
+                            <Button onClick={onBackClickHandler} className="back-button">
+                                &lt;
+                            </Button>
 
-                        <Editable maxWidth={'800px'} textAlign="left" fontWeight={400} value={editValue} onChange={handleEditNameChange} onSubmit={handleEditName}>
-                            <Flex>
-                                <Center mt={'-10'}>
-                                    <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
-                                        <EditablePreview />
-                                        <Input as={EditableInput} height={'30px'} mt={'-10px'} />
+                            <Editable maxWidth={'500px'} width={'500px'} textAlign="left" fontWeight={400} value={editValue} onCancel={() => setShowEditValuePreview(true)} onEdit={() => setShowEditValuePreview(false)} onChange={handleEditNameChange} onSubmit={handleEditName}>
+                                <Flex>
+                                    <Center mt={'-10'}>
+                                        <Box height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                            {
+                                                showEditValuePreview &&
+                                                <Text title={editValue} fontSize={'24px'} fontWeight={700}>{getTruncatedText(editValue, 40)}</Text>
+                                            }
+                                            <Input as={EditableInput} height={'30px'} mt={'-10px'} width={'500px'} />
+                                        </Box>
+                                    </Center>
+                                    <Box mt={'-45px'}>
+                                        <EditableControlsName />
                                     </Box>
-                                </Center>
-                                <Box mt={'-40px'}>
-                                    <EditableControlsName />
-                                </Box>
-                            </Flex>
-                        </Editable>
+                                </Flex>
+                            </Editable>
+                        </Box>
                         <Button variant="outline" className="delete-button" fontWeight={100} onClick={() => onDeleteHandler(DmsSingleComputeData.id)}>
                             Delete
                         </Button>
@@ -292,8 +300,8 @@ const ComputeDetails = () => {
                                     </Box>
                                     <Box width={'150px'} left={'20'}>
                                         <Text fontSize={14}>Compute Name</Text>
-                                        <Text fontSize={14} fontWeight={600}>
-                                            {DmsSingleComputeData.name}
+                                        <Text title={DmsSingleComputeData.name} fontSize={14} fontWeight={600}>
+                                            {getTruncatedText(DmsSingleComputeData.name, 16)}
                                         </Text>
                                     </Box>
                                 </Box>
