@@ -106,11 +106,10 @@ const ExperimentModal = (props: any) => {
             .mutate<ExperimentCreate<ExperimentCreateDetail>>({
                 mutation: createExperiment(formFields)
             })
-            .then(() => {
+            .then((response) => {
                 toast(getToastOptions(`Experiment has being successfully created`, 'success'));
-                getAndUpdateSingleProjectData(projectSelected);
+                navigate(`/projectDetails/${projectSelected}/experiment/${response.data?.dmsCreateExperiment}`);
                 updateSpinnerInfo(false);
-                navigate(`/projectDetails/${projectSelected}`);
                 setFormFields({});
                 setProjectSelected('');
                 setExperimentName('');

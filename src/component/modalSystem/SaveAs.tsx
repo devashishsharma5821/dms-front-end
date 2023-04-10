@@ -25,7 +25,7 @@ import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState } from '../../models/project';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { getProjectNameAndLabelsForSelect } from '../../utils/common.utils';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CloneExperiment, CloneExperimentDetail } from '../../models/experimentModel';
 import client from '../../apollo-client';
 import { getToastOptions } from '../../models/toastMessages';
@@ -40,6 +40,7 @@ const SaveAs = (props: any) => {
     const [selectedProjectId, setSelectedProjectId] = React.useState('');
     const params = useParams();
     const { toast } = createStandaloneToast();
+    const navigate = useNavigate();
     interface databricksSettings {
         projectName: string;
         experimentName: string;
@@ -79,21 +80,21 @@ const SaveAs = (props: any) => {
                 validateOnChange={true}
                 onSubmit={(values) => {
                  setLoading(true);
-                 console.log('Values', values.experimentName, selectedProjectId, params.experimentId);
                  const cloneVariables = {
-                     projectSelected: selectedProjectId,
+                     projectSelected: params.projectId,
                      experimentId: params.experimentId,
-                     experimentName: values.experimentName
+                     experimentName: values.experimentName,
+                     destination_project_id: selectedProjectId
                 };
                  // The below api will be available when needs to be integrated
                     client.mutate<CloneExperiment<CloneExperimentDetail>>({
                         mutation: cloneExperiment(cloneVariables)
                     })
                     .then((response) => {
-                        console.log('Respnse', response)
                         props.onClose();
                         setLoading(false);
                         toast(getToastOptions('Experiment Cloned Successfully', 'success'));
+                        navigate(`/projectDetails/${selectedProjectId}/experiment/${response.data?.dmsCloneExperiment.experiment_id}`);
                         setSelectedProjectId('');
                     })
                     .catch((err) => toast(getToastOptions(`${err}`, 'error')));
