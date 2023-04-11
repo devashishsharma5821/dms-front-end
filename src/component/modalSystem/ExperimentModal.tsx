@@ -21,6 +21,8 @@ import {
     VStack,
     createStandaloneToast,
     AvatarGroup,
+    Popover,
+    PopoverTrigger,
     useDisclosure, FormErrorMessage
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
@@ -37,9 +39,12 @@ import { ExperimentCreate, ExperimentCreateDetail } from '../../models/experimen
 import { useNavigate } from 'react-router-dom';
 import CreateProjectModal from './CreateProjectModal';
 import { MultiSelect } from 'chakra-multiselect';
+import IsRequired from '../../assets/icons/IsRequired';
+import Share from './Share';
 // import CreateProjectModal from './CreateProjectModal';
 
 const ExperimentModal = (props: any) => {
+    const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
     const projectTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
@@ -59,6 +64,8 @@ const ExperimentModal = (props: any) => {
     const { toast } = createStandaloneToast();
     const navigate = useNavigate();
     const projectModal = useDisclosure();
+    const AddMembers = useDisclosure();
+    const tagPopOver = useDisclosure();
     const handleProjectChange = (evt: any) => {
         setProjectSelected(evt.target.value);
         const formFields = {
@@ -124,6 +131,9 @@ const ExperimentModal = (props: any) => {
     };
     const handleProjectCreate = () => {
         projectModal.onOpen();
+    };
+    const handleAddMember = () => {
+        AddMembers.onOpen();
     };
     const onCreateProjectSuccess = (projectName: any, projectId: any) => {
         setProjectSelected(projectId);
@@ -205,6 +215,10 @@ const ExperimentModal = (props: any) => {
                             <Text color={projectTitleColor} mb={'-14px'} fontWeight={600}>
                                 Create New Project
                             </Text>
+                            <Text ml={'152px'} mt={'-20px'}>
+                                {' '}
+                                <IsRequired />
+                            </Text>
 
                             <Button
                                 onClick={handleProjectCreate}
@@ -216,6 +230,7 @@ const ExperimentModal = (props: any) => {
                                 border={'1px'}
                                 borderColor={'default.toolbarButton'}
                                 borderRadius={4}
+                                fontWeight={600}
                             >
                                 Create Project
                             </Button>
@@ -244,6 +259,7 @@ const ExperimentModal = (props: any) => {
                                         name="projectName"
                                         variant="outline"
                                         value={experimentName}
+                                        mb={'20px'}
                                         onChange={handleExperimentNameChange}
                                     />{' '}
                                     {
@@ -252,28 +268,18 @@ const ExperimentModal = (props: any) => {
                                     }
 
                                 </FormControl>
-                                <Flex>
-                                    <Center>
-                                        <Text color={projectTitleColor} mt={'14'} fontWeight={600}>
-                                            Tag:
-                                        </Text>
-                                    </Center>
-                                </Flex>
-                                <Flex>
-                                    <Box width={'592px'} mr={'20px'} pl={'-50px'} height={'36px'}>
-                                        <MultiSelect
-                                            value={tagValue}
-                                            options={tagOptions}
-                                            mr={'200px'}
-                                            color={defaultInBoxTextColor}
-                                            label=""
-                                            onChange={handleTagChange!}
-                                            create
-                                            bg={'black'}
-                                            marginInlineStart={'-4px'}
-                                        />
-                                    </Box>
-                                </Flex>
+                                <Flex ml={'16px'} maxHeight={'37px'} maxWidth={'400px'}>
+                                    <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>
+                                        Tag:
+                                    </Text>
+                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={true}>
+                                        <PopoverTrigger>
+                                            <Text color={'default.textButton'} ml={8} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
+                                                + Add Tag
+                                            </Text>
+                                        </PopoverTrigger>
+                                    </Popover>
+                                </Flex>{' '}
                                 {/*<FormControl isRequired>*/}
                                 {/*    <FormLabel htmlFor="existingCompute" color={projectTitleColor} mt={12} fontWeight={600}>*/}
                                 {/*        Link To*/}
@@ -320,12 +326,16 @@ const ExperimentModal = (props: any) => {
                                 <Text color={projectTitleColor} mt={'46'} fontWeight={600}>
                                     Shared with:
                                 </Text>
+                                {/* <Text onClick={handleAddMember} color={'default.textButton'} ml={8} mt={'46'} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
+                                    + Add Member(s)
+                                </Text>
+                                {AddMembers.isOpen && <Share isOpen={AddMembers.isOpen} onClose={AddMembers.onClose} />} */}
                             </Center>
                         </Flex>
                         {AllUsersData && (
                             <Flex>
                                 <Center>
-                                    <AvatarGroup size={'md'} max={3} spacing={1}>
+                                    <AvatarGroup size={'md'} max={4} spacing={1}>
                                         {projectAccess?.map((access: any, accessIndex: any) => {
                                             return <Avatar key={access.id} name={getUserNameFromId(AllUsersData, access.user_id)} color={'default.whiteText'} />;
                                         })}
@@ -344,26 +354,26 @@ const ExperimentModal = (props: any) => {
                         colorScheme="gray"
                         bg={'white'}
                         color={'default.toolbarButton'}
-                        width={'81px'}
+                        width={'72px'}
                         border={'1px'}
                         borderColor={'default.toolbarButton'}
-                        height={'40px'}
+                        height={'36px'}
                         borderRadius={4}
                     >
-                        Cancel
+                        Close
                     </Button>
 
                     <Button
-                        disabled={loading || experimentName === ''}
+                        disabled={experimentName === '' || projectSelected === ''}
                         colorScheme="gray"
-                        bg={'white'}
-                        color={'default.toolbarButton'}
-                        width={'81px'}
+                        bg={'default.toolbarButton'}
+                        color={'white'}
+                        width={'72px'}
                         border={'1px'}
                         borderColor={'default.toolbarButton'}
-                        height={'40px'}
+                        height={'36px'}
                         borderRadius={4}
-                        ml={'20px'}
+                        ml={'14px'}
                         onClick={handleExperimentCreate}
                     >
                         Create
