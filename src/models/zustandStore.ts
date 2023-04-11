@@ -29,6 +29,7 @@ export interface AppState {
     TransformersData: any;
     AllProjectsData: any;
     SingleProjectData: any;
+    DatasetDetailData: any;
     UserConfig: [];
     lastAliveMessage: AliveEvent | null;
     inferStartedMessaage: StartedEvent | null;
@@ -62,6 +63,8 @@ export type updateDmsSingleComputeData = (computeSingleData: any) => void;
 export type updateTransformersData = (transformersData: TransformerInfo[]) => void;
 export type updateAllProjectsData = (projectsData: GetAllProjectsDetail[]) => void;
 export type updateSingleProjectData = (projectData: any) => void;
+export type updateSingleDatasetDataType = (projectData: any) => void;
+
 export type updateUserConfig = (UserConfig: []) => void;
 export type connectionEstablished = () => void;
 export type receiveMessage = (action: any) => void;
@@ -78,6 +81,7 @@ export type getAndUpdateDbSettingsData = () => void;
 export type getAndUpdateTransformersData = () => void;
 export type getAndUpdateAllProjectsData = () => void;
 export type getAndUpdateSingleProjectData = (id: string) => void;
+export type getAndUpdateSingleDatasetData = (id: string) => void;
 export type submitMessage = (content: any) => void;
 export type dmsRunCompute = (id: string) => void;
 export type updateSpinnerInfo = (spinnerInfo: boolean) => void;

@@ -327,7 +327,7 @@ query {
   }
 }
 `;
-}
+};
 export const getComputeListData = () => {
     const GET_COMPUTELIST = gql`
         query {
@@ -459,6 +459,22 @@ export const GET_SINGLE_PROJECT = (id: string) => {
   }
 }
 `;
+};
+export const GET_SINGLE_DATASET = (id: string) => {
+    return gql`
+   query dmsDataSource {
+   id
+    name
+    spec{
+      ... on DMSDatabricksFileUpload {
+        path
+      }
+      
+    }
+    df_profile
+    created_by
+    created_at
+    `;
 };
 
 export const createProject = (variables: any) => {
