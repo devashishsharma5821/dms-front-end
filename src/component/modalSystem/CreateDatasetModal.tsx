@@ -27,8 +27,10 @@ import { datasetPreviewSchema, DeleteDataset, DeleteDatasetDetail } from '../../
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { deleteDataset } from '../../query';
+import { useNavigate } from 'react-router-dom';
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
+    const textColor2 = useColorModeValue('#646A78', 'default.whiteText');
     const titleDarkCSV = useColorModeValue('default.blackText', 'default.whiteText');
     const datasetTitleColor = useColorModeValue('default.titleForShare', 'default.whiteText');
     const finalRef = React.useRef(null);
@@ -47,6 +49,8 @@ const CreateDataset = (props: any) => {
     const { toast } = createStandaloneToast();
     const [isNextAvaiable, setIsNextAvaiable] = useState(false);
     const [isNextAvaiableForFileUpload, setIsNextAvaiableForFileUpload] = useState(false);
+    const [disableStatus, setDisableStatus] = useState(false);
+    const navigate = useNavigate();
     const [screenState, setScreenState] = useState({
         screen1: true,
         screen2: false,
@@ -56,7 +60,7 @@ const CreateDataset = (props: any) => {
 
     const handleDeleteDataset = () => {
         // TODO After backend adds the delete dataset Id as a input add the delete dataset mutation
-        if (screenState.screen3) {
+        if (screenState.screen3 || screenState.screen2) {
             updateSpinnerInfo(true);
             client
                 .mutate<DeleteDataset<DeleteDatasetDetail>>({
@@ -91,7 +95,6 @@ const CreateDataset = (props: any) => {
         }
     };
     const createDataset = () => {
-        getAndUpdateSingleProjectData(selectedProjectId);
         setSelectedProjectId('');
         setDatasetName('');
         setPreviousStateData({
@@ -100,6 +103,7 @@ const CreateDataset = (props: any) => {
         });
         props.onClose();
         toast(getToastOptions(`File Uploaded Successfully`, 'success'));
+        navigate(`/datasetDetails/${datasetId}`);
     };
     const navigateToNextScreen = () => {
         if (screenState.screen1) {
@@ -122,10 +126,11 @@ const CreateDataset = (props: any) => {
         }
     };
     const getResponseFromFileUpload = (uploadResponse: any) => {
+        console.log('Upload Response', uploadResponse)
         if (!uploadResponse) {
             toast(getToastOptions(`File Upload Failed, contact support`, 'error'));
         } else {
-            setDatasetId(uploadResponse.id);
+            setDatasetId(uploadResponse.dataset_id);
             const colDefKeysSchema = [
                 {
                     field: 'col_name',
@@ -164,19 +169,31 @@ const CreateDataset = (props: any) => {
         setSelectedProjectId(formFields.projectSelected);
     };
     const enableNext = (enableNextButton: boolean) => {
-        console.log("asdfds",enableNextButton, datasetName )
         setIsNextAvaiable(enableNextButton);
     };
     const navigateToPrevScreen = () => {
-        setPreviousStateData({
-            datasetName: datasetName,
-            projectSelected: selectedProjectId
-        });
-        setScreenState({
-            screen1: true,
-            screen2: false,
-            screen3: false
-        });
+        if(screenState.screen2) {
+            setPreviousStateData({
+                datasetName: datasetName,
+                projectSelected: selectedProjectId
+            });
+            setScreenState({
+                screen1: true,
+                screen2: false,
+                screen3: false
+            });
+        } else if (screenState.screen3) {
+            setPreviousStateData({
+                datasetName: datasetName,
+                projectSelected: selectedProjectId
+            });
+            setScreenState({
+                screen1: false,
+                screen2: true,
+                screen3: false
+            });
+        }
+
 
     };
     return (
@@ -247,6 +264,7 @@ const CreateDataset = (props: any) => {
                                                 <FileUploadComponent
                                                     projectId={selectedProjectId}
                                                     datasetName={datasetName}
+                                                    disableStatus={(status: boolean) => setDisableStatus(status) }
                                                     getResponseFromFileUpload={(fileUploadResponse: any) => getResponseFromFileUpload(fileUploadResponse)}
                                                 ></FileUploadComponent>
                                             </Box>
@@ -261,9 +279,15 @@ const CreateDataset = (props: any) => {
                     <>
                         <Flex flexDirection={'column'}>
                             <Box ml={'23'} mr={'12'} borderColor={'light.lighterGrayishBlue'} width={'1400px'} mt={'18'}>
-                                <Text fontWeight={700} fontSize={'16px'} color={textColor}>
-                                    Schema
-                                </Text>
+                                <Flex>
+                                    <Text fontWeight={700} fontSize={'16px'} color={textColor}>
+                                        Schema
+                                    </Text>
+                                    <Text ml={'16px'} fontWeight={700} fontSize={'16px'} color={textColor2}>
+                                        {rowDataSchema.length} Records
+                                    </Text>
+                                </Flex>
+
                                 <Box style={gridStyleSchema} className="ag-theme-alpine">
                                     <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
                                 </Box>
@@ -282,60 +306,80 @@ const CreateDataset = (props: any) => {
 
                 <Divider color={'default.dividerColor'} mt={'70px'} width={'auto'} />
                 <ModalFooter mb={'18px'} mt={'21px'} mr={'20px'}>
-                    <Button
-                        disabled={loading}
-                        onClick={handleDeleteDataset}
-                        colorScheme="gray"
-                        bg={'white'}
-                        color={'default.toolbarButton'}
-                        width={'81px'}
-                        border={'1px'}
-                        borderColor={'default.toolbarButton'}
-                        height={'40px'}
-                        borderRadius={4}
-                    >
-                        Cancel
-                    </Button>
                     {screenState.screen1 && (
-                        <Button
-                            disabled={loading || (!isNextAvaiable || datasetName === "")}
-                            onClick={navigateToNextScreen}
-                            colorScheme="gray"
-                            bg={'white'}
-                            color={'default.toolbarButton'}
-                            width={'81px'}
-                            border={'1px'}
-                            borderColor={'default.toolbarButton'}
-                            height={'40px'}
-                            borderRadius={4}
-                            ml={'20px'}
-                        >
-                            Next
-                        </Button>
+                        <>
+                            <Button
+                                disabled={loading || disableStatus}
+                                onClick={handleDeleteDataset}
+                                colorScheme="gray"
+                                bg={'white'}
+                                color={'default.toolbarButton'}
+                                width={'81px'}
+                                border={'1px'}
+                                borderColor={'default.toolbarButton'}
+                                height={'40px'}
+                                borderRadius={4}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                disabled={loading || (!isNextAvaiable || datasetName === "")}
+                                onClick={navigateToNextScreen}
+                                colorScheme="gray"
+                                bg={'default.toolbarButton'}
+                                color={'white'}
+                                width={'81px'}
+                                border={'1px'}
+                                borderColor={'default.toolbarButton'}
+                                height={'40px'}
+                                borderRadius={4}
+                                ml={'20px'}
+                            >
+                                Next
+                            </Button>
+                        </>
+
+                    )}
+                    {(screenState.screen2 || screenState.screen3) && (
+                        <>
+                            <Button
+                                disabled={loading || disableStatus}
+                                onClick={handleDeleteDataset}
+                                bg={'transparent'}
+                                color={'default.toolbarButton'}
+                                width={'81px'}
+                                height={'40px'}
+                                variant='link'
+                                borderRadius={4}
+                                textDecoration='none'
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={navigateToPrevScreen}
+                                colorScheme="gray"
+                                bg={'white'}
+                                color={'default.toolbarButton'}
+                                width={'81px'}
+                                border={'1px'}
+                                borderColor={'default.toolbarButton'}
+                                height={'40px'}
+                                borderRadius={4}
+                                ml={'20px'}
+                                disabled={disableStatus}
+                            >
+                                Previous
+                            </Button>
+                        </>
+
                     )}
                     {screenState.screen2 && (
                         <Button
-                            onClick={navigateToPrevScreen}
-                            colorScheme="gray"
-                            bg={'white'}
-                            color={'default.toolbarButton'}
-                            width={'81px'}
-                            border={'1px'}
-                            borderColor={'default.toolbarButton'}
-                            height={'40px'}
-                            borderRadius={4}
-                            ml={'20px'}
-                        >
-                            Previous
-                        </Button>
-                    )}
-                    {screenState.screen2 && (
-                        <Button
-                            disabled={!isNextAvaiableForFileUpload}
+                            disabled={!isNextAvaiableForFileUpload || disableStatus}
                             onClick={navigateToNextScreenFileUpload}
                             colorScheme="gray"
-                            bg={'white'}
-                            color={'default.toolbarButton'}
+                            bg={'default.toolbarButton'}
+                            color={'white'}
                             width={'81px'}
                             border={'1px'}
                             borderColor={'default.toolbarButton'}
@@ -351,8 +395,8 @@ const CreateDataset = (props: any) => {
                             disabled={loading}
                             onClick={createDataset}
                             colorScheme="gray"
-                            bg={'white'}
-                            color={'default.toolbarButton'}
+                            bg={'default.toolbarButton'}
+                            color={'white'}
                             width={'120px'}
                             border={'1px'}
                             borderColor={'default.toolbarButton'}

@@ -18,7 +18,8 @@ export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDeta
             id: project.id
         };
     });
-    return projectsName;
+    return projectsName.sort(
+        (p1, p2) => (p1.name > p2.name) ? 1 : (p1.name < p2.name) ? -1 : 0);
 };
 export const copyToClipBoard = (copyMessage: string, callBack: any) => {
     navigator.clipboard.writeText(copyMessage).then(() => {
