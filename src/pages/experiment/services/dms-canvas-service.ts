@@ -139,7 +139,7 @@ class DmsCanvasService {
         });
 
         graph.on('add', function (cell, collection, opt) {
-            console.log('lets check on add ===>', graph?.getCells(), cell.attributes.attrs.idOfTransformer);
+            console.log('lets check on add inside dms-canvas-service ===>', graph?.getCells(), cell.attributes.attrs.idOfTransformer);
 
             if (cell.attributes.attrs.idOfTransformer) {
                 updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
@@ -148,6 +148,13 @@ class DmsCanvasService {
                 console.log('lets check id of transformer ==>', cell);
             }
         });
+        // link.on('change:source', function () {
+        //     // Handle source change event
+        // });
+
+        // link.on('change:target', function () {
+        //     // Handle target change event
+        // });
 
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
 
@@ -369,12 +376,12 @@ class DmsCanvasService {
             'to-back:pointerclick': this.applyOnSelection.bind(this, 'toBack'),
             // 'layout:pointerclick': this.layoutDirectedGraph.bind(this),
             'snapline:change': this.changeSnapLines.bind(this),
-            'clear:pointerclick': this.graph.clear.bind(this.graph),
-            'print:pointerclick': this.paper.print.bind(this.paper),
-            'grid-size:change': this.paper.setGridSize.bind(this.paper)
+            'clear:pointerclick': this.graph?.clear?.bind(this.graph),
+            'print:pointerclick': this.paper?.print?.bind(this.paper),
+            'grid-size:change': this.paper?.setGridSize?.bind(this.paper)
         });
 
-        this.renderPlugin('.toolbar-container', this.toolbarService.toolbar);
+        this.renderPlugin('.toolbar-container', this?.toolbarService?.toolbar);
     }
 
     applyOnSelection(method: string) {

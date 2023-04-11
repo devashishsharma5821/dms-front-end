@@ -203,7 +203,7 @@ const ExperimentsPage = () => {
         obj['id'] = 'antuit.dms.dfp.io.Load Dataframe';
 
         let newArr: any = [];
-        SingleProjectData?.datasources.map((csvData: any) => newArr.push(csvData.name));
+        SingleProjectData?.datasources?.map((csvData: any) => newArr.push(csvData?.name));
 
         let newParseSchemaData = JSON.parse(obj?.schema?.jsonSchema);
 
@@ -865,7 +865,7 @@ const ExperimentsPage = () => {
 
         let currentModel = model?.getTransformer();
 
-        if (!restoring && currentModel.name) {
+        if (!restoring) {
             addStages({
                 stageId: currentModel?.stageId,
                 name: currentModel?.name,
@@ -931,8 +931,8 @@ const ExperimentsPage = () => {
         // Collect the stages
         rappidData?.graph?.getCells()?.map((cell: any) => {
             let stageId = cell.get('id');
-            console.log('let me check cell inside onSvaeHandler ==>', cell, 'stages =>>', stages);
-            if (cell?.attributes?.type !== 'standard.EmbeddedImage') {
+            console.log('let me check cell inside onSaveHandler for now ==>', cell, 'stages =>>', stages, 'stageId==>', stageId);
+            if (cell?.attributes?.type !== 'standard.Link') {
                 let stage = stages?.find((st: any) => st.id === stageId);
 
                 console.log('lets check stage after filter ===>', stage, 'currentStages ===>', stages, 'stageId ===>', stageId);
