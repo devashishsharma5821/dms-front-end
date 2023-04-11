@@ -28,6 +28,7 @@ import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import client from '../../apollo-client';
 import { deleteDataset } from '../../query';
 import { useNavigate } from 'react-router-dom';
+import TickIcon from '../../assets/icons/TickIcon';
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
     const textColor2 = useColorModeValue('#646A78', 'default.whiteText');
@@ -60,7 +61,7 @@ const CreateDataset = (props: any) => {
 
     const handleDeleteDataset = () => {
         // TODO After backend adds the delete dataset Id as a input add the delete dataset mutation
-        if (screenState.screen3 || screenState.screen2) {
+        if (datasetId !== '') {
             updateSpinnerInfo(true);
             client
                 .mutate<DeleteDataset<DeleteDatasetDetail>>({
@@ -89,6 +90,7 @@ const CreateDataset = (props: any) => {
         } else {
             updateSpinnerInfo(false);
             props.onClose();
+            setDatasetName('');
             setScreenState({ screen1: true,
                 screen2: false,
                 screen3: false});
@@ -207,20 +209,26 @@ const CreateDataset = (props: any) => {
                 <Divider color={'default.dividerColor'} mt={'13px'} mb={'19px'} />
                 <Center>
                     <Box>
-                        <Avatar borderRadius="full" boxSize="32px" name={'1'} bg={'default.toolbarButton'} color={'default.whiteText'} mb={'8px'} />
+                        {screenState.screen1 && <Avatar borderRadius="full" boxSize="32px" name={'1'} bg={'default.toolbarButton'} color={'default.whiteText'} mb={'8px'} /> }
+                        {(screenState.screen2 || screenState.screen3) && <Avatar borderRadius="full" bg={'default.toolbarButton'} boxSize="32px" icon={<TickIcon/>} mb={'8px'} />}
                         <Text ml={'-8px'}>Details</Text>
                     </Box>
                     <Divider borderColor={'default.toolbarButton'} borderWidth={'1px'} orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-22px'} />
                     <Box>
-                        <Avatar
+                        {(screenState.screen1 || screenState.screen2) && <Avatar
                             borderRadius="full"
                             boxSize="32px"
                             name={'2'}
                             bg={screenState.screen2 || screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'}
                             color={'default.whiteText'}
                             mb={'8px'}
-                        />
-                        <Text ml={'-8px'}>Source</Text>
+                        />}
+                        {screenState.screen3 && <Avatar borderRadius="full" bg={'default.toolbarButton'} boxSize="32px" icon={<TickIcon/>} mb={'8px'} />}
+
+
+                        {screenState.screen1 && <Text fontWeight={400} color='#929AA9' ml={'-8px'}>Source</Text> }
+                        {(screenState.screen2 || screenState.screen3) && <Text fontWeight={400} color='#111111' ml={'-8px'}>Source</Text> }
+
                     </Box>
                     <Divider
                         borderColor={screenState.screen2 || screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'}
@@ -232,7 +240,8 @@ const CreateDataset = (props: any) => {
                     />
                     <Box>
                         <Avatar borderRadius="full" boxSize="32px" name={'3'} bg={screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
-                        <Text ml={'-8px'}> Preview</Text>
+                        {(screenState.screen1 || screenState.screen2) && <Text fontWeight={400} color='#929AA9' ml={'-8px'}>Preview</Text> }
+                        {screenState.screen3 && <Text fontWeight={400} color='#111111' ml={'-8px'}>Preview</Text> }
                     </Box>
                 </Center>
                 {screenState.screen1 && (
