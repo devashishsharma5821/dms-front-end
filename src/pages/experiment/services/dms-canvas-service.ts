@@ -370,8 +370,8 @@ class DmsCanvasService {
             // 'layout:pointerclick': this.layoutDirectedGraph.bind(this),
             'snapline:change': this.changeSnapLines.bind(this),
             'clear:pointerclick': this.graph.clear.bind(this.graph),
-            'print:pointerclick': this.paper.print.bind(this.paper),
-            'grid-size:change': this.paper.setGridSize.bind(this.paper)
+            'print:pointerclick': this.paper?.print?.bind(this.paper),
+            'grid-size:change': this.paper?.setGridSize?.bind(this.paper)
         });
 
         this.renderPlugin('.toolbar-container', this.toolbarService.toolbar);

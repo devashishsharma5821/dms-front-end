@@ -217,6 +217,7 @@ const Share = (props: any) => {
                     }
                 });
                 setAccessUserList(newAccessList);
+                setUserValue([]);
             }
         }
     };
@@ -358,7 +359,7 @@ const Share = (props: any) => {
                                         })}
                                     {accessUserList.length === 0 && (
                                         <Box ml={'15px'}>
-                                            <Text color={accesstextColor}>This Project Is Not Shared With Any User</Text>
+                                            <Text color={accesstextColor}>This project is not shared with any user</Text>
                                         </Box>
                                     )}
                                 </Flex>

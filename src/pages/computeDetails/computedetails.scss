@@ -12,6 +12,8 @@
 .computedetailsContainer-1 {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 785px;
     .back-button {
         border: 2px solid rgb(226, 229, 230);
         background: white;
@@ -23,14 +25,13 @@
     }
     .delete-button {
         font-style: normal;
-        color: #2180c2;
+        color: #0073E6;
         font-size: 16px;
         line-height: 16px;
         margin-left: 24px;
-        border: 1px solid #2180c2;
+        border: 1px solid #0073E6;
         border-radius: 3px;
     }
-    width: 400px;
 }
 
 .computedetailsContainer-2 {

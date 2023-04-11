@@ -21,9 +21,9 @@ import {
     VStack,
     createStandaloneToast,
     AvatarGroup,
-    useDisclosure,
     Popover,
-    PopoverTrigger
+    PopoverTrigger,
+    useDisclosure, FormErrorMessage
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
@@ -244,7 +244,7 @@ const ExperimentModal = (props: any) => {
                     <Box ml={'21'}>
                         <Flex>
                             <VStack align="flex-start">
-                                <FormControl isRequired>
+                                <FormControl isInvalid={experimentName === ""} isRequired>
                                     <FormLabel htmlFor="Project Name" mb={6} color={projectTitleColor} fontWeight={600}>
                                         Experiment Name
                                     </FormLabel>
@@ -262,6 +262,11 @@ const ExperimentModal = (props: any) => {
                                         mb={'20px'}
                                         onChange={handleExperimentNameChange}
                                     />{' '}
+                                    {
+                                        experimentName === "" &&
+                                        <FormErrorMessage>Experiment Name is required</FormErrorMessage>
+                                    }
+
                                 </FormControl>
                                 <Flex ml={'16px'} maxHeight={'37px'} maxWidth={'400px'}>
                                     <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>

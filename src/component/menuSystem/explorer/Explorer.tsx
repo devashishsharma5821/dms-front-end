@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
 import './Explorer.scss';
-import { Box, Center, Divider, Flex, Square, Text, useColorModeValue, VStack, Accordion, AccordionItem, AccordionPanel, AccordionButton, AccordionIcon } from '@chakra-ui/react';
+import { Box, Center, Divider, Flex, Square, Text, useColorModeValue, Accordion, AccordionItem, AccordionPanel, AccordionButton, AccordionIcon } from '@chakra-ui/react';
 import { RightArrow, WhiteExperiment } from '../../../assets/icons';
 import { getAndUpdateAllProjectsData } from '../../../zustandActions/projectActions';
 import useAppStore from '../../../store';
 import { GetAllProjectsAppStoreState } from '../../../models/project';
 import { updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import SearchComponent from '../../search/SearchComponent';
-import { getTruncatedText } from '../../../utils/common.utils';
+import { getTruncatedText, projectsSearchByNameOnly } from '../../../utils/common.utils';
 
 const Explorer = (props: any) => {
     const textColor = useColorModeValue('default.darkBlack', 'default.whiteText');
@@ -25,29 +25,44 @@ const Explorer = (props: any) => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
-            const userId = UserConfig.userConfiguration.user.userId;
-            const userOnlyProjects = AllProjectsData.filter((project) => {
-                return project.created_by === userId;
-            });
-            const sharedWithMe = AllProjectsData.filter((project) => {
-                return project.created_by !== userId;
-            });
-            const explorerState = [
-                {
-                    name: 'My Projects',
-                    hasSubMenu: userOnlyProjects,
-                    expanded: false
-                },
-                {
-                    name: 'Shared with me',
-                    hasSubMenu: sharedWithMe,
-                    expanded: false
-                }
-            ];
-            setSubMenuForExplorer(explorerState);
-            updateSpinnerInfo(false);
+            updateSpinnerInfo(true);
+            populateExplorerPanel('');
         }
     }, [AllProjectsData]);
+
+    const populateExplorerPanel = (search: string) => {
+        const userId = UserConfig.userConfiguration.user.userId;
+        let projectsData;
+        if(search !== '') {
+            const searchedData = projectsSearchByNameOnly(AllProjectsData, search);
+            projectsData = searchedData;
+        } else {
+            projectsData = [...AllProjectsData];
+        }
+        const userOnlyProjects = projectsData.filter((project: any) => {
+            return project.created_by === userId;
+        });
+        const sharedWithMe = projectsData.filter((project: any) => {
+            return project.created_by !== userId;
+        });
+        const explorerState = [
+            {
+                name: 'My Projects',
+                hasSubMenu: userOnlyProjects,
+                expanded: false
+            },
+            {
+                name: 'Shared with me',
+                hasSubMenu: sharedWithMe,
+                expanded: false
+            }
+        ];
+        setSubMenuForExplorer(explorerState);
+        updateSpinnerInfo(false);
+    }
+    const onSearchChange = (searchValue: string) => {
+        populateExplorerPanel(searchValue);
+    };
 
     return (
         <>
@@ -64,7 +79,7 @@ const Explorer = (props: any) => {
 
                     <Divider mt={'16px'} mb={'8px'} orientation="horizontal" bg={'light.lighterGrayishBlue'} />
                     <Box width={'226px'} height={'16px'} ml={'14px'}>
-                        <SearchComponent />
+                        <SearchComponent searchChange={onSearchChange} />
                     </Box>
                     <Box mt={'24px'}>
                         {subMenuForExplorer &&

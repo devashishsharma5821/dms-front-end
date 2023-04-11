@@ -65,6 +65,8 @@ const ProjectDetails = (props: any) => {
     const tagPopOver = useDisclosure();
     const editAccessModal = useDisclosure();
     const { toast } = createStandaloneToast();
+    const [showEditValuePreview, setShowEditValuePreview] = useState(true);
+
     function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -89,7 +91,7 @@ const ProjectDetails = (props: any) => {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
         return isEditing ? (
-            <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
+            <ButtonGroup ml={'20px'} justifyContent="center" mt={'50px'}>
                 <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
                     Save
                 </Button>
@@ -99,7 +101,7 @@ const ProjectDetails = (props: any) => {
             </ButtonGroup>
         ) : (
             <Flex>
-                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
+                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'25px'} width={'48px'} height={'48px'}>
                     <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
                 </Button>
             </Flex>
@@ -172,10 +174,12 @@ const ProjectDetails = (props: any) => {
         setInlineDescription(SingleProjectData.basic.description);
     };
     const handleEditNameChange = (editChangeValue: string) => {
+        setShowEditValuePreview(false);
         setInlineProjectName(editChangeValue);
     };
     const handleEditNameChangeCancel = () => {
         setInlineProjectName(SingleProjectData.basic.name);
+        setShowEditValuePreview(true);
     };
     const handleEditProject = (variables: any, toastMessages: any) => {
         updateSpinnerInfo(true);
@@ -241,6 +245,7 @@ const ProjectDetails = (props: any) => {
                 errorMessage: 'Project Name Failed To edit'
             });
         }
+        setShowEditValuePreview(true);
     };
 
     const handleEditDescription = (nextDescription: string) => {
@@ -274,45 +279,51 @@ const ProjectDetails = (props: any) => {
                         <Text>Projects / My Project</Text>
                     </Box>
 
-                    <Box ml={'24'} mt={'16px'} mb={'24'} color={'default.darkGrayCreate'}>
-                        <Flex flexDir={'row'} cursor={'pointer'}>
-                            <Button
-                                cursor={'pointer'}
-                                mr={'8px'}
-                                color={'default.accessByNumber'}
-                                border={'1px'}
-                                borderColor={'light.lighterGrayishBlue'}
-                                bg={'white'}
-                                onClick={navigateToProjects}
-                                height={'30px'}
-                                width={'30px'}
-                                borderRadius={4}
-                            >
-                                {' '}
-                                <LeftArrow />
-                            </Button>
-                            <Flex>
-                                <Editable
-                                    maxWidth={'800px'}
-                                    textAlign="left"
-                                    fontWeight={400}
-                                    onSubmit={handleEditName}
-                                    onChange={handleEditNameChange}
-                                    onCancel={handleEditNameChangeCancel}
-                                    value={inlineProjectName}
-                                >
-                                    <Flex>
-                                        <Center mt={'-10'}>
-                                            <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
-                                                <EditablePreview />
-                                                <Input as={EditableInput} height={'30px'} mt={'-10px'} />
-                                            </Box>
-                                        </Center>
-                                        <Box mt={'-40px'}>
-                                            <EditableControlsName />
-                                        </Box>
+                    <Box ml={'24'} mt={'16px'} mb={'24'} color={'default.darkGrayCreate'} width="60vw">
+                        <Flex flexDir={'row'} cursor={'pointer'} justifyContent={'space-between'} alignItems={'center'}>
+                                    <Flex alignItems="center">
+                                        <Button
+                                            cursor={'pointer'}
+                                            mr={'8px'}
+                                            color={'default.accessByNumber'}
+                                            border={'1px'}
+                                            borderColor={'light.lighterGrayishBlue'}
+                                            bg={'white'}
+                                            onClick={navigateToProjects}
+                                            height={'30px'}
+                                            width={'30px'}
+                                            borderRadius={4}
+                                        >
+                                            {' '}
+                                            <LeftArrow />
+                                        </Button>
+                                        <Editable
+                                            maxWidth={'40vw'}
+                                            width={'40vw'}
+                                            textAlign="left"
+                                            fontWeight={400}
+                                            onSubmit={handleEditName}
+                                            onChange={handleEditNameChange}
+                                            onCancel={handleEditNameChangeCancel}
+                                            onEdit={() => setShowEditValuePreview(false)}
+                                            value={inlineProjectName}
+                                        >
+                                            <Flex>
+                                                <Center mt={'-10'}>
+                                                    <Box height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                                        {
+                                                            showEditValuePreview &&
+                                                            <Text title={inlineProjectName} fontSize={'24px'} fontWeight={700}>{getTruncatedText(inlineProjectName, 60)}</Text>
+                                                        }
+                                                        <Input as={EditableInput} height={'30px'} mt={'-10px'} width={'40vw'} />
+                                                    </Box>
+                                                </Center>
+                                                <Box mt={'-40px'}>
+                                                    <EditableControlsName />
+                                                </Box>
+                                            </Flex>
+                                        </Editable>
                                     </Flex>
-                                </Editable>
                                 <Button
                                     cursor={'pointer'}
                                     width={'71px'}
@@ -330,7 +341,6 @@ const ProjectDetails = (props: any) => {
                                 >
                                     Delete
                                 </Button>
-                            </Flex>
                         </Flex>
                         <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
                             <Flex>
@@ -370,7 +380,7 @@ const ProjectDetails = (props: any) => {
                                                         Project Name
                                                     </Text>
                                                     <Text title={SingleProjectData.basic.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {getTruncatedText(SingleProjectData.basic.name, 50)}
+                                                        {getTruncatedText(SingleProjectData.basic.name, 20)}
                                                     </Text>
                                                 </Box>
                                             </Flex>

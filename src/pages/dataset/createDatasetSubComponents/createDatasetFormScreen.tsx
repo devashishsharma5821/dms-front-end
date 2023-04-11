@@ -25,6 +25,39 @@ const CreateDatasetFormScreen = (props: any) => {
     const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
     const [projectNames, setProjectNames] = React.useState([{ name: '', id: '' }]);
     const [projectAccess, setProjectAccess] = React.useState<any>([]);
+    const sourceData = [
+        {
+            sections: [
+                {
+                    name: 'Databricks Tables',
+                    icon: <SourceDatabricks color={'#666C80'} />,
+                    type: 'icon',
+                    disable: true,
+                    selected: false
+                },
+                { name: 'Azure Blob Storage', icon: <SourceAzure color={'#666C80'} />, type: 'icon', disable: true, selected: false }
+            ]
+        },
+        {
+            sections: [
+                {
+                    name: 'DBFS',
+                    icon: <SourceDBFS color={'#666C80'} />,
+                    type: 'icon',
+                    disable: true,
+                    selected: false
+                },
+                {
+                    name: 'Upload CSV OR PARQUET',
+                    icon: <SourceCSV color={'#666C80'} />,
+                    type: 'icon',
+                    disable: false,
+                    selected: false
+                }
+            ]
+        }
+    ];
+    const [sorceSelectDataset, setSorceSelectDataset] = useState(sourceData);
     const projectModal = useDisclosure();
     const handleDataSetNameChange = (evt: any) => {
         setDatasetName(evt.target.value);
@@ -45,45 +78,26 @@ const CreateDatasetFormScreen = (props: any) => {
         setProjectAccess(getProjectAccessList(AllProjectsData, evt.target.value));
         props.handleFormFields(formFields);
     };
+    const enableUploadCSVSelection = (type: string) => {
+        let sourceSelectState = sorceSelectDataset;
+        if(type === 'auto') {
+            sourceSelectState[1].sections[1].selected = !sourceSelectState[1].sections[1].selected;
+            sourceSelectState[1].sections[1].icon = (sourceSelectState[1].sections[1].selected) ? <SourceCSV color={'#FFFFFF'} /> : <SourceCSV color={'#666C80'} />;
+            setSorceSelectDataset(sourceSelectState);
+            props.setScreenState(sourceSelectState[1].sections[1].selected);
+        } else {
+            sourceSelectState[1].sections[1].selected = true;
+            sourceSelectState[1].sections[1].icon = <SourceCSV color={'#FFFFFF'} />
+            setSorceSelectDataset(sourceSelectState);
+            props.setScreenState(true);
+        }
+
+    };
     const triggerAction = (type: string) => {
-        if (type === 'Upload CSV') {
-            const newScreens = {
-                screen1: false,
-                screen2: true,
-                screen3: false
-            };
-            props.setScreenState(newScreens);
+        if (type === 'Upload CSV OR PARQUET') {
+            enableUploadCSVSelection('auto')
         }
     };
-    const sorceSelectDataset = [
-        {
-            sections: [
-                {
-                    name: 'Databricks Tables',
-                    icon: <SourceDatabricks color={'#666C80'} />,
-                    type: 'icon',
-                    disable: true
-                },
-                { name: 'Azure Blob Storage', icon: <SourceAzure color={'#666C80'} />, type: 'icon', disable: true }
-            ]
-        },
-        {
-            sections: [
-                {
-                    name: 'DBFS',
-                    icon: <SourceDBFS color={'#666C80'} />,
-                    type: 'icon',
-                    disable: true
-                },
-                {
-                    name: 'Upload CSV OR PARQUET',
-                    icon: <SourceCSV color={'#666C80'} />,
-                    type: 'icon',
-                    disable: false
-                }
-            ]
-        }
-    ];
     useEffect(() => {
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
@@ -108,6 +122,22 @@ const CreateDatasetFormScreen = (props: any) => {
             getAndUpdateAllUsersData(variablesForAllUsers);
         }
     }, [AllUsersData]);
+
+    useEffect(() => {
+        if(Object.keys(props.previousState).length) {
+            setProjectSelected(props.previousState.projectSelected);
+            setDatasetName(props.previousState.datasetName);
+            setSorceSelectDataset(sourceData);
+            const formFields = {
+                datasetName: props.previousState.datasetName,
+                projectSelected: props.previousState.projectSelected
+            };
+            setFormFields(formFields);
+            setProjectAccess(getProjectAccessList(AllProjectsData, props.previousState.projectSelected));
+            props.handleFormFields(formFields);
+            enableUploadCSVSelection('nonAuto');
+        }
+    }, [props.previousState]);
 
     const handleProjectCreate = () => {
         projectModal.onOpen();
@@ -270,7 +300,8 @@ const CreateDatasetFormScreen = (props: any) => {
                                                                 _hover={{ bg: 'default.toolbarButton', color: 'white' }}
                                                                 cursor={section.disable ? 'not-allowed' : 'pointer'}
                                                                 ml={'20px'}
-                                                                bg="default.lightGray"
+                                                                bg={(section.selected) ? 'default.toolbarButton': 'default.lightGray'}
+                                                                color={(section.selected) ? 'white': 'black'}
                                                                 width={'155px'}
                                                                 height="134px"
                                                                 mt={'14px'}
@@ -282,7 +313,7 @@ const CreateDatasetFormScreen = (props: any) => {
                                                                     {section.icon}
                                                                 </Center>
 
-                                                                <Box cursor={section.disable ? 'not-allowed' : 'pointer'} textAlign={'center'} mt={'4px'} color={'black'} fontWeight={400}>
+                                                                <Box cursor={section.disable ? 'not-allowed' : 'pointer'} textAlign={'center'} mt={'4px'} color={(section.selected) ? 'white': 'black'} fontWeight={400}>
                                                                     {' '}
                                                                     {section.name}{' '}
                                                                 </Box>
