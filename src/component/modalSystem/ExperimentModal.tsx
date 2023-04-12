@@ -23,12 +23,17 @@ import {
     AvatarGroup,
     Popover,
     PopoverTrigger,
-    useDisclosure, FormErrorMessage
+    useDisclosure, FormErrorMessage, PopoverContent, Stack, PopoverCloseButton, ButtonGroup
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
-import { getProjectAccessList, getProjectNameAndLabelsForSelect, getUserNameFromId } from '../../utils/common.utils';
+import {
+    getProjectAccessList,
+    getProjectNameAndLabelsForSelect,
+    getTruncatedText,
+    getUserNameFromId
+} from '../../utils/common.utils';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState } from '../../models/project';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
@@ -51,9 +56,15 @@ const ExperimentModal = (props: any) => {
     const boxColor = useColorModeValue('#F7FAFC', '#B3B3B3');
     const finalRef = React.useRef(null);
     const [loading] = useState(false);
+    const closeButton = useColorModeValue('#666C80', '#ffffff');
     const [AllUsersData] = useAppStore((state: any) => [state.AllUsersData]);
     const [AllProjectsData] = useAppStore((state: GetAllProjectsAppStoreState) => [state.AllProjectsData]);
-    const [formFields, setFormFields] = useState({});
+    const [formFields, setFormFields] = useState({
+        experimentName: '',
+        projectSelected: '',
+        tags: [],
+        description: ''
+    });
     const [projectNames, setProjectNames] = React.useState([{ name: '', id: '' }]);
     const [projectAccess, setProjectAccess] = React.useState<any>([]);
     const [projectSelected, setProjectSelected] = useState('');
@@ -97,15 +108,30 @@ const ExperimentModal = (props: any) => {
         };
         setFormFields(formFields);
     };
+    const handleRemoveTag = (tag: string) => {
+        const newTags = formFields.tags.filter((tagToKeep: any) => {
+            return tagToKeep !== tag;
+        });
+        const formFieldsNew = {
+            experimentName: experimentName,
+            projectSelected: projectSelected,
+            tags: newTags,
+            description: experimentDescription
+        };
+        setFormFields(formFieldsNew);
+    };
     const handleTagChange = (ev: any) => {
         setTagValue(ev);
+    };
+    const handleTagSubmit = (ev: any) => {
         const formFields = {
             experimentName: experimentName,
             projectSelected: projectSelected,
-            tags: ev,
+            tags: tagValue,
             description: experimentDescription
         };
         setFormFields(formFields);
+        tagPopOver.onClose();
     };
     const handleExperimentCreate = () => {
         updateSpinnerInfo(true);
@@ -117,7 +143,12 @@ const ExperimentModal = (props: any) => {
                 toast(getToastOptions(`Experiment has being successfully created`, 'success'));
                 navigate(`/projectDetails/${projectSelected}/experiment/${response.data?.dmsCreateExperiment}`);
                 updateSpinnerInfo(false);
-                setFormFields({});
+                setFormFields({
+                    experimentName: '',
+                    projectSelected: '',
+                    tags: [],
+                    description: ''
+                });
                 setProjectSelected('');
                 setExperimentName('');
                 setTagValue([]);
@@ -268,18 +299,65 @@ const ExperimentModal = (props: any) => {
                                     }
 
                                 </FormControl>
-                                <Flex ml={'16px'} maxHeight={'37px'} maxWidth={'400px'}>
-                                    <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>
-                                        Tag:
-                                    </Text>
-                                    <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="right" closeOnBlur={true}>
-                                        <PopoverTrigger>
-                                            <Text color={'default.textButton'} ml={8} fontWeight={600} minWidth={'76'} cursor={'pointer'}>
-                                                + Add Tag
-                                            </Text>
-                                        </PopoverTrigger>
-                                    </Popover>
-                                </Flex>{' '}
+                                <Flex maxHeight={'37px'} maxWidth={'400px'}>
+                                    <Center>
+                                        <Text fontWeight={600} color={textColor2} mt={'20'}>
+                                            Tag:
+                                        </Text>
+
+                                        <Popover isOpen={tagPopOver.isOpen} onOpen={tagPopOver.onOpen} onClose={tagPopOver.onClose} placement="bottom" closeOnBlur={true}>
+                                            <PopoverTrigger>
+                                                <Button variant="link" color={'default.toolbarButton'} mt={'20'} ml={8} cursor={'pointer'}>
+                                                    + Add Tag
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent p={5} w={'399px'} h={'201px'} ml={'256px'}>
+                                                <Stack cursor={'pointer'}>
+                                                    <Flex flexDirection={'row'}>
+                                                        <Text color={'default.modalShareText'} fontWeight={700} mb={12}>
+                                                            Add Tag
+                                                        </Text>
+                                                        <Box justifyContent="flex-end">
+                                                            <PopoverCloseButton mr={'16px'} mt={'14px'} color={'#757575'} />
+                                                        </Box>
+                                                    </Flex>
+                                                    <MultiSelect
+                                                        value={tagValue}
+                                                        options={tagOptions}
+                                                        color={defaultInBoxTextColor}
+                                                        onChange={handleTagChange!}
+                                                        create
+                                                        bg={'black'}
+                                                        marginInlineStart={'-10px'}
+                                                    />
+                                                    <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-start" cursor={'pointer'}>
+                                                        <Button onClick={handleTagSubmit} bg={'default.toolbarButton'} cursor={'pointer'} width={'104px'} height={'36px'} borderRadius={4} mb={20} mt={16}>
+                                                            Add Tag(s)
+                                                        </Button>
+                                                    </ButtonGroup>
+                                                </Stack>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </Center>
+                                </Flex>
+                                <Flex>
+                                    {formFields?.tags.map((tag: string, tagIndex: number) => {
+                                        return(
+                                            <Box cursor={'pointer'} key={`${tag}_${tagIndex}`} ml={16} mt={8} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
+                                                <Flex cursor={'pointer'}>
+                                                    <Center cursor={'pointer'}>
+                                                        <Text title={tag} color={'#1A3F59'} fontSize={'14px'} mt={'2px'} ml={6}>
+                                                            {getTruncatedText(tag, 9)}
+                                                        </Text>
+                                                        <Box onClick={() => handleRemoveTag(tag)} justifyContent={'flex-end'} ml={'10px'} mr={'8px'} cursor={'pointer'}>
+                                                            <CloseIcon onClick={() => handleRemoveTag(tag)} cursor={'pointer'} color={closeButton} />
+                                                        </Box>
+                                                    </Center>
+                                                </Flex>
+                                            </Box>
+                                        )
+                                    })}
+                                </Flex>
                                 {/*<FormControl isRequired>*/}
                                 {/*    <FormLabel htmlFor="existingCompute" color={projectTitleColor} mt={12} fontWeight={600}>*/}
                                 {/*        Link To*/}
