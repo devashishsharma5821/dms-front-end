@@ -108,6 +108,7 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
+        console.log('P')
         if (SingleProjectData === null) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
