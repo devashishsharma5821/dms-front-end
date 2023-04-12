@@ -215,7 +215,7 @@ const Properties = (props: any) => {
                                 Project ID:
                             </Text>
                             <Text color={accesstextColor} mt={'20'} mb={16} ml={'5px'}>
-                                {props.projectData.basic.id}
+                                {props.projectData?.basic.id}
                             </Text>
                             <Box ml={8}>
                                 <CopyIcon />
@@ -226,7 +226,7 @@ const Properties = (props: any) => {
                                 Project Name:
                             </Text>
                             <Text color={accesstextColor} mt={'20'} mb={16} ml={'5px'}>
-                                {props.projectData.basic.name}
+                                {props.projectData?.basic.name}
                             </Text>
                         </Center>
                     </Flex>
@@ -281,7 +281,7 @@ const Properties = (props: any) => {
                             </Flex>
                             <Flex>
                                 <Center>
-                                    <Text color={textColor2} mt={'20'} ml={16}>
+                                    <Text fontWeight={600} color={textColor2} mt={'20'} ml={16}>
                                         Tag:
                                     </Text>
 
@@ -379,7 +379,7 @@ const Properties = (props: any) => {
                                                     Last Modified
                                                 </Text>
                                                 <Text ml={12} color={textColor2} fontWeight={700}>
-                                                    {convertTime(props.data.updated_at, true)}
+                                                    {convertTime(props.data.modified_at, true)}
                                                 </Text>
                                             </Box>
                                         </Center>

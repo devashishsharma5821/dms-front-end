@@ -65,7 +65,7 @@ const Share = (props: any) => {
         if (props.isEdit) {
             setAccessUserList([]);
             updateSpinnerInfo(true);
-            if (SingleProjectData === null) {
+            if (SingleProjectData === null || SingleProjectData === undefined) {
                 getAndUpdateSingleProjectData(params.projectId as string);
             } else {
                 updateSpinnerInfo(false);
@@ -125,7 +125,7 @@ const Share = (props: any) => {
             if (type === 'delete') {
                 const removeVariable = {
                     userId: user![0].userId,
-                    projectId: params.projectId
+                    projectId: params?.projectId || localStorage.getItem('projectId')
                 };
                 client
                     .mutate<ShareDelete<ShareDeleteDetail>>({
@@ -149,7 +149,7 @@ const Share = (props: any) => {
                             access_level: type === 'canEdit' ? DMSAccessLevel[1] : DMSAccessLevel[0]
                         }
                     ],
-                    project_id: params.projectId
+                    project_id: params?.projectId || localStorage.getItem('projectId')
                 };
                 client
                     .mutate<ShareCreate<ShareCreateDetail>>({
@@ -184,7 +184,7 @@ const Share = (props: any) => {
                             access_level: DMSAccessLevel[0]
                         };
                     }),
-                    project_id: params.projectId
+                    project_id: params?.projectId || localStorage.getItem('projectId')
                 };
                 client
                     .mutate<ShareCreate<ShareCreateDetail>>({

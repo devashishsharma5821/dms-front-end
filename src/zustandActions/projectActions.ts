@@ -23,8 +23,14 @@ export const getAndUpdateAllProjectsData: getAndUpdateAllProjectsDataType = asyn
 export const updateAllProjectsData: updateAllProjectsDataType = (AllProjectsData) => useAppStore.setState(() => ({ AllProjectsData: AllProjectsData }));
 
 export const getAndUpdateSingleProjectData: getAndUpdateSingleProjectDataType = async (id: string) => {
+    let projectIdCheck;
+    if(id === undefined) {
+        projectIdCheck = localStorage.getItem('projectId');
+    } else {
+        projectIdCheck = id;
+    }
     const response = await client.query<GetSingleProject<Array<GetSingleProjectDetail>>>({
-        query: GET_SINGLE_PROJECT(id)
+        query: GET_SINGLE_PROJECT(projectIdCheck!)
     });
     if(response.errors?.length) {
         toast(getToastOptions(response.errors[0].message, 'error'));
