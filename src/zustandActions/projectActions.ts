@@ -43,6 +43,6 @@ export const getAndUpdateSingleDatasetData: getAndUpdateSingleDatasetDataType = 
     if (response.errors?.length) {
         toast(getToastOptions(response.errors[0].message, 'error'));
     }
-    useAppStore.setState(() => ({ SingleProjectData: response?.data?.dmsDataset }));
+    useAppStore.setState(() => ({ DatasetDetailData: response?.data?.dmsDataSource }));
 };
 export const updateSingleDatasetData: updateSingleDatasetDataType = (DatasetDetailData: any) => useAppStore.setState(() => ({ DatasetDetailData: DatasetDetailData }));

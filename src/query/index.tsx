@@ -386,6 +386,28 @@ export const GET_DB_SETTINGS = gql`
     }
 `;
 
+// Dataset and Dataset API Start Here
+
+export const GET_SINGLE_DATASET = (id: string) => {
+    return gql`
+        query dmsDataSource {
+            dmsDataSource(id: "${id}") {
+                id
+                name
+                spec {
+                    ... on DMSDatabricksFileUpload {
+                        path
+                    }
+                }
+                df_profile
+                created_by
+                created_at
+                updated_at
+            }
+        }
+    `;
+};
+
 // Project and Projects API Start Here
 export const GET_ALL_PROJECTS = gql`
     query dmsProjects {
@@ -459,22 +481,6 @@ export const GET_SINGLE_PROJECT = (id: string) => {
   }
 }
 `;
-};
-export const GET_SINGLE_DATASET = (id: string) => {
-    return gql`
-   query dmsDataSource {
-   id
-    name
-    spec{
-      ... on DMSDatabricksFileUpload {
-        path
-      }
-      
-    }
-    df_profile
-    created_by
-    created_at
-    `;
 };
 
 export const createProject = (variables: any) => {

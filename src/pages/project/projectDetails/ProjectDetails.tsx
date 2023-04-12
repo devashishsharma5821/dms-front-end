@@ -356,6 +356,7 @@ const ProjectDetails = (props: any) => {
                                                     <Text ml={16} color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Project ID
                                                     </Text>
+
                                                     <Center justifyContent={'flex-start'}>
                                                         <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
                                                             {SingleProjectData.basic.id}

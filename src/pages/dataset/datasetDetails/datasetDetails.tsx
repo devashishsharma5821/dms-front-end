@@ -25,7 +25,7 @@ import { GetSingleDatasetAppStoreState } from '../../../models/dataset';
 import { getToastOptions } from '../../../models/toastMessages';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { getAndUpdateSingleDatasetData } from '../../../zustandActions/projectActions';
-import { getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime } from '../../../utils/common.utils';
+import { getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime, getUserNameFromId } from '../../../utils/common.utils';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -70,9 +70,9 @@ const DatasetDetails = (props: any) => {
             getAndUpdateSingleDatasetData(params.datasetId as string);
         } else {
             updateSpinnerInfo(false);
-
+            console.log('datasetdetail', DatasetDetailData);
             if (AllUsersData && DatasetDetailData) {
-                setAccessUserList(getFormattedUserData(AllUsersData, DatasetDetailData));
+                // setAccessUserList(getFormattedUserDataDataset(AllUsersData, DatasetDetailData));
             }
         }
     }, [DatasetDetailData]);
@@ -83,6 +83,7 @@ const DatasetDetails = (props: any) => {
         } else {
             if (AllUsersData && DatasetDetailData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, DatasetDetailData));
+                console.log('AllUsersData', AllUsersData);
             }
         }
     }, [AllUsersData]);
@@ -161,7 +162,7 @@ const DatasetDetails = (props: any) => {
                                                 Created by
                                             </Text>
                                             <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                Shirin Bampoori
+                                                {getUserNameFromId(AllUsersData, DatasetDetailData.created_by)}
                                             </Text>
 
                                             <Flex flexDir={'row'}>
@@ -169,12 +170,14 @@ const DatasetDetails = (props: any) => {
                                                     <Text ml={16} color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Dataset ID
                                                     </Text>
-                                                    <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {DatasetDetailData.id}
-                                                    </Text>
-                                                    <Text ml={8} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} cursor={'pointer'}>
-                                                        <CopyIcon />
-                                                    </Text>
+                                                    <Center justifyContent={'flex-start'}>
+                                                        <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                            {DatasetDetailData.id}
+                                                        </Text>
+                                                        <Text ml={8} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} cursor={'pointer'}>
+                                                            <CopyIcon />
+                                                        </Text>
+                                                    </Center>
                                                 </Box>
                                                 <Box ml={'145px'}>
                                                     <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
@@ -253,7 +256,7 @@ const DatasetDetails = (props: any) => {
                                                 </Box>
                                             </Center>
                                             <Center ml={'84px'} mt={'10px'}>
-                                                <Text fontWeight={600} cursor={'pointer'} color={'default.textButton'} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)}>
+                                                <Text fontWeight={600} cursor={'pointer'} color={'default.textButton'}>
                                                     {' '}
                                                     Edit
                                                 </Text>
@@ -263,7 +266,7 @@ const DatasetDetails = (props: any) => {
                                                 </Text>
                                             </Center>
                                         </Flex>
-                                        <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={'20px'}>
+                                        {/* <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={'20px'}>
                                             {accessUserList &&
                                                 accessUserList.map((icons: User, iconsIndex: number) => {
                                                     return (
@@ -282,7 +285,7 @@ const DatasetDetails = (props: any) => {
                                                         </div>
                                                     );
                                                 })}
-                                        </Box>
+                                        </Box> */}
                                     </Box>
                                 </Flex>
                             </Flex>

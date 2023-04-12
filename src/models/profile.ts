@@ -1,5 +1,4 @@
-export interface AppAlerts {
-}
+export interface AppAlerts {}
 
 export interface Applications {
     applicationId: number;
@@ -10,18 +9,19 @@ export interface Applications {
 export class GetAllUsersType<T> {
     getUsers!: {
         users: T;
-    }
+    };
 }
 export interface AllUsers {
-        userId: string;
-        firstName: string;
-        lastName: string;
-        applicationName: string;
-        email: string;
+    userId: string;
+    firstName: string;
+    lastName: string;
+    applicationName: string;
+    email: string;
 }
 export interface GetAllUsersDataAppStoreState {
     AllUsersData: AllUsers[];
 }
+
 export interface User {
     userId: string;
     firstName: string;
@@ -31,7 +31,7 @@ export interface User {
     defaultApp: string;
     appAlerts: AppAlerts;
     espUserToken: string;
-    applications:Applications[];
+    applications: Applications[];
 }
 
 export interface UserConfiguration {
@@ -50,5 +50,5 @@ export interface UserConfigurationResponse {
 export enum DMSAccessLevel {
     VIEWER,
     EDITOR,
-    OWNER,
+    OWNER
 }

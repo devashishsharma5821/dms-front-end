@@ -3,13 +3,13 @@ import { GetAllProjectsDetail } from '../models/project';
 import moment from 'moment';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
-        if (selectedProject === '') {
-            return projectList[0].project_access;
-        } else {
-            return projectList.filter((project: any) => {
-                return project.id.toString() === selectedProject;
-            })[0].project_access;
-        }
+    if (selectedProject === '') {
+        return projectList[0].project_access;
+    } else {
+        return projectList.filter((project: any) => {
+            return project.id.toString() === selectedProject;
+        })[0].project_access;
+    }
 };
 export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDetail[]) => {
     const projectsName = projectList.map((project) => {
@@ -74,6 +74,22 @@ export const getFormattedUserData = (allUserData: AllUsers[], projectData: any) 
 
     return reformattedProjectAccessData;
 };
+// export const getFormattedUserDataDataset = (allUserData: AllUsers[], datasetsData: any) => {
+//     const reformattedDatasetAccessData = datasetsData.map((DatasetDetailsData: any, datasetAccessIndex: any) => {
+//         const sharedUser = allUserData?.filter((singleUser) => {
+//             return singleUser.userId === DatasetDetailsData.user_id;
+//         });
+//         return {
+//             id: sharedUser![0].userId,
+//             firstName: sharedUser?.length > 0 ? sharedUser![0].firstName : '',
+//             lastName: sharedUser?.length > 0 ? sharedUser![0].lastName : '',
+//             email: sharedUser?.length > 0 ? sharedUser![0].email : '',
+//             accessLevel: sharedUser?.length > 0 ? DatasetDetailsData.dataset_access[datasetAccessIndex].access_level : ''
+//         };
+//     });
+
+//     return reformattedDatasetAccessData;
+// };
 
 export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any) => {
     const searchTerm = keyword.toLowerCase();
@@ -93,8 +109,8 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
 
 export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type: string, projectSelected?: string) => {
     let projectFilteredData = [];
-    if(projectSelected) {
-        if(projectSelected === 'All') {
+    if (projectSelected) {
+        if (projectSelected === 'All') {
             projectFilteredData = allProjectsData;
         } else {
             projectFilteredData = allProjectsData.filter((project: GetAllProjectsDetail) => {
@@ -104,11 +120,11 @@ export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type
     } else {
         projectFilteredData = allProjectsData;
     }
-    if(type === 'All') {
+    if (type === 'All') {
         return projectFilteredData;
-    } else if(type === 'onlyMe') {
+    } else if (type === 'onlyMe') {
         const userId = userConfig.userConfiguration.user.userId;
-        const userOnlyProjects = projectFilteredData.filter((project: GetAllProjectsDetail ) => {
+        const userOnlyProjects = projectFilteredData.filter((project: GetAllProjectsDetail) => {
             return project.created_by === userId;
         });
         return userOnlyProjects;

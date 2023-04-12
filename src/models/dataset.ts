@@ -30,5 +30,5 @@ export interface GetDatasetDetail {
     };
 }
 export class GetSingleDataset<T> {
-    dmsDataset!: T;
+    dmsDataSource!: T;
 }
