@@ -506,6 +506,16 @@ export const editProject = (variables: any) => {
                 )
             }`;
 };
+export const editDataset = (variables: any) => {
+    return gql`mutation {
+                dmsEditProject(
+                    id: "${variables.id}",
+                    name: "${variables.name}",
+                    project_variables: "${variables.project_variables}",
+                
+                )
+            }`;
+};
 
 export const createAccess = () => {
     return gql`

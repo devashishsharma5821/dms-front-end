@@ -32,3 +32,26 @@ export interface GetDatasetDetail {
 export class GetSingleDataset<T> {
     dmsDataSource!: T;
 }
+
+export class DatasetEdit<T> {
+    dmsEditDataset!: T;
+}
+export class DatasetEditDetail {
+    dmsEditDataset!: boolean;
+}
+export class DatasetDelete<T> {
+    dmsDeleteDataset!: T;
+}
+export class GetAllDatasets<T> {
+    dmsDatasets!: T;
+}
+export interface GetAllDatasetsDetail {
+    id: string;
+    name: string;
+    created_by: string;
+    created_at: string;
+    updated_at: string;
+    spec: {
+        path: string;
+    };
+}

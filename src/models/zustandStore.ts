@@ -82,6 +82,7 @@ export type getAndUpdateTransformersData = () => void;
 export type getAndUpdateAllProjectsData = () => void;
 export type getAndUpdateSingleProjectData = (id: string) => void;
 export type getAndUpdateSingleDatasetData = (id: string) => void;
+export type getAndUpdateAllDatasetsData = () => void;
 export type submitMessage = (content: any) => void;
 export type dmsRunCompute = (id: string) => void;
 export type updateSpinnerInfo = (spinnerInfo: boolean) => void;

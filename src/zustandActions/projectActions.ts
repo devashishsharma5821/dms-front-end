@@ -14,6 +14,7 @@ import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../models/toastMessages';
 import { GetSingleDataset, GetSingleDatasetAppStoreState } from '../models/dataset';
 const { toast } = createStandaloneToast();
+
 export const getAndUpdateAllProjectsData: getAndUpdateAllProjectsDataType = async () => {
     const response = await client.query<GetAllProjects<Array<GetAllProjectsDetail>>>({
         query: GET_ALL_PROJECTS

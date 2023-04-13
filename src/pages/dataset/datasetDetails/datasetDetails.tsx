@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -15,17 +15,21 @@ import {
     ButtonGroup,
     useEditableControls,
     CloseButton,
-    createStandaloneToast
+    createStandaloneToast,
+    useDisclosure
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import LeftArrow from '../../../assets/LeftArrow';
 import { CopyIcon, PencilIcon } from '../../../assets/icons';
 import useAppStore from '../../../store';
-import { GetSingleDatasetAppStoreState } from '../../../models/dataset';
+import { GetSingleDatasetAppStoreState, DatasetEdit, DatasetEditDetail, DatasetDelete, DeleteDatasetDetail } from '../../../models/dataset';
 import { getToastOptions } from '../../../models/toastMessages';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { getAndUpdateSingleDatasetData } from '../../../zustandActions/projectActions';
 import { getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime, getUserNameFromId } from '../../../utils/common.utils';
+import { deleteDataset, editDataset } from '../../../query';
+import client from '../../../apollo-client';
+import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -36,6 +40,9 @@ const DatasetDetails = (props: any) => {
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
     const { toast } = createStandaloneToast();
     const params = useParams();
+    const [deleteId, setDeleteId] = useState<string>('');
+    const [inlineDatasetName, setInlineDatasetName] = useState<string>('');
+    const deleteConfirmationModal = useDisclosure();
     // const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const navigate = useNavigate();
     const navigateToDataset = () => {
@@ -69,6 +76,7 @@ const DatasetDetails = (props: any) => {
         if (DatasetDetailData === null) {
             getAndUpdateSingleDatasetData(params.datasetId as string);
         } else {
+            setInlineDatasetName(DatasetDetailData.name);
             updateSpinnerInfo(false);
             console.log('datasetdetail', DatasetDetailData);
             if (AllUsersData && DatasetDetailData) {
@@ -88,6 +96,63 @@ const DatasetDetails = (props: any) => {
         }
     }, [AllUsersData]);
 
+    const handleEditDataset = (variables: any, toastMessages: any) => {
+        updateSpinnerInfo(true);
+        client
+            .mutate<DatasetEdit<DatasetEditDetail>>({
+                mutation: editDataset(variables)
+            })
+            .then(() => {
+                toast(getToastOptions(toastMessages.successMessage, 'success'));
+                updateSpinnerInfo(false);
+            })
+            .catch((err) => {
+                updateSpinnerInfo(false);
+                toast(getToastOptions(`${err}`, 'error'));
+            });
+    };
+
+    const handleEditName = () => {
+        if (inlineDatasetName !== DatasetDetailData.name) {
+            const variables = {
+                id: DatasetDetailData.id,
+                name: inlineDatasetName
+                // dataset_variables: DatasetDetailData.name
+            };
+            handleEditDataset(variables, {
+                successMessage: 'Dataset Name Edited Successfully',
+                errorMessage: 'Dataset Name Failed To edit'
+            });
+        }
+    };
+    const handleEditNameChange = (editChangeValue: string) => {
+        setInlineDatasetName(editChangeValue);
+    };
+    const handleEditNameChangeCancel = () => {
+        setInlineDatasetName(DatasetDetailData.name);
+    };
+    const onDeleteHandler = (id: string) => {
+        deleteConfirmationModal.onOpen();
+        setDeleteId(id);
+    };
+    const submitDeleteHandler = () => {
+        updateSpinnerInfo(true);
+        client
+            .mutate<DatasetDelete<DeleteDatasetDetail>>({
+                mutation: deleteDataset(deleteId)
+            })
+            .then(() => {
+                toast(getToastOptions(`Dataset is deleted successfully`, 'success'));
+
+                navigate('/projects');
+                deleteConfirmationModal.onClose();
+                updateSpinnerInfo(false);
+            })
+            .catch((err) => {
+                updateSpinnerInfo(false);
+                toast(getToastOptions(`${err}`, 'error'));
+            });
+    };
     return (
         <>
             {AllUsersData && DatasetDetailData && (
@@ -115,11 +180,15 @@ const DatasetDetails = (props: any) => {
                             <>
                                 {' '}
                                 <Flex>
-                                    <Text fontSize={24} fontWeight={700} color={accesstextColor} mt={-2}>
-                                        My Dataset 1
-                                    </Text>
-
-                                    <Editable maxWidth={'800px'} textAlign="left" fontWeight={400}>
+                                    <Editable
+                                        maxWidth={'800px'}
+                                        textAlign="left"
+                                        fontWeight={400}
+                                        onSubmit={handleEditName}
+                                        onChange={handleEditNameChange}
+                                        onCancel={handleEditNameChangeCancel}
+                                        value={inlineDatasetName}
+                                    >
                                         <Flex>
                                             <Center mt={'-10'}>
                                                 <Box maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
@@ -146,6 +215,7 @@ const DatasetDetails = (props: any) => {
                                         fontWeight={600}
                                         ml={'30px'}
                                         mt={'-10px'}
+                                        onClick={() => onDeleteHandler(DatasetDetailData.id)}
                                     >
                                         Delete
                                     </Button>
@@ -155,7 +225,7 @@ const DatasetDetails = (props: any) => {
                         <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
                             <Flex>
                                 <Flex width={'50%'} ml={'22px'} maxHeight={'320px'} mr={'48px'}>
-                                    <Avatar p={'5px'} borderRadius="full" boxSize="42px" color={'default.whiteText'} mt={'24px'} />
+                                    <Avatar p={'5px'} borderRadius="full" boxSize="42px" color={'default.whiteText'} mt={'24px'} name={getUserNameFromId(AllUsersData, DatasetDetailData.created_by)} />
                                     <Center>
                                         <Box width={'450px'}>
                                             <Text ml={16} mt={'22px'} color={textColor2} fontWeight={600} lineHeight={'22px'}>
@@ -298,6 +368,14 @@ const DatasetDetails = (props: any) => {
                         </Box>
                     </Box>
                 </Box>
+            )}
+            {deleteConfirmationModal.isOpen && (
+                <DeleteConfirmationModal
+                    isOpen={deleteConfirmationModal.isOpen}
+                    onClose={deleteConfirmationModal.onClose}
+                    submitDeleteHandler={submitDeleteHandler}
+                    options={{ name: DatasetDetailData.name, label: 'Dataset', placeholder: 'My Dataset 00' }}
+                />
             )}
         </>
     );
