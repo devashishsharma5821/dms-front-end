@@ -6,7 +6,7 @@ import { HaloService } from './halo-service';
 import { KeyboardService } from './keyboard-service';
 import * as appShapes from './app-shapes';
 import TransformerModel from '../../../models/transformerModal';
-import { updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
+import { updateGraph, updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
 
 class DmsCanvasService {
     el: HTMLElement;
@@ -139,7 +139,7 @@ class DmsCanvasService {
         });
 
         graph.on('add', function (cell, collection, opt) {
-            console.log('lets check on add ===>', graph?.getCells(), cell.attributes.attrs.idOfTransformer);
+            console.log('lets check on add inside dms-canvas-service ===>', graph?.getCells(), cell.attributes.attrs.idOfTransformer);
 
             if (cell.attributes.attrs.idOfTransformer) {
                 updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
@@ -147,6 +147,8 @@ class DmsCanvasService {
                 updateSelectedTransformer(cell.attributes.attrs.idOfTransformer);
                 console.log('lets check id of transformer ==>', cell);
             }
+
+            updateGraph(graph);
         });
 
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
@@ -369,12 +371,12 @@ class DmsCanvasService {
             'to-back:pointerclick': this.applyOnSelection.bind(this, 'toBack'),
             // 'layout:pointerclick': this.layoutDirectedGraph.bind(this),
             'snapline:change': this.changeSnapLines.bind(this),
-            'clear:pointerclick': this.graph.clear.bind(this.graph),
+            'clear:pointerclick': this.graph?.clear?.bind(this.graph),
             'print:pointerclick': this.paper?.print?.bind(this.paper),
             'grid-size:change': this.paper?.setGridSize?.bind(this.paper)
         });
 
-        this.renderPlugin('.toolbar-container', this.toolbarService.toolbar);
+        this.renderPlugin('.toolbar-container', this?.toolbarService?.toolbar);
     }
 
     applyOnSelection(method: string) {

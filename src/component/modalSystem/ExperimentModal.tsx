@@ -23,17 +23,17 @@ import {
     AvatarGroup,
     Popover,
     PopoverTrigger,
-    useDisclosure, FormErrorMessage, PopoverContent, Stack, PopoverCloseButton, ButtonGroup
+    useDisclosure,
+    FormErrorMessage,
+    PopoverContent,
+    Stack,
+    PopoverCloseButton,
+    ButtonGroup
 } from '@chakra-ui/react';
 import { CloseIcon, DownArrowShare } from '../../assets/icons';
 import OrIconSmall from '../../assets/icons/OrIconSmall';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
-import {
-    getProjectAccessList,
-    getProjectNameAndLabelsForSelect,
-    getTruncatedText,
-    getUserNameFromId
-} from '../../utils/common.utils';
+import { getProjectAccessList, getProjectNameAndLabelsForSelect, getTruncatedText, getUserNameFromId } from '../../utils/common.utils';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState } from '../../models/project';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
@@ -275,7 +275,7 @@ const ExperimentModal = (props: any) => {
                     <Box ml={'21'}>
                         <Flex>
                             <VStack align="flex-start">
-                                <FormControl isInvalid={experimentName === ""} isRequired>
+                                <FormControl isInvalid={experimentName === ''} isRequired>
                                     <FormLabel htmlFor="Project Name" mb={6} color={projectTitleColor} fontWeight={600}>
                                         Experiment Name
                                     </FormLabel>
@@ -293,11 +293,7 @@ const ExperimentModal = (props: any) => {
                                         mb={'20px'}
                                         onChange={handleExperimentNameChange}
                                     />{' '}
-                                    {
-                                        experimentName === "" &&
-                                        <FormErrorMessage>Experiment Name is required</FormErrorMessage>
-                                    }
-
+                                    {experimentName === '' && <FormErrorMessage>Experiment Name is required</FormErrorMessage>}
                                 </FormControl>
                                 <Flex maxHeight={'37px'} maxWidth={'400px'}>
                                     <Center>
@@ -331,7 +327,16 @@ const ExperimentModal = (props: any) => {
                                                         marginInlineStart={'-10px'}
                                                     />
                                                     <ButtonGroup display="flex" mt={'20px'} justifyContent="flex-start" cursor={'pointer'}>
-                                                        <Button onClick={handleTagSubmit} bg={'default.toolbarButton'} cursor={'pointer'} width={'104px'} height={'36px'} borderRadius={4} mb={20} mt={16}>
+                                                        <Button
+                                                            onClick={handleTagSubmit}
+                                                            bg={'default.toolbarButton'}
+                                                            cursor={'pointer'}
+                                                            width={'104px'}
+                                                            height={'36px'}
+                                                            borderRadius={4}
+                                                            mb={20}
+                                                            mt={16}
+                                                        >
                                                             Add Tag(s)
                                                         </Button>
                                                     </ButtonGroup>
@@ -342,7 +347,7 @@ const ExperimentModal = (props: any) => {
                                 </Flex>
                                 <Flex>
                                     {formFields?.tags.map((tag: string, tagIndex: number) => {
-                                        return(
+                                        return (
                                             <Box cursor={'pointer'} key={`${tag}_${tagIndex}`} ml={16} mt={8} bg={' #F2F4F8'} height={'24px'} borderRadius={3} minWidth={70}>
                                                 <Flex cursor={'pointer'}>
                                                     <Center cursor={'pointer'}>
@@ -355,7 +360,7 @@ const ExperimentModal = (props: any) => {
                                                     </Center>
                                                 </Flex>
                                             </Box>
-                                        )
+                                        );
                                     })}
                                 </Flex>
                                 {/*<FormControl isRequired>*/}

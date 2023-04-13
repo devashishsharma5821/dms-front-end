@@ -587,7 +587,6 @@ const ExperimentsPage = () => {
                 return transformersList;
             }, TransformersData[0]);
         }
-        console.log('lets check transformedNewDataForStencil  ==>', transformedNewDataForStencil);
         setTransformersGroup(transformersGroup);
         setTransformedNewDataForStencil(transformedNewDataForStencil);
     };
@@ -801,7 +800,6 @@ const ExperimentsPage = () => {
     }, [selectedStageId]);
 
     useEffect(() => {
-        console.log('lets check selectedTransformer ==>', selectedTransformer, 'selectedCellId ===>', selectedCellId);
         addTransformerAsStage(selectedTransformer, undefined, selectedCellId);
     }, [selectedTransformer, selectedCellId]);
 
@@ -974,8 +972,6 @@ const ExperimentsPage = () => {
                 }
             }
         });
-
-        console.log('lets check experimentToSave ===>', experimentToSave);
 
         // Save it into local storage
         localStorage.setItem('savedGraph', JSON.stringify(experimentToSave));
