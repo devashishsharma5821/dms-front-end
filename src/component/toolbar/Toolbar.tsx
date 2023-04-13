@@ -87,19 +87,25 @@ const Toolbar = (props: toolbarPropsType) => {
             {toolbarDataIcons.section1.map((sections, sectionIndex) => {
                 return (
                     <>
-                        {sections.type === 'icon' && sections.name === 'SaveAs' && (
-                            // <Center onClick={() => triggerActions(sections.name)} cursor="pointer" ml={'16'} mr={'16'}>
-                            <Center onClick={() => props.onSaveClickHandler()} cursor="pointer" ml={'16'} mr={'16'}>
+                        {/*{sections.type === 'icon' && sections.name === 'SaveAs' && (*/}
+                        {/*    // <Center onClick={() => triggerActions(sections.name)} cursor="pointer" ml={'16'} mr={'16'}>*/}
+                        {/*    <Center onClick={() => props.onSaveClickHandler()} cursor="pointer" ml={'16'} mr={'16'}>*/}
+                        {/*        <Box mr={'8'}>{sections.component}</Box>*/}
+                        {/*        <Box>{sections.name}</Box>*/}
+                        {/*    </Center>*/}
+                        {/*)}*/}
+                        {sections.type === 'icon' && (
+                            <Center onClick={() => triggerActions(sections.name)} cursor="pointer" ml={'16'} mr={'16'}>
                                 <Box mr={'8'}>{sections.component}</Box>
                                 <Box>{sections.name}</Box>
                             </Center>
                         )}
-                        {sections.type === 'icon' && sections.name !== 'SaveAs' && (
-                            <Center onClick={() => triggerActions(sections.name)} ml={'16'} mr={'16'}>
-                                <Box mr={'8'}>{sections.component}</Box>
-                                <Box>{sections.name}</Box>
-                            </Center>
-                        )}
+                        {/*{sections.type === 'icon' && sections.name !== 'SaveAs' && (*/}
+                        {/*    <Center onClick={() => triggerActions(sections.name)} ml={'16'} mr={'16'}>*/}
+                        {/*        <Box mr={'8'}>{sections.component}</Box>*/}
+                        {/*        <Box>{sections.name}</Box>*/}
+                        {/*    </Center>*/}
+                        {/*)}*/}
                         {sections.type === 'moreIcon' && (
                             <>
                                 <Menu>
