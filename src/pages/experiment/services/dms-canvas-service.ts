@@ -6,7 +6,7 @@ import { HaloService } from './halo-service';
 import { KeyboardService } from './keyboard-service';
 import * as appShapes from './app-shapes';
 import TransformerModel from '../../../models/transformerModal';
-import { updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
+import { updateGraph, updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
 
 class DmsCanvasService {
     el: HTMLElement;
@@ -147,14 +147,9 @@ class DmsCanvasService {
                 updateSelectedTransformer(cell.attributes.attrs.idOfTransformer);
                 console.log('lets check id of transformer ==>', cell);
             }
-        });
-        // link.on('change:source', function () {
-        //     // Handle source change event
-        // });
 
-        // link.on('change:target', function () {
-        //     // Handle target change event
-        // });
+            updateGraph(graph);
+        });
 
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
 

@@ -56,6 +56,7 @@ interface ExtendedEmbeddedImage extends shapes.standard.EmbeddedImage {
 
 const ExperimentsPage = () => {
     const { projectId, experimentId } = useParams();
+    // TODO remove this hack for the Share Modal
 
     // New Consts For the new ProjectDetailsMenu Page I am designing.
     const elementRef = React.useRef<HTMLDivElement>(null);
@@ -109,12 +110,14 @@ const ExperimentsPage = () => {
 
     // This useEffect will need to remove after implementation of child routing.
     useEffect(() => {
-        if (SingleProjectData === null) {
-            getAndUpdateSingleProjectData(projectId as string);
+        if (SingleProjectData === null || SingleProjectData === undefined) {
+            getAndUpdateSingleProjectData(projectId!.toString());
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
         } else {
+            // @ts-ignore
+            localStorage.setItem('projectId', projectId.toString());
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
@@ -203,7 +206,7 @@ const ExperimentsPage = () => {
         obj['id'] = 'antuit.dms.dfp.io.Load Dataframe';
 
         let newArr: any = [];
-        SingleProjectData?.datasources?.map((csvData: any) => newArr.push(csvData?.name));
+        SingleProjectData?.datasources.map((csvData: any) => newArr.push(csvData.name));
 
         let newParseSchemaData = JSON.parse(obj?.schema?.jsonSchema);
 
@@ -865,7 +868,7 @@ const ExperimentsPage = () => {
 
         let currentModel = model?.getTransformer();
 
-        if (!restoring) {
+        if (!restoring && currentModel.name) {
             addStages({
                 stageId: currentModel?.stageId,
                 name: currentModel?.name,
@@ -882,7 +885,6 @@ const ExperimentsPage = () => {
     };
 
     const refreshExperiment = () => {
-        console.log('111111111');
         getAndUpdateExperimentData(ExperimentData.id);
     };
 
@@ -931,8 +933,8 @@ const ExperimentsPage = () => {
         // Collect the stages
         rappidData?.graph?.getCells()?.map((cell: any) => {
             let stageId = cell.get('id');
-            console.log('let me check cell inside onSaveHandler for now ==>', cell, 'stages =>>', stages, 'stageId==>', stageId);
-            if (cell?.attributes?.type !== 'standard.Link') {
+            console.log('let me check cell inside onSvaeHandler ==>', cell, 'stages =>>', stages);
+            if (cell?.attributes?.type !== 'standard.EmbeddedImage') {
                 let stage = stages?.find((st: any) => st.id === stageId);
 
                 console.log('lets check stage after filter ===>', stage, 'currentStages ===>', stages, 'stageId ===>', stageId);
@@ -978,6 +980,8 @@ const ExperimentsPage = () => {
         // Save it into local storage
         localStorage.setItem('savedGraph', JSON.stringify(experimentToSave));
     };
+
+    console.log('lets check ExperimentData =====>', ExperimentData?.core && JSON.parse(ExperimentData?.core));
 
     return (
         <>

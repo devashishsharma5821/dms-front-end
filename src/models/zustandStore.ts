@@ -50,6 +50,7 @@ export interface AppState {
     selectedTransformer: any;
     selectedCellId: any;
     stages: any;
+    updatedGraph: any;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -85,3 +86,4 @@ export type updateSelectedStageId = (stageId: any) => void;
 export type updateSelectedTransformer = (stageId: any) => void;
 export type addStages = (stage: any) => void;
 export type updateSelectedCellId = (cellId: string) => void;
+export type updateGraph = (graph: any) => void;

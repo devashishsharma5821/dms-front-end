@@ -45,7 +45,7 @@ const SearchComponent = (props:any) => {
                 value={searchValue}
                 border="none"
                 paddingStart="38"
-                paddingEnd="var(--chakra-space-4)"
+                paddingEnd="25px"
                 _focus={{ outline: 'none', boxShadow: 'none' }}
                 onChange={searchChange}
             />

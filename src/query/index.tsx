@@ -327,7 +327,7 @@ query {
   }
 }
 `;
-}
+};
 export const getComputeListData = () => {
     const GET_COMPUTELIST = gql`
         query {
@@ -403,17 +403,17 @@ export const GET_ALL_PROJECTS = gql`
                 user_id
                 access_level
             }
-                datasources {
-      id
-      name
-       created_by
-      created_at
-      spec {
-        ... on DMSDatabricksFileUpload {
-          path
-        }
-      }
-    }
+            datasources {
+                id
+                name
+                created_by
+                created_at
+                spec {
+                    ... on DMSDatabricksFileUpload {
+                        path
+                    }
+                }
+            }
         }
     }
 `;
@@ -535,7 +535,8 @@ export const dmsEditExperiment = (variables: any) => {
     id: "${variables.id}"
     name: "${variables.name}",
     tags: ${JSON.stringify(variables.tags)},
-    description: "${variables.description}"
+    description: "${variables.description}",
+    core: ${JSON.stringify(variables.stages)}
   )
 }`;
 };
