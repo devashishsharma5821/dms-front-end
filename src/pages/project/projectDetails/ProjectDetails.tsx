@@ -44,7 +44,7 @@ import Share from '../../../component/modalSystem/Share';
 import LeftArrow from '../../../assets/LeftArrow';
 import { getToastOptions } from '../../../models/toastMessages';
 import ProjectDetailsGrid from './detailsGridComponent';
-
+import moment from 'moment';
 const ProjectDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const accesstextColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -108,7 +108,6 @@ const ProjectDetails = (props: any) => {
         );
     }
     useEffect(() => {
-        console.log('P')
         if (SingleProjectData === null) {
             getAndUpdateSingleProjectData(params.projectId as string);
         } else {
@@ -214,6 +213,9 @@ const ProjectDetails = (props: any) => {
                 errorMessage: 'Project Tags Failed To Add'
             });
             setPopOverTag('');
+            SingleProjectData.basic.tags = [...SingleProjectData.basic.tags];
+            SingleProjectData.basic.updated_at = moment.utc().format();
+            updateSingleProjectData(SingleProjectData);
         }
     };
     const handleRemoveTag = (tag: string) => {
@@ -231,6 +233,9 @@ const ProjectDetails = (props: any) => {
             successMessage: 'Project Tags Deleted Successfully',
             errorMessage: 'Project Tags Failed To Delete'
         });
+        SingleProjectData.basic.tags = [...SingleProjectData.basic.tags];
+        SingleProjectData.basic.updated_at = moment.utc().format();
+        updateSingleProjectData(SingleProjectData);
     };
     const handleEditName = () => {
         if (inlineProjectName !== SingleProjectData.basic.name) {
@@ -246,6 +251,9 @@ const ProjectDetails = (props: any) => {
                 errorMessage: 'Project Name Failed To edit'
             });
         }
+        SingleProjectData.basic.name = inlineProjectName;
+        SingleProjectData.basic.updated_at = moment.utc().format();
+        updateSingleProjectData(SingleProjectData);
         setShowEditValuePreview(true);
     };
 
@@ -262,6 +270,9 @@ const ProjectDetails = (props: any) => {
                 successMessage: 'Project Description Edited Successfully',
                 errorMessage: 'Project Description Failed To edit'
             });
+            SingleProjectData.basic.description = nextDescription;
+            SingleProjectData.basic.updated_at = moment.utc().format();
+            updateSingleProjectData(SingleProjectData);
         }
     };
     const createUserAccessForCreateProjectMode = (userList: AllUsers) => {
