@@ -6,13 +6,15 @@ import validator from '@rjsf/validator-ajv6';
 import type { JSONSchema7 } from 'json-schema';
 import useAppStore from '../../store';
 import { DetailsAppStoreState, DetailsPropsType } from '../../models/transformer';
+import { updateModuleConfigData } from '../../zustandActions/transformersActions';
+import { cloneDeep } from 'lodash';
 
 const Details = (props: DetailsPropsType) => {
-    const [TransformersData, ExperimentData] = useAppStore((state: DetailsAppStoreState) => [state.TransformersData, state.ExperimentData]);
+    const [TransformersData, ExperimentData, moduleConfigData] = useAppStore((state: DetailsAppStoreState) => [state.TransformersData, state.ExperimentData, state.moduleConfigData]);
 
     const transformer = TransformersData?.find((transformer: any) => transformer?.id === props?.selectedStageId);
 
-    console.log('lets check ExperimentData ===>', ExperimentData, 'TransformersData ===>', TransformersData, 'transformer  ===>', transformer);
+    console.log('lets check ExperimentData ===>', ExperimentData, 'TransformersData ===>', TransformersData, 'transformer  ===>', transformer, 'moduleConfigData ===>', moduleConfigData);
 
     const [schema] = React.useState<JSONSchema7>({
         title: 'Widgets',
@@ -198,6 +200,14 @@ const Details = (props: DetailsPropsType) => {
 
     const onSubmitHandler = (e: any) => {
         console.log('onSubmitHandler ===>', e);
+        let newFormData = cloneDeep(e.formData);
+        updateModuleConfigData(newFormData);
+    };
+
+    const handleChange = (e: any) => {
+        console.log('lets check onchangeHandler ===>', e);
+        // let newFormData = cloneDeep(e.formData);
+        // updateModuleConfigData(newFormData);
     };
 
     return (
@@ -207,7 +217,7 @@ const Details = (props: DetailsPropsType) => {
                 <DrawerContent mt="64px" bg={useColorModeValue('default.whiteText', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
                     <DrawerBody mt="30px">
-                        <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onSubmit={onSubmitHandler} omitExtraData={true} validator={validator} />
+                        <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onSubmit={onSubmitHandler} onChange={handleChange} omitExtraData={true} validator={validator} />
                     </DrawerBody>
                     {/* 
                     <DrawerFooter>

@@ -7,7 +7,8 @@ import {
     updateSelectedStageId as updateSelectedStageIdType,
     updateSelectedTransformer as updateSelectedTransformerType,
     addStages as addStagesType,
-    updateSelectedCellId as updateSelectedCellIdType
+    updateSelectedCellId as updateSelectedCellIdType,
+    updateModuleConfigData as updateModuleConfigDataType
 } from '../models/zustandStore';
 import { TransformerListResponse } from '../models/transformerListResponse';
 import { TransformerDetail } from '../models/transformerDetail';
@@ -17,15 +18,22 @@ import { Dictionary } from '../models/schema';
 import { g } from '@antuit/rappid-v1';
 import { getToastOptions } from '../models/toastMessages';
 import { createStandaloneToast } from '@chakra-ui/react';
+import { updateSpinnerInfo } from './commonActions';
 const { toast } = createStandaloneToast();
 
 export const getAndUpdateTransformersData: getAndUpdateTransformersDataType = async () => {
+    updateSpinnerInfo(true);
     const { GET_TRANSFORMERS } = getTransformersData();
-    const response = await client.query<TransformerListResponse<Array<TransformerDetail>>>({
-        query: GET_TRANSFORMERS
-    });
-
-    useAppStore.setState(() => ({ TransformersData: response.data.dmsTransformers }));
+    try {
+        const response = await client.query<TransformerListResponse<Array<TransformerDetail>>>({
+            query: GET_TRANSFORMERS
+        });
+        useAppStore.setState(() => ({ TransformersData: response.data.dmsTransformers }));
+    } catch (error: any) {
+        toast(getToastOptions(error.message, 'error'));
+    } finally {
+        updateSpinnerInfo(false);
+    }
 };
 
 export const updateTransformersData: updateTransformersDataType = (TransformersData) => useAppStore.setState(() => ({ TransformersData: TransformersData }));
@@ -42,11 +50,14 @@ export const updateSelectedTransformer: updateSelectedTransformerType = (stageId
 
 export const addStages: addStagesType = (stage: any) =>
     useAppStore.setState((state: any) => {
+        let newStages;
         if (stage?.stageId && state?.stages?.some((stage: any) => stage?.id === stage?.stageId)) {
+            console.log('lets check coming inside addStage 2');
         } else {
-            if (!state.stages) {
-                state.stages = [];
-            }
+            console.log('lets check coming inside addStage 1');
+            // if (!state.stages) {
+            //     state.stages = [];
+            // }
 
             const newStage = {
                 id: stage?.stageId,
@@ -76,10 +87,46 @@ export const addStages: addStagesType = (stage: any) =>
                 signature: ''
             };
 
-            state?.stages?.push(newStage);
-            return state;
+            console.log('lets check newStages to add in current newStage ==>', newStage);
+
+            // state?.stages?.push(newStage);
+            newStages = [...state.stages, newStage];
         }
+        console.log('lets check newStages to add in current newStages ==>', newStages);
+        state.stages = newStages;
+        // return { stages: newStages };
+        return state;
     });
+
+export const updateModuleConfigData: updateModuleConfigDataType = (moduleConfigData: any) => {
+    let stagesWithConfig: any;
+    let experimentToSave: any;
+
+    useAppStore.setState((state: any) => {
+        console.log('lets check experimentToSave ==>', state.experimentToSave);
+        stagesWithConfig = JSON.parse(state.experimentToSave.stages);
+        stagesWithConfig.stages.module_conf = moduleConfigData;
+        experimentToSave = state.experimentToSave;
+        console.log('lets check stagesWithConfig ==>', stagesWithConfig);
+
+        return { moduleConfigData: moduleConfigData };
+    });
+
+    experimentToSave.stages = JSON.stringify(stagesWithConfig);
+
+    console.log('lets check new experimentToSave', experimentToSave);
+
+    // TODO: Need Some more work
+    // try {
+    //     const response = await client.mutate<any>({
+    //         mutation: dmsEditExperiment(experimentToSave)
+    //     });
+
+    //     console.log('lets check response ===>', response);
+    // } catch (error: any) {
+    //     toast(getToastOptions(`${error.message}`, 'error'));
+    // }
+};
 
 export const updateGraph = async (graph: any) => {
     let experimentToSave: any = {
@@ -96,8 +143,12 @@ export const updateGraph = async (graph: any) => {
         let extractedPorts: any;
         let extractedPortsIdArray: any = [];
 
+        console.log('lets check state for stages ===>', state.stages);
+
         graph?.getCells().map((cell: any) => {
+            console.log('lets check cell data ', cell);
             if (cell.get('type') === 'standard.Link') {
+                console.log('lets check its going inside link check standard');
                 let [port1, port2] = extractedPortsIdArray;
                 let source = cell.get('source');
                 let target = cell.get('target');
@@ -106,8 +157,15 @@ export const updateGraph = async (graph: any) => {
             }
             let stageId = cell.get('id');
             if (cell?.attributes?.type !== 'standard.Link') {
-                let stage = state?.stages?.find((st: any) => st.id === stageId);
+                console.log('lets check its going inside link check EmbeddedImage', 'stageLength', state.stages.length, 'stages', state.stages, 'stageId ==>', stageId);
+                let stage = state?.stages?.find((st: any) => {
+                    console.log('let check st.id ===>', st.id, 'stageId===>', stageId);
+                    return st.id === stageId;
+                });
+                // let stage = state.stages[0];
+                console.log('lets check stage only ===>', stage);
                 if (stageId && stage) {
+                    console.log('lets check stageId and stage ', stageId, stage);
                     let stageInputs = stage.inputs?.map((input: any) => {
                         return {
                             id: input.id,
@@ -137,6 +195,7 @@ export const updateGraph = async (graph: any) => {
                         position: cell.position()
                     });
                 }
+                console.log('lets check moduleConfigData ===>', state.moduleConfigData);
             }
         });
 
@@ -149,6 +208,8 @@ export const updateGraph = async (graph: any) => {
             updatedGraph: experimentToSave
         };
     });
+
+    console.log('lets check experiment to save ===>', experimentToSave);
 
     let newGeneratedObj: any = {};
 
@@ -181,12 +242,20 @@ export const updateGraph = async (graph: any) => {
         }
     });
 
+    console.log('lets check newGeneratedObj for now ===>', newGeneratedObj);
+
     let newStages = {
         stages: newGeneratedObj
     };
 
     let stages: any = JSON.stringify(newStages);
     experimentToSave.stages = stages;
+
+    useAppStore.setState((state: any) => {
+        return { experimentToSave: experimentToSave };
+    });
+
+    console.log('checking inside inside experimentToSave', experimentToSave);
 
     try {
         const response = await client.mutate<any>({
