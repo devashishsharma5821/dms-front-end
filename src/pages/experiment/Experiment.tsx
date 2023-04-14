@@ -229,6 +229,7 @@ const ExperimentsPage = () => {
     };
 
     const createCanvasSchemaFromTransformersData = () => {
+        console.log('lets check createCanvasSchemaFromTransformersData how many time calling');
         addLoadDataframeInTransformers(TransformersData);
         let transformerData = cloneDeep(TransformersData);
         let transformersGroup: any = {};
@@ -595,9 +596,9 @@ const ExperimentsPage = () => {
         if (TransformersData === null) {
             getAndUpdateTransformersData();
         } else {
-            SingleProjectData && createCanvasSchemaFromTransformersData();
+            TransformersData && createCanvasSchemaFromTransformersData();
         }
-    }, [TransformersData, SingleProjectData]);
+    }, [TransformersData]);
 
     const returnCurrentTransformersIcon = (icon: string) => {
         const location = window.location.host;
