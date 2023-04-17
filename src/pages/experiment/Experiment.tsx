@@ -56,6 +56,7 @@ interface ExtendedEmbeddedImage extends shapes.standard.EmbeddedImage {
 
 const ExperimentsPage = () => {
     const { projectId, experimentId } = useParams();
+    // TODO remove this hack for the Share Modal
 
     // New Consts For the new ProjectDetailsMenu Page I am designing.
     const elementRef = React.useRef<HTMLDivElement>(null);
@@ -109,12 +110,14 @@ const ExperimentsPage = () => {
 
     // This useEffect will need to remove after implementation of child routing.
     useEffect(() => {
-        if (SingleProjectData === null) {
-            getAndUpdateSingleProjectData(projectId as string);
+        if (SingleProjectData === null || SingleProjectData === undefined) {
+            getAndUpdateSingleProjectData(projectId!.toString());
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
         } else {
+            // @ts-ignore
+            localStorage.setItem('projectId', projectId.toString());
             if (AllUsersData && SingleProjectData) {
                 setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
             }
@@ -584,7 +587,6 @@ const ExperimentsPage = () => {
                 return transformersList;
             }, TransformersData[0]);
         }
-        console.log('lets check transformedNewDataForStencil  ==>', transformedNewDataForStencil);
         setTransformersGroup(transformersGroup);
         setTransformedNewDataForStencil(transformedNewDataForStencil);
     };
@@ -798,7 +800,6 @@ const ExperimentsPage = () => {
     }, [selectedStageId]);
 
     useEffect(() => {
-        console.log('lets check selectedTransformer ==>', selectedTransformer, 'selectedCellId ===>', selectedCellId);
         addTransformerAsStage(selectedTransformer, undefined, selectedCellId);
     }, [selectedTransformer, selectedCellId]);
 
@@ -882,7 +883,6 @@ const ExperimentsPage = () => {
     };
 
     const refreshExperiment = () => {
-        console.log('111111111');
         getAndUpdateExperimentData(ExperimentData.id);
     };
 
@@ -972,8 +972,6 @@ const ExperimentsPage = () => {
                 }
             }
         });
-
-        console.log('lets check experimentToSave ===>', experimentToSave);
 
         // Save it into local storage
         localStorage.setItem('savedGraph', JSON.stringify(experimentToSave));

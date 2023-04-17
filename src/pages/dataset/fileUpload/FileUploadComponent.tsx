@@ -17,6 +17,7 @@ const FileUploadComponent = (props: any) => {
 
     const handleFile = (files: any) => {
         updateSpinnerInfo(true);
+        props.disableStatus(true);
         let fileSizeMB = files[0].size / (1024 ** 2);
         if(fileSizeMB > 100) {
             toast(getToastOptions(`Please upload file less than 100 MB`, 'error'));
@@ -33,6 +34,7 @@ const FileUploadComponent = (props: any) => {
                     setTimeout(() => {
                         props.getResponseFromFileUpload(response.data.dmsDatabricksUploadDBFS);
                         updateSpinnerInfo(false);
+                        props.disableStatus(false);
                     },200)
                 })
                 .catch(() => {

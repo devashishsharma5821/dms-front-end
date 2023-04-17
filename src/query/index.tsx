@@ -404,6 +404,7 @@ export const GET_SINGLE_DATASET = (id: string) => {
                 created_at
                 updated_at
             }
+            
         }
     `;
 };
@@ -428,6 +429,8 @@ export const GET_ALL_PROJECTS = gql`
             datasources {
                 id
                 name
+                created_by
+                created_at
                 spec {
                     ... on DMSDatabricksFileUpload {
                         path
@@ -565,7 +568,8 @@ export const dmsEditExperiment = (variables: any) => {
     id: "${variables.id}"
     name: "${variables.name}",
     tags: ${JSON.stringify(variables.tags)},
-    description: "${variables.description}"
+    description: "${variables.description}",
+    core: ${JSON.stringify(variables.stages)}
   )
 }`;
 };

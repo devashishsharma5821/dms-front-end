@@ -18,7 +18,7 @@ export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDeta
             id: project.id
         };
     });
-    return projectsName;
+    return projectsName.sort((p1, p2) => (p1.name > p2.name ? 1 : p1.name < p2.name ? -1 : 0));
 };
 export const copyToClipBoard = (copyMessage: string, callBack: any) => {
     navigator.clipboard.writeText(copyMessage).then(() => {
@@ -104,6 +104,13 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
             }).length > 0
             ? true
             : false;
+    });
+};
+
+export const projectsSearchByNameOnly = (projectData: any, keyword: any) => {
+    const searchTerm = keyword.toLowerCase();
+    return projectData.filter((project: any) => {
+        return project.name.toLowerCase().match(new RegExp(searchTerm, 'g'));
     });
 };
 

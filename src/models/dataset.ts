@@ -40,7 +40,7 @@ export class DatasetEditDetail {
     dmsEditDataset!: boolean;
 }
 export class DatasetDelete<T> {
-    dmsDeleteDataset!: T;
+    dmsDeleteDataSource!: T;
 }
 export class GetAllDatasets<T> {
     dmsDatasets!: T;

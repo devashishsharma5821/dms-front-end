@@ -44,6 +44,7 @@ const SideBarMenu = () => {
             setActivateSubMenu(false);
             setActivateThirdSubMenu(false);
             setIsHovering(false);
+            updateSpinnerInfo(false);
         }
     };
     const hoverInThirdSubMenu = () => {
@@ -55,6 +56,7 @@ const SideBarMenu = () => {
         setActivateThirdSubMenu(false);
         setActivateSubMenu(false);
         setIsHovering(false);
+        updateSpinnerInfo(false);
     };
     const hoverInSubMenu = () => {
         setActivateSubMenu(true);
@@ -63,6 +65,7 @@ const SideBarMenu = () => {
     const hoverOutSubMenu = () => {
         setActivateSubMenu(false);
         setIsHovering(false);
+        updateSpinnerInfo(false);
     };
     const hasThirdLevelMenu = (projectId: string) => {
         updateSpinnerInfo(true);

@@ -34,7 +34,8 @@ const useAppStore = create<AppState>((set) => ({
     selectedStageId: null,
     selectedCellId: null,
     selectedTransformer: null,
-    stages: []
+    stages: [],
+    updatedGraph: null
 }));
 
 export default useAppStore;

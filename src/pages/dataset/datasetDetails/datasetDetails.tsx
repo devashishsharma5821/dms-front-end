@@ -31,6 +31,8 @@ import { deleteDataset, editDataset } from '../../../query';
 import client from '../../../apollo-client';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
+import Share from '../../../component/modalSystem/Share';
+import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const datasetDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
@@ -43,15 +45,20 @@ const DatasetDetails = (props: any) => {
     const [deleteId, setDeleteId] = useState<string>('');
     const [inlineDatasetName, setInlineDatasetName] = useState<string>('');
     const deleteConfirmationModal = useDisclosure();
-    // const [accessUserList, setAccessUserList] = React.useState<any>([]);
+    const editAccessModal = useDisclosure();
     const navigate = useNavigate();
+    const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
+    const createProjectModal = useDisclosure();
+
     const navigateToDataset = () => {
         navigate(`/dataset`);
     };
     const clipBoardSuccess = () => {
         toast(getToastOptions(`Location Copied To Clipboard`, 'success'));
     };
-
+    const createUserAccessForCreateDatasetMode = (userList: AllUsers) => {
+        setAccessUserListCreateMode(userList);
+    };
     function EditableControlsName() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -144,7 +151,7 @@ const DatasetDetails = (props: any) => {
             .then(() => {
                 toast(getToastOptions(`Dataset is deleted successfully`, 'success'));
 
-                navigate('/projects');
+                navigate('/dataset');
                 deleteConfirmationModal.onClose();
                 updateSpinnerInfo(false);
             })
@@ -325,22 +332,30 @@ const DatasetDetails = (props: any) => {
                                                     </Text>
                                                 </Box>
                                             </Center>
-                                            <Center ml={'84px'} mt={'10px'}>
-                                                <Text fontWeight={600} cursor={'pointer'} color={'default.textButton'}>
+                                            <Center ml={'57px'} mt={'10px'}>
+                                                <Text fontWeight={600} cursor={'pointer'} color={'default.textButton'} onClick={editAccessModal.onOpen}>
                                                     {' '}
                                                     Edit
                                                 </Text>
-                                                <Text color={'default.textButton'} fontWeight={600} ml={16} cursor={'pointer'} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)}>
+                                                <Text
+                                                    color={'default.textButton'}
+                                                    fontWeight={600}
+                                                    ml={16}
+                                                    cursor={'pointer'}
+                                                    onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)}
+                                                    width={'80px'}
+                                                    mr={'12px'}
+                                                >
                                                     {' '}
                                                     Copy Link
                                                 </Text>
                                             </Center>
                                         </Flex>
-                                        {/* <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={'20px'}>
+                                        <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={'20px'}>
                                             {accessUserList &&
                                                 accessUserList.map((icons: User, iconsIndex: number) => {
                                                     return (
-                                                        <div style={{ marginBottom: '16px' }}>
+                                                        <div key={iconsIndex} style={{ marginBottom: '16px' }}>
                                                             <Flex justifyContent={'start'}>
                                                                 <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={'M D'} color={'default.whiteText'} />
                                                                 <Box width={'250px'}>
@@ -355,7 +370,7 @@ const DatasetDetails = (props: any) => {
                                                         </div>
                                                     );
                                                 })}
-                                        </Box> */}
+                                        </Box>
                                     </Box>
                                 </Flex>
                             </Flex>
@@ -376,6 +391,15 @@ const DatasetDetails = (props: any) => {
                     submitDeleteHandler={submitDeleteHandler}
                     options={{ name: DatasetDetailData.name, label: 'Dataset', placeholder: 'My Dataset 00' }}
                 />
+            )}
+            {editAccessModal.isOpen && (
+                <Share
+                    isOpen={editAccessModal.isOpen}
+                    retainData={accessUserListCreateMode}
+                    onClose={editAccessModal.onClose}
+                    isEdit={true}
+                    onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateDatasetMode(userList)}
+                ></Share>
             )}
         </>
     );

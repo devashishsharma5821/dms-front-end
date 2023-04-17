@@ -74,6 +74,7 @@ const Project = () => {
     useEffect(() => {
         if (AllProjectsData?.length) {
             setAllProjectsData(AllProjectsData);
+            updateSpinnerInfo(false);
         }
     }, [AllProjectsData]);
 

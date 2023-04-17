@@ -8,6 +8,8 @@ import Settings from '../settings/Settings';
 import MyProfileModal from '../modalSystem/MyProfileModal';
 
 import DemandModelingStudio from '../../assets/icons/DemandModelingStudio';
+import { AllUsers } from '../../models/profile';
+import { useParams } from 'react-router-dom';
 // import ViewData from '../modalSystem/ViewData';
 // import NotebookModal from '../modalSystem/NotebookModal';
 const Header = (props: any) => {
@@ -15,9 +17,11 @@ const Header = (props: any) => {
     const textColor = useColorModeValue('default.darkBlack', 'default.whiteText');
     const textColor2 = useColorModeValue('default.BlackText', 'default.whiteText');
     const [isExperiment, setIsExperiment] = useState(false);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
     const settingsModal = useDisclosure();
     const myProfileModal = useDisclosure();
+    const editAccessModal = useDisclosure();
+    const params = useParams();
     // const ViewDataModal = useDisclosure();
     // const notebookModal = useDisclosure();
     useEffect(() => {
@@ -28,6 +32,10 @@ const Header = (props: any) => {
             setIsExperiment(true);
         }
     }, [window.location.pathname]);
+
+    const createUserAccessForCreateProjectMode = (userList: AllUsers) => {
+        setAccessUserListCreateMode(userList);
+    };
     return (
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" height={'64px'} pl={'4'} bg={themebg} color={'default.lightText'} width={'auto'}>
             <Center ml={'16px'}>
@@ -66,7 +74,7 @@ const Header = (props: any) => {
                         </AvatarGroup>
                         <Box mr={'26px'} ml={'16px'}>
                             <Button
-                                onClick={onOpen}
+                                onClick={editAccessModal.onOpen}
                                 color={'light.headerTitleLightColor'}
                                 border={'1px'}
                                 borderColor={'default.headerButoonBorder'}
@@ -78,7 +86,17 @@ const Header = (props: any) => {
                             >
                                 Share
                             </Button>
-                            {isOpen && <Share isOpen={isOpen} onClose={onClose}></Share>}
+                            {
+                                editAccessModal.isOpen &&
+                                <Share
+                                    isOpen={editAccessModal.isOpen}
+                                    retainData={accessUserListCreateMode}
+                                    onClose={editAccessModal.onClose}
+                                    isEdit={true}
+                                    onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateProjectMode(userList)}
+                                ></Share>
+                            }
+
                         </Box>
                     </>
                 )}
