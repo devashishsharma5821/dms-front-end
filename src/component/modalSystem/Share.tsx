@@ -32,11 +32,10 @@ import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandAction
 import client from '../../apollo-client';
 import { createAccess, deleteAccess } from '../../query';
 import { useParams } from 'react-router-dom';
-import { getAndUpdateAllProjectsData, getAndUpdateSingleDatasetData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { getAndUpdateSingleDatasetData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
-import { copyToClipBoard, getFormattedUserData } from '../../utils/common.utils';
+import { getFormattedUserData } from '../../utils/common.utils';
 import { getToastOptions } from '../../models/toastMessages';
-import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
 import { GetSingleDatasetAppStoreState } from '../../models/dataset';
 
 const Share = (props: any) => {
@@ -49,7 +48,6 @@ const Share = (props: any) => {
     const defaultInBoxTextColor = useColorModeValue('default.defaultTextColorInBox', 'default.veryLightGrayTextColor');
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
-    const [selectedUser, setSelectedUser] = React.useState('');
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);

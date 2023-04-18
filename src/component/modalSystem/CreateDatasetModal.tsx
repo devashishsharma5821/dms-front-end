@@ -97,15 +97,16 @@ const CreateDataset = (props: any) => {
         }
     };
     const createDataset = () => {
+        props.onClose();
+        navigate(`/datasetDetails/${selectedProjectId}/${datasetId}`);
         setSelectedProjectId('');
         setDatasetName('');
         setPreviousStateData({
             datasetName: '',
             projectSelected: ''
         });
-        props.onClose();
         toast(getToastOptions(`File Uploaded Successfully`, 'success'));
-        navigate(`/datasetDetails/${datasetId}`);
+
     };
     const navigateToNextScreen = () => {
         if (screenState.screen1) {
@@ -128,7 +129,6 @@ const CreateDataset = (props: any) => {
         }
     };
     const getResponseFromFileUpload = (uploadResponse: any) => {
-        console.log('Upload Response', uploadResponse)
         if (!uploadResponse) {
             toast(getToastOptions(`File Upload Failed, contact support`, 'error'));
         } else {

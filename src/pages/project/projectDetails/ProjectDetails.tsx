@@ -134,6 +134,7 @@ const ProjectDetails = (props: any) => {
     useEffect(() => {
         updateSpinnerInfo(true);
         return () => {
+            updateSpinnerInfo(false);
             updateSingleProjectData(null);
         };
     }, []);

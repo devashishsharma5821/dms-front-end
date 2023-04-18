@@ -25,7 +25,11 @@ import useAppStore from '../../../store';
 import { GetSingleDatasetAppStoreState, DatasetEdit, DatasetEditDetail, DatasetDelete, DeleteDatasetDetail } from '../../../models/dataset';
 import { getToastOptions } from '../../../models/toastMessages';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
-import { getAndUpdateSingleDatasetData } from '../../../zustandActions/projectActions';
+import {
+    getAndUpdateSingleDatasetData,
+    updateSingleDatasetData,
+    updateSingleProjectData
+} from '../../../zustandActions/projectActions';
 import { getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime, getUserNameFromId } from '../../../utils/common.utils';
 import { deleteDataset, editDataset } from '../../../query';
 import client from '../../../apollo-client';
@@ -82,48 +86,42 @@ const DatasetDetails = (props: any) => {
     }
 
     useEffect(() => {
-        if (DatasetDetailData === null) {
+        updateSpinnerInfo(true);
             getAndUpdateSingleDatasetData(params.datasetId as string);
-        }
-        if (SingleProjectData === null) {
             getAndUpdateSingleProjectData(params.projectId as string);
-        }
-        if (DatasetDetailData !== null && SingleProjectData !== null) {
-            setInlineDatasetName(DatasetDetailData.name);
-            updateSpinnerInfo(false);
-
-            if (AllUsersData && DatasetDetailData && SingleProjectData) {
-                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
-                console.log('datasetdetail test 222', AllUsersData);
-            }
-        }
-    }, [DatasetDetailData, SingleProjectData]);
-    useEffect(() => {
-        if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
             getAndUpdateAllUsersData(variablesForAllUsers);
-        } else {
-            if (AllUsersData && DatasetDetailData) {
-                setAccessUserList(getFormattedUserData(AllUsersData, DatasetDetailData));
-                console.log('AllUsersData', AllUsersData);
-            }
+        return () => {
+            updateSpinnerInfo(false);
+            updateSingleProjectData(null);
+            updateSingleDatasetData(null);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (DatasetDetailData !== null && SingleProjectData !== null && AllUsersData !== null) {
+            console.log('Shirin here is the dataset details data', DatasetDetailData);
+            setInlineDatasetName(DatasetDetailData.name);
+            updateSpinnerInfo(false);
+            setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
         }
-    }, [AllUsersData]);
+    }, [DatasetDetailData, SingleProjectData, AllUsersData]);
 
     const handleEditDataset = (variables: any, toastMessages: any) => {
         updateSpinnerInfo(true);
-        client
-            .mutate<DatasetEdit<DatasetEditDetail>>({
-                mutation: editDataset(variables)
-            })
-            .then(() => {
-                toast(getToastOptions(toastMessages.successMessage, 'success'));
-                updateSpinnerInfo(false);
-            })
-            .catch((err) => {
-                updateSpinnerInfo(false);
-                toast(getToastOptions(`${err}`, 'error'));
-            });
+        // TODO Backend needs to supply edit dataset api.
+        // client
+        //     .mutate<DatasetEdit<DatasetEditDetail>>({
+        //         mutation: editDataset(variables)
+        //     })
+        //     .then(() => {
+        //         toast(getToastOptions(toastMessages.successMessage, 'success'));
+        //         updateSpinnerInfo(false);
+        //     })
+        //     .catch((err) => {
+        //         updateSpinnerInfo(false);
+        //         toast(getToastOptions(`${err}`, 'error'));
+        //     });
     };
 
     const handleEditName = () => {
@@ -169,7 +167,7 @@ const DatasetDetails = (props: any) => {
     };
     return (
         <>
-            {AllUsersData && DatasetDetailData && (
+            {AllUsersData && DatasetDetailData && SingleProjectData && (
                 <Box marginLeft={'50px'}>
                     <Box fontSize={16} fontWeight={600} ml={'24'} mt={'24'} color={datasetDetailTitle}>
                         <Text>Dataset / My Dataset</Text>
