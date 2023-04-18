@@ -32,7 +32,8 @@ import client from '../../../apollo-client';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
 import Share from '../../../component/modalSystem/Share';
-import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
+import { GetSingleProjectAppStoreState } from '../../../models/project';
+import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const datasetDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
@@ -47,8 +48,8 @@ const DatasetDetails = (props: any) => {
     const deleteConfirmationModal = useDisclosure();
     const editAccessModal = useDisclosure();
     const navigate = useNavigate();
+    const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
-    const createProjectModal = useDisclosure();
 
     const navigateToDataset = () => {
         navigate(`/dataset`);
@@ -79,18 +80,24 @@ const DatasetDetails = (props: any) => {
             </Flex>
         );
     }
+
     useEffect(() => {
         if (DatasetDetailData === null) {
             getAndUpdateSingleDatasetData(params.datasetId as string);
-        } else {
+        }
+        if (SingleProjectData === null) {
+            getAndUpdateSingleProjectData(params.projectId as string);
+        }
+        if (DatasetDetailData !== null && SingleProjectData !== null) {
             setInlineDatasetName(DatasetDetailData.name);
             updateSpinnerInfo(false);
-            console.log('datasetdetail', DatasetDetailData);
-            if (AllUsersData && DatasetDetailData) {
-                // setAccessUserList(getFormattedUserDataDataset(AllUsersData, DatasetDetailData));
+
+            if (AllUsersData && DatasetDetailData && SingleProjectData) {
+                setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+                console.log('datasetdetail test 222', AllUsersData);
             }
         }
-    }, [DatasetDetailData]);
+    }, [DatasetDetailData, SingleProjectData]);
     useEffect(() => {
         if (AllUsersData === null) {
             const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
@@ -357,7 +364,7 @@ const DatasetDetails = (props: any) => {
                                                     return (
                                                         <div key={iconsIndex} style={{ marginBottom: '16px' }}>
                                                             <Flex justifyContent={'start'}>
-                                                                <Avatar p={'5px'} borderRadius="full" boxSize="32px" name={'M D'} color={'default.whiteText'} />
+                                                                <Avatar p={'5px'} borderRadius="full" boxSize="32px" color={'default.whiteText'} name={`${icons.firstName} ${icons.lastName}`} />
                                                                 <Box width={'250px'}>
                                                                     <Text ml={12} color={accesstextColor} fontWeight={600}>
                                                                         {icons?.firstName} {icons?.lastName}

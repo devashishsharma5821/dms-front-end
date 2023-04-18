@@ -15,13 +15,13 @@ const DatasetViews = (props: any) => {
     const navigate = useNavigate();
     const renderDatasetId = (params: any) => {
         return (
-            <div style={{ color: 'rgb(3, 135, 176)', cursor: 'pointer' }} onClick={() => navigateToDataset(params.data.id)}>
+            <div style={{ color: 'rgb(3, 135, 176)', cursor: 'pointer' }} onClick={() => navigateToDataset(params.data.id, params.data.projectId)}>
                 {params.data.id}
             </div>
         );
     };
-    const navigateToDataset = (id: any) => {
-        navigate(`/datasetDetails/${id}`);
+    const navigateToDataset = (id: any, projectId: any) => {
+        navigate(`/datasetDetails/${projectId}/${id}`);
     };
     const [columnDefs] = useState<ColDef[]>([
         {
@@ -59,9 +59,10 @@ const DatasetViews = (props: any) => {
             let listOfDataSources = [];
             if (project.datasources.length > 0) {
                 listOfDataSources = project.datasources.map((datasource: any) => {
-                    return datasource;
+                    return { ...datasource, projectId: project.id };
                 });
             }
+
             datasourceData.push(...listOfDataSources);
         });
         setRowData(datasourceData);

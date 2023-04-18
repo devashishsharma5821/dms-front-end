@@ -74,22 +74,6 @@ export const getFormattedUserData = (allUserData: AllUsers[], projectData: any) 
 
     return reformattedProjectAccessData;
 };
-// export const getFormattedUserDataDataset = (allUserData: AllUsers[], datasetsData: any) => {
-//     const reformattedDatasetAccessData = datasetsData.map((DatasetDetailsData: any, datasetAccessIndex: any) => {
-//         const sharedUser = allUserData?.filter((singleUser) => {
-//             return singleUser.userId === DatasetDetailsData.user_id;
-//         });
-//         return {
-//             id: sharedUser![0].userId,
-//             firstName: sharedUser?.length > 0 ? sharedUser![0].firstName : '',
-//             lastName: sharedUser?.length > 0 ? sharedUser![0].lastName : '',
-//             email: sharedUser?.length > 0 ? sharedUser![0].email : '',
-//             accessLevel: sharedUser?.length > 0 ? DatasetDetailsData.dataset_access[datasetAccessIndex].access_level : ''
-//         };
-//     });
-
-//     return reformattedDatasetAccessData;
-// };
 
 export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any) => {
     const searchTerm = keyword.toLowerCase();
