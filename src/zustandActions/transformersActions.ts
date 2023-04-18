@@ -8,7 +8,8 @@ import {
     updateSelectedTransformer as updateSelectedTransformerType,
     addStages as addStagesType,
     updateSelectedCellId as updateSelectedCellIdType,
-    updateModuleConfigData as updateModuleConfigDataType
+    updateModuleConfigData as updateModuleConfigDataType,
+    updateGraphOnChangingPosition as updateGraphOnChangingPositionType
 } from '../models/zustandStore';
 import { TransformerListResponse } from '../models/transformerListResponse';
 import { TransformerDetail } from '../models/transformerDetail';
@@ -50,6 +51,7 @@ export const updateSelectedTransformer: updateSelectedTransformerType = (stageId
 
 export const addStages: addStagesType = (stage: any) =>
     useAppStore.setState((state: any) => {
+        console.log('lets check stages for now inside addStages', stage);
         let newStages;
         let newStage;
         if (stage?.stageId && state?.stages?.some((stage: any) => stage?.id === stage?.stageId)) {
@@ -206,7 +208,6 @@ export const updateGraph = async (graph: any) => {
     let newGeneratedObj: any = {};
 
     experimentToSave.stages.map((stage: any) => {
-        console.log('lets now check stage while updating graph ===>', stage);
         if (stage.inputs.length > 0) {
             newGeneratedObj[stage.id] = {
                 id: stage.id,
@@ -218,9 +219,6 @@ export const updateGraph = async (graph: any) => {
                         intermediate: {}
                     }
                 }
-                // position: {
-                //     [stage.id]: stage.position
-                // }
                 // position: stage.position
             };
         } else {
@@ -244,6 +242,32 @@ export const updateGraph = async (graph: any) => {
     useAppStore.setState((state: any) => {
         return { experimentToSave: experimentToSave };
     });
+
+    try {
+        const response = await client.mutate<any>({
+            mutation: dmsEditExperiment(experimentToSave)
+        });
+
+        console.log('lets check response ===>', response);
+    } catch (error: any) {
+        toast(getToastOptions(`${error.message}`, 'error'));
+    }
+};
+
+export const updateGraphOnChangingPosition: updateGraphOnChangingPositionType = async (dataFormed: any) => {
+    let experimentToSave: any;
+    useAppStore.setState((state: any) => {
+        experimentToSave = state.experimentToSave;
+        return state;
+    });
+    let stagesWithConfig = JSON.parse(experimentToSave.stages);
+    for (let key in stagesWithConfig.stages) {
+        if (stagesWithConfig.stages[key].id === dataFormed.id) {
+            // Can make what ever changes we want to with experimentToSave
+            console.log('lets check going inside if check or not', dataFormed.id);
+        }
+    }
+    experimentToSave.stages = JSON.stringify(stagesWithConfig);
 
     try {
         const response = await client.mutate<any>({

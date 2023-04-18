@@ -90,3 +90,4 @@ export type addStages = (stage: any) => void;
 export type updateSelectedCellId = (cellId: string) => void;
 export type updateGraph = (graph: any) => void;
 export type updateModuleConfigData = (moduleConfigData: any, title: string) => void;
+export type updateGraphOnChangingPosition = (dataFormed: any) => void;

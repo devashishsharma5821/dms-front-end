@@ -6,7 +6,7 @@ import { HaloService } from './halo-service';
 import { KeyboardService } from './keyboard-service';
 import * as appShapes from './app-shapes';
 import TransformerModel from '../../../models/transformerModal';
-import { updateGraph, updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
+import { updateGraph, updateGraphOnChangingPosition, updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
 
 class DmsCanvasService {
     el: HTMLElement;
@@ -130,19 +130,24 @@ class DmsCanvasService {
             }
         }));
 
-        console.log('lets check here ===>', graph.getCells());
-        // paper.on('blank:mousewheel', _.partial(this.onMousewheel, null), this);
         paper.on('cell:mousewheel', this.onMousewheel.bind(this));
 
         paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
             updateSelectedStageId(cellView?.model?.attributes?.attrs?.idOfTransformer);
         });
 
-        // paper.on('cell:pointerdown', function (cellView) {
-        //     console.log('User clicked on cell with ID ' + cellView.model.id);
-        // });
         paper.on('cell:pointerup', function (cellView) {
-            console.log('User clicked on cell with ID ', cellView.model);
+            let newlyFormedData: any = {
+                id: '',
+                position: null,
+                type: '',
+                size: null
+            };
+            newlyFormedData.id = cellView.model.attributes.id;
+            newlyFormedData.position = cellView.model.attributes.position;
+            newlyFormedData.type = cellView.model.attributes.type;
+            newlyFormedData.size = cellView.model.attributes.size;
+            updateGraphOnChangingPosition(newlyFormedData);
         });
 
         graph.on('add', function (cell, collection, opt) {
