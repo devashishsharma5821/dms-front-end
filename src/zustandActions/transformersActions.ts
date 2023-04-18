@@ -51,6 +51,7 @@ export const updateSelectedTransformer: updateSelectedTransformerType = (stageId
 export const addStages: addStagesType = (stage: any) =>
     useAppStore.setState((state: any) => {
         let newStages;
+        let newStage;
         if (stage?.stageId && state?.stages?.some((stage: any) => stage?.id === stage?.stageId)) {
             console.log('lets check coming inside addStage 2');
         } else {
@@ -59,7 +60,7 @@ export const addStages: addStagesType = (stage: any) =>
             //     state.stages = [];
             // }
 
-            const newStage = {
+            newStage = {
                 id: stage?.stageId,
                 name: stage?.name,
                 transformerId: stage?.transformerId,
@@ -87,45 +88,39 @@ export const addStages: addStagesType = (stage: any) =>
                 signature: ''
             };
 
-            console.log('lets check newStages to add in current newStage ==>', newStage);
-
-            // state?.stages?.push(newStage);
             newStages = [...state.stages, newStage];
         }
-        console.log('lets check newStages to add in current newStages ==>', newStages);
-        state.stages = newStages;
-        // return { stages: newStages };
-        return state;
+
+        return { stages: newStages };
     });
 
-export const updateModuleConfigData: updateModuleConfigDataType = (moduleConfigData: any) => {
+export const updateModuleConfigData: updateModuleConfigDataType = async (moduleConfigData: any, title: string) => {
     let stagesWithConfig: any;
     let experimentToSave: any;
 
     useAppStore.setState((state: any) => {
-        console.log('lets check experimentToSave ==>', state.experimentToSave);
         stagesWithConfig = JSON.parse(state.experimentToSave.stages);
-        stagesWithConfig.stages.module_conf = moduleConfigData;
-        experimentToSave = state.experimentToSave;
-        console.log('lets check stagesWithConfig ==>', stagesWithConfig);
 
+        for (let key in stagesWithConfig.stages) {
+            if (stagesWithConfig.stages[key].name === title) {
+                stagesWithConfig.stages[key].module_conf = JSON.stringify(moduleConfigData);
+            }
+        }
+        experimentToSave = state.experimentToSave;
         return { moduleConfigData: moduleConfigData };
     });
 
     experimentToSave.stages = JSON.stringify(stagesWithConfig);
 
-    console.log('lets check new experimentToSave', experimentToSave);
+    try {
+        const response = await client.mutate<any>({
+            mutation: dmsEditExperiment(experimentToSave)
+        });
 
-    // TODO: Need Some more work
-    // try {
-    //     const response = await client.mutate<any>({
-    //         mutation: dmsEditExperiment(experimentToSave)
-    //     });
-
-    //     console.log('lets check response ===>', response);
-    // } catch (error: any) {
-    //     toast(getToastOptions(`${error.message}`, 'error'));
-    // }
+        console.log('lets check response ===>', response);
+    } catch (error: any) {
+        toast(getToastOptions(`${error.message}`, 'error'));
+    }
 };
 
 export const updateGraph = async (graph: any) => {
@@ -143,7 +138,7 @@ export const updateGraph = async (graph: any) => {
         let extractedPorts: any;
         let extractedPortsIdArray: any = [];
 
-        console.log('lets check state for stages ===>', state.stages);
+        console.log('lets check newStages to add in current newStages ==> inside update graph', state.stages);
 
         graph?.getCells().map((cell: any) => {
             console.log('lets check cell data ', cell);
@@ -195,7 +190,6 @@ export const updateGraph = async (graph: any) => {
                         position: cell.position()
                     });
                 }
-                console.log('lets check moduleConfigData ===>', state.moduleConfigData);
             }
         });
 
@@ -209,40 +203,36 @@ export const updateGraph = async (graph: any) => {
         };
     });
 
-    console.log('lets check experiment to save ===>', experimentToSave);
-
     let newGeneratedObj: any = {};
 
     experimentToSave.stages.map((stage: any) => {
+        console.log('lets now check stage while updating graph ===>', stage);
         if (stage.inputs.length > 0) {
             newGeneratedObj[stage.id] = {
                 id: stage.id,
                 name: stage.name,
-                module_id: '',
+                module_id: stage.transformerId,
                 module_conf: '',
                 inputs: {
                     [stage.inputs[0].id]: {
                         intermediate: {}
                     }
                 }
-                // display: {
+                // position: {
                 //     [stage.id]: stage.position
                 // }
+                // position: stage.position
             };
         } else {
             newGeneratedObj[stage.id] = {
                 id: stage.id,
                 name: stage.name,
-                module_id: '',
+                module_id: stage.transformerId,
                 module_conf: ''
-                // display: {
-                //     [stage.id]: stage.position
-                // }
+                // position: stage.position
             };
         }
     });
-
-    console.log('lets check newGeneratedObj for now ===>', newGeneratedObj);
 
     let newStages = {
         stages: newGeneratedObj
@@ -254,8 +244,6 @@ export const updateGraph = async (graph: any) => {
     useAppStore.setState((state: any) => {
         return { experimentToSave: experimentToSave };
     });
-
-    console.log('checking inside inside experimentToSave', experimentToSave);
 
     try {
         const response = await client.mutate<any>({

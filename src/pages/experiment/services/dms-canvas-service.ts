@@ -138,6 +138,13 @@ class DmsCanvasService {
             updateSelectedStageId(cellView?.model?.attributes?.attrs?.idOfTransformer);
         });
 
+        // paper.on('cell:pointerdown', function (cellView) {
+        //     console.log('User clicked on cell with ID ' + cellView.model.id);
+        // });
+        paper.on('cell:pointerup', function (cellView) {
+            console.log('User clicked on cell with ID ', cellView.model);
+        });
+
         graph.on('add', function (cell, collection, opt) {
             console.log('lets check on add inside dms-canvas-service ===>', graph?.getCells(), cell.attributes.attrs.idOfTransformer);
 
