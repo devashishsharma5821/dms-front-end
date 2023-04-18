@@ -108,7 +108,7 @@ const DatasetViews = (props: any) => {
                 </Flex>
                 <Flex flexWrap={'wrap'} flexDirection={'row'} ml={'24'}>
                     <Box style={gridStyle} className="ag-theme-alpine">
-                        <AgGridReact<any> ref={gridRef} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                        <AgGridReact<any> ref={gridRef} onFirstDataRendered={onFirstDataRendered} pagination={true} paginationPageSize={10} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                     </Box>
                 </Flex>
             </Box>
