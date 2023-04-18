@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './details.scss';
 import { Button, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useColorModeValue, Drawer } from '@chakra-ui/react';
 import Form from '@rjsf/chakra-ui';
@@ -8,9 +8,20 @@ import useAppStore from '../../store';
 import { DetailsAppStoreState, DetailsPropsType } from '../../models/transformer';
 import { updateModuleConfigData } from '../../zustandActions/transformersActions';
 import { cloneDeep } from 'lodash';
+import client from '../../apollo-client';
+import { dmsEditExperiment } from '../../query';
+import { getToastOptions } from '../../models/toastMessages';
+import { createStandaloneToast } from '@chakra-ui/react';
+const { toast } = createStandaloneToast();
 
 const Details = (props: DetailsPropsType) => {
-    const [TransformersData, ExperimentData, moduleConfigData] = useAppStore((state: DetailsAppStoreState) => [state.TransformersData, state.ExperimentData, state.moduleConfigData]);
+    const [TransformersData, ExperimentData, moduleConfigData, experimentToSave] = useAppStore((state: DetailsAppStoreState) => [
+        state.TransformersData,
+        state.ExperimentData,
+        state.moduleConfigData,
+        state.experimentToSave
+    ]);
+    const timer = useRef<ReturnType<typeof setTimeout>>();
 
     const transformer = TransformersData?.find((transformer: any) => transformer?.id === props?.selectedStageId);
 
@@ -198,16 +209,30 @@ const Details = (props: DetailsPropsType) => {
     //     updateSelectedStageId(null);
     // };
 
-    const onSubmitHandler = (e: any) => {
+    const onSubmitHandler = async (e: any) => {
         console.log('onSubmitHandler ===>', e);
         let newFormData = cloneDeep(e.formData);
-        updateModuleConfigData(newFormData);
+        updateModuleConfigData(newFormData, e.schema.title);
     };
 
     const handleChange = (e: any) => {
-        console.log('lets check onchangeHandler ===>', e);
-        // let newFormData = cloneDeep(e.formData);
-        // updateModuleConfigData(newFormData);
+        let stagesWithConfig = JSON.parse(experimentToSave.stages);
+        for (let key in stagesWithConfig.stages) {
+            if (stagesWithConfig.stages[key].name === e.schema.title) {
+                stagesWithConfig.stages[key].module_conf = JSON.stringify(e.formData);
+            }
+        }
+        experimentToSave.stages = JSON.stringify(stagesWithConfig);
+
+        if (timer.current) clearTimeout(timer.current);
+        timer.current = setTimeout(() => {
+            client
+                .mutate<any>({
+                    mutation: dmsEditExperiment(experimentToSave)
+                })
+                .then((response) => console.log('lets check response ===>', response))
+                .catch((error) => toast(getToastOptions(`${error.message}`, 'error')));
+        }, 1000);
     };
 
     return (

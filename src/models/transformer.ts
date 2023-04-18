@@ -86,4 +86,5 @@ export interface DetailsAppStoreState {
     SingleProjectData?: SingleProjectData;
     ExperimentData?: any;
     moduleConfigData?: any;
+    experimentToSave?: any;
 }
