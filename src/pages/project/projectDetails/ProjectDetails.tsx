@@ -293,66 +293,67 @@ const ProjectDetails = (props: any) => {
 
                     <Box ml={'24'} mt={'16px'} mb={'24'} color={'default.darkGrayCreate'} width="60vw">
                         <Flex flexDir={'row'} cursor={'pointer'} justifyContent={'space-between'} alignItems={'center'}>
-                                    <Flex alignItems="center">
-                                        <Button
-                                            cursor={'pointer'}
-                                            mr={'8px'}
-                                            color={'default.accessByNumber'}
-                                            border={'1px'}
-                                            borderColor={'light.lighterGrayishBlue'}
-                                            bg={'white'}
-                                            onClick={navigateToProjects}
-                                            height={'30px'}
-                                            width={'30px'}
-                                            borderRadius={4}
-                                        >
-                                            {' '}
-                                            <LeftArrow />
-                                        </Button>
-                                        <Editable
-                                            maxWidth={'40vw'}
-                                            width={'40vw'}
-                                            textAlign="left"
-                                            fontWeight={400}
-                                            onSubmit={handleEditName}
-                                            onChange={handleEditNameChange}
-                                            onCancel={handleEditNameChangeCancel}
-                                            onEdit={() => setShowEditValuePreview(false)}
-                                            value={inlineProjectName}
-                                        >
-                                            <Flex>
-                                                <Center mt={'-10'}>
-                                                    <Box height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
-                                                        {
-                                                            showEditValuePreview &&
-                                                            <Text title={inlineProjectName} fontSize={'24px'} fontWeight={700}>{getTruncatedText(inlineProjectName, 60)}</Text>
-                                                        }
-                                                        <Input as={EditableInput} height={'30px'} mt={'-10px'} width={'40vw'} />
-                                                    </Box>
-                                                </Center>
-                                                <Box mt={'-40px'}>
-                                                    <EditableControlsName />
-                                                </Box>
-                                            </Flex>
-                                        </Editable>
-                                    </Flex>
+                            <Flex alignItems="center">
                                 <Button
                                     cursor={'pointer'}
-                                    width={'71px'}
-                                    height={'36px'}
-                                    colorScheme="gray"
-                                    bg={'white'}
-                                    color={'default.textButton'}
+                                    mr={'8px'}
+                                    color={'default.accessByNumber'}
                                     border={'1px'}
-                                    borderColor={'default.textButton'}
+                                    borderColor={'light.lighterGrayishBlue'}
+                                    bg={'white'}
+                                    onClick={navigateToProjects}
+                                    height={'30px'}
+                                    width={'30px'}
                                     borderRadius={4}
-                                    fontWeight={600}
-                                    ml={'30px'}
-                                    mt={'-10px'}
-                                    onClick={() => onDeleteHandler(SingleProjectData.basic.id)}
                                 >
-                                    Delete
+                                    {' '}
+                                    <LeftArrow />
                                 </Button>
+                                <Editable
+                                    maxWidth={'40vw'}
+                                    width={'40vw'}
+                                    textAlign="left"
+                                    fontWeight={400}
+                                    onSubmit={handleEditName}
+                                    onChange={handleEditNameChange}
+                                    onCancel={handleEditNameChangeCancel}
+                                    onEdit={() => setShowEditValuePreview(false)}
+                                    value={inlineProjectName}
+                                >
+                                    <Flex>
+                                        <Center mt={'-10'}>
+                                            <Box height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                                {showEditValuePreview && (
+                                                    <Text title={inlineProjectName} fontSize={'24px'} fontWeight={700}>
+                                                        {getTruncatedText(inlineProjectName, 60)}
+                                                    </Text>
+                                                )}
+                                                <Input as={EditableInput} height={'30px'} mt={'-10px'} width={'40vw'} />
+                                            </Box>
+                                        </Center>
+                                        <Box mt={'-40px'}>
+                                            <EditableControlsName />
+                                        </Box>
+                                    </Flex>
+                                </Editable>
+                            </Flex>
+                            <Button
+                                cursor={'pointer'}
+                                width={'71px'}
+                                height={'36px'}
+                                colorScheme="gray"
+                                bg={'white'}
+                                color={'default.textButton'}
+                                border={'1px'}
+                                borderColor={'default.textButton'}
+                                borderRadius={4}
+                                fontWeight={600}
+                                ml={'30px'}
+                                mt={'-10px'}
+                                onClick={() => onDeleteHandler(SingleProjectData.basic.id)}
+                            >
+                                Delete
+                            </Button>
                         </Flex>
                         <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
                             <Flex>
@@ -378,6 +379,7 @@ const ProjectDetails = (props: any) => {
                                                     <Text ml={16} color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Project ID
                                                     </Text>
+
                                                     <Center justifyContent={'flex-start'}>
                                                         <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
                                                             {SingleProjectData.basic.id}

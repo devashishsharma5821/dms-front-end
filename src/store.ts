@@ -12,6 +12,7 @@ const useAppStore = create<AppState>((set) => ({
     TransformersData: null,
     AllProjectsData: null,
     SingleProjectData: null,
+    DatasetDetailData: null,
     UserConfig: [],
     lastAliveMessage: null,
     inferStartedMessaage: null,

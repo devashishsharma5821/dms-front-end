@@ -8,3 +8,4 @@ export const Project = lazy(() => import('./project'));
 export const ProjectDetails = lazy(() => import('./project/projectDetails'));
 export const ComputeDetails = lazy(() => import('./computeDetails'));
 export const Dataset = lazy(() => import('./dataset'));
+export const DatasetDetails = lazy(() => import('./dataset/datasetDetails'));

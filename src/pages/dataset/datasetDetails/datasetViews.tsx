@@ -10,18 +10,18 @@ import { convertTime, getUserNameFromId } from '../../../utils/common.utils';
 const DatasetViews = (props: any) => {
     const textColorPage = useColorModeValue('default.blackText', 'dark.white');
     const gridRef = useRef<AgGridReact<any>>(null);
-    const gridStyle = useMemo(() => ({ height: '400px', width: '98%' }), []);
+    const gridStyle = useMemo(() => ({ height: '300px', width: '98%' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
     const navigate = useNavigate();
     const renderDatasetId = (params: any) => {
         return (
-            <div style={{ color: 'rgb(3, 135, 176)', cursor: 'pointer' }} onClick={() => navigateToDataset(params.data.id)}>
+            <div style={{ color: 'rgb(3, 135, 176)', cursor: 'pointer' }} onClick={() => navigateToDataset(params.data.id, params.data.projectId)}>
                 {params.data.id}
             </div>
         );
     };
-    const navigateToDataset = (id: any) => {
-        navigate(`/datasetDetails/${id}`);
+    const navigateToDataset = (id: any, projectId: any) => {
+        navigate(`/datasetDetails/${projectId}/${id}`);
     };
     const [columnDefs] = useState<ColDef[]>([
         {
@@ -59,9 +59,10 @@ const DatasetViews = (props: any) => {
             let listOfDataSources = [];
             if (project.datasources.length > 0) {
                 listOfDataSources = project.datasources.map((datasource: any) => {
-                    return datasource;
+                    return { ...datasource, projectId: project.id };
                 });
             }
+
             datasourceData.push(...listOfDataSources);
         });
         setRowData(datasourceData);
@@ -85,9 +86,7 @@ const DatasetViews = (props: any) => {
         gridRef?.current!?.api?.sizeColumnsToFit();
     };
     window.addEventListener('resize', () => {
-        if (gridRef?.current!.api) {
-            gridRef?.current!?.api?.sizeColumnsToFit();
-        }
+        gridRef?.current!?.api?.sizeColumnsToFit();
     });
     return (
         <>
@@ -102,14 +101,14 @@ const DatasetViews = (props: any) => {
                         </Box>
                         <Box color={'default.containerAgGridRecords'}>
                             <Text ml={'14'} fontWeight={700}>
-                                {rowData.length} records
+                                {rowData?.length}
                             </Text>
                         </Box>
                     </Center>
                 </Flex>
                 <Flex flexWrap={'wrap'} flexDirection={'row'} ml={'24'}>
                     <Box style={gridStyle} className="ag-theme-alpine">
-                        <AgGridReact<any> ref={gridRef} pagination={true} paginationPageSize={10} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                        <AgGridReact<any> ref={gridRef} onFirstDataRendered={onFirstDataRendered} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                     </Box>
                 </Flex>
             </Box>

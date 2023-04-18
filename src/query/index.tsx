@@ -386,6 +386,29 @@ export const GET_DB_SETTINGS = gql`
     }
 `;
 
+// Dataset and Dataset API Start Here
+
+export const GET_SINGLE_DATASET = (id: string) => {
+    return gql`
+        query dmsDataSource {
+            dmsDataSource(id: "${id}") {
+                id
+                name
+                spec {
+                    ... on DMSDatabricksFileUpload {
+                        path
+                    }
+                }
+                df_profile
+                created_by
+                created_at
+                updated_at
+            }
+            
+        }
+    `;
+};
+
 // Project and Projects API Start Here
 export const GET_ALL_PROJECTS = gql`
     query dmsProjects {
@@ -483,6 +506,16 @@ export const editProject = (variables: any) => {
                     project_variables: "${variables.project_variables}",
                     description: "${variables.description}",
                     tags: ${JSON.stringify(variables.tags)}
+                )
+            }`;
+};
+export const editDataset = (variables: any) => {
+    return gql`mutation {
+                dmsEditProject(
+                    id: "${variables.id}",
+                    name: "${variables.name}",
+                    project_variables: "${variables.project_variables}",
+                
                 )
             }`;
 };

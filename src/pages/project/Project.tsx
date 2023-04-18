@@ -12,6 +12,7 @@ import { handleProjectsFilter, projectsSearch } from '../../utils/common.utils';
 import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
 import { GetAllUsersDataAppStoreState } from '../../models/profile';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import TickIcon from '../../assets/icons/TickIcon';
 
 const Project = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -74,12 +75,12 @@ const Project = () => {
         if (AllProjectsData?.length) {
             setAllProjectsData(AllProjectsData);
             updateSpinnerInfo(false);
-        };
+        }
     }, [AllProjectsData]);
 
     useEffect(() => {
         getAndUpdateAllProjectsData();
-    }, [])
+    }, []);
 
     const onCreateProjectSuccess = () => {
         getAndUpdateAllProjectsData();
@@ -98,6 +99,7 @@ const Project = () => {
                         Duis aute irure dolor in reprehenderit in voluptate velit
                     </Text>
                 </Stack>
+
                 <Center mt={-20} flex="3" justifyContent={'flex-end'} zIndex={2}>
                     <Box>
                         <SearchComponent searchChange={onSearchChange} />

@@ -42,7 +42,7 @@ export const AppRouter = (props: any) => {
                                         <Route path="/compute" element={<Compute />} />
                                         <Route path="/computedetails/:computeId" element={<ComputeDetails />} />
                                         <Route path="/dataset" element={<Dataset />} />
-                                        <Route path="/datasetDetails/:datasetId" element={<DatasetDetails />} />
+                                        <Route path="/datasetDetails/:projectId/:datasetId" element={<DatasetDetails />} />
                                     </Routes>
                                 </Box>
                             </ContextCompute>

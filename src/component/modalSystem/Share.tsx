@@ -32,11 +32,12 @@ import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandAction
 import client from '../../apollo-client';
 import { createAccess, deleteAccess } from '../../query';
 import { useParams } from 'react-router-dom';
-import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, getAndUpdateSingleDatasetData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
 import { copyToClipBoard, getFormattedUserData } from '../../utils/common.utils';
 import { getToastOptions } from '../../models/toastMessages';
 import { getAndUpdateExperimentData } from '../../zustandActions/experimentActions';
+import { GetSingleDatasetAppStoreState } from '../../models/dataset';
 
 const Share = (props: any) => {
     const textColor = useColorModeValue('light.header', 'default.whiteText');
@@ -52,6 +53,7 @@ const Share = (props: any) => {
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
+    const [DatasetDetailData] = useAppStore((state: GetSingleDatasetAppStoreState) => [state.DatasetDetailData]);
     const params = useParams();
     const userOptions = AllUsersData?.map((user) => ({ label: user.email, value: user.email }));
     const [userValue, setUserValue] = React.useState([]);
@@ -65,15 +67,16 @@ const Share = (props: any) => {
         if (props.isEdit) {
             setAccessUserList([]);
             updateSpinnerInfo(true);
-            if (SingleProjectData === null || SingleProjectData === undefined) {
+            if (SingleProjectData === null || SingleProjectData === undefined || DatasetDetailData === null || DatasetDetailData === undefined) {
                 getAndUpdateSingleProjectData(params.projectId as string);
+                getAndUpdateSingleDatasetData(params.datasetId as string);
             } else {
                 updateSpinnerInfo(false);
                 if (SingleProjectData.project_access === null || SingleProjectData.project_access.length === 0) {
                     setAccessUserList([]);
                     setUserValue([]);
                 } else {
-                    if (AllUsersData && SingleProjectData) {
+                    if (AllUsersData && SingleProjectData && DatasetDetailData) {
                         const userList = getFormattedUserData(AllUsersData, SingleProjectData);
                         setAccessUserList(userList);
                     }
@@ -135,6 +138,7 @@ const Share = (props: any) => {
                         toast(getToastOptions(`Access removed Successfully`, 'success'));
                         // TODO remove the api call, and manually change zustand store state using updateSingleProjectData
                         getAndUpdateSingleProjectData(params.projectId as string);
+
                         updateSpinnerInfo(false);
                     })
                     .catch((err) => {
@@ -160,6 +164,7 @@ const Share = (props: any) => {
                         toast(getToastOptions(`Project Permission Changed Successfully`, 'success'));
                         // TODO remove the api call, and manually change zustand store state using updateSingleProjectData
                         getAndUpdateSingleProjectData(params.projectId as string);
+                        //getAndUpdateSingleDatasetData(params.datasetId as string);
                         updateSpinnerInfo(false);
                     })
                     .catch((err) => {
@@ -195,6 +200,7 @@ const Share = (props: any) => {
                         toast(getToastOptions(`Project Shared Successfully`, 'success'));
                         // TODO remove the api call, and manually change zustand store state using updateSingleProjectData
                         getAndUpdateSingleProjectData(params.projectId as string);
+                        // getAndUpdateSingleDatasetData(params.datasetId as string);
                         setUserValue([]);
                         updateSpinnerInfo(false);
                     })
@@ -233,7 +239,17 @@ const Share = (props: any) => {
         }
     };
     return (
-        <Modal size={'3xl'} initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} closeOnOverlayClick={false} trapFocus={false} lockFocusAcrossFrames={true} isCentered>
+        <Modal
+            size={'3xl'}
+            initialFocusRef={initialRef}
+            finalFocusRef={finalRef}
+            isOpen={props.isOpen}
+            onClose={props.onClose}
+            closeOnOverlayClick={false}
+            trapFocus={false}
+            lockFocusAcrossFrames={true}
+            isCentered
+        >
             <ModalOverlay />
             <ModalContent width={'713px'} borderRadius={'4'} maxHeight={'autos'}>
                 <ModalHeader color={shretextColor} mt={'13px'} ml={20} mb={'13px'}>

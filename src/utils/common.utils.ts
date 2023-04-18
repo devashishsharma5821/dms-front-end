@@ -3,13 +3,13 @@ import { GetAllProjectsDetail } from '../models/project';
 import moment from 'moment';
 
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
-        if (selectedProject === '') {
-            return projectList[0].project_access;
-        } else {
-            return projectList.filter((project: any) => {
-                return project.id.toString() === selectedProject;
-            })[0].project_access;
-        }
+    if (selectedProject === '') {
+        return projectList[0].project_access;
+    } else {
+        return projectList.filter((project: any) => {
+            return project.id.toString() === selectedProject;
+        })[0].project_access;
+    }
 };
 export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDetail[]) => {
     const projectsName = projectList.map((project) => {
@@ -18,8 +18,7 @@ export const getProjectNameAndLabelsForSelect = (projectList: GetAllProjectsDeta
             id: project.id
         };
     });
-    return projectsName.sort(
-        (p1, p2) => (p1.name > p2.name) ? 1 : (p1.name < p2.name) ? -1 : 0);
+    return projectsName.sort((p1, p2) => (p1.name > p2.name ? 1 : p1.name < p2.name ? -1 : 0));
 };
 export const copyToClipBoard = (copyMessage: string, callBack: any) => {
     navigator.clipboard.writeText(copyMessage).then(() => {
@@ -95,14 +94,14 @@ export const projectsSearch = (projectData: any, keyword: any, AllUsersData: any
 export const projectsSearchByNameOnly = (projectData: any, keyword: any) => {
     const searchTerm = keyword.toLowerCase();
     return projectData.filter((project: any) => {
-        return project.name.toLowerCase().match(new RegExp(searchTerm, 'g'))
+        return project.name.toLowerCase().match(new RegExp(searchTerm, 'g'));
     });
 };
 
 export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type: string, projectSelected?: string) => {
     let projectFilteredData = [];
-    if(projectSelected) {
-        if(projectSelected === 'All') {
+    if (projectSelected) {
+        if (projectSelected === 'All') {
             projectFilteredData = allProjectsData;
         } else {
             projectFilteredData = allProjectsData.filter((project: GetAllProjectsDetail) => {
@@ -112,11 +111,11 @@ export const handleProjectsFilter = (userConfig: any, allProjectsData: any, type
     } else {
         projectFilteredData = allProjectsData;
     }
-    if(type === 'All') {
+    if (type === 'All') {
         return projectFilteredData;
-    } else if(type === 'onlyMe') {
+    } else if (type === 'onlyMe') {
         const userId = userConfig.userConfiguration.user.userId;
-        const userOnlyProjects = projectFilteredData.filter((project: GetAllProjectsDetail ) => {
+        const userOnlyProjects = projectFilteredData.filter((project: GetAllProjectsDetail) => {
             return project.created_by === userId;
         });
         return userOnlyProjects;
