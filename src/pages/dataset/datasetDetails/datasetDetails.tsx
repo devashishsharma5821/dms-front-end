@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Box,
     Button,
@@ -25,11 +25,7 @@ import useAppStore from '../../../store';
 import { GetSingleDatasetAppStoreState, DatasetEdit, DatasetEditDetail, DatasetDelete, DeleteDatasetDetail } from '../../../models/dataset';
 import { getToastOptions } from '../../../models/toastMessages';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
-import {
-    getAndUpdateSingleDatasetData,
-    updateSingleDatasetData,
-    updateSingleProjectData
-} from '../../../zustandActions/projectActions';
+import { getAndUpdateSingleDatasetData, updateSingleDatasetData, updateSingleProjectData } from '../../../zustandActions/projectActions';
 import { getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime, getUserNameFromId } from '../../../utils/common.utils';
 import { deleteDataset, editDataset } from '../../../query';
 import client from '../../../apollo-client';
@@ -38,6 +34,9 @@ import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandAct
 import Share from '../../../component/modalSystem/Share';
 import { GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
+
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const datasetDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
@@ -54,7 +53,11 @@ const DatasetDetails = (props: any) => {
     const navigate = useNavigate();
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
-
+    // const gridRefSchema = useRef<AgGridReact<any>>(null);
+    // const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
+    // const gridRef = useRef<AgGridReact<any>>(null);
+    // const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
+    // const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
     const navigateToDataset = () => {
         navigate(`/dataset`);
     };
@@ -87,10 +90,10 @@ const DatasetDetails = (props: any) => {
 
     useEffect(() => {
         updateSpinnerInfo(true);
-            getAndUpdateSingleDatasetData(params.datasetId as string);
-            getAndUpdateSingleProjectData(params.projectId as string);
-            const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
-            getAndUpdateAllUsersData(variablesForAllUsers);
+        getAndUpdateSingleDatasetData(params.datasetId as string);
+        getAndUpdateSingleProjectData(params.projectId as string);
+        const variablesForAllUsers = { isActive: true, pageNumber: 1, limit: 9999, searchText: '' };
+        getAndUpdateAllUsersData(variablesForAllUsers);
         return () => {
             updateSpinnerInfo(false);
             updateSingleProjectData(null);
@@ -192,7 +195,12 @@ const DatasetDetails = (props: any) => {
                             <>
                                 {' '}
                                 <Flex>
-                                    <Editable
+                                    <Text mt={'-5px'} maxWidth={'425px'} height={'28px'} fontSize={24} fontWeight={700} color={accesstextColor}>
+                                        {' '}
+                                        {DatasetDetailData.name}
+                                    </Text>
+
+                                    {/* <Editable
                                         maxWidth={'800px'}
                                         textAlign="left"
                                         fontWeight={400}
@@ -213,7 +221,7 @@ const DatasetDetails = (props: any) => {
                                                 <EditableControlsName />
                                             </Box>
                                         </Flex>
-                                    </Editable>
+                                    </Editable> */}
                                     <Button
                                         cursor={'pointer'}
                                         width={'71px'}
@@ -288,7 +296,8 @@ const DatasetDetails = (props: any) => {
                                                     </Text>
                                                 </Box>
                                             </Flex>
-                                            <Flex ml={'16px'} mt={'15'} maxHeight={'37px'} maxWidth={'400px'}>
+                                            <Box height={'100px'}></Box>
+                                            {/* <Flex ml={'16px'} mt={'15'} maxHeight={'37px'} maxWidth={'400px'}>
                                                 <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>
                                                     Tag:
                                                 </Text>
@@ -300,9 +309,9 @@ const DatasetDetails = (props: any) => {
                                             <Center ml={'16px'} mt={'5px'} width={'70px'} height={'24px'} bg={'#F2F4F8'} borderRadius={3} pl={'6px'} color={'#1A3F59'}>
                                                 <Text> Demo</Text>
                                                 <CloseButton size={'sm'} color={'#666C80'} />
-                                            </Center>
+                                            </Center> */}
 
-                                            <Editable height={'80px'} maxWidth={'400px'} textAlign="left" fontWeight={400} ml={16}>
+                                            {/* <Editable height={'80px'} maxWidth={'400px'} textAlign="left" fontWeight={400} ml={16}>
                                                 <Flex>
                                                     <Center>
                                                         <Text mt={'14px'} color={textColor2} lineHeight={'22px'} fontWeight={600}>
@@ -320,7 +329,7 @@ const DatasetDetails = (props: any) => {
                                                     <EditablePreview />
                                                     <Textarea as={EditableInput} />
                                                 </Box>
-                                            </Editable>
+                                            </Editable> */}
                                         </Box>
                                     </Center>
                                 </Flex>
@@ -381,10 +390,10 @@ const DatasetDetails = (props: any) => {
                             </Flex>
                         </Box>
                         <Box mt={'22px'} width={'442px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
-                            Grid 1 place here
+                            {/* <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact> */}
                         </Box>
                         <Box mt={'22px'} width={'1130px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
-                            Grid 2 place here
+                            {/* <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact> */}
                         </Box>
                     </Box>
                 </Box>
