@@ -286,6 +286,10 @@ const CreateDatasetFormScreen = (props: any) => {
                             <Text ml={'20px'} color={datasetTitleColor} mt={'72px'} fontWeight={600}>
                                 Select Source
                             </Text>
+                            <Text ml={'132px'} mt={'-20px'}>
+                                {' '}
+                                <IsRequired />
+                            </Text>
 
                             {sorceSelectDataset?.map((row, rowIndex) => {
                                 return (
