@@ -51,7 +51,6 @@ const Share = (props: any) => {
     const [accessUserList, setAccessUserList] = React.useState<any>([]);
     const [AllUsersData] = useAppStore((state: GetAllUsersDataAppStoreState) => [state.AllUsersData]);
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
-    const [DatasetDetailData] = useAppStore((state: GetSingleDatasetAppStoreState) => [state.DatasetDetailData]);
     const params = useParams();
     const userOptions = AllUsersData?.map((user) => ({ label: user.email, value: user.email }));
     const [userValue, setUserValue] = React.useState([]);
@@ -65,16 +64,15 @@ const Share = (props: any) => {
         if (props.isEdit) {
             setAccessUserList([]);
             updateSpinnerInfo(true);
-            if (SingleProjectData === null || SingleProjectData === undefined || DatasetDetailData === null || DatasetDetailData === undefined) {
+            if (SingleProjectData === null || SingleProjectData === undefined) {
                 getAndUpdateSingleProjectData(params.projectId as string);
-                getAndUpdateSingleDatasetData(params.datasetId as string);
             } else {
                 updateSpinnerInfo(false);
                 if (SingleProjectData.project_access === null || SingleProjectData.project_access.length === 0) {
                     setAccessUserList([]);
                     setUserValue([]);
                 } else {
-                    if (AllUsersData && SingleProjectData && DatasetDetailData) {
+                    if (AllUsersData && SingleProjectData) {
                         const userList = getFormattedUserData(AllUsersData, SingleProjectData);
                         setAccessUserList(userList);
                     }

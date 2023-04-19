@@ -162,7 +162,6 @@ class DmsCanvasService {
 
             updateGraph(graph);
         });
-
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
 
         const paperScroller = (this.paperScroller = new joint.ui.PaperScroller({
@@ -178,7 +177,7 @@ class DmsCanvasService {
     }
 
     initializeStencil(stencil: any, group: any) {
-        const { stencilService, paperScroller, snaplines } = this;
+        const { stencilService, paperScroller, snaplines, haloService } = this;
         stencilService.create(paperScroller, snaplines, group);
 
         this.renderPlugin('stencil-container', stencilService.stencil);
@@ -323,6 +322,40 @@ class DmsCanvasService {
             }
 
             const ns = joint.linkTools;
+            // TODO below is a way to add a icon to the link
+            // const InfoButton = joint.elementTools.Button.extend({
+            //     name: 'info-button',
+            //     options: {
+            //         focusOpacity: 0.5,
+            //         distance: 60,
+            //         action: (evt: any) =>  {
+            //             console.log('BUTTON CLICKED')
+            //         },
+            //         markup: [{
+            //             tagName: 'circle',
+            //             selector: 'button',
+            //             attributes: {
+            //                 'r': 7,
+            //                 'fill': '#001DFF',
+            //                 'cursor': 'pointer'
+            //             }
+            //         }, {
+            //             tagName: 'path',
+            //             selector: 'icon',
+            //             attributes: {
+            //                 'd': 'M -2 4 2 4 M 0 3 0 0 M -2 -1 1 -1 M -1 -4 1 -4',
+            //                 'fill': 'none',
+            //                 'stroke': '#FFFFFF',
+            //                 'stroke-width': 2,
+            //                 'pointer-events': 'none'
+            //             }
+            //         }]
+            //     }
+            // });
+            // const toolsView = new joint.dia.ToolsView({
+            //     name: 'link-hover',
+            //     tools: [new InfoButton()]
+            // });
             const toolsView = new joint.dia.ToolsView({
                 name: 'link-hover',
                 tools: [new ns.Vertices({ vertexAdding: false }), new ns.SourceArrowhead(), new ns.TargetArrowhead()]
