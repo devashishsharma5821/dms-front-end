@@ -548,8 +548,8 @@ export const deleteProject = (id: string) => {
 // Dataset APIs start here
 export const uploadCSVDataset = () => {
     return gql`
-        mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!) {
-            dmsDatabricksUploadDBFS(file: $file, project_id: $projectId, dataset_name: $datasetName)
+        mutation dmsDatabricksUploadDBFS($file: Upload!, $projectId: ID!, $datasetName: String!, $format: DMSDataframeFormatSpec) {
+            dmsDatabricksUploadDBFS(file: $file, project_id: $projectId, dataset_name: $datasetName, format: $format)
         }
     `;
 };

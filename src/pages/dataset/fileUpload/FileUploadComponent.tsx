@@ -27,7 +27,7 @@ const FileUploadComponent = (props: any) => {
             client
                 .mutate<UploadCSV<UploadCSVDetail>>({
                     mutation: uploadCSVDataset(),
-                    variables: { file: files[0], projectId: props.projectId, datasetName: props.datasetName },
+                    variables: { file: files[0], projectId: props.projectId, datasetName: props.datasetName, format: JSON.stringify({"format": "PARQUET"}) },
                     context: { useMultipart: true }
                 })
                 .then((response: any) => {
