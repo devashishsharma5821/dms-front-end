@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     Box,
     Button,
@@ -36,7 +36,8 @@ import { GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-
+import { datasetPreviewSchema } from '../../../models/dataset';
+import { keys, startCase } from 'lodash';
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
     const datasetDetailTitle = useColorModeValue('default.darkGrayCreate', 'default.whiteText');
@@ -53,11 +54,15 @@ const DatasetDetails = (props: any) => {
     const navigate = useNavigate();
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
-    // const gridRefSchema = useRef<AgGridReact<any>>(null);
-    // const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
-    // const gridRef = useRef<AgGridReact<any>>(null);
-    // const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
-    // const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
+    const gridStyleSchema = useMemo(() => ({ height: '270px', width: '511px' }), []);
+    const gridRefSchema = useRef<AgGridReact<any>>(null);
+    const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
+    const gridRef = useRef<AgGridReact<any>>(null);
+    const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
+    const [rowData, setRowData] = useState<any[]>([]);
+
+    const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
+    const gridStyle = useMemo(() => ({ height: '300px', width: '856px' }), []);
     const navigateToDataset = () => {
         navigate(`/dataset`);
     };
@@ -104,6 +109,7 @@ const DatasetDetails = (props: any) => {
     useEffect(() => {
         if (DatasetDetailData !== null && SingleProjectData !== null && AllUsersData !== null) {
             console.log('Shirin here is the dataset details data', DatasetDetailData);
+
             setInlineDatasetName(DatasetDetailData.name);
             updateSpinnerInfo(false);
             setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
@@ -389,11 +395,22 @@ const DatasetDetails = (props: any) => {
                                 </Flex>
                             </Flex>
                         </Box>
-                        <Box mt={'22px'} width={'442px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
-                            {/* <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact> */}
+                        <Box style={gridStyleSchema} className="ag-theme-alpine" mt={'22px'} width={'442px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
+                            <Flex>
+                                <Text fontWeight={700} fontSize={'16px'}>
+                                    Schema
+                                </Text>
+                                <Text ml={'16px'} fontWeight={700} fontSize={'16px'} color={textColor2}>
+                                    {rowDataSchema.length} Records
+                                </Text>
+                            </Flex>
+                            <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
                         </Box>
-                        <Box mt={'22px'} width={'1130px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
-                            {/* <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact> */}
+                        <Box style={gridStyle} className="ag-theme-alpine" mt={'22px'} width={'1130px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
+                            <Text fontWeight={700} fontSize={'16px'}>
+                                Sample Data
+                            </Text>
+                            <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                         </Box>
                     </Box>
                 </Box>
