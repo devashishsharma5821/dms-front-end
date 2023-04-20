@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     Box,
     Button,
@@ -22,11 +22,25 @@ import { useNavigate, useParams } from 'react-router-dom';
 import LeftArrow from '../../../assets/LeftArrow';
 import { CopyIcon, PencilIcon } from '../../../assets/icons';
 import useAppStore from '../../../store';
-import { GetSingleDatasetAppStoreState, DatasetEdit, DatasetEditDetail, DatasetDelete, DeleteDatasetDetail } from '../../../models/dataset';
+import {
+    GetSingleDatasetAppStoreState,
+    DatasetEdit,
+    DatasetEditDetail,
+    DatasetDelete,
+    DeleteDatasetDetail,
+    datasetPreviewSchema
+} from '../../../models/dataset';
 import { getToastOptions } from '../../../models/toastMessages';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { getAndUpdateSingleDatasetData, updateSingleDatasetData, updateSingleProjectData } from '../../../zustandActions/projectActions';
-import { getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime, getUserNameFromId } from '../../../utils/common.utils';
+import {
+    getTruncatedText,
+    getFormattedUserData,
+    copyToClipBoard,
+    convertTime,
+    getUserNameFromId,
+    getColDefsForDataset, getRowDataForDataset
+} from '../../../utils/common.utils';
 import { deleteDataset, editDataset } from '../../../query';
 import client from '../../../apollo-client';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
@@ -53,11 +67,14 @@ const DatasetDetails = (props: any) => {
     const navigate = useNavigate();
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
-    // const gridRefSchema = useRef<AgGridReact<any>>(null);
-    // const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
-    // const gridRef = useRef<AgGridReact<any>>(null);
-    // const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
-    // const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
+    const gridRef = useRef<AgGridReact<any>>(null);
+    const gridStyle = useMemo(() => ({ height: '300px', width: '856px' }), []);
+    const [rowData, setRowData] = useState<any[]>([]);
+    const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
+    const gridRefSchema = useRef<AgGridReact<any>>(null);
+    const gridStyleSchema = useMemo(() => ({ height: '270px', width: '511px' }), []);
+    const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
+    const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
     const navigateToDataset = () => {
         navigate(`/dataset`);
     };
@@ -107,6 +124,12 @@ const DatasetDetails = (props: any) => {
             setInlineDatasetName(DatasetDetailData.name);
             updateSpinnerInfo(false);
             setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
+            const storedColDefs = getColDefsForDataset(DatasetDetailData.df_profile.sample_rows[0]);
+            setColumnDefsSchema(storedColDefs.colDefKeysSchema);
+            setColumnDefs(storedColDefs.colDef);
+            const storedData = getRowDataForDataset(DatasetDetailData.df_profile);
+            setRowDataSchema(storedData.rowDataForSchema);
+            setRowData(storedData.rowDataForSample);
         }
     }, [DatasetDetailData, SingleProjectData, AllUsersData]);
 
@@ -389,11 +412,11 @@ const DatasetDetails = (props: any) => {
                                 </Flex>
                             </Flex>
                         </Box>
-                        <Box mt={'22px'} width={'442px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
-                            {/* <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact> */}
+                        <Box mt={'22px'} width={'442px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10} style={gridStyleSchema} className="ag-theme-alpine">
+                             <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
                         </Box>
-                        <Box mt={'22px'} width={'1130px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10}>
-                            {/* <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact> */}
+                        <Box mt={'22px'} width={'1130px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10} style={gridStyle} className="ag-theme-alpine">
+                             <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
                         </Box>
                     </Box>
                 </Box>
