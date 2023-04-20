@@ -43,6 +43,8 @@ class DmsCanvasService {
 
     startRappid(stencil: any, group: any) {
         // Set the Theme of the Joint JS based on the CSS included in the canvasStyles
+
+        console.log('Inside dms-canvas-service startRappid method');
         joint.setTheme('modern');
         this.initializePaper();
         this.initializeStencil(stencil, group);
@@ -55,10 +57,14 @@ class DmsCanvasService {
     }
 
     getPaperScroller() {
+        console.log('Inside dms-canvas-service getPaperScroller method');
+
         return this.paperScroller;
     }
 
     initializePaper() {
+        console.log('Inside dms-canvas-service initializePaper method');
+
         const graph = (this.graph = new joint.dia.Graph(
             {},
             {
@@ -177,6 +183,7 @@ class DmsCanvasService {
 
             updateGraph(graph);
         });
+
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
 
         const paperScroller = (this.paperScroller = new joint.ui.PaperScroller({
@@ -192,6 +199,7 @@ class DmsCanvasService {
     }
 
     initializeStencil(stencil: any, group: any) {
+        console.log('lets check stencil ===>', stencil, 'group ====>', group);
         const { stencilService, paperScroller, snaplines, haloService } = this;
         stencilService.create(paperScroller, snaplines, group);
 
@@ -201,6 +209,7 @@ class DmsCanvasService {
 
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
             // Add the ports coming from backend transformers Api and bind it to paper canvas on drop event
+            console.log('lets check element drop event');
             const portsToAdd = elementView.model.attributes.CombinedPorts;
             elementView.model.addPorts(portsToAdd);
             this.selection.collection.reset([elementView.model]);
@@ -208,6 +217,8 @@ class DmsCanvasService {
     }
 
     initializeSelection() {
+        console.log('Inside dms-canvas-service initializeSelection method');
+
         this.clipboard = new joint.ui.Clipboard();
         this.selection = new joint.ui.Selection({ paper: this.paper, useModelGeometry: true });
         this.selection.collection.on('reset add remove', this.onSelectionChange.bind(this));
@@ -258,6 +269,8 @@ class DmsCanvasService {
     }
 
     onSelectionChange() {
+        console.log('Inside dms-canvas-service onSelectionChange method');
+
         const { paper, selection } = this;
         const { collection } = selection;
         paper.removeTools();
@@ -277,6 +290,8 @@ class DmsCanvasService {
     }
 
     selectPrimaryCell(cellView: joint.dia.CellView) {
+        console.log('Inside dms-canvas-service selectPrimaryCell method');
+
         console.log('lets check cellView ==>', cellView);
         const cell = cellView.model;
         if (cell.isElement()) {
@@ -288,6 +303,8 @@ class DmsCanvasService {
     }
 
     selectPrimaryElement(elementView: joint.dia.ElementView) {
+        console.log('Inside dms-canvas-service selectPrimaryElement method');
+
         const element = elementView.model;
 
         new joint.ui.FreeTransform({
@@ -301,6 +318,8 @@ class DmsCanvasService {
     }
 
     selectPrimaryLink(linkView: joint.dia.LinkView) {
+        console.log('Inside dms-canvas-service selectPrimaryLink method');
+
         const ns = joint.linkTools;
         const toolsView = new joint.dia.ToolsView({
             name: 'link-pointerdown',
@@ -320,6 +339,8 @@ class DmsCanvasService {
     }
 
     initializeToolsAndInspector() {
+        console.log('Inside dms-canvas-service initializeToolsAndInspector method');
+
         this.paper.on('cell:pointerup', (cellView: joint.dia.CellView) => {
             const cell = cellView.model;
             const { collection } = this.selection;
@@ -402,6 +423,8 @@ class DmsCanvasService {
     }
 
     initializeNavigator() {
+        console.log('Inside dms-canvas-service initializeNavigator method');
+
         const navigator = (this.navigator = new joint.ui.Navigator({
             width: 191,
             height: 125,
@@ -422,6 +445,8 @@ class DmsCanvasService {
     }
 
     initializeToolbar() {
+        console.log('Inside dms-canvas-service initializeToolbar method');
+
         this.toolbarService.create(this.commandManager, this.paperScroller);
 
         this.toolbarService.toolbar.on({
@@ -440,6 +465,8 @@ class DmsCanvasService {
     }
 
     applyOnSelection(method: string) {
+        console.log('Inside dms-canvas-service applyOnSelection method');
+
         this.graph.startBatch('selection');
         this.selection.collection.models.forEach((model: any) => {
             model[method]();
@@ -448,6 +475,8 @@ class DmsCanvasService {
     }
 
     changeSnapLines(checked: boolean) {
+        console.log('Inside dms-canvas-service applyOnSelection method');
+
         if (checked) {
             this.snaplines.startListening();
             this.stencilService.stencil.options.snaplines = this.snaplines;
@@ -459,10 +488,14 @@ class DmsCanvasService {
     }
 
     initializeKeyboardShortcuts() {
+        console.log('Inside dms-canvas-service initializeKeyboardShortcuts method');
+
         this.keyboardService.create(this.graph, this.clipboard, this.selection, this.paperScroller, this.commandManager);
     }
 
     initializeTooltips(): joint.ui.Tooltip {
+        console.log('Inside dms-canvas-service initializeTooltips method');
+
         return new joint.ui.Tooltip({
             rootTarget: document.body,
             target: '[data-tooltip]',
@@ -536,7 +569,10 @@ class DmsCanvasService {
     // You need to make sure, the Chakra components you use document.getElementsByClassName to find the dom association
     // Because Chakra components are Javascript by design and not HTML ELEMENTS.
     renderPlugin(selector: string, plugin: any): void {
+        console.log('Inside dms-canvas-service renderPlugin method');
+
         if (selector === 'stencil-container') {
+            console.log('lets check selector inside renderPlugin method ===>', selector, plugin.el);
             document.getElementsByClassName(selector)[0].appendChild(plugin.el);
             plugin.render();
             const stencilElement = document.getElementsByClassName(selector)[0];
@@ -560,6 +596,7 @@ class DmsCanvasService {
         } else if (selector === '.paper-container') {
             const totalElements: any = this.el.querySelector(selector)?.childElementCount;
             if (totalElements < 1) {
+                console.log('lets check totalElements ===>', totalElements);
                 this.el.querySelector(selector)?.appendChild(plugin.el);
                 plugin.render();
             }

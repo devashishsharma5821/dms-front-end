@@ -102,24 +102,29 @@ export const updateModuleConfigData: updateModuleConfigDataType = async (moduleC
 
     useAppStore.setState((state: any) => {
         stagesWithConfig = JSON.parse(state.experimentToSave.stages);
-
+        console.log('lets check stagesWithConfig inside updateModuleConfigData ==> 1', stagesWithConfig);
         for (let key in stagesWithConfig.stages) {
             if (stagesWithConfig.stages[key].name === title) {
-                stagesWithConfig.stages[key].module_conf = JSON.stringify(moduleConfigData);
+                console.log('lets check going inside or not ===>', moduleConfigData);
+                // stagesWithConfig.stages[key].module_conf = JSON.stringify(moduleConfigData);
+                console.log('lets check stagesWithConfig inside updateModuleConfigData ==> 2', stagesWithConfig);
             }
         }
         experimentToSave = state.experimentToSave;
         return { moduleConfigData: moduleConfigData };
     });
 
+    console.log('lets check stagesWithConfig ===>', stagesWithConfig);
+
     experimentToSave.stages = JSON.stringify(stagesWithConfig);
 
     try {
+        console.log('lets check experimentToSave inside updateModuleConfigData ====> 1', experimentToSave);
         const response = await client.mutate<any>({
             mutation: dmsEditExperiment(experimentToSave)
         });
 
-        console.log('lets check response ===>', response);
+        console.log('lets check experimentToSave inside updateModuleConfigData ====> 3', response);
     } catch (error: any) {
         toast(getToastOptions(`${error.message}`, 'error'));
     }
