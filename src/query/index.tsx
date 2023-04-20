@@ -571,7 +571,7 @@ export const dmsEditExperiment = (variables: any) => {
                     "x": 50,
                     "y": 50
                 },
-                "status": "Valid",
+                "status": "VALID",
                 "signature": "",
                 "inputs": {},
                 "outputs": {
@@ -616,7 +616,7 @@ export const dmsEditExperiment = (variables: any) => {
                     "x": 250,
                     "y": 100
                 },
-                "status": "Valid",
+                "status": "VALID",
                 "signature": "",
                 "inputs": {
                     "__primary_df__": {
@@ -665,7 +665,7 @@ export const dmsEditExperiment = (variables: any) => {
                     "x": 446,
                     "y": 128
                 },
-                "status": "Valid",
+                "status": "VALID",
                 "signature": "",
                 "inputs": {
                     "__primary_df__": {
@@ -714,7 +714,7 @@ export const dmsEditExperiment = (variables: any) => {
                     "x": 583,
                     "y": 146
                 },
-                "status": "Valid",
+                "status": "VALID",
                 "signature": "",
                 "inputs": {
                     "__primary_df__": {
@@ -759,14 +759,14 @@ export const dmsEditExperiment = (variables: any) => {
             }
         }
     });
-    //display: ${JSON.stringify(displayNew)};
     return gql`mutation {
   dmsEditExperiment(
     id: "${variables.id}"
     name: "${variables.name}",
     tags: ${JSON.stringify(variables.tags)},
     description: "${variables.description}",
-    core: ${(variables.stages) ? JSON.stringify(variables.stages): null}
+    core: ${(variables.stages) ? JSON.stringify(variables.stages): null},
+    display: ${JSON.stringify(displayNew)}
   )
 }`;
 };
