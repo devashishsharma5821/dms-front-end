@@ -59,8 +59,10 @@ const FileUploadComponent = (props: any) => {
         evt.preventDefault();
         evt.stopPropagation();
         setDragActive(false);
-        if (evt.dataTransfer.files && evt.dataTransfer.files[0]) {
+        if (evt.dataTransfer.files && evt.dataTransfer.files[0] && (evt.dataTransfer.files[0].type === "text/csv" || evt.dataTransfer.files[0].type === "")) {
             handleFile(evt.dataTransfer.files);
+        } else {
+            toast(getToastOptions(`Please drag and drop only CSV OR PARQUET Files`, 'error'));
         }
     };
 

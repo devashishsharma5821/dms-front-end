@@ -190,6 +190,13 @@ const ExperimentsPage = () => {
     }, [DmsComputeData]);
 
     useEffect(() => {
+        if (ExperimentData !== null && (ExperimentData.display !== null || ExperimentData.display !== undefined)) {
+          console.log('Experiment Display Data', JSON.parse(ExperimentData.display));
+          console.log('Experiment Core Data', JSON.parse(ExperimentData.core));
+        }
+    }, [ExperimentData]);
+
+    useEffect(() => {
         updateSpinnerInfo(true);
         getAndUpdateExperimentData(experimentId as string);
     }, [experimentId]);
