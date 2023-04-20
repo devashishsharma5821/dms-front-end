@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as joint from '@antuit/rappid-v1';
 import { getComputeListData } from '../../query';
 import { startCase } from 'lodash';
 import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Button } from '@chakra-ui/react';
@@ -745,9 +746,17 @@ const ExperimentsPage = () => {
     const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlu');
 
     const handleDrawerOpen = () => {
+        console.log('opened simple function');
         setDrawerInitialzed(true);
         transformerMenuDrawer.onOpen();
     };
+
+    // useEffect(() => {
+    //     console.log('opened');
+    //     setTimeout(() => {
+    //         handleDrawerOpen();
+    //     }, 500);
+    // }, []);
 
     //Method to initialize DMS and stencil services
     const initializeAndStartRapid = async (stencil?: any, group?: any) => {
@@ -768,10 +777,50 @@ const ExperimentsPage = () => {
     useEffect(() => {
         if (transformerMenuDrawer.isOpen && drawerInitialized) {
             setTimeout(() => {
+                console.log('lets check transformedNewDataForStencil ===>', transformedNewDataForStencil, 'transformersGroup ===>', transformersGroup);
                 initializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
             }, 10);
         } else transformerMenuDrawer.onClose();
     }, [drawerInitialized]);
+
+    // TODO : Need to work on Below useEffect
+
+    // useEffect(() => {
+    //     console.log('lets check ExperimentData inside of useEffect ===>', ExperimentData);
+    //     init();
+    //     async function init() {
+    //         const rappid = await new DmsCanvasService(elementRef?.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+
+    //         let transformerOnPaper: any = [];
+
+    //         if (ExperimentData.core) {
+    //             let core = JSON.parse(ExperimentData?.core);
+    //             console.log('lets check ExperimentData  cores for the missing ones===>', core);
+
+    //             let xaxis = 0;
+    //             let yaxis = 0;
+    //             for (let key in core.stages) {
+    //                 console.log('lets check data inside loop ', core.stages[key].name);
+    //                 xaxis += 150;
+    //                 yaxis += 150;
+    //                 transformerOnPaper.push(
+    //                     new joint.shapes.basic.Rect({
+    //                         position: { x: xaxis, y: yaxis },
+    //                         size: { width: 220, height: 44 },
+    //                         attrs: { rect: { fill: '#c6c7e2' }, text: { text: core.stages[key].name } }
+    //                     })
+    //                 );
+    //             }
+    //         }
+
+    //         console.log('lets check elements ====>', transformerOnPaper);
+
+    //         rappid.initializePaper();
+    //         transformerOnPaper.map((element: any) => {
+    //             rappid.graph.addCell(element);
+    //         });
+    //     }
+    // }, [ExperimentData]);
 
     //SideEffect to handle all canvas services call
     useEffect(() => {

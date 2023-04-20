@@ -209,23 +209,27 @@ const Details = (props: DetailsPropsType) => {
     //     updateSelectedStageId(null);
     // };
 
-    const onSubmitHandler = async (e: any) => {
-        console.log('onSubmitHandler ===>', e);
-        let newFormData = cloneDeep(e.formData);
-        updateModuleConfigData(newFormData, e.schema.title);
-    };
+    // const onSubmitHandler = async (e: any) => {
+    //     console.log('onSubmitHandler ===>', e);
+    //     let newFormData = cloneDeep(e.formData);
+    //     console.log('lets now check newFormData ==>', newFormData);
+    //     updateModuleConfigData(newFormData, e.schema.title);
+    // };
 
     const handleChange = (e: any) => {
+        console.log('lets check formData in handleChange ===>', JSON.stringify(e.formData));
         let stagesWithConfig = JSON.parse(experimentToSave.stages);
         for (let key in stagesWithConfig.stages) {
             if (stagesWithConfig.stages[key].name === e.schema.title) {
                 stagesWithConfig.stages[key].module_conf = JSON.stringify(e.formData);
             }
         }
+        console.log('lets check stagesWithConfig ===>', stagesWithConfig);
         experimentToSave.stages = JSON.stringify(stagesWithConfig);
 
         if (timer.current) clearTimeout(timer.current);
         timer.current = setTimeout(() => {
+            console.log('lets check the experimentToSave inside handleChange ===>', JSON.parse(experimentToSave.stages));
             client
                 .mutate<any>({
                     mutation: dmsEditExperiment(experimentToSave)
@@ -235,6 +239,8 @@ const Details = (props: DetailsPropsType) => {
         }, 1000);
     };
 
+    // console.log('now lets check jsonSchema ===>', JSON.parse(transformer?.schema?.jsonSchema));
+
     return (
         <>
             <Drawer isOpen={props?.isOpen} placement="right" onClose={props?.onClose} colorScheme={useColorModeValue('light.whiteText', 'dark.veryDarkGrayishBlue')}>
@@ -242,7 +248,7 @@ const Details = (props: DetailsPropsType) => {
                 <DrawerContent mt="64px" bg={useColorModeValue('default.whiteText', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
                     <DrawerBody mt="30px">
-                        <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onSubmit={onSubmitHandler} onChange={handleChange} omitExtraData={true} validator={validator} />
+                        <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onChange={handleChange} omitExtraData={true} validator={validator} />
                     </DrawerBody>
                     {/* 
                     <DrawerFooter>

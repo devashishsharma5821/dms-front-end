@@ -563,6 +563,7 @@ export const deleteDataset = (dataSourceId: any) => {
 
 // ProjectDetailsMenu APIs Start here
 export const dmsEditExperiment = (variables: any) => {
+    console.log('lets check experimentToSave inside updateModuleConfigData ====> 2', variables);
     return gql`mutation {
   dmsEditExperiment(
     id: "${variables.id}"
