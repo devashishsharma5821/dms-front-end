@@ -119,20 +119,35 @@ class DmsCanvasService {
             sorting: joint.dia.Paper.sorting.APPROX,
             markAvailable: true,
 
-            validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
-                // console.log('lets check validateConnection function values', cellViewS, magnetS, cellViewT, magnetT, end, linkView);
+            validateConnection: (cellViewS, magnetS, cellViewT, magnetT, _end, _linkView) => {
+                const sourceId = cellViewS.model.get('id');
+                const targetId = cellViewT.model.get('id');
+
                 // Prevent linking from input ports
-                // if (magnetS && magnetS.getAttribute('port-group') === 'in') return false;
-                // Prevent linking from output ports to input ports within one element
-                // if (cellViewS === cellViewT) return false;
+                if (magnetS?.getAttribute('port-group') === 'in')
+                    return false;
+
+                // Preventing linking from output ports to input ports within the same element
+                if (cellViewS === cellViewT)
+                    return false;
+
                 // Prevent linking to output ports
-                // return magnetT && magnetT.getAttribute('port-group') === 'in';
-                return true;
-            },
-            validateMagnet: function (cellView, magnet) {
-                // Note that this is the default behaviour. It is shown for reference purposes.
-                // Disable linking interaction for magnets marked as passive
-                return magnet.getAttribute('magnet') !== 'passive';
+                if (magnetT?.getAttribute('port-group') === 'out')
+                    return false;
+
+                // Prevent linking to ports with an existing link
+                for (const link of graph.getLinks()) {
+                    const linkSourceId = link.source().id;
+                    const linkTargetId = link.target().id;
+
+                    if (linkSourceId && linkTargetId) {
+                        if (linkTargetId === targetId && link.target().port === magnetT?.getAttribute('port'))
+                            return false;
+                    }
+                }
+
+                // Only allow linking to same port types
+                return magnetS?.getAttribute('port-type') === magnetT?.getAttribute('port-type');
             }
         }));
 
