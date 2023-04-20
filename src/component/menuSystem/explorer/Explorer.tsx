@@ -85,7 +85,7 @@ const Explorer = (props: any) => {
                         {subMenuForExplorer &&
                             subMenuForExplorer.map((section: any, sectionIndex: number) => {
                                 return (
-                                    <Box>
+                                    <Box >
                                         <Accordion allowMultiple cursor={'pointer'}>
                                             <AccordionItem>
                                                 <h2>
@@ -101,7 +101,7 @@ const Explorer = (props: any) => {
                                                         </Square>
                                                     </AccordionButton>
                                                 </h2>
-                                                <AccordionPanel pb={4}>
+                                                <AccordionPanel  height={(section.hasSubMenu.length >= 8) ? '330px' : 'auto'} overflowY={'auto'} overflowX={'hidden'} pb={4}>
                                                     {section.hasSubMenu.map((project: any, projectIndex: any) => {
                                                         return (
                                                             <Box

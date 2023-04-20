@@ -766,7 +766,7 @@ export const dmsEditExperiment = (variables: any) => {
     name: "${variables.name}",
     tags: ${JSON.stringify(variables.tags)},
     description: "${variables.description}",
-    core: ${JSON.stringify(variables.stages)}
+    core: ${(variables.stages) ? JSON.stringify(variables.stages): null}
   )
 }`;
 };

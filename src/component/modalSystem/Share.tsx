@@ -34,7 +34,7 @@ import { createAccess, deleteAccess } from '../../query';
 import { useParams } from 'react-router-dom';
 import { getAndUpdateSingleDatasetData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
 import { GetSingleProjectAppStoreState } from '../../models/project';
-import { getFormattedUserData } from '../../utils/common.utils';
+import { convertApolloError, getFormattedUserData } from '../../utils/common.utils';
 import { getToastOptions } from '../../models/toastMessages';
 import { GetSingleDatasetAppStoreState } from '../../models/dataset';
 
@@ -139,7 +139,7 @@ const Share = (props: any) => {
                     })
                     .catch((err) => {
                         updateSpinnerInfo(false);
-                        toast(getToastOptions(`${err}`, 'error'));
+                        toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
                     });
             } else if (type === 'canEdit' || type === 'canView') {
                 const mutationVariable = {
@@ -165,7 +165,7 @@ const Share = (props: any) => {
                     })
                     .catch((err) => {
                         updateSpinnerInfo(false);
-                        toast(getToastOptions(`${err}`, 'error'));
+                        toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
                     });
             }
         }
@@ -201,7 +201,8 @@ const Share = (props: any) => {
                         updateSpinnerInfo(false);
                     })
                     .catch((err) => {
-                        toast(getToastOptions(`${err}`, 'error'));
+                        updateSpinnerInfo(false);
+                        toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
                     });
             } else {
                 let newAccessList = [...accessUserList];
