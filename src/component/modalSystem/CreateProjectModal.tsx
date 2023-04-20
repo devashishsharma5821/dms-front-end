@@ -43,6 +43,7 @@ import { AllUsers } from '../../models/profile';
 import { ShareCreate, ShareCreateDetail } from '../../models/share';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { getToastOptions } from '../../models/toastMessages';
+import { convertApolloError } from '../../utils/common.utils';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -226,7 +227,8 @@ const CreateProjectModal = (props: any) => {
                                     })
                                     .catch((err: any) => {
                                         setLoading(false);
-                                        toast(getToastOptions(`${err}`, 'error'));
+                                        updateSpinnerInfo(false);
+                                        toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
                                     });
                             }
                         }}

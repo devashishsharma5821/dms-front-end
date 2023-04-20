@@ -2,6 +2,12 @@ import { AllUsers } from '../models/profile';
 import { GetAllProjectsDetail } from '../models/project';
 import moment from 'moment';
 
+export const convertApolloError = (error: any) => {
+  const keyToIgnore = ":";
+    const indexOfError = error.toString().indexOf(keyToIgnore);
+    const errorString = error.toString().substring(indexOfError + 1);
+    return errorString;
+};
 export const getProjectAccessList = (projectList: any, selectedProject: string) => {
     if (selectedProject === '') {
         return projectList[0].project_access;
