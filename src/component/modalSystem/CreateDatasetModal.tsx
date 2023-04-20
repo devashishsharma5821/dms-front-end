@@ -29,6 +29,7 @@ import client from '../../apollo-client';
 import { deleteDataset } from '../../query';
 import { useNavigate } from 'react-router-dom';
 import TickIcon from '../../assets/icons/TickIcon';
+import { getColDefsForDataset, getRowDataForDataset } from '../../utils/common.utils';
 const CreateDataset = (props: any) => {
     const textColor = useColorModeValue('dark.veryDarkGray', 'default.whiteText');
     const textColor2 = useColorModeValue('#646A78', 'default.whiteText');
@@ -133,36 +134,12 @@ const CreateDataset = (props: any) => {
             toast(getToastOptions(`File Upload Failed, contact support`, 'error'));
         } else {
             setDatasetId(uploadResponse.dataset_id);
-            const colDefKeysSchema = [
-                {
-                    field: 'col_name',
-                    headerName: 'Col_name'
-                },
-                {
-                    field: 'data_type',
-                    headerName: 'Data_type'
-                },
-                {
-                    field: 'comment',
-                    headerName: 'Comment'
-                }
-            ];
-            setColumnDefsSchema(colDefKeysSchema);
-            setRowDataSchema(
-                uploadResponse['schema'].map((row: any) => {
-                    return {
-                        col_name: row[0],
-                        data_type: row[1],
-                        comment: row[2]
-                    };
-                })
-            );
-            const colDefKeys = keys(uploadResponse['sample_rows'][0]);
-            const colDef = colDefKeys.map((headerKeys: string) => {
-                return { headerName: startCase(headerKeys), field: headerKeys } as ColDef;
-            });
-            setColumnDefs(colDef);
-            setRowData(uploadResponse['sample_rows']);
+            const storedColDefs = getColDefsForDataset(uploadResponse['sample_rows'][0]);
+            setColumnDefsSchema(storedColDefs.colDefKeysSchema);
+            setColumnDefs(storedColDefs.colDef);
+            const storedData = getRowDataForDataset(uploadResponse);
+            setRowDataSchema(storedData.rowDataForSchema);
+            setRowData(storedData.rowDataForSample);
             setIsNextAvaiableForFileUpload(true);
         }
     };

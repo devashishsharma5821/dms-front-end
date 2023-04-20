@@ -1,6 +1,50 @@
 import { AllUsers } from '../models/profile';
 import { GetAllProjectsDetail } from '../models/project';
 import moment from 'moment';
+import { keys, startCase } from 'lodash';
+import { ColDef } from 'ag-grid-community';
+
+export const getColDefsForDataset = (dataForSampleRows: any) => {
+    const colDefKeysSchema = [
+        {
+            field: 'col_name',
+            headerName: 'Col_name'
+        },
+        {
+            field: 'data_type',
+            headerName: 'Data_type'
+        },
+        {
+            field: 'comment',
+            headerName: 'Comment'
+        }
+    ];
+    const colDefKeys = keys(dataForSampleRows);
+    const colDef = colDefKeys.map((headerKeys: string) => {
+        return { headerName: startCase(headerKeys), field: headerKeys } as ColDef;
+    });
+    return {
+        colDefKeysSchema,
+        colDef
+    }
+};
+
+export const getRowDataForDataset = (data: any) => {
+    const rowDataForSchema = data['schema'].map((row: any) => {
+            return {
+                col_name: row[0],
+                data_type: row[1],
+                comment: row[2]
+            };
+        });
+    const rowDataForSample = data['sample_rows'];
+
+    return {
+        rowDataForSchema,
+        rowDataForSample
+    }
+}
+
 
 export const convertApolloError = (error: any) => {
   const keyToIgnore = ":";
