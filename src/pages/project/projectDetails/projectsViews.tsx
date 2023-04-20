@@ -65,17 +65,7 @@ const ProjectsViews = (props: any) => {
                         AllProjectsData.map((project: GetAllProjectsDetail) => {
                             return (
                                 <div key={project.id}>
-                                    <Box
-                                        key={project.id}
-                                        bg={'#FFFFFF'}
-                                        width={'309px'}
-                                        border={'1px'}
-                                        borderColor={'#D8DCDE'}
-                                        height={'287px'}
-                                        borderRadius={8}
-                                        ml={'22'}
-                                        mt={'20'}
-                                    >
+                                    <Box key={project.id} bg={'#FFFFFF'} width={'309px'} border={'1px'} borderColor={'#D8DCDE'} height={'287px'} borderRadius={8} ml={'22'} mt={'20'}>
                                         <Box onClick={() => navigateToDetails(project.id)} key={project.id} maxHeight={'69px'} bg={'light.lightGrayishBlue'} borderTopRadius={8} cursor={'pointer'}>
                                             <Center ml={'23px'} pt={'8px'} justifyContent={'flex-start'}>
                                                 {UserConfig.userConfiguration.user.userId !== project.created_by ? <People color={'#666C80'} /> : <Documentation color={'#666C80'} />}
@@ -84,7 +74,7 @@ const ProjectsViews = (props: any) => {
                                                     {getTruncatedText(project && project.name, 16)}
                                                 </Text>
                                             </Center>
-                                            <Text ml={'52px'} mb={'10px'} color={'default.containerAgGridRecords'} fontWeight={400} height={'22px'}>
+                                            <Text ml={'59px'} mb={'10px'} color={'default.containerAgGridRecords'} fontWeight={400} height={'22px'}>
                                                 ID: {getTruncatedText(project && project.id, 20)}
                                             </Text>
                                             <Box ml={'20px'} mr={'20px'} height={'112px'}>
