@@ -5,7 +5,7 @@ import SearchComponent from '../../component/search/SearchComponent';
 import { DownArrowShare } from '../../assets/icons';
 import DatasetViews from './datasetDetails/datasetViews';
 import CreateDatasetModal from '../../component/modalSystem/CreateDatasetModal';
-import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, updateAllProjectsData } from '../../zustandActions/projectActions';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetAllProjectsDetail } from '../../models/project';
 import {
@@ -62,6 +62,10 @@ const Dataset = () => {
             setProjectSelected('All');
         }
     }, [AllProjectsData]);
+
+    useEffect(() => {
+        return () => {updateAllProjectsData(null)}
+    }, []);
 
     useEffect(() => {
         if (AllUsersData === null) {

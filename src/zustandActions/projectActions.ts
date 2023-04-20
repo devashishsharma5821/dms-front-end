@@ -24,7 +24,7 @@ export const getAndUpdateAllProjectsData: getAndUpdateAllProjectsDataType = asyn
     }
     useAppStore.setState(() => ({ AllProjectsData: response.data.dmsProjects }));
 };
-export const updateAllProjectsData: updateAllProjectsDataType = (AllProjectsData) => useAppStore.setState(() => ({ AllProjectsData: AllProjectsData }));
+export const updateAllProjectsData: updateAllProjectsDataType = (AllProjectsData:any) => useAppStore.setState(() => ({ AllProjectsData: AllProjectsData }));
 
 export const getAndUpdateSingleProjectData: getAndUpdateSingleProjectDataType = async (id: string) => {
     let projectIdCheck;

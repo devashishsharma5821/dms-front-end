@@ -116,7 +116,7 @@ const SaveAs = (props: any) => {
                                         .catch((err) => toast(getToastOptions(`${err}`, 'error')));
                                 }}
                             >
-                                {({ handleSubmit, errors, touched , isValid, dirty}) => (
+                                {({ handleSubmit, errors, touched , isValid, dirty,values}) => (
                                     <form onSubmit={handleSubmit}>
                                         <VStack  align="flex-start">
                                             <FormControl  isInvalid={!!errors.projectName && touched.projectName} isRequired>
@@ -170,8 +170,8 @@ const SaveAs = (props: any) => {
                                                     <Button disabled={loading} onClick={props.onClose} colorScheme='gray' bg={'white'} color={'#2180C2'}  width={'81px'}  border={'1px'} borderColor={'#2180C2'} height={'40px'} borderRadius={3}>Cancel</Button>
                                                     {
                                                         (loading) ?
-                                                            <Button width={'68px'} height={'40px'} ml={'11px'} borderRadius={3} isLoading disabled={!isValid || !dirty} onSubmit={props.onSubmit} type="submit" colorScheme="blue" >Save</Button>
-                                                            : <Button width={'68px'} height={'40px'} ml={'11px'} borderRadius={3} disabled={!isValid || !dirty} onSubmit={props.onSubmit} type="submit" colorScheme="blue"  >Save</Button>
+                                                            <Button width={'68px'} height={'40px'} ml={'11px'} borderRadius={3} isLoading disabled={values.experimentName === ''} onSubmit={props.onSubmit} type="submit" colorScheme="blue" >Save</Button>
+                                                            : <Button width={'68px'} height={'40px'} ml={'11px'} borderRadius={3} disabled={values.experimentName === ''} onSubmit={props.onSubmit} type="submit" colorScheme="blue"  >Save</Button>
                                                     }
                                                 </ModalFooter>
 
