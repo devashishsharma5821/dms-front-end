@@ -1,47 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import {
-    Box,
-    Button,
-    Center,
-    Editable,
-    Flex,
-    Text,
-    useColorModeValue,
-    EditablePreview,
-    Input,
-    EditableInput,
-    Avatar,
-    Textarea,
-    ButtonGroup,
-    useEditableControls,
-    CloseButton,
-    createStandaloneToast,
-    useDisclosure
-} from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Text, useColorModeValue, Avatar, ButtonGroup, useEditableControls, createStandaloneToast, useDisclosure } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import LeftArrow from '../../../assets/LeftArrow';
 import { CopyIcon, PencilIcon } from '../../../assets/icons';
 import useAppStore from '../../../store';
-import {
-    GetSingleDatasetAppStoreState,
-    DatasetEdit,
-    DatasetEditDetail,
-    DatasetDelete,
-    DeleteDatasetDetail,
-    datasetPreviewSchema
-} from '../../../models/dataset';
+import { GetSingleDatasetAppStoreState, DatasetDelete, DeleteDatasetDetail } from '../../../models/dataset';
 import { getToastOptions } from '../../../models/toastMessages';
 import { AllUsers, GetAllUsersDataAppStoreState, User } from '../../../models/profile';
 import { getAndUpdateSingleDatasetData, updateSingleDatasetData, updateSingleProjectData } from '../../../zustandActions/projectActions';
-import {
-    getTruncatedText,
-    getFormattedUserData,
-    copyToClipBoard,
-    convertTime,
-    getUserNameFromId,
-    getColDefsForDataset, getRowDataForDataset
-} from '../../../utils/common.utils';
-import { deleteDataset, editDataset } from '../../../query';
+import { getTruncatedText, getFormattedUserData, copyToClipBoard, convertTime, getUserNameFromId, getColDefsForDataset, getRowDataForDataset } from '../../../utils/common.utils';
+import { deleteDataset } from '../../../query';
 import client from '../../../apollo-client';
 import { DeleteConfirmationModal } from '../../../component/modalSystem/deleteConfirmationModal';
 import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../../zustandActions/commonActions';
@@ -50,6 +18,7 @@ import { GetSingleProjectAppStoreState } from '../../../models/project';
 import { getAndUpdateSingleProjectData } from '../../../zustandActions/projectActions';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
+import { datasetPreviewSchema } from '../../../models/dataset';
 
 const DatasetDetails = (props: any) => {
     const textColor2 = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -67,14 +36,16 @@ const DatasetDetails = (props: any) => {
     const navigate = useNavigate();
     const [SingleProjectData] = useAppStore((state: GetSingleProjectAppStoreState) => [state.SingleProjectData]);
     const [accessUserListCreateMode, setAccessUserListCreateMode] = React.useState<any>([]);
+    const [windowSize, setWindowSize] = React.useState([window.innerWidth, window.innerHeight]);
     const gridRef = useRef<AgGridReact<any>>(null);
     const gridStyle = useMemo(() => ({ height: '300px', width: '856px' }), []);
     const [rowData, setRowData] = useState<any[]>([]);
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
     const gridRefSchema = useRef<AgGridReact<any>>(null);
-    const gridStyleSchema = useMemo(() => ({ height: '270px', width: '511px' }), []);
+    const gridStyleSchema = useMemo(() => ({ height: '250px', width: '411px' }), []);
     const [rowDataSchema, setRowDataSchema] = useState<datasetPreviewSchema[]>([]);
     const [columnDefsSchema, setColumnDefsSchema] = useState<ColDef[]>([]);
+
     const navigateToDataset = () => {
         navigate(`/dataset`);
     };
@@ -84,26 +55,26 @@ const DatasetDetails = (props: any) => {
     const createUserAccessForCreateDatasetMode = (userList: AllUsers) => {
         setAccessUserListCreateMode(userList);
     };
-    function EditableControlsName() {
-        const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
+    // function EditableControlsName() {
+    //     const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
-        return isEditing ? (
-            <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
-                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
-                    Save
-                </Button>
-                <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getCancelButtonProps()}>
-                    Cancel
-                </Button>
-            </ButtonGroup>
-        ) : (
-            <Flex>
-                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
-                    <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
-                </Button>
-            </Flex>
-        );
-    }
+    //     return isEditing ? (
+    //         <ButtonGroup ml={'20px'} justifyContent="center" mt={'45px'}>
+    //             <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getSubmitButtonProps()}>
+    //                 Save
+    //             </Button>
+    //             <Button cursor={'pointer'} variant="link" colorScheme="blue" {...getCancelButtonProps()}>
+    //                 Cancel
+    //             </Button>
+    //         </ButtonGroup>
+    //     ) : (
+    //         <Flex>
+    //             <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
+    //                 <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
+    //             </Button>
+    //         </Flex>
+    //     );
+    // }
 
     useEffect(() => {
         updateSpinnerInfo(true);
@@ -121,6 +92,7 @@ const DatasetDetails = (props: any) => {
     useEffect(() => {
         if (DatasetDetailData !== null && SingleProjectData !== null && AllUsersData !== null) {
             console.log('Shirin here is the dataset details data', DatasetDetailData);
+
             setInlineDatasetName(DatasetDetailData.name);
             updateSpinnerInfo(false);
             setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
@@ -150,25 +122,24 @@ const DatasetDetails = (props: any) => {
         //     });
     };
 
-    const handleEditName = () => {
-        if (inlineDatasetName !== DatasetDetailData.name) {
-            const variables = {
-                id: DatasetDetailData.id,
-                name: inlineDatasetName
-                // dataset_variables: DatasetDetailData.name
-            };
-            handleEditDataset(variables, {
-                successMessage: 'Dataset Name Edited Successfully',
-                errorMessage: 'Dataset Name Failed To edit'
-            });
-        }
-    };
-    const handleEditNameChange = (editChangeValue: string) => {
-        setInlineDatasetName(editChangeValue);
-    };
-    const handleEditNameChangeCancel = () => {
-        setInlineDatasetName(DatasetDetailData.name);
-    };
+    // const handleEditName = () => {
+    //     if (inlineDatasetName !== DatasetDetailData.name) {
+    //         const variables = {
+    //             id: DatasetDetailData.id,
+    //             name: inlineDatasetName
+    //         };
+    //         handleEditDataset(variables, {
+    //             successMessage: 'Dataset Name Edited Successfully',
+    //             errorMessage: 'Dataset Name Failed To edit'
+    //         });
+    //     }
+    // };
+    // const handleEditNameChange = (editChangeValue: string) => {
+    //     setInlineDatasetName(editChangeValue);
+    // };
+    // const handleEditNameChangeCancel = () => {
+    //     setInlineDatasetName(DatasetDetailData.name);
+    // };
     const onDeleteHandler = (id: string) => {
         deleteConfirmationModal.onOpen();
         setDeleteId(id);
@@ -191,6 +162,16 @@ const DatasetDetails = (props: any) => {
                 toast(getToastOptions(`${err}`, 'error'));
             });
     };
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+        window.addEventListener('resize', handleWindowResize);
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    });
     return (
         <>
             {AllUsersData && DatasetDetailData && SingleProjectData && (
@@ -257,7 +238,7 @@ const DatasetDetails = (props: any) => {
                                         borderRadius={4}
                                         fontWeight={600}
                                         ml={'30px'}
-                                        mt={'-10px'}
+                                        mt={'-6px'}
                                         onClick={() => onDeleteHandler(DatasetDetailData.id)}
                                     >
                                         Delete
@@ -265,62 +246,70 @@ const DatasetDetails = (props: any) => {
                                 </Flex>
                             </>
                         </Flex>
-                        <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
-                            <Flex>
-                                <Flex width={'50%'} ml={'22px'} maxHeight={'320px'} mr={'48px'}>
-                                    <Avatar p={'5px'} borderRadius="full" boxSize="42px" color={'default.whiteText'} mt={'24px'} name={getUserNameFromId(AllUsersData, DatasetDetailData.created_by)} />
-                                    <Center>
-                                        <Box width={'450px'}>
-                                            <Text ml={16} mt={'22px'} color={textColor2} fontWeight={600} lineHeight={'22px'}>
-                                                Created by
-                                            </Text>
-                                            <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                {getUserNameFromId(AllUsersData, DatasetDetailData.created_by)}
-                                            </Text>
+                        <Box height={windowSize[1] - 200} overflowX={'hidden'} overflowY={'scroll'}>
+                            <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
+                                <Flex>
+                                    <Flex width={'50%'} ml={'22px'} maxHeight={'320px'} mr={'48px'}>
+                                        <Avatar
+                                            p={'5px'}
+                                            borderRadius="full"
+                                            boxSize="42px"
+                                            color={'default.whiteText'}
+                                            mt={'24px'}
+                                            name={getUserNameFromId(AllUsersData, DatasetDetailData.created_by)}
+                                        />
+                                        <Center>
+                                            <Box width={'450px'}>
+                                                <Text ml={16} mt={'22px'} color={textColor2} fontWeight={600} lineHeight={'22px'}>
+                                                    Created by
+                                                </Text>
+                                                <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                    {getUserNameFromId(AllUsersData, DatasetDetailData.created_by)}
+                                                </Text>
 
-                                            <Flex flexDir={'row'}>
-                                                <Box>
-                                                    <Text ml={16} color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
-                                                        Dataset ID
-                                                    </Text>
-                                                    <Center justifyContent={'flex-start'}>
+                                                <Flex flexDir={'row'}>
+                                                    <Box>
+                                                        <Text ml={16} color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
+                                                            Dataset ID
+                                                        </Text>
+                                                        <Center justifyContent={'flex-start'}>
+                                                            <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                                {DatasetDetailData.id}
+                                                            </Text>
+                                                            <Text ml={8} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} cursor={'pointer'}>
+                                                                <CopyIcon />
+                                                            </Text>
+                                                        </Center>
+                                                    </Box>
+                                                    <Box ml={'145px'}>
+                                                        <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
+                                                            Dataset Name
+                                                        </Text>
+                                                        <Text title={DatasetDetailData.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                            {getTruncatedText(DatasetDetailData.name, 50)}
+                                                        </Text>
+                                                    </Box>
+                                                </Flex>
+                                                <Flex flexDir={'row'}>
+                                                    <Box>
+                                                        <Text ml={16} color={textColor2} mt={'12px'} fontWeight={600} lineHeight={'22px'}>
+                                                            Created On
+                                                        </Text>
                                                         <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                            {DatasetDetailData.id}
+                                                            {convertTime(DatasetDetailData.created_at, false)}
                                                         </Text>
-                                                        <Text ml={8} onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)} cursor={'pointer'}>
-                                                            <CopyIcon />
+                                                    </Box>
+                                                    <Box ml={'51px'}>
+                                                        <Text ml={16} color={textColor2} mt={'12px'} fontWeight={600} lineHeight={'22px'}>
+                                                            Last Modified
                                                         </Text>
-                                                    </Center>
-                                                </Box>
-                                                <Box ml={'145px'}>
-                                                    <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
-                                                        Dataset Name
-                                                    </Text>
-                                                    <Text title={DatasetDetailData.name} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {getTruncatedText(DatasetDetailData.name, 50)}
-                                                    </Text>
-                                                </Box>
-                                            </Flex>
-                                            <Flex flexDir={'row'}>
-                                                <Box>
-                                                    <Text ml={16} color={textColor2} mt={'12px'} fontWeight={600} lineHeight={'22px'}>
-                                                        Created On
-                                                    </Text>
-                                                    <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {convertTime(DatasetDetailData.created_at, false)}
-                                                    </Text>
-                                                </Box>
-                                                <Box ml={'51px'}>
-                                                    <Text ml={16} color={textColor2} mt={'12px'} fontWeight={600} lineHeight={'22px'}>
-                                                        Last Modified
-                                                    </Text>
-                                                    <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
-                                                        {convertTime(DatasetDetailData.updated_at, true)}
-                                                    </Text>
-                                                </Box>
-                                            </Flex>
-                                            <Box height={'100px'}></Box>
-                                            {/* <Flex ml={'16px'} mt={'15'} maxHeight={'37px'} maxWidth={'400px'}>
+                                                        <Text ml={16} color={accesstextColor} fontWeight={700} lineHeight={'20px'}>
+                                                            {convertTime(DatasetDetailData.updated_at, true)}
+                                                        </Text>
+                                                    </Box>
+                                                </Flex>
+                                                <Box height={'100px'}></Box>
+                                                {/* <Flex ml={'16px'} mt={'15'} maxHeight={'37px'} maxWidth={'400px'}>
                                                 <Text color={textColor2} fontWeight={600} lineHeight={'22px'}>
                                                     Tag:
                                                 </Text>
@@ -334,7 +323,7 @@ const DatasetDetails = (props: any) => {
                                                 <CloseButton size={'sm'} color={'#666C80'} />
                                             </Center> */}
 
-                                            {/* <Editable height={'80px'} maxWidth={'400px'} textAlign="left" fontWeight={400} ml={16}>
+                                                {/* <Editable height={'80px'} maxWidth={'400px'} textAlign="left" fontWeight={400} ml={16}>
                                                 <Flex>
                                                     <Center>
                                                         <Text mt={'14px'} color={textColor2} lineHeight={'22px'} fontWeight={600}>
@@ -353,70 +342,111 @@ const DatasetDetails = (props: any) => {
                                                     <Textarea as={EditableInput} />
                                                 </Box>
                                             </Editable> */}
-                                        </Box>
-                                    </Center>
-                                </Flex>
-                                <Flex width={'50%'} maxHeight={'267px'} mt={'10px'}>
-                                    <Box width={'100%'}>
-                                        <Flex justifyContent={'start'}>
-                                            <Center mt={'10px'}>
-                                                <Text color={textColor2} fontWeight={700}>
-                                                    Access by
-                                                </Text>
-                                                <Box ml={8} bg={'default.tagBoxColor'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
-                                                    <Text color={'default.accessByNumber'} fontSize={'14px'} pt={2} fontWeight={600} cursor={'pointer'}>
-                                                        {accessUserList.length}
+                                            </Box>
+                                        </Center>
+                                    </Flex>
+                                    <Flex width={'50%'} maxHeight={'267px'} mt={'10px'}>
+                                        <Box width={'100%'}>
+                                            <Flex justifyContent={'start'}>
+                                                <Center mt={'10px'}>
+                                                    <Text color={textColor2} fontWeight={700}>
+                                                        Access by
                                                     </Text>
-                                                </Box>
-                                            </Center>
-                                            <Center ml={'57px'} mt={'10px'}>
-                                                <Text fontWeight={600} cursor={'pointer'} color={'default.textButton'} onClick={editAccessModal.onOpen}>
-                                                    {' '}
-                                                    Edit
-                                                </Text>
-                                                <Text
-                                                    color={'default.textButton'}
-                                                    fontWeight={600}
-                                                    ml={16}
-                                                    cursor={'pointer'}
-                                                    onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)}
-                                                    width={'80px'}
-                                                    mr={'12px'}
-                                                >
-                                                    {' '}
-                                                    Copy Link
-                                                </Text>
-                                            </Center>
-                                        </Flex>
-                                        <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={'20px'}>
-                                            {accessUserList &&
-                                                accessUserList.map((icons: User, iconsIndex: number) => {
-                                                    return (
-                                                        <div key={iconsIndex} style={{ marginBottom: '16px' }}>
-                                                            <Flex justifyContent={'start'}>
-                                                                <Avatar p={'5px'} borderRadius="full" boxSize="32px" color={'default.whiteText'} name={`${icons.firstName} ${icons.lastName}`} />
-                                                                <Box width={'250px'}>
-                                                                    <Text ml={12} color={accesstextColor} fontWeight={600}>
-                                                                        {icons?.firstName} {icons?.lastName}
-                                                                    </Text>
-                                                                    <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600}>
-                                                                        {icons.email}
-                                                                    </Text>
-                                                                </Box>
-                                                            </Flex>
-                                                        </div>
-                                                    );
-                                                })}
+                                                    <Box ml={8} bg={'default.tagBoxColor'} width={'29px'} height={'24px'} textAlign="center" borderRadius={3}>
+                                                        <Text color={'default.accessByNumber'} fontSize={'14px'} pt={2} fontWeight={600} cursor={'pointer'}>
+                                                            {accessUserList.length}
+                                                        </Text>
+                                                    </Box>
+                                                </Center>
+                                                <Center ml={'57px'} mt={'10px'}>
+                                                    <Text fontWeight={600} cursor={'pointer'} color={'default.textButton'} onClick={editAccessModal.onOpen}>
+                                                        {' '}
+                                                        Edit
+                                                    </Text>
+                                                    <Text
+                                                        color={'default.textButton'}
+                                                        fontWeight={600}
+                                                        ml={16}
+                                                        cursor={'pointer'}
+                                                        onClick={() => copyToClipBoard(window.location.href, clipBoardSuccess)}
+                                                        width={'80px'}
+                                                        mr={'12px'}
+                                                    >
+                                                        {' '}
+                                                        Copy Link
+                                                    </Text>
+                                                </Center>
+                                            </Flex>
+                                            <Box overflowY="auto" overflowX="hidden" maxHeight="245px" minHeight="222px" h="100%" whiteSpace="nowrap" color="white" width={'100%'} mt={'20px'}>
+                                                {accessUserList &&
+                                                    accessUserList.map((icons: User, iconsIndex: number) => {
+                                                        return (
+                                                            <div key={iconsIndex} style={{ marginBottom: '16px' }}>
+                                                                <Flex justifyContent={'start'}>
+                                                                    <Avatar p={'5px'} borderRadius="full" boxSize="32px" color={'default.whiteText'} name={`${icons.firstName} ${icons.lastName}`} />
+                                                                    <Box width={'250px'}>
+                                                                        <Text ml={12} color={accesstextColor} fontWeight={600}>
+                                                                            {icons?.firstName} {icons?.lastName}
+                                                                        </Text>
+                                                                        <Text ml={12} color={'default.veryLightGrayTextColor'} fontWeight={600}>
+                                                                            {icons.email}
+                                                                        </Text>
+                                                                    </Box>
+                                                                </Flex>
+                                                            </div>
+                                                        );
+                                                    })}
+                                            </Box>
                                         </Box>
-                                    </Box>
+                                    </Flex>
                                 </Flex>
-                            </Flex>
-                        </Box>
-                        <Box mt={'22px'} width={'442px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10} style={gridStyleSchema} className="ag-theme-alpine">
-                             <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
-                        </Box>
-                        <Box mt={'22px'} width={'1130px'} height={'298px'} border={'1px'} borderColor={'#D8DCDE'} borderRadius={8} p={10} style={gridStyle} className="ag-theme-alpine">
-                             <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                            </Box>
+
+                            <Box
+                                style={gridStyleSchema}
+                                className="ag-theme-alpine"
+                                mt={'22px'}
+                                minWidth={'442px'}
+                                minHeight={'298px'}
+                                border={'1px'}
+                                borderColor={'#D8DCDE'}
+                                borderRadius={8}
+                                pl={'23px'}
+                                pr={'9px'}
+                                pb={'25px'}
+                            >
+                                <Flex>
+                                    <Text fontWeight={700} fontSize={'16px'} mt={'21px'} mb={'16px'} color={accesstextColor}>
+                                        Schema
+                                    </Text>
+                                    <Text ml={'16px'} fontWeight={700} fontSize={'16px'} color={'default.containerAgGridRecords'} mt={'21px'}>
+                                        {rowDataSchema.length} Records
+                                    </Text>
+                                </Flex>
+                                <Box height={'80%'} width={'98%'}>
+                                    <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
+                                </Box>
+                            </Box>
+                            <Box
+                                style={gridStyle}
+                                className="ag-theme-alpine"
+                                mt={'22px'}
+                                width={'1130px'}
+                                height={'298px'}
+                                border={'1px'}
+                                borderColor={'#D8DCDE'}
+                                borderRadius={8}
+                                pl={'23px'}
+                                pr={'9px'}
+                                pb={'25px'}
+                            >
+                                <Text fontWeight={700} fontSize={'16px'} mt={'21px'} mb={'16px'} color={accesstextColor}>
+                                    Sample Data
+                                </Text>
+                                <Box height={'80%'} width={'98%'}>
+                                    <AgGridReact<any> ref={gridRef} rowData={rowData} columnDefs={columnDefs} animateRows={true}></AgGridReact>
+                                </Box>
+                            </Box>
                         </Box>
                     </Box>
                 </Box>
