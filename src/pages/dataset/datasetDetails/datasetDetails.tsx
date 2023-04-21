@@ -424,7 +424,7 @@ const DatasetDetails = (props: any) => {
                                     </Text>
                                 </Flex>
                                 <Box height={'80%'} width={'98%'}>
-                                    <AgGridReact<any> ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
+                                    <AgGridReact<any> onFirstDataRendered={() => gridRefSchema?.current!?.api?.sizeColumnsToFit()} ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
                                 </Box>
                             </Box>
                             <Box

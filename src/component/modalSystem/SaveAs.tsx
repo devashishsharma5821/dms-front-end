@@ -49,27 +49,29 @@ const SaveAs = (props: any) => {
         experimentName: string;
      }
     useEffect(() => {
-        updateSpinnerInfo(true);
         if (AllProjectsData === null) {
             getAndUpdateAllProjectsData();
         } else {
-            updateSpinnerInfo(false);
             setProjectNames(getProjectNameAndLabelsForSelect(AllProjectsData));
             setSelectedProjectId(getProjectNameAndLabelsForSelect(AllProjectsData)[0].id);
         }
     }, [AllProjectsData, SingleProjectData]);
 
     useEffect(() => {
+        updateSpinnerInfo(true);
             const currentExperiment = SingleProjectData?.experiments.filter(exp => {
                 return exp.id === params.experimentId;
             })[0];
             setOldExperimentName(`${currentExperiment?.name}(1)`)
+        if(currentExperiment?.name !== '' && currentExperiment?.name !== undefined && currentExperiment?.name !== 'undefined(1)') {
+            updateSpinnerInfo(false);
+        }
     }, [SingleProjectData, oldExperimentName]);
 
     return (
         <>
             {
-                AllProjectsData && SingleProjectData && (oldExperimentName !== '' && oldExperimentName !== undefined) &&
+                AllProjectsData && SingleProjectData && (oldExperimentName !== '' && oldExperimentName !== undefined && oldExperimentName !== 'undefined(1)') &&
                 <Modal
                     size={'lg'}
                     initialFocusRef={initialRef}

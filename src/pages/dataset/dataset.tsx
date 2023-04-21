@@ -15,7 +15,7 @@ import {
     projectsSearch
 } from '../../utils/common.utils';
 import { cloneDeep } from 'lodash';
-import { getAndUpdateAllUsersData } from '../../zustandActions/commonActions';
+import { getAndUpdateAllUsersData, updateSpinnerInfo } from '../../zustandActions/commonActions';
 
 const Dataset = () => {
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -55,15 +55,17 @@ const Dataset = () => {
     }, [projectSelected]);
 
     useEffect(() => {
-        if (AllProjectsData === null) {
-            getAndUpdateAllProjectsData();
-        } else {
+        updateSpinnerInfo(true);
+        if (AllProjectsData !== null) {
             setProjectNames([{name: 'All Projects', id: 'All'}, ...getProjectNameAndLabelsForSelect(AllProjectsData)]);
             setProjectSelected('All');
+            setAllProjectsData(AllProjectsData);
+            updateSpinnerInfo(false);
         }
     }, [AllProjectsData]);
 
     useEffect(() => {
+        getAndUpdateAllProjectsData();
         return () => {updateAllProjectsData(null)}
     }, []);
 
