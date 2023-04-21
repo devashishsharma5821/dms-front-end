@@ -3,7 +3,7 @@ import './project.scss';
 import { Box, Button, Center, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetAllProjectsDetail } from '../../models/project';
-import { getAndUpdateAllProjectsData } from '../../zustandActions/projectActions';
+import { getAndUpdateAllProjectsData, updateAllProjectsData } from '../../zustandActions/projectActions';
 import SearchComponent from '../../component/search/SearchComponent';
 // import { DownArrow } from '../../assets/icons';
 import CreateProjectModal from '../../component/modalSystem/CreateProjectModal';
@@ -80,6 +80,7 @@ const Project = () => {
 
     useEffect(() => {
         getAndUpdateAllProjectsData();
+        return () => {updateAllProjectsData(null)}
     }, []);
 
     const onCreateProjectSuccess = () => {

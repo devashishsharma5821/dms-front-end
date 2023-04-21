@@ -45,7 +45,6 @@ export const getRowDataForDataset = (data: any) => {
     }
 }
 
-
 export const convertApolloError = (error: any) => {
   const keyToIgnore = ":";
     const indexOfError = error.toString().indexOf(keyToIgnore);

@@ -99,7 +99,7 @@ const CreateProjectModal = (props: any) => {
             .catch((err: any) => {
                 updateSpinnerInfo(false);
                 setLoading(false);
-                toast(getToastOptions(`${err}`, 'error'));
+                toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
             });
     };
     const createUserAccessForCreateProjectMode = (userList: AllUsers) => {
@@ -186,7 +186,7 @@ const CreateProjectModal = (props: any) => {
                                     })
                                     .catch((err: any) => {
                                         setLoading(false);
-                                        toast(getToastOptions(`${err}`, 'error'));
+                                        toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
                                     });
                             } else {
                                 client
@@ -218,7 +218,7 @@ const CreateProjectModal = (props: any) => {
                                                     updateSpinnerInfo(false);
                                                 })
                                                 .catch((err) => {
-                                                    toast(getToastOptions(`${err}`, 'error'));
+                                                    toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
                                                 });
                                         } else {
                                             updateSpinnerInfo(false);

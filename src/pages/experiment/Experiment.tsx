@@ -191,13 +191,6 @@ const ExperimentsPage = () => {
     }, [DmsComputeData]);
 
     useEffect(() => {
-        if (ExperimentData !== null && (ExperimentData.display !== null || ExperimentData.display !== undefined)) {
-          console.log('Experiment Display Data', JSON.parse(ExperimentData.display));
-          console.log('Experiment Core Data', JSON.parse(ExperimentData.core));
-        }
-    }, [ExperimentData]);
-
-    useEffect(() => {
         updateSpinnerInfo(true);
         getAndUpdateExperimentData(experimentId as string);
     }, [experimentId]);
@@ -752,10 +745,36 @@ const ExperimentsPage = () => {
 
     const themebg = useColorModeValue('light.lightGrayishBlue', 'dark.veryDarkGrayishBlu');
 
+    useEffect(() => {
+        if (ExperimentData !== null && (ExperimentData.display !== null || ExperimentData.display !== undefined)) {
+            console.log('Experiment Display Data', JSON.parse(ExperimentData.display));
+            console.log('Experiment Core Data', JSON.parse(ExperimentData.core));
+            console.log('Transfor', TransformersData)
+        }
+    }, [ExperimentData]);
     const handleDrawerOpen = () => {
         console.log('opened simple function');
         setDrawerInitialzed(true);
         transformerMenuDrawer.onOpen();
+        const expDataDisplay = JSON.parse(ExperimentData.display);
+        const expCore = JSON.parse(ExperimentData.core);
+        const displayKeys = Object.keys(expDataDisplay.stages);
+        const coreMapped = displayKeys.map(dis => {
+           return {
+               core: expCore.stages[dis],
+               display:expDataDisplay.stages[dis]
+           }
+        });
+        coreMapped.forEach((mapped, mappedIndex) => {
+                console.log('bbbbbb', transformedNewDataForStencil['Input/Output'][mappedIndex + 1].attributes);
+                // Add the transformer as a stage on the canvas by using the stencil Property
+                let transformerToAddBack = {...transformedNewDataForStencil['Input/Output'][1].attributes};
+                console.log('32232323', transformerToAddBack);
+                transformerToAddBack.position = mapped.display.position;
+                const element = transformerToAddBack;
+                rappidData?.graph?.addCell(element);
+        });
+        console.log('zzzzzzz', coreMapped)
     };
 
     // useEffect(() => {
@@ -895,17 +914,17 @@ const ExperimentsPage = () => {
 
         let lastCell = rappidData?.graph?.getLastCell();
         let box = lastCell?.getBBox();
-
-        let attrs: any = {
-            name: selectedTransformer?.name,
-            label: selectedTransformer?.name,
-            transformerId: selectedTransformer?.id,
-            icon: selectedTransformer?.icon,
-            layout: null,
-            inPorts: inPorts,
-            outPorts: outPorts,
-            position: position ? position : { x: box?.x, y: box?.y }
-        };
+        let attrs: any;
+            attrs = {
+                name: selectedTransformer?.name,
+                label: selectedTransformer?.name,
+                transformerId: selectedTransformer?.id,
+                icon: selectedTransformer?.icon,
+                layout: null,
+                inPorts: inPorts,
+                outPorts: outPorts,
+                position: position ? position : { x: box?.x, y: box?.y }
+            };
         if (cellId) {
             attrs.id = cellId;
         } else {
@@ -919,7 +938,7 @@ const ExperimentsPage = () => {
         }
 
         // TODO AFTER confirmation gonna add this line
-        // rappidData?.graph?.addCell(model);
+        rappidData?.graph?.addCell(model);
 
         let currentModel = model?.getTransformer();
 
