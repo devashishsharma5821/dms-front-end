@@ -44,6 +44,7 @@ import { ShareCreate, ShareCreateDetail } from '../../models/share';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
 import { getToastOptions } from '../../models/toastMessages';
 import { convertApolloError } from '../../utils/common.utils';
+import { useNavigate } from 'react-router-dom';
 const CreateProjectModal = (props: any) => {
     const textColor = useColorModeValue('dark.darkGrayCreate', 'default.whiteText');
     const textColorTitle = useColorModeValue('default.titleForShare', 'default.whiteText');
@@ -59,6 +60,7 @@ const CreateProjectModal = (props: any) => {
     const isEdit = props.isEdit.status;
     const isEditData = props.isEdit.data;
     const isAllUsersData = props.isEdit.usersData;
+    const navigate = useNavigate();
     const [data, setData] = useState({
         id: isEdit ? isEditData.basic.id : '',
         name: isEdit ? isEditData.basic.name : '',
@@ -216,6 +218,7 @@ const CreateProjectModal = (props: any) => {
                                                     setCreateProjectSuccess(values['name'], response?.data?.dmsCreateProject);
                                                     setAccessUserListCreateMode([]);
                                                     updateSpinnerInfo(false);
+                                                    navigate('/projects');
                                                 })
                                                 .catch((err) => {
                                                     toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
@@ -223,6 +226,7 @@ const CreateProjectModal = (props: any) => {
                                         } else {
                                             updateSpinnerInfo(false);
                                             setCreateProjectSuccess(values['name'], response?.data?.dmsCreateProject);
+                                            navigate('/projects');
                                         }
                                     })
                                     .catch((err: any) => {
