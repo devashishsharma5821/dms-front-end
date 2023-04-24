@@ -207,19 +207,19 @@ export const getStencilMarkup = (currentObj: any, stencilBg: any, stencilStroke:
                 strokeDasharray: '0'
             },
             label: {
-                text: currentObj?.name,
+                text: getTruncatedText(currentObj?.name, 24),
                 fill: '#08192E',
                 fontFamily: 'IBM Plex Sans',
                 fontWeight: '600',
                 fontSize: 14,
                 strokeWidth: 1,
-                x: -30,
+                x: -48,
                 y: 6
             },
             image: {
-                width: 40,
-                height: 40,
-                x: 0,
+                width: 35,
+                height: 35,
+                x: -13,
                 y: 10,
                 href: returnCurrentTransformersIcon(icon)
             }

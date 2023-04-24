@@ -196,11 +196,12 @@ const ExperimentsPage = () => {
     }, [experimentId]);
 
     const addLoadDataframeInTransformers = (TransformersData: any) => {
-        if (TransformersData[0].name === 'Load Dataframe') {
+        const transData = cloneDeep(TransformersData);
+        if (transData[0].name === 'Load Dataframe') {
             return;
         }
 
-        const arr = cloneDeep(TransformersData);
+        const arr = cloneDeep(transData);
         const [obj] = arr.filter((transformer: any) => transformer.name === 'LoadingSparkDataframe');
 
         obj['name'] = 'Load Dataframe';
@@ -225,8 +226,8 @@ const ExperimentsPage = () => {
         newParseSchemaData.required.pop();
         newParseSchemaData.required.push('files');
         obj.schema.jsonSchema = JSON.stringify(newParseSchemaData);
-        TransformersData.unshift(obj);
-        updateTransformersData(TransformersData);
+        transData.unshift(obj);
+        updateTransformersData(transData);
     };
 
     const createCanvasSchemaFromTransformersData = () => {
@@ -246,7 +247,7 @@ const ExperimentsPage = () => {
                 const stencilMarkup = getStencilMarkup(currentObj, stencilBg, stencilStroke, icon, uuid);
                 (transformersList[currentObj['category']] = transformersList[currentObj['category']] || []).push(stencilMarkup);
                 return transformersList;
-            }, TransformersData[0]);
+            }, transformerData[0]);
         }
         setTransformersGroup(transformersGroup);
         setTransformedNewDataForStencil(transformedNewDataForStencil);
@@ -467,6 +468,7 @@ const ExperimentsPage = () => {
     }
     useEffect(() => {
         if (TransformersData === null) {
+            updateSpinnerInfo(true);
             getAndUpdateTransformersData();
         } else {
             TransformersData && createCanvasSchemaFromTransformersData();
@@ -480,6 +482,7 @@ const ExperimentsPage = () => {
         }
         async function init() {
             console.log('STEP 2.1');
+            updateSpinnerInfo(false);
             await initializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
         }
     }, [ExperimentData, TransformersData]);
