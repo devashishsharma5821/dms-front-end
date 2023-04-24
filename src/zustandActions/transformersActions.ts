@@ -212,40 +212,7 @@ export const updateGraph = async (graph: any) => {
 
     let newGeneratedObj: any = {};
     let displayObj: any = {};
-    const displayNew = JSON.stringify({
-        stages: {
-            'a84bf374-a13a-4f91-8a8c-184f496dc391': {
-                id: 'a84bf374-a13a-4f91-8a8c-184f496dc391',
-                position: {
-                    x: 50,
-                    y: 50
-                },
-                status: 'VALID',
-                signature: '',
-                inputs: {},
-                outputs: {}
-            },
-            '0091b92b-511d-4af6-8bbc-9eec810bba76': {
-                id: '0091b92b-511d-4af6-8bbc-9eec810bba76',
-                position: {
-                    x: 250,
-                    y: 100
-                },
-                status: 'VALID',
-                signature: '',
-                inputs: {
-                    'a84bf374-a13a-4f91-8a8c-184f496dc391': {
-                        id: 'a84bf374-a13a-4f91-8a8c-184f496dc391',
-                        position: {
-                            x: 0,
-                            y: 0
-                        }
-                    }
-                },
-                outputs: {}
-            }
-        }
-    });
+
     experimentToSave.stages.map((stage: any) => {
         console.log('1111', stage);
         if (stage.inputs.length > 0) {
@@ -297,14 +264,14 @@ export const updateGraph = async (graph: any) => {
     };
 
     let stages: any = JSON.stringify(newStages);
-    let display: any = displayNew;
+    let display: any = JSON.stringify(newDisplay);
     experimentToSave.stages = stages;
     experimentToSave.display = display;
 
     useAppStore.setState((state: any) => {
         return { experimentToSave: experimentToSave };
     });
-
+    console.log('Step 5', experimentToSave);
     try {
         const response = await client.mutate<any>({
             mutation: dmsEditExperiment(experimentToSave)
