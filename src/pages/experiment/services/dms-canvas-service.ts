@@ -41,13 +41,16 @@ class DmsCanvasService {
         this.keyboardService = keyboardService;
     }
 
-    startRappid(stencil: any, group: any) {
+    startRappid(stencil: any, group: any, isStencil: boolean) {
         // Set the Theme of the Joint JS based on the CSS included in the canvasStyles
 
         console.log('Inside dms-canvas-service startRappid method');
         joint.setTheme('modern');
+        console.log('STEP 4');
         this.initializePaper();
-        this.initializeStencil(stencil, group);
+        if(isStencil) {
+            this.initializeStencil(stencil, group);
+        }
         this.initializeSelection();
         this.initializeToolsAndInspector();
         this.initializeNavigator();
