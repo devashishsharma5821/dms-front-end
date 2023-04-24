@@ -252,13 +252,6 @@ const ExperimentsPage = () => {
         setTransformedNewDataForStencil(transformedNewDataForStencil);
     };
 
-    useEffect(() => {
-        if (TransformersData === null) {
-            getAndUpdateTransformersData();
-        } else {
-            TransformersData && createCanvasSchemaFromTransformersData();
-        }
-    }, [TransformersData]);
 
     useEffect(() => {
         client
@@ -437,65 +430,59 @@ const ExperimentsPage = () => {
 
     const addTransformersBackToCanvas = () => {
         let transformerOnPaper: any = [];
-        // const expDataDisplay = JSON.parse(ExperimentData.display);
-        // const expCore = JSON.parse(ExperimentData.core);
-        // const displayKeys = Object.keys(expDataDisplay.stages);
-        // const coreMapped = displayKeys.map((dis) => {
-        //     return {
-        //         core: expCore.stages[dis],
-        //         display: expDataDisplay.stages[dis]
-        //     };
-        // });
-        // coreMapped.forEach((mapped, mappedIndex) => {
-        //     console.log('bbbbbb', transformedNewDataForStencil['Input/Output'][mappedIndex + 1].attributes);
-        //     // Add the transformer as a stage on the canvas by using the stencil Property
-        //     let transformerToAddBack = { ...transformedNewDataForStencil['Input/Output'][1].attributes };
-        //     console.log('32232323', transformerToAddBack);
-        //     transformerToAddBack.position = mapped.display.position;
-        //     const element = transformerToAddBack;
-        //     rappidData?.graph?.addCell(element);
-        // });
-        // console.log('zzzzzzz', coreMapped);
-        // if (ExperimentData.core) {
-        //     let core = JSON.parse(ExperimentData?.core);
-        //     console.log('lets check ExperimentData  cores for the missing ones===>', core);
-        //
-        //     let xaxis = 0;
-        //     let yaxis = 0;
-        //     for (let key in core.stages) {
-        //         console.log('lets check data inside loop ', core.stages[key].name);
-        //         xaxis += 150;
-        //         yaxis += 150;
-        //         transformerOnPaper.push(
-        //             new joint.shapes.basic.Rect({
-        //                 position: { x: xaxis, y: yaxis },
-        //                 size: { width: 220, height: 44 },
-        //                 attrs: { rect: { fill: '#c6c7e2' }, text: { text: core.stages[key].name } }
-        //             })
-        //         );
-        //     }
-        // }
-        transformerOnPaper.push(
-            new joint.shapes.basic.Rect({
-                position: { x: 150, y: 150 },
-                size: { width: 220, height: 44 },
-                attrs: { rect: { fill: '#c6c7e2' }, text: { text: '1111' } }
-            })
-        );
-        transformerOnPaper.map((element: any) => {
-            rappidData?.graph.addCell(element);
-        });
+        const expDataDisplay = JSON.parse(ExperimentData.display);
+        const expCore = JSON.parse(ExperimentData.core);
+        if(Object.keys(expCore).length > 0 && Object.keys(expDataDisplay).length > 0) {
+            const displayKeys = Object.keys(expDataDisplay.stages);
+            const coreMapped = displayKeys.map((dis) => {
+                return {
+                    core: expCore.stages[dis],
+                    display: expDataDisplay.stages[dis]
+                };
+            });
+            console.log('STEP 6', coreMapped);
+            console.log('STEP 6.1', TransformersData);
+            const transFormerData = cloneDeep(TransformersData);
+            coreMapped.forEach((coreDisplay) => {
+                if (transFormerData) {
+                    const currentTransformer = transFormerData.filter(trans => {
+                        return trans.id = coreDisplay.core.module_id;
+                    })[0];
+                    console.log('STEP 6.2', currentTransformer);
+                    let stencilBg = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.backgroundDark : transformerMenuConf[currentTransformer['category']]?.backgroundLight;
+                    let stencilStroke = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.backgroundDarkStroke : transformerMenuConf[currentTransformer['category']]?.backgroundLightStroke;
+                    let icon = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.iconDark : transformerMenuConf[currentTransformer['category']]?.iconLight;
+                    if (!transformersGroup[currentTransformer['category']])
+                        transformersGroup[currentTransformer['category']] = { index: transformerMenuConf[currentTransformer['category']]?.order, label: transformerMenuConf[currentTransformer['category']]?.category };
+                    currentTransformer.name = startCase(currentTransformer.name ? currentTransformer?.name : currentTransformer?.id?.split('.').pop());
+                    const stencilMarkup = getStencilMarkup(currentTransformer, stencilBg, stencilStroke, icon, uuid);
+                    stencilMarkup.attributes.position = coreDisplay.display.position;
+                    transformerOnPaper.push(stencilMarkup);
+                }});
+            console.log('STEP 6.3', transformerOnPaper);
+            transformerOnPaper.map((element: any) => {
+                rappidData?.graph.addCell(element);
+            });
+        }
     }
     useEffect(() => {
+        if (TransformersData === null) {
+            getAndUpdateTransformersData();
+        } else {
+            TransformersData && createCanvasSchemaFromTransformersData();
+        }
+    }, [TransformersData]);
+
+    useEffect(() => {
         console.log('STEP 2', ExperimentData);
-        if(ExperimentData) {
+        if(ExperimentData && TransformersData) {
             init();
         }
         async function init() {
             console.log('STEP 2.1');
             await initializeAndStartRapid(transformedNewDataForStencil, transformersGroup);
         }
-    }, [ExperimentData]);
+    }, [ExperimentData, TransformersData]);
 
     //SideEffect to handle all canvas services call
     useEffect(() => {
