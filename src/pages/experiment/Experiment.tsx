@@ -749,7 +749,7 @@ const ExperimentsPage = () => {
         if (ExperimentData !== null && (ExperimentData.display !== null || ExperimentData.display !== undefined)) {
             console.log('Experiment Display Data', JSON.parse(ExperimentData.display));
             console.log('Experiment Core Data', JSON.parse(ExperimentData.core));
-            console.log('Transfor', TransformersData)
+            console.log('Transfor', TransformersData);
         }
     }, [ExperimentData]);
     const handleDrawerOpen = () => {
@@ -759,22 +759,22 @@ const ExperimentsPage = () => {
         const expDataDisplay = JSON.parse(ExperimentData.display);
         const expCore = JSON.parse(ExperimentData.core);
         const displayKeys = Object.keys(expDataDisplay.stages);
-        const coreMapped = displayKeys.map(dis => {
-           return {
-               core: expCore.stages[dis],
-               display:expDataDisplay.stages[dis]
-           }
+        const coreMapped = displayKeys.map((dis) => {
+            return {
+                core: expCore.stages[dis],
+                display: expDataDisplay.stages[dis]
+            };
         });
         coreMapped.forEach((mapped, mappedIndex) => {
-                console.log('bbbbbb', transformedNewDataForStencil['Input/Output'][mappedIndex + 1].attributes);
-                // Add the transformer as a stage on the canvas by using the stencil Property
-                let transformerToAddBack = {...transformedNewDataForStencil['Input/Output'][1].attributes};
-                console.log('32232323', transformerToAddBack);
-                transformerToAddBack.position = mapped.display.position;
-                const element = transformerToAddBack;
-                rappidData?.graph?.addCell(element);
+            console.log('bbbbbb', transformedNewDataForStencil['Input/Output'][mappedIndex + 1].attributes);
+            // Add the transformer as a stage on the canvas by using the stencil Property
+            let transformerToAddBack = { ...transformedNewDataForStencil['Input/Output'][1].attributes };
+            console.log('32232323', transformerToAddBack);
+            transformerToAddBack.position = mapped.display.position;
+            const element = transformerToAddBack;
+            rappidData?.graph?.addCell(element);
         });
-        console.log('zzzzzzz', coreMapped)
+        console.log('zzzzzzz', coreMapped);
     };
 
     // useEffect(() => {
@@ -811,42 +811,42 @@ const ExperimentsPage = () => {
 
     // TODO : Need to work on Below useEffect
 
-    // useEffect(() => {
-    //     console.log('lets check ExperimentData inside of useEffect ===>', ExperimentData);
-    //     init();
-    //     async function init() {
-    //         const rappid = await new DmsCanvasService(elementRef?.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
+    useEffect(() => {
+        console.log('lets check ExperimentData inside of useEffect ===>', ExperimentData);
+        init();
+        async function init() {
+            const rappid = await new DmsCanvasService(elementRef?.current, new StencilService(), new ToolbarService(), new InspectorService(), new HaloService(), new KeyboardService());
 
-    //         let transformerOnPaper: any = [];
+            let transformerOnPaper: any = [];
 
-    //         if (ExperimentData.core) {
-    //             let core = JSON.parse(ExperimentData?.core);
-    //             console.log('lets check ExperimentData  cores for the missing ones===>', core);
+            if (ExperimentData.core) {
+                let core = JSON.parse(ExperimentData?.core);
+                console.log('lets check ExperimentData  cores for the missing ones===>', core);
 
-    //             let xaxis = 0;
-    //             let yaxis = 0;
-    //             for (let key in core.stages) {
-    //                 console.log('lets check data inside loop ', core.stages[key].name);
-    //                 xaxis += 150;
-    //                 yaxis += 150;
-    //                 transformerOnPaper.push(
-    //                     new joint.shapes.basic.Rect({
-    //                         position: { x: xaxis, y: yaxis },
-    //                         size: { width: 220, height: 44 },
-    //                         attrs: { rect: { fill: '#c6c7e2' }, text: { text: core.stages[key].name } }
-    //                     })
-    //                 );
-    //             }
-    //         }
+                let xaxis = 0;
+                let yaxis = 0;
+                for (let key in core.stages) {
+                    console.log('lets check data inside loop ', core.stages[key].name);
+                    xaxis += 150;
+                    yaxis += 150;
+                    transformerOnPaper.push(
+                        new joint.shapes.basic.Rect({
+                            position: { x: xaxis, y: yaxis },
+                            size: { width: 220, height: 44 },
+                            attrs: { rect: { fill: '#c6c7e2' }, text: { text: core.stages[key].name } }
+                        })
+                    );
+                }
+            }
 
-    //         console.log('lets check elements ====>', transformerOnPaper);
+            console.log('lets check elements ====>', transformerOnPaper);
 
-    //         rappid.initializePaper();
-    //         transformerOnPaper.map((element: any) => {
-    //             rappid.graph.addCell(element);
-    //         });
-    //     }
-    // }, [ExperimentData]);
+            rappid.initializePaper();
+            transformerOnPaper.map((element: any) => {
+                rappid.graph.addCell(element);
+            });
+        }
+    }, [ExperimentData]);
 
     //SideEffect to handle all canvas services call
     useEffect(() => {
@@ -915,16 +915,16 @@ const ExperimentsPage = () => {
         let lastCell = rappidData?.graph?.getLastCell();
         let box = lastCell?.getBBox();
         let attrs: any;
-            attrs = {
-                name: selectedTransformer?.name,
-                label: selectedTransformer?.name,
-                transformerId: selectedTransformer?.id,
-                icon: selectedTransformer?.icon,
-                layout: null,
-                inPorts: inPorts,
-                outPorts: outPorts,
-                position: position ? position : { x: box?.x, y: box?.y }
-            };
+        attrs = {
+            name: selectedTransformer?.name,
+            label: selectedTransformer?.name,
+            transformerId: selectedTransformer?.id,
+            icon: selectedTransformer?.icon,
+            layout: null,
+            inPorts: inPorts,
+            outPorts: outPorts,
+            position: position ? position : { x: box?.x, y: box?.y }
+        };
         if (cellId) {
             attrs.id = cellId;
         } else {
