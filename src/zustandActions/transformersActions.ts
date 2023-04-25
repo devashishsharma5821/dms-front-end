@@ -193,6 +193,12 @@ export const updateGraph: updateGraphType = async (graph: any) => {
                             signature: output.signature
                         };
                     });
+
+                    let position = cell.position();
+                    console.log("POSITION", cell.position().x)
+                    console.log("POSITION", cell.position().y)
+                    position.x = Math.ceil(cell.position().x);
+                    position.y = Math.ceil(cell.position().y);
                     experimentToSave.stages.push({
                         id: cell.id.toString(),
                         transformerId: stage.transformerId,
@@ -202,7 +208,7 @@ export const updateGraph: updateGraphType = async (graph: any) => {
                         formData: stage.formState?.currentForm.formData,
                         status: stage.status,
                         signature: stage.signature,
-                        position: cell.position()
+                        position: position
                     });
                 }
             }

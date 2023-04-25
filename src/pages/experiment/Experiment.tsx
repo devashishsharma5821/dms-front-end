@@ -432,7 +432,7 @@ const ExperimentsPage = () => {
         let transformerOnPaper: any = [];
         const expDataDisplay = JSON.parse(ExperimentData.display);
         const expCore = JSON.parse(ExperimentData.core);
-        if (Object.keys(expCore).length > 0 && Object.keys(expDataDisplay).length > 0) {
+        if(Object.keys(expCore).length > 0 && Object.keys(expDataDisplay).length > 0) {
             const displayKeys = Object.keys(expDataDisplay.stages);
             const coreMapped = displayKeys.map((dis) => {
                 return {
@@ -445,31 +445,31 @@ const ExperimentsPage = () => {
             const transFormerData = cloneDeep(TransformersData);
             coreMapped.forEach((coreDisplay) => {
                 if (transFormerData) {
-                    const currentTransformer = transFormerData.filter((trans) => {
-                        return (trans.id = coreDisplay.core.module_id);
+                    const currentTransformer = transFormerData.filter(trans => {
+                        console.log('6.2', trans.id, coreDisplay.core.module_id)
+                        return trans.id === coreDisplay.core.module_id;
                     })[0];
-                    console.log('STEP 6.2', currentTransformer);
+                    console.log('STEP 6.4', currentTransformer);
                     let stencilBg = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.backgroundDark : transformerMenuConf[currentTransformer['category']]?.backgroundLight;
-                    let stencilStroke =
-                        colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.backgroundDarkStroke : transformerMenuConf[currentTransformer['category']]?.backgroundLightStroke;
+                    let stencilStroke = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.backgroundDarkStroke : transformerMenuConf[currentTransformer['category']]?.backgroundLightStroke;
                     let icon = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.iconDark : transformerMenuConf[currentTransformer['category']]?.iconLight;
                     if (!transformersGroup[currentTransformer['category']])
-                        transformersGroup[currentTransformer['category']] = {
-                            index: transformerMenuConf[currentTransformer['category']]?.order,
-                            label: transformerMenuConf[currentTransformer['category']]?.category
-                        };
+                        transformersGroup[currentTransformer['category']] = { index: transformerMenuConf[currentTransformer['category']]?.order, label: transformerMenuConf[currentTransformer['category']]?.category };
                     currentTransformer.name = startCase(currentTransformer.name ? currentTransformer?.name : currentTransformer?.id?.split('.').pop());
                     const stencilMarkup = getStencilMarkup(currentTransformer, stencilBg, stencilStroke, icon, uuid);
                     stencilMarkup.attributes.position = coreDisplay.display.position;
                     transformerOnPaper.push(stencilMarkup);
-                }
-            });
+                }});
             console.log('STEP 6.3', transformerOnPaper);
             transformerOnPaper.map((element: any) => {
                 rappidData?.graph.addCell(element);
+                const portsToAdd = element.attributes.CombinedPorts;
+                console.log('STEP 6.5', transformerOnPaper);
+                const lastCell = rappidData?.graph?.getLastCell();
+                lastCell.addPorts(portsToAdd);
             });
         }
-    };
+    }
     useEffect(() => {
         if (TransformersData === null) {
             updateSpinnerInfo(true);
@@ -481,7 +481,7 @@ const ExperimentsPage = () => {
 
     useEffect(() => {
         console.log('STEP 2', ExperimentData);
-        if (ExperimentData && TransformersData) {
+        if(ExperimentData && TransformersData) {
             init();
         }
         async function init() {
@@ -500,7 +500,7 @@ const ExperimentsPage = () => {
             rappidData.startRappid(transformedNewDataForStencil, transformersGroup, false);
             // TODO The Experiment and Core and Display Data needs to be attached here.
             console.log('STEP 3.3', ExperimentData);
-            if (ExperimentData) {
+            if(ExperimentData) {
                 addTransformersBackToCanvas();
             }
         }
@@ -565,16 +565,6 @@ const ExperimentsPage = () => {
         let lastCell = rappidData?.graph?.getLastCell();
         let box = lastCell?.getBBox();
         let attrs: any;
-        attrs = {
-            name: selectedTransformer?.name,
-            label: selectedTransformer?.name,
-            transformerId: selectedTransformer?.id,
-            icon: selectedTransformer?.icon,
-            layout: null,
-            inPorts: inPorts,
-            outPorts: outPorts,
-            position: position ? position : { x: box?.x, y: box?.y }
-        };
         attrs = {
             name: selectedTransformer?.name,
             label: selectedTransformer?.name,
