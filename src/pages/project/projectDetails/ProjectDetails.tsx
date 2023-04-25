@@ -66,7 +66,7 @@ const ProjectDetails = (props: any) => {
     const editAccessModal = useDisclosure();
     const { toast } = createStandaloneToast();
     const [showEditValuePreview, setShowEditValuePreview] = useState(true);
-
+    const [windowSize, setWindowSize] = React.useState([window.innerWidth, window.innerHeight]);
     function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
@@ -283,7 +283,15 @@ const ProjectDetails = (props: any) => {
     const clipBoardSuccess = () => {
         toast(getToastOptions(`Location Copied To Clipboard`, 'success'));
     };
-
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+        window.addEventListener('resize', handleWindowResize);
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    });
     return (
         <>
             {AllUsersData && SingleProjectData && (
@@ -292,7 +300,7 @@ const ProjectDetails = (props: any) => {
                         <Text>Projects / My Project</Text>
                     </Box>
 
-                    <Box ml={'24'} mt={'16px'} mb={'24'} color={'default.darkGrayCreate'} width="60vw">
+                    <Box marginLeft={'24px'} mt={'16px'} mb={'24px'} color={'default.darkGrayCreate'} width="60vw">
                         <Flex flexDir={'row'} cursor={'pointer'} justifyContent={'space-between'} alignItems={'center'}>
                             <Flex alignItems="center">
                                 <Button
@@ -356,6 +364,8 @@ const ProjectDetails = (props: any) => {
                                 Delete
                             </Button>
                         </Flex>
+                    </Box>
+                    <Box height={windowSize[1] - 200} overflowX={'hidden'} overflowY={'scroll'} marginLeft={'24px'}>
                         <Box width={'60vw'} height={'350px'} borderRadius={8} border={'1px'} borderColor={'light.lighterGrayishBlue'} mt={'32px'} pb={'24px'}>
                             <Flex>
                                 <Flex width={'50%'} ml={'22px'} maxHeight={'320px'} mr={'48px'}>
@@ -582,6 +592,7 @@ const ProjectDetails = (props: any) => {
                                 </Flex>
                             </Flex>
                         </Box>
+
                         <Box mt={'20px'}>
                             <ProjectDetailsGrid gridData={SingleProjectData} projectId={SingleProjectData.basic.id}></ProjectDetailsGrid>
                         </Box>

@@ -76,25 +76,19 @@ const CreateDataset = (props: any) => {
                     setDatasetName('');
                     updateSpinnerInfo(false);
                     props.onClose();
-                    setScreenState({ screen1: true,
-                        screen2: false,
-                        screen3: false});
+                    setScreenState({ screen1: true, screen2: false, screen3: false });
                 })
                 .catch((err: any) => {
                     updateSpinnerInfo(false);
                     props.onClose();
                     toast(getToastOptions(`${err}`, 'error'));
-                    setScreenState({ screen1: true,
-                        screen2: false,
-                        screen3: false});
+                    setScreenState({ screen1: true, screen2: false, screen3: false });
                 });
         } else {
             updateSpinnerInfo(false);
             props.onClose();
             setDatasetName('');
-            setScreenState({ screen1: true,
-                screen2: false,
-                screen3: false});
+            setScreenState({ screen1: true, screen2: false, screen3: false });
         }
     };
     const createDataset = () => {
@@ -107,7 +101,6 @@ const CreateDataset = (props: any) => {
             projectSelected: ''
         });
         toast(getToastOptions(`File Uploaded Successfully`, 'success'));
-
     };
     const navigateToNextScreen = () => {
         if (screenState.screen1) {
@@ -151,7 +144,7 @@ const CreateDataset = (props: any) => {
         setIsNextAvaiable(enableNextButton);
     };
     const navigateToPrevScreen = () => {
-        if(screenState.screen2) {
+        if (screenState.screen2) {
             setPreviousStateData({
                 datasetName: datasetName,
                 projectSelected: selectedProjectId
@@ -172,8 +165,6 @@ const CreateDataset = (props: any) => {
                 screen3: false
             });
         }
-
-
     };
     return (
         <Modal size={'lg'} closeOnOverlayClick={false} finalFocusRef={finalRef} isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -186,26 +177,34 @@ const CreateDataset = (props: any) => {
                 <Divider color={'default.dividerColor'} mt={'13px'} mb={'19px'} />
                 <Center>
                     <Box>
-                        {screenState.screen1 && <Avatar borderRadius="full" boxSize="32px" name={'1'} bg={'default.toolbarButton'} color={'default.whiteText'} mb={'8px'} /> }
-                        {(screenState.screen2 || screenState.screen3) && <Avatar borderRadius="full" bg={'default.toolbarButton'} boxSize="32px" icon={<TickIcon/>} mb={'8px'} />}
+                        {screenState.screen1 && <Avatar borderRadius="full" boxSize="32px" name={'1'} bg={'default.toolbarButton'} color={'default.whiteText'} mb={'8px'} />}
+                        {(screenState.screen2 || screenState.screen3) && <Avatar borderRadius="full" bg={'default.toolbarButton'} boxSize="32px" icon={<TickIcon />} mb={'8px'} />}
                         <Text ml={'-8px'}>Details</Text>
                     </Box>
                     <Divider borderColor={'default.toolbarButton'} borderWidth={'1px'} orientation="horizontal" maxWidth={'96px'} mr={'16px'} mt={'-22px'} />
                     <Box>
-                        {(screenState.screen1 || screenState.screen2) && <Avatar
-                            borderRadius="full"
-                            boxSize="32px"
-                            name={'2'}
-                            bg={screenState.screen2 || screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'}
-                            color={'default.whiteText'}
-                            mb={'8px'}
-                        />}
-                        {screenState.screen3 && <Avatar borderRadius="full" bg={'default.toolbarButton'} boxSize="32px" icon={<TickIcon/>} mb={'8px'} />}
+                        {(screenState.screen1 || screenState.screen2) && (
+                            <Avatar
+                                borderRadius="full"
+                                boxSize="32px"
+                                name={'2'}
+                                bg={screenState.screen2 || screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'}
+                                color={'default.whiteText'}
+                                mb={'8px'}
+                            />
+                        )}
+                        {screenState.screen3 && <Avatar borderRadius="full" bg={'default.toolbarButton'} boxSize="32px" icon={<TickIcon />} mb={'8px'} />}
 
-
-                        {screenState.screen1 && <Text fontWeight={400} color='#929AA9' ml={'-8px'}>Source</Text> }
-                        {(screenState.screen2 || screenState.screen3) && <Text fontWeight={400} color='#111111' ml={'-8px'}>Source</Text> }
-
+                        {screenState.screen1 && (
+                            <Text fontWeight={400} color="#929AA9" ml={'-8px'}>
+                                Source
+                            </Text>
+                        )}
+                        {(screenState.screen2 || screenState.screen3) && (
+                            <Text fontWeight={400} color="#111111" ml={'-8px'}>
+                                Source
+                            </Text>
+                        )}
                     </Box>
                     <Divider
                         borderColor={screenState.screen2 || screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'}
@@ -217,8 +216,16 @@ const CreateDataset = (props: any) => {
                     />
                     <Box>
                         <Avatar borderRadius="full" boxSize="32px" name={'3'} bg={screenState.screen3 ? 'default.toolbarButton' : 'default.bgDatasetLevels'} color={'default.whiteText'} mb={'8px'} />
-                        {(screenState.screen1 || screenState.screen2) && <Text fontWeight={400} color='#929AA9' ml={'-8px'}>Preview</Text> }
-                        {screenState.screen3 && <Text fontWeight={400} color='#111111' ml={'-8px'}>Preview</Text> }
+                        {(screenState.screen1 || screenState.screen2) && (
+                            <Text fontWeight={400} color="#929AA9" ml={'-8px'}>
+                                Preview
+                            </Text>
+                        )}
+                        {screenState.screen3 && (
+                            <Text fontWeight={400} color="#111111" ml={'-8px'}>
+                                Preview
+                            </Text>
+                        )}
                     </Box>
                 </Center>
                 {screenState.screen1 && (
@@ -250,7 +257,7 @@ const CreateDataset = (props: any) => {
                                                 <FileUploadComponent
                                                     projectId={selectedProjectId}
                                                     datasetName={datasetName}
-                                                    disableStatus={(status: boolean) => setDisableStatus(status) }
+                                                    disableStatus={(status: boolean) => setDisableStatus(status)}
                                                     getResponseFromFileUpload={(fileUploadResponse: any) => getResponseFromFileUpload(fileUploadResponse)}
                                                 ></FileUploadComponent>
                                             </Box>
@@ -309,7 +316,7 @@ const CreateDataset = (props: any) => {
                                 Cancel
                             </Button>
                             <Button
-                                disabled={loading || (!isNextAvaiable || datasetName === "")}
+                                disabled={loading || !isNextAvaiable || datasetName === ''}
                                 onClick={navigateToNextScreen}
                                 colorScheme="gray"
                                 bg={'default.toolbarButton'}
@@ -324,7 +331,6 @@ const CreateDataset = (props: any) => {
                                 Next
                             </Button>
                         </>
-
                     )}
                     {(screenState.screen2 || screenState.screen3) && (
                         <>
@@ -335,9 +341,9 @@ const CreateDataset = (props: any) => {
                                 color={'default.toolbarButton'}
                                 width={'81px'}
                                 height={'40px'}
-                                variant='link'
+                                variant="link"
                                 borderRadius={4}
-                                textDecoration='none'
+                                textDecoration="none"
                             >
                                 Cancel
                             </Button>
@@ -357,7 +363,6 @@ const CreateDataset = (props: any) => {
                                 Previous
                             </Button>
                         </>
-
                     )}
                     {screenState.screen2 && (
                         <Button
