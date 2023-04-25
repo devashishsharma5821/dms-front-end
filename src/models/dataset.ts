@@ -26,9 +26,9 @@ export interface GetDatasetDetail {
     created_at: string;
     updated_at: string;
     df_profile: {
-      headers: [];
-      schema: [];
-      sample_rows: any;
+        headers: [];
+        schema: [];
+        sample_rows: any;
     };
     spec: {
         path: string;
