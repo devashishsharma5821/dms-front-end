@@ -37,7 +37,8 @@ const useAppStore = create<AppState>((set) => ({
     stages: [],
     updatedGraph: null,
     moduleConfigData: null,
-    experimentToSave: null
+    experimentToSave: null,
+    graph: null
 }));
 
 export default useAppStore;

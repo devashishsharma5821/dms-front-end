@@ -253,7 +253,6 @@ const ExperimentsPage = () => {
         setTransformedNewDataForStencil(transformedNewDataForStencil);
     };
 
-
     useEffect(() => {
         client
             .query<DataBricksTokenResponse<DataBricksTokenDetails>>({
@@ -447,9 +446,10 @@ const ExperimentsPage = () => {
             coreMapped.forEach((coreDisplay) => {
                 if (transFormerData) {
                     const currentTransformer = transFormerData.filter(trans => {
-                        return trans.id = coreDisplay.core.module_id;
+                        console.log('6.2', trans.id, coreDisplay.core.module_id)
+                        return trans.id === coreDisplay.core.module_id;
                     })[0];
-                    console.log('STEP 6.2', currentTransformer);
+                    console.log('STEP 6.4', currentTransformer);
                     let stencilBg = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.backgroundDark : transformerMenuConf[currentTransformer['category']]?.backgroundLight;
                     let stencilStroke = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.backgroundDarkStroke : transformerMenuConf[currentTransformer['category']]?.backgroundLightStroke;
                     let icon = colorMode === 'dark' ? transformerMenuConf[currentTransformer['category']]?.iconDark : transformerMenuConf[currentTransformer['category']]?.iconLight;
@@ -463,6 +463,10 @@ const ExperimentsPage = () => {
             console.log('STEP 6.3', transformerOnPaper);
             transformerOnPaper.map((element: any) => {
                 rappidData?.graph.addCell(element);
+                const portsToAdd = element.attributes.CombinedPorts;
+                console.log('STEP 6.5', transformerOnPaper);
+                const lastCell = rappidData?.graph?.getLastCell();
+                lastCell.addPorts(portsToAdd);
             });
         }
     }
@@ -801,6 +805,7 @@ const ExperimentsPage = () => {
                                 }}
                                 onCloseEventHandler={onCloseEventHandler}
                                 selectedStageId={selectedStageId}
+                                selectedCellId={selectedCellId}
                             />
                         )}
 

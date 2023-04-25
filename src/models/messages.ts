@@ -1,11 +1,11 @@
 import { Dictionary } from './schema';
 import { DataTablesRequest, AzureBlobGetContainersRequest, AzureBlobBrowseContainerRequest } from '@antuit-zebra/pipeline-interactive-driver-client-ts';
-import { PipelineExperimentCore_Input } from '@antuit-zebra/pipeline-interactive-driver-client-ts/dms_commons/protobuf/common';
+import { PipelineExperimentCore_Input, PipelineExperimentCore_Output } from '@antuit-zebra/pipeline-interactive-driver-client-ts/dms_commons/protobuf/common';
 export type BaseRequest = {
     userId: string | null;
     experimentId: number;
     opId: string;
-    project_id?: number | undefined;
+    project_id: number;
     get_datatables?: DataTablesRequest | undefined;
     /** Azure Blob Storage */
     az_blob_get_containers?: AzureBlobGetContainersRequest | undefined;
@@ -27,6 +27,7 @@ export interface InferRunStage {
     transformerId: string;
     moduleConf: string;
     inputs?: Dictionary<PipelineExperimentCore_Input>;
+    outputs?: Dictionary<PipelineExperimentCore_Output>;
 }
 
 export interface InferRunStageInput {

@@ -15,7 +15,7 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
     const opid = v4();
     const { wsHost } = defaultConfig;
     let wsUrl = `${wsHost}?token=${localStorage.accessToken}&espToken=${localStorage.espUserToken}`;
-    const [message, connectionState, DmsComputeData, UserConfig] = useAppStore((state: SocketWrapperAppStoreState) => [state.message, state.connectionState, state.DmsComputeData, state.UserConfig]);
+    const [message, connectionState, DmsComputeData] = useAppStore((state: SocketWrapperAppStoreState) => [state.message, state.connectionState, state.DmsComputeData, state.UserConfig]);
     const { sendJsonMessage } = useWebSocket(wsUrl, {
         onOpen: () => {
             console.log('Socket connection Establishedd');
@@ -54,12 +54,17 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
     });
 
     useEffect(() => {
+        console.log('letys check msg outside connectionState', connectionState?.connected, 'msg ===>', message);
+
         if (connectionState?.connected && message?.length > 0) {
+            console.log('letys check msg inside connectionState', connectionState?.connected, 'msg ===>', message);
+            // sendJsonMessage(message.content);
+
             disperseMessage(message);
             // if(message.content?.)
             // checkAlive(message.content);
         }
-    }, [message]);
+    }, [message, connectionState.connected]);
 
     useEffect(() => {
         if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);
@@ -68,13 +73,14 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
 
     const disperseMessage = (messages: Array<disperseMessage>) => {
         messages.forEach((msg: disperseMessage) => {
-            if (Object.keys(msg)?.length > 0) {
-                if (msg?.content?.action === Action.Publish) {
-                    checkAlive(msg);
-                } else {
-                    sendJsonMessage(msg.content);
-                }
-            }
+            console.log('jalaj', msg);
+            // if (Object.keys(msg)?.length > 0) {
+            //     if (msg?.content?.action === Action.Publish) {
+            //         checkAlive(msg);
+            //     } else {
+            sendJsonMessage(msg.content);
+            //     }
+            // }
         });
     };
 
@@ -85,6 +91,7 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
             await computeRunningStatus?.forEach((compute: DmsComputeData) => {
                 if (compute?.status && compute?.id) {
                     const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
+                        project_id: 2,
                         experimentId: 1,
                         opId: opid,
                         userId: compute?.id

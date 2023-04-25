@@ -576,10 +576,19 @@ export const dmsEditExperiment = (variables: any) => {
 }`;
 };
 
+// export const dmsEditExperimentViaVariables = (variables: any) => {
+//     console.log('lets check experimentToSave inside updateModuleConfigData ====> 2', variables);
+//     return gql`
+//         mutation dmsEditExperiment($id: ID!, $name: String, $description: String, $tags: [String], $core: DMSPipelineExperimentCore, $display: DMSPipelineExperimentDisplay) {
+//             dmsEditExperiment(id: $id, name: $name, description: $description, tags: $tags, core:$core, display: $display)
+//         }
+//     `;
+// };
+
 export const createExperiment = (variables: any) => {
     // TODO replace transformer_libary_version to unhardcode.
     return gql`mutation {
-  dmsCreateExperiment(
+    dmsCreateExperiment(
     project_id: "${variables.projectSelected}"
     name: "${variables.experimentName}",
     tags: ${JSON.stringify(variables.tags)},

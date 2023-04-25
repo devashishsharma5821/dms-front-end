@@ -46,6 +46,7 @@ export interface DetailsPropsType {
     onClose: () => void;
     onCloseEventHandler: () => void;
     selectedStageId: any;
+    selectedCellId: any;
 }
 
 export interface DataSource {
@@ -87,4 +88,7 @@ export interface DetailsAppStoreState {
     ExperimentData?: any;
     moduleConfigData?: any;
     experimentToSave?: any;
+    graph?: any;
+    stages?: any;
+    UserConfig?: any;
 }

@@ -6,21 +6,33 @@ import validator from '@rjsf/validator-ajv6';
 import type { JSONSchema7 } from 'json-schema';
 import useAppStore from '../../store';
 import { DetailsAppStoreState, DetailsPropsType } from '../../models/transformer';
-import { updateModuleConfigData } from '../../zustandActions/transformersActions';
+import { setStageForm, setStageHasRun, setStageStatus, updateModuleConfigData } from '../../zustandActions/transformersActions';
 import { cloneDeep } from 'lodash';
 import client from '../../apollo-client';
 import { dmsEditExperiment } from '../../query';
 import { getToastOptions } from '../../models/toastMessages';
 import { createStandaloneToast } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+import { BusHelper } from '../../helpers/BusHelper';
+import { v4 } from 'uuid';
+import { submitMessage } from '../../zustandActions/socketActions';
+import { StageStatus } from '../../models/types';
 const { toast } = createStandaloneToast();
 
 const Details = (props: DetailsPropsType) => {
-    const [TransformersData, ExperimentData, moduleConfigData, experimentToSave] = useAppStore((state: DetailsAppStoreState) => [
+    const [TransformersData, ExperimentData, moduleConfigData, experimentToSave, graph, stages, UserConfig] = useAppStore((state: DetailsAppStoreState) => [
         state.TransformersData,
         state.ExperimentData,
         state.moduleConfigData,
-        state.experimentToSave
+        state.experimentToSave,
+        state.graph,
+        state.stages,
+        state.UserConfig
     ]);
+    const opid = v4();
+
+    const { projectId, experimentId } = useParams();
+
     const timer = useRef<ReturnType<typeof setTimeout>>();
 
     const transformer = TransformersData?.find((transformer: any) => transformer?.id === props?.selectedStageId);
@@ -209,12 +221,73 @@ const Details = (props: DetailsPropsType) => {
     //     updateSelectedStageId(null);
     // };
 
-    // const onSubmitHandler = async (e: any) => {
-    //     console.log('onSubmitHandler ===>', e);
-    //     let newFormData = cloneDeep(e.formData);
-    //     console.log('lets now check newFormData ==>', newFormData);
-    //     updateModuleConfigData(newFormData, e.schema.title);
-    // };
+    // if (formData && Object.keys(formData).length > 0 && currentSelectedStage && graph && currentStages && props.userId && props.experimentId) {
+    //     let msg = BusHelper.GetInferOutputRunRequestMessage(
+    //         {
+    //             experimentId: parseInt(props.experimentId),
+    //             userId: props.userId,
+    //             stages: BusHelper.getInferRunStages(currentSelectedStage, graph, currentStages, formData),
+    //             stageId: currentSelectedStage.id,
+    //             opId: uuidv4()
+    //         },
+    //         true
+    //     );
+    //     dispatch(submitMessage({ content: msg }));
+    //     dispatch(setStageStatus({ stageId: currentSelectedStage.id, status: StageStatus.Pending }));
+    // }
+
+    const runInference = (formData: any) => {
+        if (props?.selectedStageId) {
+            console.log('lets check selectedCellId ===>', props?.selectedCellId);
+            const currentSelectedStage = stages.find((stage: any) => stage.id === props?.selectedCellId);
+            console.log('lets check currentSelectedStage after finding ===>', currentSelectedStage);
+            setStageHasRun({ stageId: currentSelectedStage.id, hasRun: false });
+            setStageForm({
+                stageId: currentSelectedStage.id,
+                currentForm: { formData: formData }
+            });
+            console.log(
+                'lets check everything for BusHelper ==>',
+                'formData ===>',
+                formData,
+                'currentSelectedStage ===>',
+                currentSelectedStage,
+                'graph ===>',
+                graph,
+                'currentStages ===>',
+                stages,
+                'userId ===>',
+                UserConfig.userConfiguration.user.userId,
+                'experimentId ===>',
+                experimentId
+            );
+
+            if (formData && Object.keys(formData).length > 0 && currentSelectedStage.id && graph && stages && experimentId && UserConfig.userConfiguration.user.userId) {
+                console.log('lets check going inside that if check or not');
+                if (projectId) {
+                    let msg = BusHelper.GetInferOutputRunRequestMessage(
+                        {
+                            experimentId: parseInt(experimentId),
+                            project_id: parseInt(projectId),
+                            userId: '431',
+                            stages: BusHelper.getInferRunStages(currentSelectedStage, graph, stages, formData),
+                            stageId: props?.selectedCellId,
+                            opId: opid
+                        },
+                        true
+                    );
+                    submitMessage([{ content: msg }]);
+                    console.log('lets check msg after BusHelper ===>', msg);
+                    setStageStatus({ stageId: currentSelectedStage.id, status: StageStatus.Pending });
+                }
+            }
+        }
+    };
+
+    const onSubmitHandler = async (e: any) => {
+        console.log('lets check event data ===>', e);
+        runInference(e.formData);
+    };
 
     const handleChange = (e: any) => {
         console.log('lets check formData in handleChange ===>', JSON.stringify(e.formData));
@@ -239,8 +312,6 @@ const Details = (props: DetailsPropsType) => {
         }, 1000);
     };
 
-    // console.log('now lets check jsonSchema ===>', JSON.parse(transformer?.schema?.jsonSchema));
-
     return (
         <>
             <Drawer isOpen={props?.isOpen} placement="right" onClose={props?.onClose} colorScheme={useColorModeValue('light.whiteText', 'dark.veryDarkGrayishBlue')}>
@@ -248,7 +319,7 @@ const Details = (props: DetailsPropsType) => {
                 <DrawerContent mt="64px" bg={useColorModeValue('default.whiteText', 'dark.veryDarkGrayishBlue')}>
                     <DrawerCloseButton />
                     <DrawerBody mt="30px">
-                        <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onChange={handleChange} omitExtraData={true} validator={validator} />
+                        <Form schema={JSON.parse(transformer?.schema?.jsonSchema)} onChange={handleChange} onSubmit={onSubmitHandler} omitExtraData={true} validator={validator} />
                     </DrawerBody>
                     {/* 
                     <DrawerFooter>
