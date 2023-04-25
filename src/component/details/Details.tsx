@@ -269,7 +269,7 @@ const Details = (props: DetailsPropsType) => {
                         {
                             experimentId: parseInt(experimentId),
                             project_id: parseInt(projectId),
-                            userId: '433',
+                            userId: '431',
                             stages: BusHelper.getInferRunStages(currentSelectedStage, graph, stages, formData),
                             stageId: props?.selectedCellId,
                             opId: opid
