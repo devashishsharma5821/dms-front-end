@@ -189,6 +189,7 @@ const Compute = () => {
                     useAppStore.setState(() => ({ DmsComputeData: newData }));
                     if (UserConfig && globalComputeId) {
                         const shutDownRequest = BusHelper.GetShutdownRequestMessage({
+                            project_id: 2,
                             experimentId: parseInt(globalComputeId),
                             opId: opid,
                             userId: globalComputeId
@@ -308,6 +309,7 @@ const Compute = () => {
     const confirmAlertActionForRefresh = () => {
         const messageQue: Array<disperseMessage> = [];
         const aliveMessage = BusHelper.GetKeepAliveRequestMessage({
+            project_id: 2,
             experimentId: 1,
             opId: opid,
             userId: globalComputeId

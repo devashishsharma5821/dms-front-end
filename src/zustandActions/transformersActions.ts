@@ -9,7 +9,11 @@ import {
     addStages as addStagesType,
     updateSelectedCellId as updateSelectedCellIdType,
     updateModuleConfigData as updateModuleConfigDataType,
-    updateGraphOnChangingPosition as updateGraphOnChangingPositionType
+    updateGraph as updateGraphType,
+    updateGraphOnChangingPosition as updateGraphOnChangingPositionType,
+    setStageHasRun as setStageHasRunType,
+    setStageForm as setStageFormType,
+    setStageStatus as setStageStatusType
 } from '../models/zustandStore';
 import { TransformerListResponse } from '../models/transformerListResponse';
 import { TransformerDetail } from '../models/transformerDetail';
@@ -20,6 +24,7 @@ import { g } from '@antuit/rappid-v1';
 import { getToastOptions } from '../models/toastMessages';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { updateSpinnerInfo } from './commonActions';
+import TransformerModel from '../models/transformerModal';
 const { toast } = createStandaloneToast();
 
 export const getAndUpdateTransformersData: getAndUpdateTransformersDataType = async () => {
@@ -130,7 +135,10 @@ export const updateModuleConfigData: updateModuleConfigDataType = async (moduleC
     }
 };
 
-export const updateGraph = async (graph: any) => {
+export const updateGraph: updateGraphType = async (graph: any) => {
+    useAppStore.setState((state: any) => {
+        return { graph: graph };
+    });
     let experimentToSave: any = {
         id: '',
         name: '',
@@ -307,4 +315,83 @@ export const updateGraphOnChangingPosition: updateGraphOnChangingPositionType = 
     } catch (error: any) {
         toast(getToastOptions(`${error.message}`, 'error'));
     }
+};
+
+//   let connections = state.graph.getConnectedLinks(currentCell, { outbound: true }); // Only get outbound connections
+
+export const setStageHasRun: setStageHasRunType = (data: any) => {
+    console.log('lets check data inside setSTageHasRun ==>', data);
+    useAppStore.setState((state: any) => {
+        console.log('lets check stage inside setStageHasRun =====>', state.stages, 'data ====>', data);
+        let stage = state.stages.find((stage: any) => stage.id === data.stageId);
+
+        if (stage) {
+            console.log('lets check stage after find inside setStageHasRun ==>', stage, 'data ===>', data);
+
+            stage.hasRun = data.hasRun;
+            if (!data.hasRun) {
+                console.log('lets check graph inside setStageHasRun ==>', state.graph);
+                let currentCell = state.graph.getCells().find((cell: any) => cell.get('id') === data.stageId);
+                console.log('ltes check currentCell inside setStageHasRun ===>', currentCell);
+                if (currentCell) {
+                    let connections = state.graph.getConnectedLinks(currentCell); // Only get outbound connections
+                    console.log('lets check connections inside setStageHasRun ===>', connections);
+
+                    // TODO: Currently no connections are forming so need to check below commented after connections made
+
+                    connections.forEach((conn: any) => {
+                        let target = conn.get('target');
+                        let targetCell = state.graph?.getCell(target.id);
+                        if (targetCell instanceof TransformerModel) {
+                            let targetTransformer = targetCell.getTransformer();
+                            let connectedTargetStage = state.stages?.find((stage: any) => stage.id === targetTransformer.stageId);
+                            if (connectedTargetStage) {
+                                connectedTargetStage.hasRun = data.hasRun;
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        return state;
+    });
+};
+
+//   stage.formState = { currentForm: action.payload.currentForm };
+
+export const setStageForm: setStageFormType = (data: any) => {
+    console.log('lets check data inside setStageForm ===>', data);
+    useAppStore.setState((state: any) => {
+        if (data.stageId && state.stages.some((stage: any) => data.stageId === stage.id)) {
+            console.log('lets check going inside or not setStageForm==>');
+            let stage = state.stages.find((stage: any) => stage.id === data.stageId);
+            if (stage) {
+                stage.formState = { currentForm: data.currentForm };
+                console.log('stage has been found lets check ==>', stage);
+            } else {
+                console.log('Stage not found.');
+            }
+        } else {
+            console.log('Stage not found.');
+        }
+        return state;
+    });
+};
+
+export const setStageStatus: setStageStatusType = (data: any) => {
+    console.log('lets check data inside setStageStatus ===>', data);
+    useAppStore.setState((state) => {
+        let stage = state.stages?.find((stage: any) => {
+            return stage.id === data.stageId;
+        });
+        if (stage) {
+            console.log('lets check stage inside setStageStatus ===>', stage);
+            stage.status = data.status;
+            if (data.status === StageStatus.Invalid) {
+                console.log('lets check going inside invalid check or not ===>', data.status);
+                stage.hasRun = false;
+            }
+        }
+        return state;
+    });
 };

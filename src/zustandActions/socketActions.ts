@@ -9,7 +9,11 @@ import {
     startConnecting as startConnectingType,
     AppState
 } from '.././models/zustandStore';
-export const submitMessage: submitMessageType = (content) => useAppStore.setState(() => ({ message: content }));
+export const submitMessage: submitMessageType = (content) =>
+    useAppStore.setState(() => {
+        console.log('lets check content inside submitMessage', content);
+        return { message: content };
+    });
 export const connectionEstablished: connectionEstablishedType = () =>
     useAppStore.setState(() => {
         return { connectionState: { connected: true, subscribed: false } };

@@ -54,6 +54,7 @@ export interface AppState {
     updatedGraph: any;
     moduleConfigData: any;
     experimentToSave: any;
+    graph: any;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -96,3 +97,6 @@ export type updateSelectedCellId = (cellId: string) => void;
 export type updateGraph = (graph: any) => void;
 export type updateModuleConfigData = (moduleConfigData: any, title: string) => void;
 export type updateGraphOnChangingPosition = (dataFormed: any) => void;
+export type setStageHasRun = (data: any) => void;
+export type setStageForm = (data: any) => void;
+export type setStageStatus = (data: any) => void;

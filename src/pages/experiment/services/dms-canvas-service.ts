@@ -48,7 +48,7 @@ class DmsCanvasService {
         joint.setTheme('modern');
         console.log('STEP 4');
         this.initializePaper();
-        if(isStencil) {
+        if (isStencil) {
             this.initializeStencil(stencil, group);
         }
         this.initializeSelection();
@@ -127,16 +127,13 @@ class DmsCanvasService {
                 const targetId = cellViewT.model.get('id');
 
                 // Prevent linking from input ports
-                if (magnetS?.getAttribute('port-group') === 'in')
-                    return false;
+                if (magnetS?.getAttribute('port-group') === 'in') return false;
 
                 // Preventing linking from output ports to input ports within the same element
-                if (cellViewS === cellViewT)
-                    return false;
+                if (cellViewS === cellViewT) return false;
 
                 // Prevent linking to output ports
-                if (magnetT?.getAttribute('port-group') === 'out')
-                    return false;
+                if (magnetT?.getAttribute('port-group') === 'out') return false;
 
                 // Prevent linking to ports with an existing link
                 for (const link of graph.getLinks()) {
@@ -144,8 +141,7 @@ class DmsCanvasService {
                     const linkTargetId = link.target().id;
 
                     if (linkSourceId && linkTargetId) {
-                        if (linkTargetId === targetId && link.target().port === magnetT?.getAttribute('port'))
-                            return false;
+                        if (linkTargetId === targetId && link.target().port === magnetT?.getAttribute('port')) return false;
                     }
                 }
 
@@ -175,7 +171,7 @@ class DmsCanvasService {
         });
 
         graph.on('add', function (cell, collection, opt) {
-            console.log('lets check on add inside dms-canvas-service ===>', graph?.getCells(), cell.attributes.attrs.idOfTransformer);
+            console.log('lets check on add inside dms-canvas-service ===>', graph?.getCells(), cell.id);
 
             if (cell.attributes.attrs.idOfTransformer) {
                 updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
