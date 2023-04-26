@@ -38,7 +38,8 @@ const useAppStore = create<AppState>((set) => ({
     updatedGraph: null,
     moduleConfigData: null,
     experimentToSave: null,
-    graph: null
+    graph: null,
+    experimentSelectedCompute: null
 }));
 
 export default useAppStore;

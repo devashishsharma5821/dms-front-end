@@ -20,6 +20,7 @@ export const connectionEstablished: connectionEstablishedType = () =>
     });
 export const receiveMessage: receiveMessageType = (action) =>
     useAppStore.setState((state: any) => {
+        console.log('lets check action inside recieveMessage ===>', action);
         let event = action;
         if (event.payload) {
             if (event.payload.alive) {

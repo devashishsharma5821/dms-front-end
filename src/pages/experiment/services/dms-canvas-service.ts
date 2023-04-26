@@ -177,7 +177,7 @@ class DmsCanvasService {
                 updateSelectedStageId(cell.attributes.attrs.idOfTransformer);
                 updateSelectedCellId(cell.id);
                 updateSelectedTransformer(cell.attributes.attrs.idOfTransformer);
-                console.log('lets check id of transformer ==>', cell);
+                console.log('lets check id of transformer ==>', cell.id);
             }
 
             updateGraph(graph);

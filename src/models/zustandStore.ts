@@ -55,6 +55,7 @@ export interface AppState {
     moduleConfigData: any;
     experimentToSave: any;
     graph: any;
+    experimentSelectedCompute: any;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -100,3 +101,5 @@ export type updateGraphOnChangingPosition = (dataFormed: any) => void;
 export type setStageHasRun = (data: any) => void;
 export type setStageForm = (data: any) => void;
 export type setStageStatus = (data: any) => void;
+export type updateExperimentSelectedCompute = (selectedCompute: any) => void;
+export type setInputOutputs = (payload: any) => void;

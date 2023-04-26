@@ -16,7 +16,6 @@ export class ComputeDetail {
     totalCores?: number;
 }
 
-
 export interface InstancePoolsType {
     instance_pool_id: string;
     instance_pool_name: string;
@@ -167,6 +166,7 @@ export interface ExperimentAppStoreState {
     selectedTransformer: any;
     selectedCellId: any;
     stages: any;
+    inferStageCompleted: any;
 }
 
 export interface SocketWrapperAppStoreState {
