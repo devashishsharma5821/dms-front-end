@@ -286,7 +286,8 @@ const Details = (props: DetailsPropsType) => {
                 .catch((error) => toast(getToastOptions(`${error.message}`, 'error')));
         }, 1000);
     };
-
+    console.log('STEP 10', JSON.parse(transformer?.schema?.jsonSchema))
+    console.log('STEP 11', formData)
     return (
         <>
             <Drawer isOpen={props?.isOpen} placement="right" onClose={props?.onClose} colorScheme={useColorModeValue('light.whiteText', 'dark.veryDarkGrayishBlue')}>

@@ -181,7 +181,7 @@ const Toolbar = (props: toolbarPropsType) => {
                         {sections.type === 'button' && (
                             <>
                                 <Divider orientation="vertical" ml={'14'} mr={'14'} height={'36px'} />
-                                <Button disabled={sections.disabled} variant="solid" bg={'light.button'} width={'80px'} height={'36px'} pl={'10'} pr={'10'}>
+                                <Button disabled={sections.disabled} variant="solid" bg={'default.toolbarButton'} color={'white'} width={'80px'} height={'36px'} pl={'10'} pr={'10'}>
                                     <RunArrow />
                                     <Text ml={'3'}>Run</Text>
                                 </Button>
@@ -221,7 +221,7 @@ const Toolbar = (props: toolbarPropsType) => {
                                                         <DeployedNotRunningIcon />
                                                     </div>
                                                 )}
-                                                <Box>{compute.name}</Box>
+                                                <Box>{compute.name}-{compute.id}</Box>
                                             </Center>
                                             <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>
                                                 <Text>{compute.totalMemory}</Text>
@@ -235,7 +235,7 @@ const Toolbar = (props: toolbarPropsType) => {
                         {props?.computeData?.length !== 0 && (
                             <Popover placement="bottom" isLazy={true} closeOnEsc={true} size={'sm'} variant="responsive">
                                 <PopoverTrigger>
-                                    <Button disabled={props?.computeData?.length === 0} mx="12px">
+                                    <Button variant='ghost' disabled={props?.computeData?.length === 0} mx="12px">
                                         <DownArrowToolbar />
                                     </Button>
                                 </PopoverTrigger>
@@ -257,7 +257,7 @@ const Toolbar = (props: toolbarPropsType) => {
                                                                 </Box>
                                                             )}
                                                             <Box fontWeight={'600'} fontSize={'16px'} color={textColor}>
-                                                                {compute?.name}
+                                                                {compute?.name}-{compute.id}
                                                             </Box>
                                                         </Center>
                                                         <Center fontWeight="medium" fontSize="sm" color={'default.containerAgGridRecords'}>

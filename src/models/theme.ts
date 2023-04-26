@@ -29,13 +29,18 @@ export const styles = {
 export const Button = defineStyleConfig({
     // Two variants: outline and solid
     variants: {
+        outline: {
+            color: 'white',
+            background: '#0073E6'
+        },
         solid: {
-            color: 'white'
+            color: 'white',
+            background: '#0073E6'
         }
     },
     defaultProps: {
         size: 'sm',
-        variant: 'solid'
+        variant: 'outline'
     }
 });
 
@@ -51,7 +56,6 @@ export const Popover = defineStyleConfig({
         }
     }
 });
-
 // Color Overrides
 export const colors = {
     default: {

@@ -24,10 +24,10 @@ const ZoomComponent = (props: any) => {
     };
     return (
         <>
-            <Box position="absolute" zIndex={10} bottom="50px" right="10px" display="flex" flexDirection="column">
-                <IconButton aria-label="Fit" variant="outline" icon={<FitToContent />} onClick={fitToContent} height={57} width="var(--chakra-space-56)" marginBottom={16} />
-                <IconButton aria-label="Zoom In" variant="outline" icon={<ZoomInIcon />} onClick={zoomIn} height={57} width="var(--chakra-space-56)" borderBottomRadius="none" />
-                <IconButton aria-label="Zoom Out" variant="outline" icon={<ZoomOutIcon />} onClick={zoomOut} height={57} width="var(--chakra-space-56)" borderTopRadius="none" />
+            <Box position="absolute" zIndex={10} bottom="60px" right="20px" display="flex" flexDirection="column">
+                <IconButton aria-label="Fit" bg={'white'} variant="ghost" icon={<FitToContent />} onClick={fitToContent} height={57} width="var(--chakra-space-56)" marginBottom={16} />
+                <IconButton aria-label="Zoom In" bg={'white'} variant="ghost" icon={<ZoomInIcon />} onClick={zoomIn} height={57} width="var(--chakra-space-56)" borderBottomRadius="none" />
+                <IconButton aria-label="Zoom Out" bg={'white'} variant="ghost" icon={<ZoomOutIcon />} onClick={zoomOut} height={57} width="var(--chakra-space-56)" borderTopRadius="none" />
             </Box>
         </>
 
