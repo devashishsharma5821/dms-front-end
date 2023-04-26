@@ -166,6 +166,7 @@ const ProjectDetails = (props: any) => {
             .catch((err) => {
                 updateSpinnerInfo(false);
                 toast(getToastOptions(`${err}`, 'error'));
+                updateSpinnerInfo(false);
             });
     };
     const handleEditDescriptionChange = (editChangeValue: string) => {
