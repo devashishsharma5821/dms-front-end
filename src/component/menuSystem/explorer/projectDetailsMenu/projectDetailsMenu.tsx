@@ -72,7 +72,7 @@ const ProjectDetailsMenu = (props: any) => {
                                                     </Square>
                                                 </AccordionButton>
                                             </h2>
-                                            <AccordionPanel pb={4}>
+                                            <AccordionPanel height={section.hasSubMenu.length >= 8 ? '330px' : 'auto'} overflowY={'auto'} overflowX={'hidden'} pb={4}>
                                                 {section.hasSubMenu.map((subSection: any, subSectionIndex: any) => {
                                                     return (
                                                         <Box
