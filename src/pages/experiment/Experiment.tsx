@@ -464,7 +464,7 @@ const ExperimentsPage = () => {
         let transformerOnPaper: any = [];
         const expDataDisplay = JSON.parse(ExperimentData.display);
         const expCore = JSON.parse(ExperimentData.core);
-        if (Object.keys(expCore).length > 0 && Object.keys(expDataDisplay).length > 0) {
+        if (expDataDisplay && Object.keys(expCore).length > 0 && expDataDisplay && Object.keys(expDataDisplay).length > 0) {
             const displayKeys = Object.keys(expDataDisplay.stages);
             const coreMapped = displayKeys.map((dis) => {
                 return {
