@@ -91,4 +91,5 @@ export interface DetailsAppStoreState {
     graph?: any;
     stages?: any;
     UserConfig?: any;
+    experimentSelectedCompute?: any;
 }

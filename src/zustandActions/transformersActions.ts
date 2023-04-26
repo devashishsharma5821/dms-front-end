@@ -13,7 +13,8 @@ import {
     updateGraphOnChangingPosition as updateGraphOnChangingPositionType,
     setStageHasRun as setStageHasRunType,
     setStageForm as setStageFormType,
-    setStageStatus as setStageStatusType
+    setStageStatus as setStageStatusType,
+    setInputOutputs as setInputOutputsType
 } from '../models/zustandStore';
 import { TransformerListResponse } from '../models/transformerListResponse';
 import { TransformerDetail } from '../models/transformerDetail';
@@ -195,8 +196,8 @@ export const updateGraph: updateGraphType = async (graph: any) => {
                     });
 
                     let position = cell.position();
-                    console.log("POSITION", cell.position().x)
-                    console.log("POSITION", cell.position().y)
+                    console.log('POSITION', cell.position().x);
+                    console.log('POSITION', cell.position().y);
                     position.x = Math.ceil(cell.position().x);
                     position.y = Math.ceil(cell.position().y);
                     experimentToSave.stages.push({
@@ -363,8 +364,6 @@ export const setStageHasRun: setStageHasRunType = (data: any) => {
     });
 };
 
-//   stage.formState = { currentForm: action.payload.currentForm };
-
 export const setStageForm: setStageFormType = (data: any) => {
     console.log('lets check data inside setStageForm ===>', data);
     useAppStore.setState((state: any) => {
@@ -398,6 +397,28 @@ export const setStageStatus: setStageStatusType = (data: any) => {
                 stage.hasRun = false;
             }
         }
+        return state;
+    });
+};
+
+// TODO: There are further functionality to cherry-pick from poc pipelineSlices.ts
+export const setInputOutputs: setInputOutputsType = (payload: any) => {
+    console.log('lets check payload inside setInputOutputs ===>', payload);
+    useAppStore.setState((state: any) => {
+        if (payload && payload.stageId && state.graph) {
+            let currentStage = state.stages?.find((stage: any) => stage.id === payload.stageId);
+            console.log('lets check going inside or not currentStage ====>', currentStage);
+
+            let currentCell = state.graph.getCells().find((cell: any) => cell.get('id') === payload.stageId);
+
+            console.log('lets check currentCell ===>', currentCell);
+
+            if (currentCell) {
+                let connections = state.graph.getConnectedLinks(currentCell, { outbound: true }); // Only get outbound connections
+                console.log('lets check connections in setInputOutputs ==>', connections);
+            }
+        }
+
         return state;
     });
 };

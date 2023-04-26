@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Box,
     Flex,
@@ -38,9 +38,16 @@ import { toolbarPropsType } from '../../models/toolbar';
 import DeployPipelineModal from '../modalSystem/DeployPipelineModal';
 import { LineageIcon } from '../../assets/icons';
 import LineageModal from '../modalSystem/LineageModal';
-import { getAndUpdateDbSettingsData } from '../../zustandActions/computeActions';
+import { getAndUpdateDbSettingsData, updateDmsComputeData } from '../../zustandActions/computeActions';
 import useAppStore from '../../store';
 import { updateSpinnerInfo } from '../../zustandActions/commonActions';
+import { updateExperimentSelectedCompute } from '../../zustandActions/experimentActions';
+import client from '../../apollo-client';
+import { dmsEditCompute } from '../../query';
+import { EditCompute } from '../../models/computeDetails';
+import { createStandaloneToast } from '@chakra-ui/react';
+import { getToastOptions } from '../../models/toastMessages';
+const { toast } = createStandaloneToast();
 
 const Toolbar = (props: toolbarPropsType) => {
     const textColor = useColorModeValue('default.blackText', 'default.whiteText');
@@ -80,6 +87,38 @@ const Toolbar = (props: toolbarPropsType) => {
         } else {
             createModal.onOpen();
         }
+    };
+
+    useEffect(() => {
+        const defaultSelectedCompute = props?.computeData.find((computeData) => computeData.is_default === true);
+        updateExperimentSelectedCompute(defaultSelectedCompute);
+    }, [props?.computeData]);
+
+    const onSelectedItemClickHandler = (compute: any) => {
+        console.log('lets check compute data ===>', compute);
+        if (compute.is_default === true) {
+            return;
+        }
+        client
+            .mutate<EditCompute<any>>({
+                mutation: dmsEditCompute(compute.id, true)
+            })
+            .then(() => {
+                const newComputeDataWithDefault = props?.computeData.map((data: any) => {
+                    if (data.id === compute.id) {
+                        data.is_default = true;
+                        return data;
+                    } else if (data.is_default === true) {
+                        data.is_default = false;
+                        return data;
+                    } else {
+                        return data;
+                    }
+                });
+
+                updateDmsComputeData(newComputeDataWithDefault);
+            })
+            .catch((error) => toast(getToastOptions(error?.message, 'error')));
     };
 
     return (
@@ -205,7 +244,7 @@ const Toolbar = (props: toolbarPropsType) => {
                                         {props?.computeData?.length !== 0 &&
                                             props?.computeData?.map((compute: any) => {
                                                 return (
-                                                    <Flex pb={'10px'} justifyContent={'space-between'}>
+                                                    <Flex pb={'10px'} justifyContent={'space-between'} style={{ cursor: 'pointer' }} onClick={onSelectedItemClickHandler.bind(null, compute)}>
                                                         <Center>
                                                             {compute?.status === 'RUNNING' ? (
                                                                 <Box mr={'8'}>

@@ -31,7 +31,11 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
         },
         onMessage: (ev: MessageEvent) => {
             console.log('Socket Receive message', JSON.parse(ev.data));
+
             const message = JSON.parse(ev.data);
+            if (message?.payload?.experiment) {
+                console.log('lets check experimentRecieveMessasage  =>', message);
+            }
             if (message?.payload?.action === 'ALIVE') {
                 const msgComputeId = message?.subject?.split('.')[2];
                 let updateFlag = false;
@@ -73,7 +77,7 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
 
     const disperseMessage = (messages: Array<disperseMessage>) => {
         messages.forEach((msg: disperseMessage) => {
-            console.log('jalaj', msg);
+            console.log('lets check message now for dispersing ===>', msg);
             // if (Object.keys(msg)?.length > 0) {
             //     if (msg?.content?.action === Action.Publish) {
             //         checkAlive(msg);
