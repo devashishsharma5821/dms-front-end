@@ -113,7 +113,7 @@
     },
     "enable_autoscaling": {
         "type": "switch",
-        "label": "Enable autoscalings",
+        "label": "Enable autoscaling",
         "className": "enableAutoscaling",
         "uiSchema": {
             "grid-column": "auto / span 8",
