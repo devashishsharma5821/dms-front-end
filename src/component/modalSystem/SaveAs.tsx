@@ -24,7 +24,7 @@ import { DownArrowShare } from '../../assets/icons';
 import useAppStore from '../../store';
 import { GetAllProjectsAppStoreState, GetSingleProjectAppStoreState } from '../../models/project';
 import { getAndUpdateAllProjectsData, getAndUpdateSingleProjectData } from '../../zustandActions/projectActions';
-import { getProjectNameAndLabelsForSelect } from '../../utils/common.utils';
+import { convertApolloError, getProjectNameAndLabelsForSelect } from '../../utils/common.utils';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CloneExperiment, CloneExperimentDetail } from '../../models/experimentModel';
 import client from '../../apollo-client';
@@ -115,7 +115,10 @@ const SaveAs = (props: any) => {
                                             navigate(`/projectDetails/${selectedProjectId}/experiment/${response.data?.dmsCloneExperiment.experiment_id}`);
                                             setSelectedProjectId('');
                                         })
-                                        .catch((err) => toast(getToastOptions(`${err}`, 'error')));
+                                        .catch((err) => {
+                                            setLoading(false);
+                                            toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
+                                        });
                                 }}
                             >
                                 {({ handleSubmit, errors, touched , isValid, dirty,values}) => (

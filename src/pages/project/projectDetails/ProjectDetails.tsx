@@ -401,7 +401,7 @@ const ProjectDetails = (props: any) => {
                                                         </Text>
                                                     </Center>
                                                 </Box>
-                                                <Box ml={'145px'}>
+                                                <Box ml={'168px'}>
                                                     <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                         Project Name
                                                     </Text>

@@ -79,7 +79,8 @@ export const convertTime = (date: any, isLastModifiedNeeded: boolean) => {
     if (isLastModifiedNeeded) {
         return moment.utc(date).local().fromNow();
     } else {
-        return moment.utc(date).local().format('MM/DD/YYYY HH:MM A');
+        const utcDate = moment.utc(date).format();
+        return moment.utc(utcDate).local().format('MM/DD/YYYY HH:mm:ss A');
     }
 };
 
@@ -196,7 +197,8 @@ export const getStencilMarkup = (currentObj: any, stencilBg: any, stencilStroke:
             root: {
                 dataTooltip: currentObj?.name,
                 dataTooltipPosition: 'left',
-                dataTooltipPositionSelector: '.joint-stencil'
+                dataTooltipPositionSelector: '.joint-stencil',
+                fontFamily: 'IBM Plex Sans',
             },
             body: {
                 rx: 2,

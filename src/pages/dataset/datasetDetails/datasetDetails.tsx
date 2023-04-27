@@ -90,9 +90,10 @@ const DatasetDetails = (props: any) => {
     }, []);
 
     useEffect(() => {
-        if (DatasetDetailData !== null && SingleProjectData !== null && AllUsersData !== null) {
+        if (DatasetDetailData && SingleProjectData && AllUsersData && DatasetDetailData !== null && SingleProjectData !== null && AllUsersData !== null) {
             console.log('Shirin here is the dataset details data', DatasetDetailData);
-
+            console.log('Shirin here is the dataset details data', SingleProjectData);
+            console.log('Shirin here is the dataset details data', AllUsersData);
             setInlineDatasetName(DatasetDetailData.name);
             updateSpinnerInfo(false);
             setAccessUserList(getFormattedUserData(AllUsersData, SingleProjectData));
@@ -281,7 +282,7 @@ const DatasetDetails = (props: any) => {
                                                             </Text>
                                                         </Center>
                                                     </Box>
-                                                    <Box ml={'145px'}>
+                                                    <Box ml={'185px'}>
                                                         <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                             Dataset Name
                                                         </Text>

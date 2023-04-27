@@ -13,6 +13,7 @@ import { GetAllProjects, GetAllProjectsDetail, GetSingleProject, GetSingleProjec
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../models/toastMessages';
 import { GetSingleDataset, GetSingleDatasetAppStoreState } from '../models/dataset';
+import { updateSpinnerInfo } from './commonActions';
 const { toast } = createStandaloneToast();
 
 export const getAndUpdateAllProjectsData: getAndUpdateAllProjectsDataType = async () => {
@@ -49,6 +50,8 @@ export const getAndUpdateSingleDatasetData: getAndUpdateSingleDatasetDataType = 
     });
     if (response.errors?.length) {
         toast(getToastOptions(response.errors[0].message, 'error'));
+        updateSpinnerInfo(false);
+
     }
     useAppStore.setState(() => ({ DatasetDetailData: response?.data?.dmsDataSource }));
 };

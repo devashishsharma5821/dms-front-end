@@ -8,7 +8,6 @@ import { DownArrow } from '../../../assets/icons';
 import ExperimentModal from '../../../component/modalSystem/ExperimentModal';
 import CreateDatasetModal from '../../../component/modalSystem/CreateDatasetModal';
 import CreateProjectModal from '../../../component/modalSystem/CreateProjectModal';
-
 const ProjectDetailsGrid = (props: any) => {
     const tabTextColor = useColorModeValue('default.darkGrayCreate', 'dark.white');
     const gridRefDataSources = useRef<AgGridReact<any>>(null);
@@ -66,7 +65,7 @@ const ProjectDetailsGrid = (props: any) => {
     };
 
     const navigateToDataset = (id: any) => {
-        navigate(`/datasetDetails/${id}`);
+        navigate(`/datasetDetails/${props?.projectId}/${id}`);
     };
 
     const renderExperimentId = (params: any) => {

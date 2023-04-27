@@ -14,6 +14,7 @@
         "@chakra-ui/react": "^2.3.5",
         "@emotion/react": "^11.9.0",
         "@emotion/styled": "^11.8.1",
+        "@fontsource/ibm-plex-sans": "^4.5.13",
         "@rjsf/chakra-ui": "^5.0.0-beta.10",
         "@rjsf/core": "^5.0.0-beta.10",
         "@rjsf/utils": "^5.0.0-beta.10",

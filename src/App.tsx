@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useMsal, useAccount, useIsAuthenticated } from '@azure/msal-react';
 import { EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { protectedResources } from './authConfig';
-
 import UserConfiguration from './user-config';
 import { ENVIRONMENT } from './environments';
 import { Box, Flex } from '@chakra-ui/react';
