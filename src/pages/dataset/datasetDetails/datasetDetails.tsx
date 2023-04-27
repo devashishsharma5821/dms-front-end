@@ -282,7 +282,7 @@ const DatasetDetails = (props: any) => {
                                                             </Text>
                                                         </Center>
                                                     </Box>
-                                                    <Box ml={'145px'}>
+                                                    <Box ml={'185px'}>
                                                         <Text color={textColor2} mt={'14px'} fontWeight={600} lineHeight={'22px'}>
                                                             Dataset Name
                                                         </Text>
