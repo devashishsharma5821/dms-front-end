@@ -32,8 +32,11 @@
     --ag-header-foreground-color: #333333;
     --ag-header-background-color: #f6f6f6;
     --ag-font-weight: 400px;
-    --ag-font-size: 15px;
+    --ag-font-size: 16px;
     --ag-font-family: 'IBM Plex Sans';
+}
+span.ag-header-cell-text {
+    font-family: 'IBM Plex Sans';
 }
 //.chakra-ui-light {
 //    --chakra-fontSizes-4xl: 20px;

@@ -60,13 +60,14 @@ const CreateDatasetFormScreen = (props: any) => {
     const [sorceSelectDataset, setSorceSelectDataset] = useState(sourceData);
     const projectModal = useDisclosure();
     const handleDataSetNameChange = (evt: any) => {
-        setDatasetName(evt.target.value);
-        const formFields = {
-            datasetName: evt.target.value,
-            projectSelected: projectSelected
-        };
-        setFormFields(formFields);
-        props.handleFormFields(formFields);
+            setDatasetName(evt.target.value.trim());
+            const formFields = {
+                datasetName: evt.target.value,
+                projectSelected: projectSelected
+            };
+            setFormFields(formFields);
+            props.handleFormFields(formFields);
+
     };
     const handleProjectChange = (evt: any) => {
         setProjectSelected(evt.target.value);
