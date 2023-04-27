@@ -1,19 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as joint from '@antuit/rappid-v1';
 import { getComputeListData } from '../../query';
-import { startCase } from 'lodash';
+import { AnyKindOfDictionary, startCase } from 'lodash';
 import { useColorModeValue, useDisclosure, useColorMode, Box, IconButton, Flex, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Button } from '@chakra-ui/react';
 import { useApolloClient } from '@apollo/client';
 import { ComputeDetailListResponse, ExperimentAppStoreState, DmsComputeData } from '../../models/computeDetails';
 import { GET_DATABRICKS_CREDS } from '../../query/index';
 import { DataBricksTokenResponse } from '../../models/dataBricksTokenResponse';
-import { DataBricksTokenDetails, InputOutput, InputOutputType, PersistedExperiment } from '../../models/types';
+import { DataBricksTokenDetails, InputOutput, InputOutputPayload, InputOutputType, PersistedExperiment, SingleInputOutput, StageStatus } from '../../models/types';
 import Toolbar from '../../component/toolbar/Toolbar';
 import { cloneDeep } from 'lodash';
 import useAppStore from '../../store';
 import { v4 } from 'uuid';
 import { Action, Message } from '@antuit/web-sockets-gateway-client';
-import { addStages, getAndUpdateTransformersData, setInputOutputs, updateSelectedStageId, updateSelectedTransformer, updateTransformersData } from '../../zustandActions/transformersActions';
+import {
+    addStages,
+    expandSchema,
+    getAndUpdateTransformersData,
+    handleConnect,
+    handleDisconnect,
+    setExpandedSchema,
+    setInputOutputs,
+    setStageForm,
+    setStageHasRun,
+    setStageStatus,
+    updateGraph,
+    updateSelectedStageId,
+    updateSelectedTransformer,
+    updateTransformersData
+} from '../../zustandActions/transformersActions';
 import '@antuit/rappid-v1/build/package/rappid.css';
 import './canvasStyles/style.css';
 import './canvasStyles/style.modern.css';
@@ -31,7 +46,7 @@ import transformerMenuConf from '../../models/transformersConfig';
 import { g, shapes } from '@antuit/rappid-v1';
 import { updateDmsComputeData } from '../../zustandActions/computeActions';
 import { getAndUpdateAllUsersData, updateDmsDatabricksCredentialsValidToken, updateSpinnerInfo } from '../../zustandActions/commonActions';
-import { hasSubscribed } from '../../zustandActions/socketActions';
+import { hasSubscribed, submitMessage } from '../../zustandActions/socketActions';
 import DoubleAngleRightIcon from '../../assets/icons/DoubleAngleRightIcon';
 import DoubleAngleLeftIcon from '../../assets/icons/DoubleAngleLeftIcon';
 import ZoomComponent from '../../component/zoomer/Zoomer';
@@ -49,6 +64,11 @@ import { Dictionary } from '../../models/schema';
 import { Port } from '../../models/transformer';
 import TransformerModel from '../../models/transformerModal';
 import { uniqueId } from 'underscore';
+import { SchemaHelper } from '../../helpers/SchemaHelper';
+import { JSONSchemaExpander, ValidateObjectResult } from '../../temp/json_schema_expander';
+import { ValidationHelper } from '../../helpers/ValidationHelpers';
+import { BusHelper } from '../../helpers/BusHelper';
+import { disperseMessage } from '../../models/messages';
 const { toast } = createStandaloneToast();
 
 interface ExtendedEmbeddedImage extends shapes.standard.EmbeddedImage {
@@ -61,20 +81,37 @@ const ExperimentsPage = () => {
 
     // New Consts For the new ProjectDetailsMenu Page I am designing.
     const elementRef = React.useRef<HTMLDivElement>(null);
-    const [DmsComputeData, UserConfig, connectionState, selectedStageId, ExperimentData, TransformersData, SingleProjectData, selectedTransformer, selectedCellId, stages, inferStageCompleted] =
-        useAppStore((state: ExperimentAppStoreState) => [
-            state.DmsComputeData,
-            state.UserConfig,
-            state.connectionState,
-            state.selectedStageId,
-            state.ExperimentData,
-            state.TransformersData,
-            state.SingleProjectData,
-            state.selectedTransformer,
-            state.selectedCellId,
-            state.stages,
-            state.inferStageCompleted
-        ]);
+    const [
+        DmsComputeData,
+        UserConfig,
+        connectionState,
+        selectedStageId,
+        ExperimentData,
+        TransformersData,
+        SingleProjectData,
+        selectedTransformer,
+        selectedCellId,
+        stages,
+        inferStageCompleted,
+        graph,
+        link,
+        isConnect
+    ] = useAppStore((state: ExperimentAppStoreState) => [
+        state.DmsComputeData,
+        state.UserConfig,
+        state.connectionState,
+        state.selectedStageId,
+        state.ExperimentData,
+        state.TransformersData,
+        state.SingleProjectData,
+        state.selectedTransformer,
+        state.selectedCellId,
+        state.stages,
+        state.inferStageCompleted,
+        state.graph,
+        state.link,
+        state.isConnect
+    ]);
     const navigate = useNavigate();
     const uuid = v4();
     const computeRunningModal = useDisclosure();
@@ -92,6 +129,7 @@ const ExperimentsPage = () => {
     const [computeStats, setComputeStats] = useState<string | undefined>();
     const [transformedNewDataForStencil, setTransformedNewDataForStencil] = useState<any>({});
     const [transformersGroup, setTransformersGroup] = useState<any>({});
+    const [initialized, setInitialized] = useState<boolean>(false);
     const { colorMode } = useColorMode();
     const [paperScrollerState, setPaperScrollerState] = React.useState<any>(undefined);
     const [newComputedata, setNewComputedata] = useState<DmsComputeData[]>([]);
@@ -106,6 +144,8 @@ const ExperimentsPage = () => {
     const transformerMenuDrawer = useDisclosure();
     const [rappidData, setRappidData] = React.useState<DmsCanvasService>();
     const [drawerInitialized, setDrawerInitialzed] = React.useState<boolean>(false);
+
+    const stage = stages.find((stage: any) => stage.id === selectedCellId);
 
     let dmsComputeRunningStatusIsDefaultOne;
 
@@ -167,6 +207,192 @@ const ExperimentsPage = () => {
             }
         }
     }, [inferStageCompleted]);
+
+    // console.log('lets check link gets updated from store jalaj 4', link, ' source ===>', link?.get('source').id, '  target ===>', link?.get('target').id);
+    const memoizeLinkValue: any = useMemo(() => {
+        console.log('jalaj 5');
+        return link;
+    }, [link]);
+    useEffect(() => {
+        console.log('lets check link gets updated from store jalaj 3', memoizeLinkValue, ' source ===>', memoizeLinkValue?.get('source').id, '  target ===>', memoizeLinkValue?.get('target').id);
+        if (memoizeLinkValue?.get('source')?.id && memoizeLinkValue?.get('target')?.id) {
+            console.log('lets check getting link or not');
+            let source = link.get('source');
+            let target = link.get('target');
+            let transformerCellFrom = rappidData?.graph.getCell(source.id);
+            let transformerCellTo = rappidData?.graph.getCell(target.id);
+
+            if (transformerCellFrom instanceof TransformerModel && transformerCellTo instanceof TransformerModel) {
+                let transformerFrom = transformerCellFrom.getTransformer();
+                let transformerTo = transformerCellTo.getTransformer();
+                let fromStageOutput: SingleInputOutput = { stageId: transformerFrom.stageId, inputOutputId: source.port };
+                let toStageInput: SingleInputOutput = { stageId: transformerTo.stageId, inputOutputId: target.port };
+                if (isConnect) {
+                    // Handle the connection
+
+                    handleConnect({
+                        fromStage: fromStageOutput,
+                        toStage: toStageInput
+                    });
+
+                    // Expand the schema
+                    let stage = stages?.find((st: any) => st.id === transformerTo.stageId);
+                    let transformer = TransformersData?.find((t: any) => t.id === stage?.transformerId);
+                    if (stage && transformer) {
+                        expandSchema({
+                            stageId: stage.id,
+                            schema: transformer.schema
+                        });
+                    }
+                } else {
+                    // Handle the disconnection
+                    handleDisconnect({
+                        fromStage: fromStageOutput,
+                        toStage: toStageInput
+                    });
+                }
+            }
+        }
+    }, [memoizeLinkValue]);
+
+    const isSomeInputsInValid = (transformer: any, stage: any) => {
+        console.log('lets check stages inside isSomeInputsInValid ===>', stage);
+        let isSomeInputsInValid = false;
+        stage?.inputs?.forEach((inp: any, inpIndex: number) => {
+            if (inp?.isConnected && !inp?.isValid) {
+                isSomeInputsInValid = true;
+            } else if (!inp?.isConnected && transformer?.inputs[inpIndex]?.isRequired) {
+                isSomeInputsInValid = true;
+            } else if (!inp?.isConnected && !transformer?.inputs[inpIndex]?.isRequired) {
+                isSomeInputsInValid = false;
+            } else {
+                isSomeInputsInValid = false;
+            }
+        });
+        return isSomeInputsInValid;
+    };
+
+    // Not checked through console
+    const setStageValidity = (expander: JSONSchemaExpander | null, updatedSchema: string) => {
+        // const stage = stages.find((stage: any) => stage.id === selectedCellId);
+        console.log('lets check stage here inside setStageValidity ===>', stage);
+        if (stage && stage.inputs) {
+            if (stage.inputs && stage.inputs.length === 0) {
+                const stageOutputInValid = stage.outputs.some((out: any) => !out.isValid);
+                setStageStatus({ stageId: stage.id, status: stageOutputInValid ? StageStatus.Invalid : StageStatus.Valid });
+                return { isValid: stageOutputInValid };
+            } else {
+                const filteredTransformer = TransformersData?.filter((transformer) => {
+                    return transformer.id === stages.transformerId;
+                })[0];
+                let formData = stage?.formState?.currentForm?.formData;
+                if (!isSomeInputsInValid(filteredTransformer, stage) && formData && Object.keys(formData).length > 0 && stages) {
+                    let filteredObj: ValidateObjectResult;
+                    if (expander != null) {
+                        filteredObj = expander.validate_object(formData);
+                    } else {
+                        filteredObj = { isModified: false, object: formData };
+                    }
+
+                    let valResult = ValidationHelper.validate(updatedSchema, filteredObj.object);
+
+                    if (valResult && valResult.length === 0) {
+                        if (filteredObj.isModified) {
+                            setStageForm({
+                                stageId: stage.id,
+                                currentForm: { formData: filteredObj.object }
+                            });
+                            setStageStatus({ stageId: stage.id, status: StageStatus.Warning });
+                            return { isValid: true, updatedFormData: filteredObj.object };
+                        }
+                    } else {
+                        setStageStatus({ stageId: stage.id, status: StageStatus.Invalid });
+                        return { isValid: false };
+                    }
+                } else {
+                    setStageStatus({ stageId: stage.id, status: StageStatus.Invalid });
+                    return { isValid: false };
+                }
+            }
+        }
+        return { isValid: false };
+    };
+
+    const triggerInference: any = (formData: any) => {
+        // const stage = stages.find((stage: any) => stage.id === selectedCellId);
+
+        if (formData && Object.keys(formData).length > 0 && stage && graph && stages && UserConfig && experimentId) {
+            const messageQue: Array<disperseMessage> = [];
+
+            setStageHasRun({ stageId: stage.id, hasRun: false });
+
+            if (projectId) {
+                messageQue.push({ content: { action: Action?.Subscribe, subject: `dms_pid.out.355` } });
+                let msg = BusHelper.GetInferOutputRunRequestMessage(
+                    {
+                        experimentId: parseInt(experimentId),
+                        project_id: parseInt(projectId),
+                        userId: '355',
+                        stages: BusHelper.getInferRunStages(stage, graph, stages, formData),
+                        stageId: stage.id,
+                        opId: uuid
+                    },
+                    true
+                );
+                submitMessage({ content: msg });
+            }
+        }
+    };
+
+    useEffect(() => {
+        updateGraph(rappidData?.graph, stages);
+    }, [stages]);
+
+    useEffect(() => {
+        // const stage = stages.find((stage: any) => stage.id === selectedCellId);
+        console.log('lets check stages are updating or not', stages, ' current stage ===>', stage);
+        if (stage?.inputs && stages && TransformersData) {
+            const transformer: any = TransformersData?.find((t: any) => t.id === stage.transformerId);
+            console.log('lets check transformer inside useEffect ===>', transformer);
+
+            let isSomeInputsInValidVariable = isSomeInputsInValid(transformer, stage);
+            console.log('lets check isSomeInputsInValidVariable ===>', isSomeInputsInValidVariable);
+            let { schema, expander } = SchemaHelper.GetExpandedSchema(stage.id, stages, transformer?.schema, isSomeInputsInValidVariable);
+            console.log('lets check schema inside ==>', schema, 'expander ===>', expander);
+            setExpandedSchema({
+                stageId: stage.id,
+                expandedSchema: schema
+            });
+
+            // if (!initialized) {
+            //     setInitialized(true);
+            //     if (props.isRestoring) return;
+            // }
+
+            let { isValid, updatedFormData } = setStageValidity(expander, schema);
+
+            if (isValid) {
+                if (updatedFormData) {
+                    triggerInference(updatedFormData);
+                }
+            } else {
+                let payload: InputOutputPayload = {
+                    stageId: stage.id,
+                    inputOutputs: []
+                };
+
+                payload.inputOutputs = stage.outputs.map((output: any) => {
+                    return {
+                        id: output.id,
+                        inferredOutput: output.inferredOutput,
+                        signature: output.signature,
+                        isValid: false
+                    };
+                });
+                setInputOutputs(payload);
+            }
+        }
+    }, [stage?.inputs, stages, TransformersData]);
 
     let unsubscribe: any = null;
     const checkComputeStatus = (dmsComputes: DmsComputeData[]) => {
@@ -587,6 +813,7 @@ const ExperimentsPage = () => {
             });
         }
         let inputs = selectedTransformer?.inputs;
+        console.log('lets check inputs of for the connetion part ===>', inputs);
         let inPorts = new Array<Port>();
         if (inputs?.length > 0) {
             inputs.forEach((input: any) => {

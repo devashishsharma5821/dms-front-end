@@ -39,7 +39,9 @@ const useAppStore = create<AppState>((set) => ({
     moduleConfigData: null,
     experimentToSave: null,
     graph: null,
-    experimentSelectedCompute: null
+    experimentSelectedCompute: null,
+    link: null,
+    isConnect: false
 }));
 
 export default useAppStore;

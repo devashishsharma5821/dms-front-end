@@ -167,6 +167,9 @@ export interface ExperimentAppStoreState {
     selectedCellId: any;
     stages: any;
     inferStageCompleted: any;
+    graph: any;
+    link: any;
+    isConnect: any;
 }
 
 export interface SocketWrapperAppStoreState {

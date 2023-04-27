@@ -56,6 +56,8 @@ export interface AppState {
     experimentToSave: any;
     graph: any;
     experimentSelectedCompute: any;
+    link: any;
+    isConnect: boolean;
 }
 
 export type updateI18N = (translation: {}) => void;
@@ -95,7 +97,7 @@ export type updateSelectedStageId = (stageId: any) => void;
 export type updateSelectedTransformer = (stageId: any) => void;
 export type addStages = (stage: any) => void;
 export type updateSelectedCellId = (cellId: string) => void;
-export type updateGraph = (graph: any) => void;
+export type updateGraph = (graph: any, stages: any) => void;
 export type updateModuleConfigData = (moduleConfigData: any, title: string) => void;
 export type updateGraphOnChangingPosition = (dataFormed: any) => void;
 export type setStageHasRun = (data: any) => void;
@@ -103,3 +105,4 @@ export type setStageForm = (data: any) => void;
 export type setStageStatus = (data: any) => void;
 export type updateExperimentSelectedCompute = (selectedCompute: any) => void;
 export type setInputOutputs = (payload: any) => void;
+export type setExpandedSchema = (payload: any) => void;
