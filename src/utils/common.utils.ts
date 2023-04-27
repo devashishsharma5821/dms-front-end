@@ -196,7 +196,8 @@ export const getStencilMarkup = (currentObj: any, stencilBg: any, stencilStroke:
             root: {
                 dataTooltip: currentObj?.name,
                 dataTooltipPosition: 'left',
-                dataTooltipPositionSelector: '.joint-stencil'
+                dataTooltipPositionSelector: '.joint-stencil',
+                fontFamily: 'IBM Plex Sans',
             },
             body: {
                 rx: 2,

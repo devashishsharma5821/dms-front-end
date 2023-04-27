@@ -100,7 +100,7 @@ const CreateDataset = (props: any) => {
             datasetName: '',
             projectSelected: ''
         });
-        toast(getToastOptions(`File Uploaded Successfully`, 'success'));
+        toast(getToastOptions(`Dataset Created Successfully`, 'success'));
     };
     const navigateToNextScreen = () => {
         if (screenState.screen1) {

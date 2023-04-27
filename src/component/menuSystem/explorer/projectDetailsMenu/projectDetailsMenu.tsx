@@ -18,7 +18,7 @@ const ProjectDetailsMenu = (props: any) => {
     const checkForSubMenuOrNavigation = (projectId: string, subSectionId: any, type: string) => {
         if (type === 'Dataset') {
             // TODO Navigate to Dataset
-            navigate(`/datasetDetails/${subSectionId.id}`);
+            navigate(`/datasetDetails/${projectId}/${subSectionId.id}`);
         } else if (type === 'Experiment') {
             navigate(`/projectDetails/${projectId}/experiment/${subSectionId.id}`);
         }

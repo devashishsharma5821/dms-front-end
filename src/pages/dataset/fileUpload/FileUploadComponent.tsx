@@ -1,12 +1,13 @@
 import React from 'react';
 import './FileUploadComponent.scss';
-import { Button, useColorModeValue, Text } from '@chakra-ui/react';
+import { Button, useColorModeValue, Text, Box } from '@chakra-ui/react';
 import client from '../../../apollo-client';
 import { UploadCSV, UploadCSVDetail } from '../../../models/dataset';
 import { uploadCSVDataset } from '../../../query';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { getToastOptions } from '../../../models/toastMessages';
 import { updateSpinnerInfo } from '../../../zustandActions/commonActions';
+import { convertApolloError } from '../../../utils/common.utils';
 const { toast } = createStandaloneToast();
 
 // drag drop file component
@@ -33,13 +34,14 @@ const FileUploadComponent = (props: any) => {
                 .then((response: any) => {
                     setTimeout(() => {
                         props.getResponseFromFileUpload(response.data.dmsDatabricksUploadDBFS);
+                        toast(getToastOptions(`${files[0].name} uploaded`, 'success'));
                         updateSpinnerInfo(false);
                         props.disableStatus(false);
                     },200)
                 })
-                .catch(() => {
+                .catch((err: any) => {
                     updateSpinnerInfo(false);
-                    toast(getToastOptions(`Upload Error`, 'error'));
+                    toast(getToastOptions(`${convertApolloError(err)}`, 'error'));
                 });
         }
     };
@@ -82,7 +84,7 @@ const FileUploadComponent = (props: any) => {
 
     return (
         <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
-            <input ref={inputRef} type="file" onClick={(e: any) => (e.target.value = null)} id="input-file-upload" accept=".csv,.parquet" multiple={true} onChange={handleChange} />
+            <input ref={inputRef} type="file" onClick={(e: any) => (e.target.value = null)} id="input-file-upload" accept=".csv,.parquet" multiple={false} onChange={handleChange} />
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? 'drag-active' : ''}>
                 <div>
                     <Text fontSize={'21px'} fontWeight={600} color={titleDarkCSV} mt={'86px'}>
