@@ -69,7 +69,7 @@ const DatasetDetails = (props: any) => {
     //         </ButtonGroup>
     //     ) : (
     //         <Flex>
-    //             <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
+    //             <Button variant={'none'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'28px'} width={'48px'} height={'48px'}>
     //                 <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
     //             </Button>
     //         </Flex>
@@ -424,7 +424,13 @@ const DatasetDetails = (props: any) => {
                                     </Text>
                                 </Flex>
                                 <Box height={'80%'} width={'98%'}>
-                                    <AgGridReact<any> onFirstDataRendered={() => gridRefSchema?.current!?.api?.sizeColumnsToFit()} ref={gridRefSchema} rowData={rowDataSchema} columnDefs={columnDefsSchema} animateRows={true}></AgGridReact>
+                                    <AgGridReact<any>
+                                        onFirstDataRendered={() => gridRefSchema?.current!?.api?.sizeColumnsToFit()}
+                                        ref={gridRefSchema}
+                                        rowData={rowDataSchema}
+                                        columnDefs={columnDefsSchema}
+                                        animateRows={true}
+                                    ></AgGridReact>
                                 </Box>
                             </Box>
                             <Box
