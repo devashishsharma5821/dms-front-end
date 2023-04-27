@@ -68,7 +68,7 @@ const SocketWrapper: React.FC<React.PropsWithChildren> = (props) => {
             // if(message.content?.)
             // checkAlive(message.content);
         }
-    }, [message, connectionState.connected]);
+    }, [message, connectionState?.connected]);
 
     useEffect(() => {
         if (DmsComputeData !== null) checkComputeStatus(DmsComputeData);

@@ -151,7 +151,7 @@ export type StageProps = {
 };
 
 export enum StageStatus {
-    VALID = 'VALID',
+    Valid = 'VALID',
     Invalid = 'Invalid',
     Warning = 'Warning',
     Pending = 'Pending'
