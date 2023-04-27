@@ -101,7 +101,7 @@ const ProjectDetails = (props: any) => {
             </ButtonGroup>
         ) : (
             <Flex>
-                <Button variant={'solid'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'25px'} width={'48px'} height={'48px'}>
+                <Button variant={'non'} _hover={{ bg: 'none' }} {...getEditButtonProps()} bg={'textColor'} top={'25px'} width={'48px'} height={'48px'}>
                     <PencilIcon color={'#666C80'} width={'40px'} height={'40px'} />
                 </Button>
             </Flex>

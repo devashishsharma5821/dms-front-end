@@ -86,8 +86,7 @@ const Header = (props: any) => {
                             >
                                 Share
                             </Button>
-                            {
-                                editAccessModal.isOpen &&
+                            {editAccessModal.isOpen && (
                                 <Share
                                     isOpen={editAccessModal.isOpen}
                                     retainData={accessUserListCreateMode}
@@ -95,8 +94,7 @@ const Header = (props: any) => {
                                     isEdit={true}
                                     onCreateUserAccess={(userList: AllUsers) => createUserAccessForCreateProjectMode(userList)}
                                 ></Share>
-                            }
-
+                            )}
                         </Box>
                     </>
                 )}
@@ -116,7 +114,6 @@ const Header = (props: any) => {
                                         <HeaderDownArrow />
                                     </Box>
                                 </Flex>
-
                             </MenuButton>
                             <MenuList borderRadius={'0'} minWidth={'110'} color={textColor} mt={'8'} ml={'-45px'} pt={'0px'} pb={'0px'}>
                                 <MenuItem pl={'9px'}>
@@ -145,7 +142,6 @@ const Header = (props: any) => {
                                 <HeaderDownArrow />
                             </Box>
                         </Flex>
-
                     </MenuButton>
                     <MenuList width={127} borderRadius={'0'} mt={'10'} ml={'30px'} color={textColor2} pt={'0px'} pb={'0px'}>
                         <MenuItem onClick={myProfileModal.onOpen}>My Profile</MenuItem>
