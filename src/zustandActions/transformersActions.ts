@@ -14,7 +14,8 @@ import {
     setStageHasRun as setStageHasRunType,
     setStageForm as setStageFormType,
     setStageStatus as setStageStatusType,
-    setInputOutputs as setInputOutputsType
+    setInputOutputs as setInputOutputsType,
+    setExpandedSchema as setExpandedSchemaType
 } from '../models/zustandStore';
 import { TransformerListResponse } from '../models/transformerListResponse';
 import { TransformerDetail } from '../models/transformerDetail';
@@ -26,6 +27,7 @@ import { getToastOptions } from '../models/toastMessages';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { updateSpinnerInfo } from './commonActions';
 import TransformerModel from '../models/transformerModal';
+import { SchemaHelper } from '../helpers/SchemaHelper';
 const { toast } = createStandaloneToast();
 
 export const getAndUpdateTransformersData: getAndUpdateTransformersDataType = async () => {
@@ -96,10 +98,11 @@ export const addStages: addStagesType = (stage: any) =>
                 signature: ''
             };
 
-            newStages = [...state.stages, newStage];
+            // newStages = [...state.stages, newStage];
         }
-
-        return { stages: newStages };
+        console.log('lets check newStages where we are updating stages   ==>', newStages, ' newStage ===>', newStage);
+        return { stages: [...state.stages, newStage] };
+        // return state.stages.push(newStage);
     });
 
 export const updateModuleConfigData: updateModuleConfigDataType = async (moduleConfigData: any, title: string) => {
@@ -136,7 +139,7 @@ export const updateModuleConfigData: updateModuleConfigDataType = async (moduleC
     }
 };
 
-export const updateGraph: updateGraphType = async (graph: any) => {
+export const updateGraph: updateGraphType = async (graph: any, stages: any) => {
     useAppStore.setState((state: any) => {
         return { graph: graph };
     });
@@ -154,7 +157,7 @@ export const updateGraph: updateGraphType = async (graph: any) => {
         let extractedPorts: any;
         let extractedPortsIdArray: any = [];
 
-        console.log('lets check newStages to add in current newStages ==> inside update graph', state.stages);
+        console.log('lets check newStages to add in current newStages ==> inside update graph', stages);
 
         graph?.getCells().map((cell: any) => {
             console.log('lets check cell data ', cell);
@@ -168,8 +171,8 @@ export const updateGraph: updateGraphType = async (graph: any) => {
             }
             let stageId = cell.get('id');
             if (cell?.attributes?.type !== 'standard.Link') {
-                console.log('lets check its going inside link check EmbeddedImage', 'stageLength', state.stages.length, 'stages', state.stages, 'stageId ==>', stageId);
-                let stage = state?.stages?.find((st: any) => {
+                console.log('lets check its going inside link check EmbeddedImage', 'stageLength', stages.length, 'stages', stages, 'stageId ==>', stageId);
+                let stage = stages?.find((st: any) => {
                     console.log('let check st.id ===>', st.id, 'stageId===>', stageId);
                     return st.id === stageId;
                 });
@@ -246,7 +249,7 @@ export const updateGraph: updateGraphType = async (graph: any) => {
             displayObj[stage.id] = {
                 id: stage.id,
                 position: stage.position,
-                status: StageStatus.VALID,
+                status: StageStatus.Valid,
                 signature: '',
                 inputs: {},
                 outputs: {}
@@ -262,7 +265,7 @@ export const updateGraph: updateGraphType = async (graph: any) => {
             displayObj[stage.id] = {
                 id: stage.id,
                 position: stage.position,
-                status: StageStatus.VALID,
+                status: StageStatus.Valid,
                 signature: '',
                 inputs: {},
                 outputs: {}
@@ -278,9 +281,9 @@ export const updateGraph: updateGraphType = async (graph: any) => {
         stages: displayObj
     };
 
-    let stages: any = JSON.stringify(newStages);
+    let stringifyStages: any = JSON.stringify(newStages);
     let display: any = JSON.stringify(newDisplay);
-    experimentToSave.stages = stages;
+    experimentToSave.stages = stringifyStages;
     experimentToSave.display = display;
 
     useAppStore.setState((state: any) => {
@@ -323,8 +326,6 @@ export const updateGraphOnChangingPosition: updateGraphOnChangingPositionType = 
         toast(getToastOptions(`${error.message}`, 'error'));
     }
 };
-
-//   let connections = state.graph.getConnectedLinks(currentCell, { outbound: true }); // Only get outbound connections
 
 export const setStageHasRun: setStageHasRunType = (data: any) => {
     console.log('lets check data inside setSTageHasRun ==>', data);
@@ -416,9 +417,121 @@ export const setInputOutputs: setInputOutputsType = (payload: any) => {
             if (currentCell) {
                 let connections = state.graph.getConnectedLinks(currentCell, { outbound: true }); // Only get outbound connections
                 console.log('lets check connections in setInputOutputs ==>', connections);
+
+                connections.forEach((conn: any) => {
+                    let source = conn.get('source');
+                    let target = conn.get('target');
+                    let targetCell = state.graph?.getCell(target.id);
+                    console.log('lets check going inside connections forEach source ===>', source, '   target==>', target, '   targetCell===>', targetCell);
+                    if (targetCell instanceof TransformerModel) {
+                        let targetTransformer = targetCell.getTransformer();
+                        console.log('lets check targetTransformer ==>', targetTransformer);
+                        let connectedSourceOutput = currentStage?.outputs.find((output: any) => output.id === source.port);
+                        console.log('lets check connectedSourceOutput ==>', connectedSourceOutput);
+                        let connectedTargetStage = state.stages?.find((stage: any) => stage.id === targetTransformer.stageId);
+                        console.log('lets check connectedTargetStage ==>', connectedTargetStage);
+
+                        if (connectedTargetStage && connectedTargetStage.inputs) {
+                            let connectedTargetInput = connectedTargetStage.inputs?.find((inp: any) => inp.id === target.port);
+                            console.log('lets check connectedTargetInput ==>', connectedTargetInput);
+
+                            if (connectedTargetInput && connectedSourceOutput) {
+                                if (!connectedTargetInput.connectedStageOutputSignature || connectedTargetInput.connectedStageOutputSignature !== connectedSourceOutput.signature) {
+                                    connectedTargetInput.connectedStageOutputSignature = connectedSourceOutput.signature;
+                                }
+
+                                if (connectedTargetInput.isValid !== connectedSourceOutput.isValid) {
+                                    connectedTargetInput.isValid = connectedSourceOutput.isValid;
+                                }
+                            }
+                        }
+                    }
+                });
             }
         }
 
+        return state;
+    });
+};
+
+export const setExpandedSchema: setExpandedSchemaType = (payload: any) => {
+    console.log('lets check payload is coming or not ==>', payload);
+    useAppStore.setState((state: any) => {
+        console.log('lets check stages inside setExpandedSchema state updating function ==>', state.stages);
+        if (state.stages) {
+            let selectedStage = state.stages?.find((stage: any) => stage.id === payload.stageId);
+            if (selectedStage) {
+                selectedStage.expandedSchema = payload.expandedSchema;
+                console.log('lets check selectedStage.expandedSchema ===>', selectedStage.expandedSchema);
+            }
+        }
+        return state;
+    });
+};
+
+export const updateLink: any = (link: any, isConnect: boolean) => {
+    useAppStore.setState((state: any) => {
+        console.log('lets check link inside updateLink jalaj 2', link);
+        return { link: link, isConnect: isConnect };
+    });
+};
+
+export const handleConnect: any = (payload: any) => {
+    useAppStore.setState((state: any) => {
+        if (payload && payload.fromStage && payload.toStage) {
+            let output = null;
+            let fromStage = state.stages?.find((stage: any) => stage.id === payload.fromStage.stageId);
+            if (fromStage) {
+                output = fromStage.outputs.find((output: any) => {
+                    return output.id === payload.fromStage.inputOutputId;
+                });
+                if (output) {
+                    let toStage = state.stages?.find((stage: any) => stage.id === payload.toStage.stageId);
+                    if (toStage && toStage.inputs) {
+                        let targetInput = toStage.inputs?.find((inp: any) => inp.id === payload.toStage.inputOutputId);
+                        if (targetInput) {
+                            // The below properties are set regardless of the signature.
+                            targetInput.isConnected = true;
+                            targetInput.isValid = output.isValid;
+                            targetInput.connectedStageId = fromStage.id;
+                            targetInput.connectedStageOutputId = output.id;
+                            targetInput.connectedStageOutputSignature = output.signature;
+                        }
+                    }
+                }
+            }
+        }
+        return state;
+    });
+};
+
+export const expandSchema: any = (expandSchemaPayload: any) => {
+    useAppStore.setState((state: any) => {
+        let selectedStage = state.stages?.find((stage: any) => stage.id === expandSchemaPayload.payload.stageId);
+        if (selectedStage && state.stages) {
+            let result = SchemaHelper.GetExpandedSchema(selectedStage.id, state.stages, expandSchemaPayload.payload.schema, false);
+            selectedStage.expandedSchema = result.schema;
+        }
+        return state;
+    });
+};
+
+export const handleDisconnect: any = (payload: any) => {
+    useAppStore.setState((state: any) => {
+        if (payload && payload.toStage) {
+            let toStage = state.stages?.find((stage: any) => stage.id === payload.toStage.stageId);
+            if (toStage && toStage.inputs) {
+                let targetInput = toStage.inputs?.find((inp: any) => inp.id === payload.toStage.inputOutputId);
+                if (targetInput) {
+                    targetInput.isConnected = false;
+                    targetInput.isValid = false;
+                    targetInput.connectedStageId = '';
+                    targetInput.connectedStageOutputId = '';
+                } else {
+                    console.error(`Target input with id ${payload.toStage.inputOutputId} not found for stage with name: ${toStage.name}`); // should never hit
+                }
+            }
+        }
         return state;
     });
 };

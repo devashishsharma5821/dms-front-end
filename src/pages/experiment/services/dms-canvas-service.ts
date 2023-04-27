@@ -6,7 +6,8 @@ import { HaloService } from './halo-service';
 import { KeyboardService } from './keyboard-service';
 import * as appShapes from './app-shapes';
 import TransformerModel from '../../../models/transformerModal';
-import { updateGraph, updateGraphOnChangingPosition, updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer } from '../../../zustandActions/transformersActions';
+import { updateGraph, updateGraphOnChangingPosition, updateSelectedCellId, updateSelectedStageId, updateSelectedTransformer, updateLink } from '../../../zustandActions/transformersActions';
+import _ from 'lodash';
 
 class DmsCanvasService {
     el: HTMLElement;
@@ -153,6 +154,7 @@ class DmsCanvasService {
         paper.on('cell:mousewheel', this.onMousewheel.bind(this));
 
         paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
+            console.log('lets check pointerdblclick inside dmsCanvasService');
             updateSelectedStageId(cellView?.model?.attributes?.attrs?.idOfTransformer);
         });
 
@@ -180,7 +182,7 @@ class DmsCanvasService {
                 console.log('lets check id of transformer ==>', cell.id);
             }
 
-            updateGraph(graph);
+            // updateGraph(graph);
         });
 
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
@@ -248,7 +250,17 @@ class DmsCanvasService {
         });
 
         this.graph.on('change:source change:target', (link: joint.dia.Link) => {
-            console.log('inside change:source change:target', link);
+            console.log('inside change:source change:target jalaj 1', link);
+            // onStageConnectDisconnect(currentGraph, link, true);
+            // let timer: any = null;
+            // if (timer) clearTimeout(timer);
+            // timer = setTimeout(() => {
+            //     updateLink(link);
+            // }, 1000);
+            const updateLinkDebounce: any = _.debounce(() => {
+                updateLink(link, true);
+            }, 3000);
+            updateLinkDebounce();
         });
 
         this.graph.on('remove', (cell: joint.dia.Cell) => {
